@@ -1,5 +1,5 @@
 site_name: Roberts Lab Handbook
-repo_url: https://github.com/RobertsLab/resources/
+repo_url: https://github.com/GMGI-Fisheries/resources
 edit_uri: blob/master/docs
 theme:
   name: material
