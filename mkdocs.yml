@@ -1,4 +1,4 @@
-site_name: Roberts Lab Handbook
+site_name: GMGI Fisheries Handbook
 repo_url: https://github.com/GMGI-Fisheries/resources
 edit_uri: blob/master/docs
 theme:
@@ -13,8 +13,8 @@ theme:
     # Light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: indigo
-      accent: indigo
+      primary: blue
+      accent: blue
       toggle:
         icon: material/toggle-switch-off-outline
         name: Switch to dark mode
@@ -34,62 +34,20 @@ markdown_extensions:
 nav:
    - Home: 'index.md'
 
-   - 'Lab Culture':
-     - Onboarding: 'Onboarding.md'
-     - Code of Conduct: 'Code-of-Conduct.md'
-     - Environment and Expectations: 'Environment-and-Expectations.md'
-     - Lab Communication: 'Lab-Communication.md'
-     - Lab Notebooks: 'Lab-Notebooks.md'
-     - DEI Resources: 'DEI-Resources.md'
-     - External Communication: 'External-Communication-and-Funding.md'
-     - Lab Safety: 'Lab-Safety.md'
-     - Undergraduate Contract: 'Undergraduate-contract.md'
-
-   - 'Computing and Code':
-     - Best Practices: 'Computing-Best-Practices.md'
-     - Code Snippets: 'code_Snippets.md'
-     - Computing Hardware: 'Computing-Hardware.md'
-     - Lab Software: 'Lab-Software.md'
-     - 'Mox Guides':
-       - New User: 'mox_Adding-a-User.md'
-       - Logging in: 'mox_Logging-In.md'
-       - Node Types: 'mox_Node-Types.md'
-       - Data Storage and System Organization: 'mox_Data-Storage-and-System-Organization.md'
-       - Running a job: 'mox_Running-a-Job.md'
-       - Viewing and interacting with jobs: 'mox_Viewing-and-Interacting-with-Jobs.md'
-       - File Transfers: 'mox_File-Transfers.md'
-       - Software: 'mox_Software.md'
-       - Installing software: 'mox_Installing-Programs.md'
-       - Jupyter Notebooks: 'mox_Jupyter-Notebooks.md'
-       - RStudio Server: 'mox_RStudio-Server.md'
-     - 'Klone Guides':
-       - Quick Start: 'klone_quick-start.md'
-       - Containers: 'klone_containers.md'
-       - New User: 'klone_Adding-a-User.md'
-       - Logging in: 'klone_Logging-In.md'
-       - Node Types: 'klone_Node-Types.md'
-       - Data Storage and System Organization: 'klone_Data-Storage-and-System-Organization.md'
-       - File Transfers: 'klone_File-Transfers.md'
-       - Running a job: 'klone_Running-a-Job.md'
-
-   - 'Databases and Catalogs':
-     - Lab Inventory: 'Lab-Inventory.md'
-     - Pubathon: 'Pubathon.md'
-     - Digital Media: 'Digital-Media.md'
-     - Experiment Database: 'Experiment-Database.md'
-     - Genomic Resources: 'Genomic-Resources.md'
-     - Spotify Playlists: 'music.md'
-
-   - 'Protocols':
-     - Purchasing and Reimbursement: 'Purchasing-and-Reimbursement.md'
-     - Data-Management: 'Data-Management.md'
-     - Lab Protocols: 'Lab-Protocols.md'
-     - Chemical SOPs: 'Chemical-Standard-Operating-Protocols.md'
-     - Alarm Information: 'Alarm-Information.md'
-
-   - 'Bioinformatic Workflows':
-     - Basics: 'bio_Basics.md'
-     - Annotation: 'bio-Annotation.md'
-     - DNA Methylation Analysis: 'bio_DNA-methylation.md'
-     - Gene Expression: 'bio-Gene-expression.md'
-     - Transcriptome Assembly: 'bio_Transcriptome-assembly.md'
+   - 'Computing':
+     - Best Practices: 'test.md'
+     - 'Computing Hardware':
+       - GMGI: 'test.md'
+       - Northeastern University: 'test.md'
+     - Beginner Resources: 'test.md'  
+     - Data Management: 'test.md'
+     - Data Transfer: 'Data_To_Server.md'
+     - 'eDNA':
+       - 01-: 'eDNA/test.md'
+     - 'PopGen':
+       - 01-: 'PopGen/test.md'
+     - 'Epigenetic Aging':
+       - 01-: 'EpiAge/test.md'
+   - 'Laboratory Protocols':
+   - 'eDNA':
+       - 01-: 'eDNA/test.md'
