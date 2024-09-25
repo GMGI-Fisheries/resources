@@ -33,7 +33,6 @@ markdown_extensions:
 
 nav:
    - Home: 'index.md'
-
    - 'Computing':
      - Best Practices: 'test.md'
      - 'Computing Hardware':
