@@ -34,23 +34,22 @@ markdown_extensions:
 nav:
   - Home: 'index.md'
 
-  - 'Computing':
-    - Best Practices: 'test.md'
-    - 'Computing Hardware':
-      - GMGI: 'test.md'
-      - Northeastern University: 'test.md'
-    - Beginner Resources: 'test.md'  
-    - Data Management: 'test.md'
-    - Data Transfer: 'Data_To_Server.md'
-    - 'eDNA':
-      - num1: 'eDNA/eDNA_01.md'
-      - num2: 'eDNA/eDNA_02.md'
-    - 'PopGen':
-      - 01-: 'PopGen/eDNA_01.md'
-    - 'Epigenetic Aging':
-      - 01-: 'EpiAge/eDNA_01.md'
-
+  - Computing Best Practices: 'test.md'
+  - 'Computing Hardware':
+    - GMGI: 'test.md'
+    - Northeastern University: 'test.md'  
+  - Computing Beginner Resources: 'test.md'
+  - Data Management: 'test.md'
+  - Data Transfer: 'Data_To_Server.md'
+  - 'eDNA: metabarcoding':
+    - num1: 'eDNA/eDNA_01.md'
+    - num2: 'eDNA/eDNA_02.md'
+  - 'PopGen':
+    - 01-: 'PopGen/eDNA_01.md'
+  - 'Epigenetic Aging':
+    - 01-: 'EpiAge/eDNA_01.md'
+  
   - 'Laboratory Protocols':
-    - 'eDNA':
+    - 'eDNA metabarcoding':
       - 01-: 'eDNA/eDNA_01.md'
 
