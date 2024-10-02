@@ -25,7 +25,7 @@ group
 7. Collapsing read counts by species name  
 8. Creating results output
 
-# Load libraries
+## Load libraries
 
 ``` r
 library(ggplot2) ## for plotting
@@ -64,9 +64,9 @@ library(tidyverse) ## for data table manipulation
     ## ✖ dplyr::lag()    masks stats::lag()
     ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 
-# Metadata input
+## Metadata input
 
-## Identify paths for metadata and project data
+### Identify paths for metadata and project data
 
 Each user needs to write in their specific directory outputs prior to
 the file name. The default working directory is this document so the
@@ -104,7 +104,7 @@ results_relab_matrix = "example_output/Results_relab_matrix.xlsx"
 results_relab_long = "example_output/Results_relab_long.xlsx"
 ```
 
-## Load project metadata
+### Load project metadata
 
 Metadata specific to each project. This contains information about each
 sample (e.g., month, site, time, sample type, etc.). Confirm that sample
@@ -120,7 +120,7 @@ IDs match those used in the ASV_table.len.tsv file.
 meta <- read.csv("example_input/metadata.csv", header = TRUE)
 ```
 
-## Load database metadata
+### Load database metadata
 
 No user edits in this section because paths have already been set above.
 
@@ -131,7 +131,7 @@ gmgi_db <- read_xlsx(path_GMGIdb, sheet = 1) %>% dplyr::rename(sseqid = Ref) %>%
   mutate(sseqid = gsub(">", "", sseqid))
 ```
 
-# BLAST data input
+## BLAST data input
 
 No user edits unless user changed blastn parameters from fisheries team
 default.
@@ -143,7 +143,7 @@ blast_col_headers = c("ASV_ID", "sseqid", "pident", "length", "mismatch", "gapop
 blast_col_classes = c(rep("character", 2), rep("numeric", 10))
 ```
 
-## GMGI database
+### GMGI database
 
 No user edits.
 
@@ -160,7 +160,7 @@ length(unique(Blast_GMGI$ASV_ID))
 
     ## [1] 61
 
-## Mitofish database
+### Mitofish database
 
 No user edits.
 
@@ -173,7 +173,7 @@ Blast_Mito <- read.table(path_blast_mito, header=F, col.names = blast_col_header
   mutate(Species_name = gsub("_", " ", Species_name))
 ```
 
-## NCBI database
+### NCBI database
 
 No user edits.
 
@@ -191,7 +191,7 @@ Blast_NCBI <- read.table(path_blast_ncbi, header=F,
   left_join(., NCBI_taxassigned, by = "staxid")
 ```
 
-# Load DADA2 ASV Table
+## Load DADA2 ASV Table
 
 The column headers will be the Sample IDs and the first column is the
 ASV ID. ASVs are given a “rank” based on sum of reads from that ASV
@@ -216,7 +216,7 @@ ASV_table <- read_tsv(path_asv_table, show_col_types = FALSE) %>%
 ASV_rank_list <- ASV_table %>% dplyr::select(ASV_ID, ASV_sum, ASV_rank)
 ```
 
-# Taxonomic Assignment
+## Taxonomic Assignment
 
 Identifying where NCBI, Mito, and GMGI disagree on tax assignment. With
 the hierarchial approach, ASVs that match to GMGI and several other
@@ -234,7 +234,7 @@ databases.
 5. Adjusting common name for those entries that don’t have one (from
 Mito or GMGI).
 
-## Identify any ASVs that contain multiple hits within the GMGI database
+### Identify any ASVs that contain multiple hits within the GMGI database
 
 At this point, a fisheries team member needs to make choices about which
 taxonomic assignment to accept.
@@ -310,7 +310,7 @@ Blast_GMGI_edited %>% group_by(ASV_ID) %>% slice_max(pident, n=1) %>% count() %>
     ## # Groups:   ASV_ID [0]
     ## # ℹ 2 variables: ASV_ID <chr>, n <int>
 
-## Identify entries that mismatch between GMGI, Mitofish, and NCBI databases
+### Identify entries that mismatch between GMGI, Mitofish, and NCBI databases
 
 Creating a df called “Disagree”. Review the output before moving onto
 the next section.
@@ -369,7 +369,7 @@ Disagree <- Blast_GMGI_edited %>% group_by(ASV_ID) %>%
 Disagree %>% write_xlsx(path_disagree_list)
 ```
 
-## Assign taxonomy based on hierarchical approach
+### Assign taxonomy based on hierarchical approach
 
 Taxonomic identification is taken from GMGI 100%, then GMGI \<100%, then
 Mitofish 100%, and finally NCBI 100%.
@@ -410,7 +410,7 @@ ASV_table_taxID <- ASV_table %>%
   relocate(., c(Species_name), .after = ASV_ID)
 ```
 
-## Edit taxonomy annotations based on mismatch table
+### Edit taxonomy annotations based on mismatch table
 
 Override any annotations with edited taxonomic identification table.  
 No user edits.
@@ -437,7 +437,7 @@ for (i in taxonomic_choice$ASV_ID) {
 }
 ```
 
-### Confirm all entries are dealt with
+#### Confirm all entries are dealt with
 
 No user edits.
 
@@ -450,7 +450,7 @@ ASV_table_taxID_edited %>% dplyr::select(Species_name) %>% distinct() %>%
     ## # A tibble: 0 × 1
     ## # ℹ 1 variable: Species_name <chr>
 
-## Adjusting common name for those entries that don’t have one (from Mito or NCBI)
+### Adjusting common name for those entries that don’t have one (from Mito or NCBI)
 
 No user edits.
 
@@ -501,9 +501,9 @@ ASV_table_taxID_edited %>% dplyr::select(Species_name, Common_name) %>% filter(i
     ## # A tibble: 0 × 2
     ## # ℹ 2 variables: Species_name <chr>, Common_name <chr>
 
-# Filtering: Filter ASV by less than 0.1% reads and then collapse by group
+## Filtering: Filter ASV by less than 0.1% reads and then collapse by group
 
-## Filter out reads that are less than 0.1% of ASV (row) total per sample.
+### Filter out reads that are less than 0.1% of ASV (row) total per sample.
 
 Create an output of what you’re losing with filtering.
 
@@ -529,7 +529,7 @@ ASV_table_taxID_filtered %>% dplyr::select(ASV_ID, Species_name, Common_name, Ca
   write_xlsx("example_output/ASV_breakdown.xlsx")
 ```
 
-# Collapsing read counts by species name
+## Collapsing read counts by species name
 
 No user edits.
 
@@ -548,7 +548,7 @@ ASV_table_taxID_collapsed <- ASV_table_taxID_filtered %>%
     ## `summarise()` has grouped output by 'Species_name', 'Common_name'. You can
     ## override using the `.groups` argument.
 
-# Creating results output
+## Creating results output
 
 Raw reads results output.  
 No user edits.
