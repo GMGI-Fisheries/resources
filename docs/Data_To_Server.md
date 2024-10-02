@@ -60,7 +60,7 @@ Start Globus transfer:
 3. Your `user.name` endpoint will now appear as an option on the Globus online interface.   
 4. Log into Globus and Navigate to 'Collections' on the left hand panel. Confirm that your GMGI endpoint is activated (green icon):
 
-![]()
+![](https://github.com/GMGI-Fisheries/resources/blob/master/img/Data_To_Server_Globus_endpoints.png?raw=true)
 
 ### NU Discovery Cluster 
 
