@@ -3,10 +3,10 @@
 Goal: Download .fastq files from sequencing center to HPC and/or move data between HPCs and personal computers.
 
 Table of Contents:  
-- [GMGI in-house sequencing to HPC](#illumina-basespace-to-nu-discovery-cluster-or-gmgi-in-house-hpc)  
-- [External sequencing to HPC](#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc)  
-- [HPC or Personal Computer](#hpc-to-personal-computer-or-vice-versa)
-- [HPC to AWS back-up](#aws-back-up)
+- [GMGI in-house sequencing to HPC](#illumina-basespace-to-nu-discovery-cluster-or-gmgi-in-house-hpc)    
+- [External sequencing to HPC](#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc)    
+- [HPC or Personal Computer](#hpc-to-personal-computer-or-vice-versa)  
+- [HPC to AWS back-up](#aws-back-up)  
 
 To transfer data from HPC to HPC (e.g., GMGI to NU), use Globus instructions outlined in [External sequencing to HPC](#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc). 
 
