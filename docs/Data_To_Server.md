@@ -10,7 +10,7 @@ Table of Contents:
 
 To transfer data from HPC to HPC (e.g., GMGI to NU), use Globus instructions outlined in [External sequencing to HPC](#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc). 
 
-# Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC
+## Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC
 
 [Illumina BaseSpace CLI instructions](https://developer.basespace.illumina.com/docs/content/documentation/cli/cli-overview#InstallBaseSpaceSequenceHubCLI)
 
