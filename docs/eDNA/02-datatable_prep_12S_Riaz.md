@@ -1,6 +1,8 @@
 Datatable preparation base script for eDNA metabarcoding
 ================
 
+**.Rmd script**
+
 This script takes your Blast output from the GMGI database, Mitofish
 database, and NCBI database to create one datatable with read counts and
 taxonomic assignment.
@@ -10,8 +12,8 @@ taxonomic assignment.
 2. Load metadata  
 3. Load BLAST output from GMGI, Mitofish, and NCBI  
 4. Load DADA2 ASV Table  
-5. Taxonomic Assignment - 5a. Identify ASVs with multiple hits from
-GMGI’s database  
+5. Taxonomic Assignment  
+- 5a. Identify ASVs with multiple hits from GMGI’s database  
 - 5b. Identify entries that mismatch between GMGI, Mitofish, and NCBI
 databases  
 - 5c. Assign taxonomy based on hierarchical approach  
@@ -224,9 +226,11 @@ database.
 
 **Sub-workflow:**  
 1. Identify any ASVs that contain multiple hits within the GMGI
-database. 2. Identify entries that mismatch between GMGI, Mitofish, and
-NCBI databases. 3. Assign taxonomy based on hierarchical approach. 4.
-Edit taxonomy annotations based on mismatch table.  
+database.  
+2. Identify entries that mismatch between GMGI, Mitofish, and NCBI
+databases.  
+3. Assign taxonomy based on hierarchical approach.  
+4. Edit taxonomy annotations based on mismatch table.  
 5. Adjusting common name for those entries that don’t have one (from
 Mito or GMGI).
 

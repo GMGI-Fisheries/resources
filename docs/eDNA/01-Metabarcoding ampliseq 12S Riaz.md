@@ -8,7 +8,7 @@ The 12S rRNA gene region of the mitogenome is ~950 bp. There are two popular pri
 
 Citation: [Riaz et al. 2011](https://academic.oup.com/nar/article/39/21/e145/1105558)
 
-Scripts to run: 
+Workflow done on HPC. Scripts to run: 
 
 1. 00-fastqc.sh   
 2. 00-multiqc.sh  
