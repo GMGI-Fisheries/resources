@@ -608,7 +608,7 @@
             
   
   <span class="md-ellipsis">
-    PopGen
+    eDNA: qPCR
   </span>
   
 
@@ -617,6 +617,69 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            eDNA: qPCR
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tbd.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    tbd
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    PopGen
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
             PopGen
           </label>
@@ -664,10 +727,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
         
           
-          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -678,8 +741,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_9">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
             Epigenetic Aging
           </label>
@@ -727,10 +790,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -741,8 +804,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             Laboratory Protocols
           </label>
@@ -762,10 +825,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11_1" >
         
           
-          <label class="md-nav__link" for="__nav_10_1" id="__nav_10_1_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11_1" id="__nav_11_1_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -776,8 +839,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10_1">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11_1">
             <span class="md-nav__icon md-icon"></span>
             eDNA metabarcoding
           </label>
@@ -861,6 +924,7 @@
 
 
 <h1 id="relative-abundance-heatmaps-edna-metabarcoding-base-script">Relative Abundance Heatmaps: eDNA metabarcoding base script</h1>
+<p><strong>.Rmd script</strong></p>
 <p>This script plots your relative abundance matrix as a heatmap. Figures
 produced are potentially part of the main figures of your
 manuscript/report.</p>
@@ -908,11 +972,11 @@ manuscript/report.</p>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">tidytext</span><span class="p">)</span>
 </code></pre></div>
-<h1 id="load-data">Load data</h1>
+<h2 id="load-data">Load data</h2>
 <div class="highlight"><pre><span></span><code><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&quot;example_output/Results_relab_long.xlsx&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="nf">across</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="n">relab</span><span class="p">),</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span><span class="n">.x</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">)))</span>
 </code></pre></div>
-<h1 id="remove-categories">Remove Categories</h1>
+<h2 id="remove-categories">Remove Categories</h2>
 <p>If you want to plot relative abundance without human, other, or
 livestock categories. As FYI/warning, relative abundance is calculated
 with these categories included. Relative abundance can also be thought
@@ -921,7 +985,7 @@ reads for that sample.</p>
 <div class="highlight"><pre><span></span><code><span class="n">df_filtered</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
 <span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Other&quot;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Livestock&quot;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;unassigned&quot;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Human&quot;</span><span class="p">)</span><span class="w"> </span>
 </code></pre></div>
-<h1 id="plot">Plot</h1>
+<h2 id="plot">Plot</h2>
 <p>reverse label order: scale y discrete limits reverse limits=rev</p>
 <p><a href="https://coolors.co/">https://coolors.co/</a> (hit tools on the top right hand side)</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## if subset of categories is desired, replace df below with df_filtered</span>
