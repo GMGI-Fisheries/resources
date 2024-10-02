@@ -38,7 +38,7 @@ options(scipen=999)
 ### 1. Replace the 3 paths below: edit example_input to your project specific path 
 ### 2. Confirm your sampleIDs match between metadata, results df, and filtering stats output
 
-filtering_stats <- read_tsv("example_input/overall_summary.tsv", show_col_types = FALSE) %>% dplyr::rename(SampleID = sample)
+filtering_stats <- read_tsv("example_input/overall_summary.tsv", show_col_types = FALSE) %>% dplyr::rename(sampleID = sample)
 
 meta <- read.csv("example_input/metadata.csv", header=TRUE)
 
@@ -58,7 +58,7 @@ ASV_breakdown <- read_xlsx("example_output/ASV_breakdown.xlsx") %>%
 No user edits. 
 
 ```{r}
-df <- full_join(filtering_stats, meta, by = "SampleID") %>%
+df <- full_join(filtering_stats, meta, by = "sampleID") %>%
   # filtering out columns we don't need 
   dplyr::select(-cutadapt_reverse_complemented) %>%
   
