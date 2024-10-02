@@ -424,17 +424,6 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Data Transfer
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -444,61 +433,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#illumina-basespace-to-nu-discovery-cluster-or-gmgi-in-house-hpc" class="md-nav__link">
-    <span class="md-ellipsis">
-      Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc" class="md-nav__link">
-    <span class="md-ellipsis">
-      Globus to NU Discovery Cluster or GMGI in-house HPC
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hpc-to-personal-computer-or-vice-versa" class="md-nav__link">
-    <span class="md-ellipsis">
-      HPC to personal computer or vice versa
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#aws-back-up" class="md-nav__link">
-    <span class="md-ellipsis">
-      AWS Back-up
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -840,50 +774,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#illumina-basespace-to-nu-discovery-cluster-or-gmgi-in-house-hpc" class="md-nav__link">
-    <span class="md-ellipsis">
-      Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc" class="md-nav__link">
-    <span class="md-ellipsis">
-      Globus to NU Discovery Cluster or GMGI in-house HPC
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hpc-to-personal-computer-or-vice-versa" class="md-nav__link">
-    <span class="md-ellipsis">
-      HPC to personal computer or vice versa
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#aws-back-up" class="md-nav__link">
-    <span class="md-ellipsis">
-      AWS Back-up
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -913,7 +803,7 @@
 - <a href="#hpc-to-personal-computer-or-vice-versa">HPC or Personal Computer</a>
 - <a href="#aws-back-up">HPC to AWS back-up</a></p>
 <p>To transfer data from HPC to HPC (e.g., GMGI to NU), use Globus instructions outlined in <a href="#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc">External sequencing to HPC</a>. </p>
-<h3 id="illumina-basespace-to-nu-discovery-cluster-or-gmgi-in-house-hpc">Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC</h3>
+<h1 id="illumina-basespace-to-nu-discovery-cluster-or-gmgi-in-house-hpc">Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC</h1>
 <p><a href="https://developer.basespace.illumina.com/docs/content/documentation/cli/cli-overview#InstallBaseSpaceSequenceHubCLI">Illumina BaseSpace CLI instructions</a></p>
 <p>Connecting your user to Illumina BaseSpace:  </p>
 <p><em>Each user only needs to complete this once to set-up. If completed for previous projects, skip to downloading data steps.</em> </p>
@@ -933,7 +823,7 @@
 <li>Navigate to <code>cd $HOME/bin</code> and download dataset: <code>bs download run -n run_name --extension=fastq.gz -o /local/output/path</code>. Replace <code>run_name</code> with the exact name of the run on BaseSpace.  </li>
 <li>Navigate to the output path <code>cd /local/output/path</code> and move all files out of subdirectories: <code>mv */* .</code> </li>
 </ol>
-<h3 id="globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc">Globus to NU Discovery Cluster or GMGI in-house HPC</h3>
+<h2 id="globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc">Globus to NU Discovery Cluster or GMGI in-house HPC</h2>
 <p>External sequencing centers (e.g., UConn) will share data via Globus. Instructions from NU on <a href="https://rc-docs.northeastern.edu/en/latest/datamanagement/transferringdata.html">transfering data</a> and using <a href="https://rc-docs.northeastern.edu/en/latest/datamanagement/globus.html#using-globus">Globus</a>. Globus works by transferring data between 'endpoints'. NU's endpoint is called Discovery Cluster which is searchable but our in-house GMGI endpoint needs to be created for each user. </p>
 <p>Globus instructions: [https://docs.globus.org/globus-connect-server/v5.4/quickstart/]. Create a Globus account prior to instructions below. If transferring to NU, user needs to connect their NU account to their Globus account (see above NU instructions for this step). </p>
 <p>GMGI endpoint set-up (only need to do this once):<br />
@@ -964,7 +854,7 @@ setup completed successfully
 <li>Check the status of a transfer by selecting 'Activity' on the left hand panel.  </li>
 <li>[GMGI only] Once transfer is complete, deactivate the endpoint: <code>./globusconnectpersonal -stop</code>. </li>
 </ol>
-<h3 id="hpc-to-personal-computer-or-vice-versa">HPC to personal computer or vice versa</h3>
+<h2 id="hpc-to-personal-computer-or-vice-versa">HPC to personal computer or vice versa</h2>
 <p>Users can do this via Globus or 'scp' (secure copy paste) commands detailed below. <a href="https://rc-docs.northeastern.edu/en/latest/datamanagement/transferringdata.html#transfer-data">NU instructions on transfer via terminal</a>. Make sure you're using "xfer.discovery.neu.edu" for the discovery cluster and not login.discovery.neu.edu, or you'll get an email warning you that you're using too much CPU!</p>
 <p>For all the below code, change content in &lt;&gt; and then delete the &lt;&gt;. All commands need to be run in own terminal and not logged onto either server. </p>
 <p>Transfer a file:
@@ -972,7 +862,7 @@ setup completed successfully
 - To personal computer from NU: <code>scp &lt;username&gt;@xfer.discovery.neu.edu:/path/ /output/path/</code>   </p>
 <p>Transfer a directory (a.k.a., repository) to personal computer from NU: <code>scp -r &lt;username&gt;@xfer.discovery.neu.edu:/path/ /output/path/</code>    </p>
 <p>To transfer directly from GMGI to NU or vice versa, use Globus. </p>
-<h3 id="aws-back-up">AWS Back-up</h3>
+<h2 id="aws-back-up">AWS Back-up</h2>
 <p>AWS is our Amazon Web Services S3 cloud-based storage to backup data long-term data storage and back-up. GMGI uploads data from our in-house server to AWS.</p>
 <p>What should be backed up:<br />
 - Raw data files such as fastq files directly from the sequencer<br />
