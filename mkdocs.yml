@@ -47,6 +47,8 @@ nav:
     - 02-dfprep-12S-Riaz: 'eDNA/02-datatable_prep_12S_Riaz.md'
     - 03-data-quality: 'eDNA/03-data_quality.md'
     - 04-relative-abund-heatmap: 'eDNA/04-relative_abundance_heatmap.md'
+  - 'eDNA: qPCR':
+    - tbd: 'tbd.md'
   - 'PopGen':
     - 01-: 'PopGen/eDNA_01.md'
   - 'Epigenetic Aging':

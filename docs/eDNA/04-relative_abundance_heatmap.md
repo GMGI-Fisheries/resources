@@ -1,6 +1,8 @@
 Relative Abundance Heatmaps: eDNA metabarcoding base script
 ================
 
+**.Rmd script**
+
 This script plots your relative abundance matrix as a heatmap. Figures
 produced are potentially part of the main figures of your
 manuscript/report.
@@ -58,14 +60,14 @@ library(ggh4x) ## for facet wrap options
 library(tidytext)
 ```
 
-# Load data
+## Load data
 
 ``` r
 df <- read_xlsx("example_output/Results_relab_long.xlsx") %>%
   mutate(across(c(relab), ~ round(.x, 5)))
 ```
 
-# Remove Categories
+## Remove Categories
 
 If you want to plot relative abundance without human, other, or
 livestock categories. As FYI/warning, relative abundance is calculated
@@ -78,7 +80,7 @@ df_filtered <- df %>%
   filter(!Category == "Other" & !Category == "Livestock" & !Category == "unassigned" & !Category == "Human") 
 ```
 
-# Plot
+## Plot
 
 reverse label order: scale y discrete limits reverse limits=rev
 

@@ -1,11 +1,13 @@
 Metabarcoding data quality: eDNA metabarcoding base script
 ================
 
+**.Rmd script**
+
 This script evaluates your sequence quality and taxonomic assignment
 quality. Figures produced in this script can go into supplemental data
 for a manuscript.
 
-# Load libraries
+## Load libraries
 
 ``` r
 library(dplyr) # for data transformation
@@ -64,7 +66,7 @@ library(cowplot)
 options(scipen=999)
 ```
 
-# Load data
+## Load data
 
 ``` r
 ### User edits:
@@ -84,9 +86,9 @@ ASV_breakdown <- read_xlsx("example_output/ASV_breakdown.xlsx") %>%
                                                 "Elasmobranch", "Marine Mammal", "Sea Turtle", "Teleost Fish")))
 ```
 
-# Sequence data
+## Sequence data
 
-## Data Transformation
+### Data Transformation
 
 No user edits.
 
@@ -105,7 +107,7 @@ df <- full_join(filtering_stats, meta, by = "sampleID") %>%
   gather("measure", "value", 2:10)  
 ```
 
-## Plotting
+### Plotting
 
 Suggested webpage to choose colors: <https://coolors.co/>
 
@@ -155,9 +157,9 @@ df %>%
 ggsave("example_output/Figures/SampleReport_FilteringStats.png", width = 10, height=8)
 ```
 
-# Plot unassigned taxonomy
+## Plot unassigned taxonomy
 
-## Data transformation
+### Data transformation
 
 No user edits.
 
@@ -205,7 +207,7 @@ species_summary <- results %>%
 ## metadata option add-in
 ```
 
-## Raw Reads Plotting
+### Raw Reads Plotting
 
 With metadata
 
