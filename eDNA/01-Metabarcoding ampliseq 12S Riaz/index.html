@@ -937,7 +937,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../eDNA_01/" class="md-nav__link">
+      <a href="../eDNA_01.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1188,7 +1188,7 @@
 <li>02-taxonomicID.sh  </li>
 </ol>
 <h2 id="step-1-conda-environment-fisheries-edna">Step 1: Conda environment: Fisheries eDNA</h2>
-<p>Background information on Conda: https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html. </p>
+<p>Background information on <a href="https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html">Conda</a>. </p>
 <p>GMGI Fisheries has a conda environment set-up with all the packages needed for this workflow. Code below was used to create this conda environment. <strong>DO NOT REPEAT</strong> every time user is running this workflow.</p>
 <div class="highlight"><pre><span></span><code># Activate conda
 source ~/../../work/gmgi/miniconda3/bin/activate
@@ -1226,7 +1226,7 @@ conda update [package name]
 nextflow pull nf-core/ampliseq
 </code></pre></div>
 <h2 id="step-2-assess-quality-of-raw-data">Step 2: Assess quality of raw data</h2>
-<p>Background information on FASTQC: https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon-flipped/lessons/05_qc_running_fastqc_interactively.html. </p>
+<p>Background information on <a href="https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon-flipped/lessons/05_qc_running_fastqc_interactively.html">FASTQC</a>. </p>
 <p><code>00-fastqc.sh</code>: </p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
 #SBATCH --error=output/fastqc_output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
@@ -1269,7 +1269,7 @@ fastqc ${i} --outdir ${out_dir}
 - This is going to output <em>many</em> error and output files. After job completes, use <code>cat *output.* &gt; ../fastqc_output.txt</code> to create one file with all the output and <code>cat *error.* &gt; ../fastqc_error.txt</code> to create one file with all of the error message outputs. 
 - Within the <code>out_dir</code> output folder, use <code>ls *html | wc</code> to count the number of html output files (1st/2nd column values). This should be equal to the --array range used and the number of raw data files. If not, the script missed some input files so address this before moving on.  </p>
 <h2 id="step-3-visualize-quality-of-raw-data">Step 3: Visualize quality of raw data</h2>
-<p>Background information on MULTIQC: https://multiqc.info/docs/#:~:text=MultiQC%20is%20a%20reporting%20tool%20that%20parses%20results,experiments%20containing%20multiple%20samples%20and%20multiple%20analysis%20steps.</p>
+<p>Background information on <a href="https://multiqc.info/docs/#:~:text=MultiQC%20is%20a%20reporting%20tool%20that%20parses%20results,experiments%20containing%20multiple%20samples%20and%20multiple%20analysis%20steps">MULTIQC</a>.</p>
 <p><code>00-multiqc.sh</code> </p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
 #SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
@@ -1305,7 +1305,7 @@ multiqc --interactive ${fastqc_output} -o ${multiqc_dir} --filename multiqc_raw.
 <h2 id="step-4-nf-coreampliseq">Step 4: nf-core/ampliseq</h2>
 <p><a href="https://nf-co.re/">Nf-core</a>: A community effort to collect a curated set of analysis pipelines built using <a href="https://www.nextflow.io/">Nextflow</a>.<br />
 Nextflow: scalable and reproducible scientific workflows using software containers, used to build wrapper programs like the one we use here.  </p>
-<p>https://nf-co.re/ampliseq/2.11.0: nfcore/ampliseq is a bioinformatics analysis pipeline used for amplicon sequencing, supporting denoising of any amplicon and supports a variety of taxonomic databases for taxonomic assignment including 16S, ITS, CO1 and 18S. </p>
+<p>[https://nf-co.re/ampliseq/2.11.0]: nfcore/ampliseq is a bioinformatics analysis pipeline used for amplicon sequencing, supporting denoising of any amplicon and supports a variety of taxonomic databases for taxonomic assignment including 16S, ITS, CO1 and 18S. </p>
 <p><img alt="" src="https://raw.githubusercontent.com/nf-core/ampliseq/2.11.0//docs/images/ampliseq_workflow.png" /></p>
 <p>We use ampliseq for the following programs:<br />
 - <a href="https://journal.embnet.org/index.php/embnetjournal/article/view/200">Cutadapt</a> is trimming primer sequences from sequencing reads. Primer sequences are non-biological sequences that often introduce point mutations that do not reflect sample sequences. This is especially true for degenerated PCR primer. If primer trimming would be omitted, artifactual amplicon sequence variants might be computed by the denoising tool or sequences might be lost due to become labelled as PCR chimera.<br />
@@ -1317,7 +1317,7 @@ Nextflow: scalable and reproducible scientific workflows using software containe
 Riaz 12S amplicon F Degenerate: ACTGGGATTAGATACCCY   <br />
 Riaz 12S amplicon R: TAGAACAGGCTCCTCTAG     </p>
 <h3 id="metadata-sheet-optional">Metadata sheet (optional)</h3>
-<p>The metadata file has to follow the QIIME2 specifications (https://docs.qiime2.org/2021.2/tutorials/metadata/). Below is a preview of the sample sheet used for this test. Keep the column headers the same for future use. The first column needs to be "ID" and can only contain numbers, letters, or "-". This is different than the sample sheet. NAs should be empty cells rather than "NA". </p>
+<p>The metadata file has to follow the <a href="https://docs.qiime2.org/2021.2/tutorials/metadata/">QIIME2 specifications</a>. Below is a preview of the sample sheet used for this test. Keep the column headers the same for future use. The first column needs to be "ID" and can only contain numbers, letters, or "-". This is different than the sample sheet. NAs should be empty cells rather than "NA". </p>
 <h3 id="create-samplesheet-sheet-for-ampliseq">Create samplesheet sheet for ampliseq</h3>
 <p>This file indicates the sample ID and the path to R1 and R2 files. Below is a preview of the sample sheet used in this test. File created on RStudio Interactive on Discovery Cluster using (<code>create_metadatasheets.R</code>).  </p>
 <ul>
@@ -1501,7 +1501,7 @@ echo &quot;BLAST nt database update completed&quot;
 <p>View the <code>update_ncbi_nt.out</code> file to confirm the echo printed at the end.</p>
 <p><em>Emma is still troubleshooting the -remote flag to also avoid storing the nt db within our /work/gmgi folder.</em> </p>
 <h4 id="download-andor-update-mitofish-database">Download and/or update Mitofish database</h4>
-<p>Check Mitofish webpage (https://mitofish.aori.u-tokyo.ac.jp/download/) for the most recent database version number. Compare to the <code>work/gmgi/databases/12S/reference_fasta/12S/Mitofish/</code> folder. If needed, update Mitofish database:</p>
+<p>Check <a href="https://mitofish.aori.u-tokyo.ac.jp/download/">Mitofish webpage</a> for the most recent database version number. Compare to the <code>work/gmgi/databases/12S/reference_fasta/12S/Mitofish/</code> folder. If needed, update Mitofish database:</p>
 <div class="highlight"><pre><span></span><code>## download db 
 wget https://mitofish.aori.u-tokyo.ac.jp/species/detail/download/?filename=download%2F/complete_partial_mitogenomes.zip  
 
