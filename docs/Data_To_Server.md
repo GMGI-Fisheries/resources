@@ -5,8 +5,10 @@ Goal: Download .fastq files from sequencing center to HPC and/or move data betwe
 #### Table of Contents
 - [GMGI in-house sequencing to HPC](#illumina-basespace-to-nu-discovery-cluster-or-gmgi-in-house-hpc)  
 - [External sequencing to HPC](#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc)  
-- [HPC to HPC or Personal Computer](#hpc-to-hpc-or-hpc-to-personal-computer)
+- [HPC or Personal Computer](#hpc-to-personal-computer-or-vice-versa)
 - [HPC to AWS back-up](#aws-back-up)
+
+To transfer data from HPC to HPC (e.g., GMGI to NU), use Globus instructions outlined in [External sequencing to HPC](#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc). 
 
 ## Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC
 
@@ -35,9 +37,7 @@ Download data from each run to desired output path:
 
 External sequencing centers (e.g., UConn) will share data via Globus. Instructions from NU on [transfering data](https://rc-docs.northeastern.edu/en/latest/datamanagement/transferringdata.html) and using [Globus](https://rc-docs.northeastern.edu/en/latest/datamanagement/globus.html#using-globus). Globus works by transferring data between 'endpoints'. NU's endpoint is called Discovery Cluster which is searchable but our in-house GMGI endpoint needs to be created for each user. 
 
-Globus instructions: [https://docs.globus.org/globus-connect-server/v5.4/quickstart/]. Create a Globus account prior to instructions below. 
-
-### GMGI in-house server 
+Globus instructions: [https://docs.globus.org/globus-connect-server/v5.4/quickstart/]. Create a Globus account prior to instructions below. If transferring to NU, user needs to connect their NU account to their Globus account (see above NU instructions for this step). 
 
 GMGI endpoint set-up (only need to do this once):  
 1. Navigate to the globusconnectpersonal-3.2.2 module that is already downloaded on GMGI's in-house server: `cd /data/resources/app_modules/globusconnectpersonal-3.2.2`.  
@@ -55,27 +55,39 @@ setup completed successfully
 ```
 
 Start Globus transfer:  
-1. Navigate to the globusconnectpersonal-3.2.2 module that is already downloaded on GMGI's in-house server: `cd /data/resources/app_modules/globusconnectpersonal-3.2.2`.
-2. Activate personal endpoint: `./globusconnectpersonal -start &`  
-3. Your `user.name` endpoint will now appear as an option on the Globus online interface.   
+1. [GMGI only] Navigate to the globusconnectpersonal-3.2.2 module that is already downloaded on GMGI's in-house server: `cd /data/resources/app_modules/globusconnectpersonal-3.2.2`.
+2. [GMGI only] Activate personal endpoint: `./globusconnectpersonal -start &`  
+3. [GMGI only] Your `user.name` endpoint will now appear as an option on the Globus online interface.   
 4. Log into Globus and Navigate to 'Collections' on the left hand panel. Confirm that your GMGI endpoint is activated (green icon):
 
 ![](https://github.com/GMGI-Fisheries/resources/blob/master/img/Data_To_Server_Globus_endpoints.png?raw=true)
 
-### NU Discovery Cluster 
+5. Select the 'File Manager' on the left hand panel. Choose the sequencing center endpoint in the left side and the server end point on the right side. NU's Discovery Cluster is searchable but GMGI endpoint will the user.name set up in previous steps. 
 
+![](https://github.com/GMGI-Fisheries/resources/blob/master/img/Data_To_Server_Globus_transfer.png?raw=true)
 
+6. Select all files that you want to transfer.  
+7. Select Start to begin the transfer.  
+8. Check the status of a transfer by selecting 'Activity' on the left hand panel.  
+9. [GMGI only] Once transfer is complete, deactivate the endpoint: `./globusconnectpersonal -stop`. 
 
+## HPC to personal computer or vice versa
 
+Users can do this via Globus or 'scp' (secure copy paste) commands detailed below. [NU instructions on transfer via terminal](https://rc-docs.northeastern.edu/en/latest/datamanagement/transferringdata.html#transfer-data). Make sure you're using "xfer.discovery.neu.edu" for the discovery cluster and not login.discovery.neu.edu, or you'll get an email warning you that you're using too much CPU!
 
-## HPC to HPC or HPC to personal computer
+For all the below code, change content in <> and then delete the <>. All commands need to be run in own terminal and not logged onto either server. 
 
+Transfer a file:
+- To NU from personal computer: `scp <filename and path> <username>@xfer.discovery.neu.edu:/path/`   
+- To personal computer from NU: `scp <username>@xfer.discovery.neu.edu:/path/ /output/path/`   
 
+Transfer a directory (a.k.a., repository) to personal computer from NU: `scp -r <username>@xfer.discovery.neu.edu:/path/ /output/path/`    
 
+To transfer directly from GMGI to NU or vice versa, use Globus. 
 
 ## AWS Back-up
 
-AWS is our Amazon Web Services option for long-term data storage and back-up. GMGI uploads data from our in-house server to AWS.
+AWS is our Amazon Web Services S3 cloud-based storage to backup data long-term data storage and back-up. GMGI uploads data from our in-house server to AWS.
 
 What should be backed up:  
 - Raw data files such as fastq files directly from the sequencer  
