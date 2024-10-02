@@ -18,7 +18,7 @@ Scripts to run:
 
 ## Step 1: Conda environment: Fisheries eDNA 
 
-Background information on Conda: https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html. 
+Background information on [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html). 
 
 GMGI Fisheries has a conda environment set-up with all the packages needed for this workflow. Code below was used to create this conda environment. **DO NOT REPEAT** every time user is running this workflow.
 
@@ -64,7 +64,7 @@ nextflow pull nf-core/ampliseq
  
 ## Step 2: Assess quality of raw data  
 
-Background information on FASTQC: https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon-flipped/lessons/05_qc_running_fastqc_interactively.html. 
+Background information on [FASTQC](https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon-flipped/lessons/05_qc_running_fastqc_interactively.html). 
 
 `00-fastqc.sh`: 
 
@@ -115,7 +115,7 @@ Notes:
 
 ## Step 3: Visualize quality of raw data  
 
-Background information on MULTIQC: https://multiqc.info/docs/#:~:text=MultiQC%20is%20a%20reporting%20tool%20that%20parses%20results,experiments%20containing%20multiple%20samples%20and%20multiple%20analysis%20steps.
+Background information on [MULTIQC](https://multiqc.info/docs/#:~:text=MultiQC%20is%20a%20reporting%20tool%20that%20parses%20results,experiments%20containing%20multiple%20samples%20and%20multiple%20analysis%20steps).
 
 `00-multiqc.sh` 
 
@@ -159,7 +159,7 @@ Notes:
 [Nf-core](https://nf-co.re/): A community effort to collect a curated set of analysis pipelines built using [Nextflow](https://www.nextflow.io/).  
 Nextflow: scalable and reproducible scientific workflows using software containers, used to build wrapper programs like the one we use here.  
 
-https://nf-co.re/ampliseq/2.11.0: nfcore/ampliseq is a bioinformatics analysis pipeline used for amplicon sequencing, supporting denoising of any amplicon and supports a variety of taxonomic databases for taxonomic assignment including 16S, ITS, CO1 and 18S. 
+[https://nf-co.re/ampliseq/2.11.0]: nfcore/ampliseq is a bioinformatics analysis pipeline used for amplicon sequencing, supporting denoising of any amplicon and supports a variety of taxonomic databases for taxonomic assignment including 16S, ITS, CO1 and 18S. 
 
 ![](https://raw.githubusercontent.com/nf-core/ampliseq/2.11.0//docs/images/ampliseq_workflow.png)
 
@@ -179,7 +179,7 @@ Riaz 12S amplicon R: TAGAACAGGCTCCTCTAG
 
 ### Metadata sheet (optional) 
 
-The metadata file has to follow the QIIME2 specifications (https://docs.qiime2.org/2021.2/tutorials/metadata/). Below is a preview of the sample sheet used for this test. Keep the column headers the same for future use. The first column needs to be "ID" and can only contain numbers, letters, or "-". This is different than the sample sheet. NAs should be empty cells rather than "NA". 
+The metadata file has to follow the [QIIME2 specifications](https://docs.qiime2.org/2021.2/tutorials/metadata/). Below is a preview of the sample sheet used for this test. Keep the column headers the same for future use. The first column needs to be "ID" and can only contain numbers, letters, or "-". This is different than the sample sheet. NAs should be empty cells rather than "NA". 
 
 ### Create samplesheet sheet for ampliseq 
 
@@ -363,7 +363,7 @@ View the `update_ncbi_nt.out` file to confirm the echo printed at the end.
 
 #### Download and/or update Mitofish database  
 
-Check Mitofish webpage (https://mitofish.aori.u-tokyo.ac.jp/download/) for the most recent database version number. Compare to the `work/gmgi/databases/12S/reference_fasta/12S/Mitofish/` folder. If needed, update Mitofish database:
+Check [Mitofish webpage](https://mitofish.aori.u-tokyo.ac.jp/download/) for the most recent database version number. Compare to the `work/gmgi/databases/12S/reference_fasta/12S/Mitofish/` folder. If needed, update Mitofish database:
 
 ```
 ## download db 
