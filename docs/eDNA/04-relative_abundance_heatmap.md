@@ -7,7 +7,7 @@ This script plots your relative abundance matrix as a heatmap. Figures
 produced are potentially part of the main figures of your
 manuscript/report.
 
-# Load libraries
+## Load libraries
 
 ``` r
 library(ggplot2) ## for plotting
