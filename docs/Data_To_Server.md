@@ -10,7 +10,7 @@ Table of Contents:
 
 To transfer data from HPC to HPC (e.g., GMGI to NU), use Globus instructions outlined in [External sequencing to HPC](#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc). 
 
-### Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC
+## Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC
 
 [Illumina BaseSpace CLI instructions](https://developer.basespace.illumina.com/docs/content/documentation/cli/cli-overview#InstallBaseSpaceSequenceHubCLI)
 
@@ -33,7 +33,7 @@ Download data from each run to desired output path:
 7. Navigate to `cd $HOME/bin` and download dataset: `bs download run -n run_name --extension=fastq.gz -o /local/output/path`. Replace `run_name` with the exact name of the run on BaseSpace.  
 8. Navigate to the output path `cd /local/output/path` and move all files out of subdirectories: `mv */* .` 
 
-### Globus to NU Discovery Cluster or GMGI in-house HPC 
+## Globus to NU Discovery Cluster or GMGI in-house HPC 
 
 External sequencing centers (e.g., UConn) will share data via Globus. Instructions from NU on [transfering data](https://rc-docs.northeastern.edu/en/latest/datamanagement/transferringdata.html) and using [Globus](https://rc-docs.northeastern.edu/en/latest/datamanagement/globus.html#using-globus). Globus works by transferring data between 'endpoints'. NU's endpoint is called Discovery Cluster which is searchable but our in-house GMGI endpoint needs to be created for each user. 
 
@@ -71,7 +71,7 @@ Start Globus transfer:
 8. Check the status of a transfer by selecting 'Activity' on the left hand panel.  
 9. [GMGI only] Once transfer is complete, deactivate the endpoint: `./globusconnectpersonal -stop`. 
 
-### HPC to personal computer or vice versa
+## HPC to personal computer or vice versa
 
 Users can do this via Globus or 'scp' (secure copy paste) commands detailed below. [NU instructions on transfer via terminal](https://rc-docs.northeastern.edu/en/latest/datamanagement/transferringdata.html#transfer-data). Make sure you're using "xfer.discovery.neu.edu" for the discovery cluster and not login.discovery.neu.edu, or you'll get an email warning you that you're using too much CPU!
 
@@ -85,7 +85,7 @@ Transfer a directory (a.k.a., repository) to personal computer from NU: `scp -r 
 
 To transfer directly from GMGI to NU or vice versa, use Globus. 
 
-### AWS Back-up
+## AWS Back-up
 
 AWS is our Amazon Web Services S3 cloud-based storage to backup data long-term data storage and back-up. GMGI uploads data from our in-house server to AWS.
 
