@@ -461,26 +461,47 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#downloading-data-from-illumina-basespace-to-hpc" class="md-nav__link">
+  <a href="#table-of-contents" class="md-nav__link">
     <span class="md-ellipsis">
-      Downloading data from Illumina BaseSpace to HPC
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Downloading data from Illumina BaseSpace to HPC">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#nu-discovery-cluster" class="md-nav__link">
-    <span class="md-ellipsis">
-      NU Discovery Cluster
+      Table of Contents
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#illumina-basespace-to-nu-discovery-cluster-or-gmgi-in-house-hpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Globus to NU Discovery Cluster or GMGI in-house HPC
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hpc-to-personal-computer-or-vice-versa" class="md-nav__link">
+    <span class="md-ellipsis">
+      HPC to personal computer or vice versa
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-back-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      AWS Back-up
+    </span>
+  </a>
   
 </li>
       
@@ -835,26 +856,47 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#downloading-data-from-illumina-basespace-to-hpc" class="md-nav__link">
+  <a href="#table-of-contents" class="md-nav__link">
     <span class="md-ellipsis">
-      Downloading data from Illumina BaseSpace to HPC
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Downloading data from Illumina BaseSpace to HPC">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#nu-discovery-cluster" class="md-nav__link">
-    <span class="md-ellipsis">
-      NU Discovery Cluster
+      Table of Contents
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#illumina-basespace-to-nu-discovery-cluster-or-gmgi-in-house-hpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Globus to NU Discovery Cluster or GMGI in-house HPC
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hpc-to-personal-computer-or-vice-versa" class="md-nav__link">
+    <span class="md-ellipsis">
+      HPC to personal computer or vice versa
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-back-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      AWS Back-up
+    </span>
+  </a>
   
 </li>
       
@@ -882,18 +924,110 @@
 
 
 <h1 id="downloading-sequencing-data-to-servers">Downloading sequencing data to servers</h1>
-<h2 id="downloading-data-from-illumina-basespace-to-hpc">Downloading data from Illumina BaseSpace to HPC</h2>
-<p>https://developer.basespace.illumina.com/docs/content/documentation/cli/cli-overview#InstallBaseSpaceSequenceHubCLI</p>
-<h3 id="nu-discovery-cluster">NU Discovery Cluster</h3>
+<p>Goal: Download .fastq files from sequencing center to HPC and/or move data between HPCs and personal computers. </p>
+<h4 id="table-of-contents">Table of Contents</h4>
+<ul>
+<li><a href="#illumina-basespace-to-nu-discovery-cluster-or-gmgi-in-house-hpc">GMGI in-house sequencing to HPC</a>  </li>
+<li><a href="#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc">External sequencing to HPC</a>  </li>
+<li><a href="#hpc-to-personal-computer-or-vice-versa">HPC or Personal Computer</a></li>
+<li><a href="#aws-back-up">HPC to AWS back-up</a></li>
+</ul>
+<p>To transfer data from HPC to HPC (e.g., GMGI to NU), use Globus instructions outlined in <a href="#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc">External sequencing to HPC</a>. </p>
+<h2 id="illumina-basespace-to-nu-discovery-cluster-or-gmgi-in-house-hpc">Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC</h2>
+<p><a href="https://developer.basespace.illumina.com/docs/content/documentation/cli/cli-overview#InstallBaseSpaceSequenceHubCLI">Illumina BaseSpace CLI instructions</a></p>
+<p>Connecting your user to Illumina BaseSpace:  </p>
+<p><em>Each user only needs to complete this once to set-up. If completed for previous projects, skip to downloading data steps.</em> </p>
 <ol>
 <li>Create folder called bin: <code>mkdir $HOME/bin</code>  </li>
 <li>Download BaseSpace CLI: <code>wget "https://launch.basespace.illumina.com/CLI/latest/amd64-linux/bs" -O $HOME/bin/bs</code>  </li>
 <li>Change the file permissions to make the downloaded binary executable: <code>chmod u+x $HOME/bin/bs</code>  </li>
 <li>Authenticate your account: <code>bs auth</code>  </li>
 <li>Navigate to the webpage provided and authenticate use of BaseSpace CLI.  </li>
-<li>Find the Project ID of desired download: Within Sequence Hub, navigate to Projects. Select the desired project. The Project ID is in the webpage handle (e.g., https://basespace.illumina.com/projects/411088072/about). </li>
-<li>Navigate to <code>$HOME/bin</code> and download dataset: <code>bs download project -i &lt;project_id&gt; --extension=fastq.gz -o /local/output/path</code>.   </li>
-<li>Navigate to the output path and move all files out of subdirectories: <code>mv */* .</code> </li>
+</ol>
+<p>Download data from each run to desired output path: </p>
+<ol>
+<li>Find the Run ID of desired download: Within Sequence Hub, navigate to Runs and select the desired run. The Run ID is in the webpage handle (e.g., https://basespace.illumina.com/run/123456789/details). </li>
+</ol>
+<p><img alt="" src="https://github.com/GMGI-Fisheries/resources/blob/master/img/Data_To_Server_basespace_runsPage.png?raw=true" /></p>
+<ol>
+<li>Navigate to <code>cd $HOME/bin</code> and download dataset: <code>bs download run -n run_name --extension=fastq.gz -o /local/output/path</code>. Replace <code>run_name</code> with the exact name of the run on BaseSpace.  </li>
+<li>Navigate to the output path <code>cd /local/output/path</code> and move all files out of subdirectories: <code>mv */* .</code> </li>
+</ol>
+<h2 id="globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc">Globus to NU Discovery Cluster or GMGI in-house HPC</h2>
+<p>External sequencing centers (e.g., UConn) will share data via Globus. Instructions from NU on <a href="https://rc-docs.northeastern.edu/en/latest/datamanagement/transferringdata.html">transfering data</a> and using <a href="https://rc-docs.northeastern.edu/en/latest/datamanagement/globus.html#using-globus">Globus</a>. Globus works by transferring data between 'endpoints'. NU's endpoint is called Discovery Cluster which is searchable but our in-house GMGI endpoint needs to be created for each user. </p>
+<p>Globus instructions: [https://docs.globus.org/globus-connect-server/v5.4/quickstart/]. Create a Globus account prior to instructions below. If transferring to NU, user needs to connect their NU account to their Globus account (see above NU instructions for this step). </p>
+<p>GMGI endpoint set-up (only need to do this once):<br />
+1. Navigate to the globusconnectpersonal-3.2.2 module that is already downloaded on GMGI's in-house server: <code>cd /data/resources/app_modules/globusconnectpersonal-3.2.2</code>.<br />
+2. Set-up an endpoint: <code>./globusconnectpersonal -setup --no-gui</code><br />
+3. This will then ask you to click on a log-in link. Once logged in, you receive a authorization code. Paste that in your terminal window where it asked for this code.
+4. Name your endpoint with your own user (change this to your first and last name): <code>user.name</code><br />
+5. If successfully, globus will output: </p>
+<div class="highlight"><pre><span></span><code>Input a value for the Endpoint Name: user.name
+
+registered new endpoint, id: [unique ID to you]
+
+setup completed successfully
+</code></pre></div>
+<p>Start Globus transfer:<br />
+1. [GMGI only] Navigate to the globusconnectpersonal-3.2.2 module that is already downloaded on GMGI's in-house server: <code>cd /data/resources/app_modules/globusconnectpersonal-3.2.2</code>.
+2. [GMGI only] Activate personal endpoint: <code>./globusconnectpersonal -start &amp;</code><br />
+3. [GMGI only] Your <code>user.name</code> endpoint will now appear as an option on the Globus online interface. <br />
+4. Log into Globus and Navigate to 'Collections' on the left hand panel. Confirm that your GMGI endpoint is activated (green icon):</p>
+<p><img alt="" src="https://github.com/GMGI-Fisheries/resources/blob/master/img/Data_To_Server_Globus_endpoints.png?raw=true" /></p>
+<ol>
+<li>Select the 'File Manager' on the left hand panel. Choose the sequencing center endpoint in the left side and the server end point on the right side. NU's Discovery Cluster is searchable but GMGI endpoint will the user.name set up in previous steps. </li>
+</ol>
+<p><img alt="" src="https://github.com/GMGI-Fisheries/resources/blob/master/img/Data_To_Server_Globus_transfer.png?raw=true" /></p>
+<ol>
+<li>Select all files that you want to transfer.  </li>
+<li>Select Start to begin the transfer.  </li>
+<li>Check the status of a transfer by selecting 'Activity' on the left hand panel.  </li>
+<li>[GMGI only] Once transfer is complete, deactivate the endpoint: <code>./globusconnectpersonal -stop</code>. </li>
+</ol>
+<h2 id="hpc-to-personal-computer-or-vice-versa">HPC to personal computer or vice versa</h2>
+<p>Users can do this via Globus or 'scp' (secure copy paste) commands detailed below. <a href="https://rc-docs.northeastern.edu/en/latest/datamanagement/transferringdata.html#transfer-data">NU instructions on transfer via terminal</a>. Make sure you're using "xfer.discovery.neu.edu" for the discovery cluster and not login.discovery.neu.edu, or you'll get an email warning you that you're using too much CPU!</p>
+<p>For all the below code, change content in &lt;&gt; and then delete the &lt;&gt;. All commands need to be run in own terminal and not logged onto either server. </p>
+<p>Transfer a file:
+- To NU from personal computer: <code>scp &lt;filename and path&gt; &lt;username&gt;@xfer.discovery.neu.edu:/path/</code> <br />
+- To personal computer from NU: <code>scp &lt;username&gt;@xfer.discovery.neu.edu:/path/ /output/path/</code>   </p>
+<p>Transfer a directory (a.k.a., repository) to personal computer from NU: <code>scp -r &lt;username&gt;@xfer.discovery.neu.edu:/path/ /output/path/</code>    </p>
+<p>To transfer directly from GMGI to NU or vice versa, use Globus. </p>
+<h2 id="aws-back-up">AWS Back-up</h2>
+<p>AWS is our Amazon Web Services S3 cloud-based storage to backup data long-term data storage and back-up. GMGI uploads data from our in-house server to AWS.</p>
+<p>What should be backed up:<br />
+- Raw data files such as fastq files directly from the sequencer<br />
+- Final result data files (i.e. count table, assemblies, etc.)  </p>
+<ol>
+<li>Make sure all files are compressed by:  </li>
+<li>Gzip all fastq files (e.g., raw data, trimmed data), .fasta/.fa files (e.g., reference genomes), and large .txt files (e.g., intermediate files created during analysis): <code>gzip *.fastq</code> or create a slurm array with a sbatch script.  </li>
+<li><a href="https://www.genozip.com/standard">Genozip</a> all .bam, .sam, .vcf files (e.g., intermediate files created during analysis). Genozip program is downloaded NU in <code>/work/gmgi/packages/</code> for general use.  </li>
+</ol>
+<p><strong>Prior to AWS back-up, check with Tim or Emma for approval of files and compression.</strong> </p>
+<ol>
+<li>Create a new screen session called AWS_tar (user can change this name to desired): <code>tmux new -s AWS_tar</code>  </li>
+<li>Create a txt file with file sizes of all desired input: <code>ls -l *gz &gt; file_size.txt</code>  </li>
+<li>Edit this file to be only file sizes and names: <code>awk '{print $5,$9}' file_size.txt &gt; file_size_edited.txt</code>  </li>
+<li>View this edited file: <code>head file_size_edited.txt</code></li>
+</ol>
+<div class="highlight"><pre><span></span><code>11400971821 Mae-263_S1_R1_001.fastq.gz
+
+12253428145 Mae-263_S1_R2_001.fastq.gz
+
+11962611469 Mae-266_S2_R1_001.fastq.gz
+
+12839131166 Mae-266_S2_R2_001.fastq.gz
+
+9691926610 Mae-274_S3_R1_001.fastq.gz
+</code></pre></div>
+<ol>
+<li>Sum the first column: <code>awk '{sum += $1} END {print sum}' file_size_edited.txt</code>. This value is in Byte (B), but convert to MB or TB for a more helpful value to work with. It's important to know the size of the data you are working for storage and cost purposes. Backing up to AWS costs $$/monthly based on TBs stored and our HPC systems have max TB storage limitations.  </li>
+<li>Tar all desired data to result in on zipped file: <code>tar -czvf HaddockEpiAge1_rawData_20231113.tar.gz ./*fastq.gz</code>. Tar file name needs to be a unique identifier that includes project name, date, and description of the files included.  </li>
+<li>Detach from a session: Press Ctrl+B, release, and then press D. This tar function will take awhile especially for large datasets.  </li>
+<li>Reopen/attach a detached session: <code>tmux attach-session -t AWS_tar</code>.  </li>
+<li>Check the tar file size: <code>ls -lha</code>. Example output: <code>-rw-rw-r--. 1 estrand science 1736366676523 Nov 15 17:54 HaddockEpiAge1_rawData_20231113.tar.gz</code>. This 1736366676523 value is the size in B which should match exactly the sum of all input file sizes calculated previously.   </li>
+<li>Once this tar function is complete, end a tmux session (forever - not just detached): In the attached session, type exit and press enter. Or press Ctrl+D.  </li>
+<li>Move the packed tar archive file to AWS transfer folder: <code>mv HaddockEpiAge1_rawData_20231113.tar.gz /data/prj/AWS-transfers</code>.  </li>
+<li>Notify Jen that there is a transfer waiting so she can move this to AWS services and then remove from the /AWS-transfers folder. </li>
 </ol>
 
 
