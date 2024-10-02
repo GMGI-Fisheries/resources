@@ -12,16 +12,18 @@ editor_options:
   chunk_output_type: inline
 ---
 
+**.Rmd script** 
+
 This script takes your Blast output from the GMGI database, Mitofish database, and NCBI database to create one datatable with read counts and taxonomic assignment.  
 
 **Workflow summary:**  
-1. Load libraries  
-2. Load metadata   
-3. Load BLAST output from GMGI, Mitofish, and NCBI   
-4. Load DADA2 ASV Table   
-5. Taxonomic Assignment
-- 5a. Identify ASVs with multiple hits from GMGI's database  
-- 5b. Identify entries that mismatch between GMGI, Mitofish, and NCBI databases  
+1. Load libraries   
+2. Load metadata     
+3. Load BLAST output from GMGI, Mitofish, and NCBI     
+4. Load DADA2 ASV Table    
+5. Taxonomic Assignment  
+- 5a. Identify ASVs with multiple hits from GMGI's database    
+- 5b. Identify entries that mismatch between GMGI, Mitofish, and NCBI databases   
 - 5c. Assign taxonomy based on hierarchical approach  
 - 5d. Edit taxonomy annotations based on mismatch table choices  
 - 5e. Adjusting common name and category for those entries that don't have one (from Mito or NCBI)  
@@ -192,11 +194,11 @@ ASV_rank_list <- ASV_table %>% dplyr::select(ASV_ID, ASV_sum, ASV_rank)
 Identifying where NCBI, Mito, and GMGI disagree on tax assignment. With the hierarchial approach, ASVs that match to GMGI and several other databases will only result in GMGI assignment. By reviewing this df, we can be sure we aren't missing an assignment in our GMGI curated database. 
 
 **Sub-workflow:**  
-1. Identify any ASVs that contain multiple hits within the GMGI database.
-2. Identify entries that mismatch between GMGI, Mitofish, and NCBI databases.
-3. Assign taxonomy based on hierarchical approach.
-4. Edit taxonomy annotations based on mismatch table.  
-5. Adjusting common name for those entries that don't have one (from Mito or GMGI). 
+1. Identify any ASVs that contain multiple hits within the GMGI database.  
+2. Identify entries that mismatch between GMGI, Mitofish, and NCBI databases.  
+3. Assign taxonomy based on hierarchical approach.  
+4. Edit taxonomy annotations based on mismatch table.    
+5. Adjusting common name for those entries that don't have one (from Mito or GMGI).   
 
 ## Identify any ASVs that contain multiple hits within the GMGI database
 

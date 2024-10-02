@@ -819,6 +819,7 @@
 
 
 <h1 id="datatable-preparation-base-script-for-edna-metabarcoding">Datatable preparation base script for eDNA metabarcoding</h1>
+<p><strong>.Rmd script</strong></p>
 <p>This script takes your Blast output from the GMGI database, Mitofish
 database, and NCBI database to create one datatable with read counts and
 taxonomic assignment.</p>
@@ -827,8 +828,8 @@ taxonomic assignment.</p>
 2. Load metadata<br />
 3. Load BLAST output from GMGI, Mitofish, and NCBI<br />
 4. Load DADA2 ASV Table<br />
-5. Taxonomic Assignment - 5a. Identify ASVs with multiple hits from
-GMGI’s database<br />
+5. Taxonomic Assignment<br />
+- 5a. Identify ASVs with multiple hits from GMGI’s database<br />
 - 5b. Identify entries that mismatch between GMGI, Mitofish, and NCBI
 databases<br />
 - 5c. Assign taxonomy based on hierarchical approach<br />
@@ -999,9 +1000,11 @@ can be sure we aren’t missing an assignment in our GMGI curated
 database.</p>
 <p><strong>Sub-workflow:</strong><br />
 1. Identify any ASVs that contain multiple hits within the GMGI
-database. 2. Identify entries that mismatch between GMGI, Mitofish, and
-NCBI databases. 3. Assign taxonomy based on hierarchical approach. 4.
-Edit taxonomy annotations based on mismatch table.<br />
+database.<br />
+2. Identify entries that mismatch between GMGI, Mitofish, and NCBI
+databases.<br />
+3. Assign taxonomy based on hierarchical approach.<br />
+4. Edit taxonomy annotations based on mismatch table.<br />
 5. Adjusting common name for those entries that don’t have one (from
 Mito or GMGI).</p>
 <h2 id="identify-any-asvs-that-contain-multiple-hits-within-the-gmgi-database">Identify any ASVs that contain multiple hits within the GMGI database</h2>
