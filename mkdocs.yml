@@ -36,10 +36,10 @@ nav:
 
   - Computing Best Practices: 'test.md'
   - 'Computing Hardware':
-    - GMGI: 'test.md'
-    - Northeastern University: 'test.md'  
-  - Computing Beginner Resources: 'test.md'
-  - Data Management: 'test.md'
+    - GMGI: 'Computing_GMGI.md'
+    - Northeastern University: 'Computing_NU.md'  
+  - Computing Beginner Resources: 'tbd.md'
+  - Data Management: 'tbd.md'
   - Data Transfer: 'Data_To_Server.md'
   - 'eDNA: metabarcoding':
     - 01-ampliseq-12S-Riaz: 'eDNA/01-Metabarcoding ampliseq 12S Riaz.md'
