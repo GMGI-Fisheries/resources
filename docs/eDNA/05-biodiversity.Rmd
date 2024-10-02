@@ -102,10 +102,10 @@ https://microbiome.github.io/tutorials/Alphadiversity.html
 ```{r}
 alpha <- microbiome::alpha(phylo_obj) %>%
   ## moving rownames to a column 
-  rownames_to_column(var = "SampleID") %>% 
+  rownames_to_column(var = "sampleID") %>% 
   
   ## merge with metadata 
-  right_join(meta, ., by = "SampleID")
+  right_join(meta, ., by = "sampleID")
 ```
 
 ## Plotting

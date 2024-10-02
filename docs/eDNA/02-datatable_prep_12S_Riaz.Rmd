@@ -22,11 +22,11 @@ This script takes your Blast output from the GMGI database, Mitofish database, a
 3. Load BLAST output from GMGI, Mitofish, and NCBI     
 4. Load DADA2 ASV Table    
 5. Taxonomic Assignment  
-- 5a. Identify ASVs with multiple hits from GMGI's database    
-- 5b. Identify entries that mismatch between GMGI, Mitofish, and NCBI databases   
-- 5c. Assign taxonomy based on hierarchical approach  
-- 5d. Edit taxonomy annotations based on mismatch table choices  
-- 5e. Adjusting common name and category for those entries that don't have one (from Mito or NCBI)  
+  - 5a. Identify ASVs with multiple hits from GMGI's database    
+  - 5b. Identify entries that mismatch between GMGI, Mitofish, and NCBI databases   
+  - 5c. Assign taxonomy based on hierarchical approach  
+  - 5d. Edit taxonomy annotations based on mismatch table choices  
+  - 5e. Adjusting common name and category for those entries that don't have one (from Mito or NCBI)  
 6. Filtering: Filter ASV by less than 0.1% reads and then collapse by group  
 7. Collapsing read counts by species name  
 8. Creating results output 

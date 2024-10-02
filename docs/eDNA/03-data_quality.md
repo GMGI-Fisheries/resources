@@ -1,39 +1,72 @@
----
-title: "Metabarcoding data quality: eDNA metabarcoding base script"
-output:
-  github_document: default
-  pdf_document:
-    keep_tex: yes
-  html_document:
-    toc: yes
-    toc_depth: 6
-    toc_float: yes
-editor_options: 
-  chunk_output_type: inline
----
+Metabarcoding data quality: eDNA metabarcoding base script
+================
 
-This script evaluates your sequence quality and taxonomic assignment quality. Figures produced in this script can go into supplemental data for a manuscript. 
+This script evaluates your sequence quality and taxonomic assignment
+quality. Figures produced in this script can go into supplemental data
+for a manuscript.
 
 # Load libraries
 
-```{r}
+``` r
 library(dplyr) # for data transformation
+```
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
 library(tidyverse) # for data transformation
+```
+
+    ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+    ## ✔ forcats   1.0.0     ✔ readr     2.1.5
+    ## ✔ ggplot2   3.5.1     ✔ stringr   1.5.1
+    ## ✔ lubridate 1.9.3     ✔ tibble    3.2.1
+    ## ✔ purrr     1.0.2     ✔ tidyr     1.3.1
+
+    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
+    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+``` r
 library(ggplot2) # for plotting
 library(readxl) ## for reading in excel files
 library(viridis)
+```
+
+    ## Loading required package: viridisLite
+
+``` r
 library(hrbrthemes)
 library(ggrepel)
 library(cowplot)
+```
 
+    ## 
+    ## Attaching package: 'cowplot'
+    ## 
+    ## The following object is masked from 'package:lubridate':
+    ## 
+    ##     stamp
+
+``` r
 # removing scientific notation
 ## remove line or comment out if not desired 
 options(scipen=999)
 ```
 
-# Load data 
+# Load data
 
-```{r}
+``` r
 ### User edits:
 ### 1. Replace the 3 paths below: edit example_input to your project specific path 
 ### 2. Confirm your sampleIDs match between metadata, results df, and filtering stats output
@@ -53,11 +86,11 @@ ASV_breakdown <- read_xlsx("example_output/ASV_breakdown.xlsx") %>%
 
 # Sequence data
 
-## Data Transformation 
+## Data Transformation
 
-No user edits. 
+No user edits.
 
-```{r}
+``` r
 df <- full_join(filtering_stats, meta, by = "sampleID") %>%
   # filtering out columns we don't need 
   dplyr::select(-cutadapt_reverse_complemented) %>%
@@ -72,11 +105,11 @@ df <- full_join(filtering_stats, meta, by = "sampleID") %>%
   gather("measure", "value", 2:10)  
 ```
 
-## Plotting 
+## Plotting
 
-Suggested webpage to choose colors: https://coolors.co/
+Suggested webpage to choose colors: <https://coolors.co/>
 
-```{r}
+``` r
 ### User edits:
 ### 1. Change paths of output to desired folder (data/figures is suggested data structure)
 ### 2. Change x axis and color, size based on metadata desired 
@@ -114,22 +147,30 @@ df %>%
         axis.text.x = element_text(angle = 45, hjust = 1),
         axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=11, face="bold"),
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=11, face="bold"))
+```
 
+![](03-data_quality_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+``` r
 ggsave("example_output/Figures/SampleReport_FilteringStats.png", width = 10, height=8)
 ```
 
-
 # Plot unassigned taxonomy
 
-## Data transformation 
+## Data transformation
 
 No user edits.
 
-```{r}
+``` r
 results_summary <- results %>% 
   group_by(Category, Project) %>%
   summarise(sum_reads = sum(reads))
+```
 
+    ## `summarise()` has grouped output by 'Category'. You can override using the
+    ## `.groups` argument.
+
+``` r
 general_stats <- results %>% 
   group_by(Category) %>%
   summarise(sum_reads = sum(reads)) %>% ungroup() %>%
@@ -137,7 +178,21 @@ general_stats <- results %>%
          percent = sum_reads/total*100) %>% dplyr::select(Category, percent) %>% distinct() %>%
   ## round to 2 decimal places 
   mutate(across(c('percent'), round, 4))
+```
 
+    ## Warning: There was 1 warning in `mutate()`.
+    ## ℹ In argument: `across(c("percent"), round, 4)`.
+    ## Caused by warning:
+    ## ! The `...` argument of `across()` is deprecated as of dplyr 1.1.0.
+    ## Supply arguments directly to `.fns` through an anonymous function instead.
+    ## 
+    ##   # Previously
+    ##   across(a:b, mean, na.rm = TRUE)
+    ## 
+    ##   # Now
+    ##   across(a:b, \(x) mean(x, na.rm = TRUE))
+
+``` r
 ASV_summary <- ASV_breakdown %>%
   group_by(Category) %>%
   summarise(count = n_distinct(ASV_ID))
@@ -150,12 +205,11 @@ species_summary <- results %>%
 ## metadata option add-in
 ```
 
+## Raw Reads Plotting
 
-## Raw Reads Plotting 
+With metadata
 
-With metadata 
-
-```{r}
+``` r
 ### User edits:
 ### 1. Change paths of output to desired folder (data/figures is suggested data structure)
 ### 2. Change x axis and color, size based on metadata desired 
@@ -164,6 +218,12 @@ With metadata
 
 # Check how many categories 
 unique(results_summary$Category)
+```
+
+    ## [1] Human        Livestock    unassigned   Teleost Fish
+    ## 9 Levels: Human Livestock Other unassigned Bird Elasmobranch ... Teleost Fish
+
+``` r
 ## Based on this output, comment/uncomment the categories present for color 
 
 ggplot(results_summary, aes(fill=Category, y=sum_reads, x=Project)) + 
@@ -187,16 +247,19 @@ ggplot(results_summary, aes(fill=Category, y=sum_reads, x=Project)) +
         axis.text.x = element_text(angle = 45, hjust = 1),
         axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=11, face="bold"),
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=11, face="bold"))
+```
 
+![](03-data_quality_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+``` r
 ## add % stacked as well
 
 ggsave("example_output/Figures/Rawreads_percategory.png", width = 8, height = 5)
 ```
 
+Reads Piechart
 
-Reads Piechart 
-
-```{r}
+``` r
 ### User edits:
 ### 1. Change paths of output to desired folder (data/figures is suggested data structure)
 ### 2. Change scale brewer color if desired 
@@ -228,10 +291,9 @@ piechart_reads <- general_stats %>%
   xlab("") + ylab("") + labs(fill = "Category")
 ```
 
+ASV Piechart
 
-ASV Piechart 
-
-```{r}
+``` r
 ### User edits:
 ### 1. Change paths of output to desired folder (data/figures is suggested data structure)
 ### 2. Change scale brewer color if desired 
@@ -263,9 +325,9 @@ piechart_ASV <- ASV_summary %>%
   xlab("") + ylab("") + labs(fill = "Category")
 ```
 
-Number of species pie chart 
+Number of species pie chart
 
-```{r}
+``` r
 piechart_spp <- species_summary %>%  
   mutate(csum = rev(cumsum(rev(count))), 
          pos = count/2 + lead(csum, 1),
@@ -292,33 +354,18 @@ piechart_spp <- species_summary %>%
   xlab("") + ylab("") + labs(fill = "Category")
 ```
 
-Plot together and export 
+Plot together and export
 
-```{r}
+``` r
 plot_grid(piechart_reads, piechart_ASV, piechart_spp, 
           ncol=3, 
           rel_widths = c(2,2,3.075) 
           #align = "hv"
           )
-
-ggsave("example_output/Category_breakdown.png", width=10, height=4)
 ```
 
+![](03-data_quality_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+``` r
+ggsave("example_output/Category_breakdown.png", width=10, height=4)
+```
