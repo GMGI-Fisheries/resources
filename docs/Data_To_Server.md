@@ -3,9 +3,9 @@
 Goal: Download .fastq files from sequencing center to HPC.
 
 #### Table of Contents
-- [GMGI in-house sequencing to HPC](#Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC)
-- [External sequencing to HPC](#Globus to NU Discovery Cluster or GMGI in-house HPC-content)
-- [HPC to HPC](#GMGI in-house to NU HPC)
+- [GMGI in-house sequencing to HPC]((#illumina-basespace-to-nu-discovery-cluster-or-gmgi-in-house-hpc))
+- [External sequencing to HPC](#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc)
+- [HPC to HPC](#gmgi-in-house-to-nu-hpc)
 
 ## Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC
 
