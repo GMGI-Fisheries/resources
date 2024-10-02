@@ -1,12 +1,15 @@
 # Downloading sequencing data to servers
 
-Goal: Download .fastqc files from sequencing center to HPC.
+Goal: Download .fastq files from sequencing center to HPC.
 
-## Illumina BaseSpace to HPC
+#### Table of Contents
+- [GMGI in-house sequencing to HPC](#Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC)
+- [External sequencing to HPC](#Globus to NU Discovery Cluster or GMGI in-house HPC-content)
+- [HPC to HPC](#GMGI in-house to NU HPC)
 
-https://developer.basespace.illumina.com/docs/content/documentation/cli/cli-overview#InstallBaseSpaceSequenceHubCLI
+## Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC
 
-### NU Discovery Cluster or GMGI in-house 
+[Illumina BaseSpace CLI instructions](https://developer.basespace.illumina.com/docs/content/documentation/cli/cli-overview#InstallBaseSpaceSequenceHubCLI)
 
 Connecting your user to Illumina BaseSpace:  
 
@@ -27,5 +30,13 @@ Download data from each run to desired output path:
 7. Navigate to `cd $HOME/bin` and download dataset: `bs download run -n run_name --extension=fastq.gz -o /local/output/path`. Replace `run_name` with the exact name of the run on BaseSpace.  
 8. Navigate to the output path `cd /local/output/path` and move all files out of subdirectories: `mv */* .` 
 
-## UConn to HPC via Globus 
+## Globus to NU Discovery Cluster or GMGI in-house HPC 
+
+External sequencing centers (e.g., UConn) will share data via Globus. Instructions from NU on [transfering data](https://rc-docs.northeastern.edu/en/latest/datamanagement/transferringdata.html) and using [Globus](https://rc-docs.northeastern.edu/en/latest/datamanagement/globus.html#using-globus). Globus works by transferring data between 'endpoints'. NU's endpoint is called Discovery Cluster which is searchable but our in-house GMGI endpoint needs to be created for each user. 
+
+GMGI endpoint set-up (if using NU cluster, skip to next section):  
+1. 
+
+
+## GMGI in-house to NU HPC 
 
