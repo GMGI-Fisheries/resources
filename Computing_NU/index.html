@@ -1138,13 +1138,15 @@
 <div class="highlight"><pre><span></span><code>ssh username@login.discovery.neu.edu
 </code></pre></div>
 <h2 id="server-structure">Server structure</h2>
-<p>We have a 30 TB maximum in our working space <code>/work/gmgi</code>:<br />
-- Each lab has their own subfolder that serves as their storage and working space (e.g., <code>work/gmgi/Fisheries/</code>).<br />
-- <code>databases/</code>: Shared folder for common databases for amplicon sequencing (i.e., 12S, 16S, 18S, COI) and NCBI nt database. View the README file for databases sources.
-- <code>containers/</code>: Shared folder for custom built containers.<br />
-- <code>packages/</code>: Shared folder for programs downloaded for all users.<br />
-- <code>miniconda3/</code> and <code>Miniconda3-latest-Linux-x86_64.sh</code>: Shared resource for building conda environments. Environments built here can be used by everyone. <em>Do not edit.</em><br />
-- <code>check_storage.sh</code>: Bash script built to calculate TB usage from each lab's folder and gmgi's work and output is <code>storage_summary_2024-09-23.txt</code> with the date calculated.</p>
+<p>We have a 30 TB maximum in our working space <code>/work/gmgi</code>:</p>
+<ul>
+<li>Each lab has their own subfolder that serves as their storage and working space (e.g., <code>work/gmgi/Fisheries/</code>).  </li>
+<li><code>databases/</code>: Shared folder for common databases for amplicon sequencing (i.e., 12S, 16S, 18S, COI) and NCBI nt database. View the README file for databases sources.</li>
+<li><code>containers/</code>: Shared folder for custom built containers.  </li>
+<li><code>packages/</code>: Shared folder for programs downloaded for all users.  </li>
+<li><code>miniconda3/</code> and <code>Miniconda3-latest-Linux-x86_64.sh</code>: Shared resource for building conda environments. Environments built here can be used by everyone. <em>Do not edit.</em>  </li>
+<li><code>check_storage.sh</code>: Bash script built to calculate TB usage from each lab's folder and gmgi's work and output is <code>storage_summary_2024-09-23.txt</code> with the date calculated.</li>
+</ul>
 <div class="highlight"><pre><span></span><code>[e.strand@login-00 ~]$ cd /work/gmgi
 [e.strand@login-00 gmgi]$ ls
 check_storage.sh  containers  databases  ecosystem-diversity  Fisheries  miniconda3  Miniconda3-latest-Linux-x86_64.sh  packages  storage_summary_2024-09-23.txt
@@ -1156,13 +1158,17 @@ eDNA  epiage  reference_genomes
 <h2 id="storage-rules">Storage rules</h2>
 <p>While analyzing data, NOT just at the end of a project!</p>
 <p>Raw data files are backed up on AWS services and on GMGI RHEL Gadus immediately upon receiving data. If working on NU cluster, once user is happy with data analysis pipeline, raw and final data is to be removed from NU cluster and only kept on AWS services or GMGI's RHEL server. </p>
-<p>Compressing files:<br />
-- Gzip all fastq files (e.g., raw data, trimmed data), .fasta/.fa files (e.g., reference genomes), and large .txt files (e.g., intermediate files created during analysis): <code>gzip *.fastq</code> or create a slurm array with a sbatch script.  <br />
-- <a href="https://www.genozip.com/standard">Genozip</a> all .bam, .sam, .vcf files (e.g., intermediate files created during analysis). Genozip has been downloaded in /work/gmgi/packages for general use.   </p>
-<p>Space-related commands:<br />
-- List all files within a directory and human-readable sizes (folder size is not total size of folder contents): <code>ls -lha</code><br />
-- Calculate total storage taken up by one directory (change path as needed): <code>du -shc .[^.]* /work/gmgi/fisheries</code>  <br />
-- In /work/gmgi/, there is a <code>check_storage.sh</code> bash script that will use the above commands to create a summary .txt file with the storage use of each team.  </p>
+<p>Compressing files:  </p>
+<ul>
+<li>Gzip all fastq files (e.g., raw data, trimmed data), .fasta/.fa files (e.g., reference genomes), and large .txt files (e.g., intermediate files created during analysis): <code>gzip *.fastq</code> or create a slurm array with a sbatch script.    </li>
+<li><a href="https://www.genozip.com/standard">Genozip</a> all .bam, .sam, .vcf files (e.g., intermediate files created during analysis). Genozip has been downloaded in /work/gmgi/packages for general use.   </li>
+</ul>
+<p>Space-related commands:  </p>
+<ul>
+<li>List all files within a directory and human-readable sizes (folder size is not total size of folder contents): <code>ls -lha</code>  </li>
+<li>Calculate total storage taken up by one directory (change path as needed): <code>du -shc .[^.]* /work/gmgi/fisheries</code>    </li>
+<li>In /work/gmgi/, there is a <code>check_storage.sh</code> bash script that will use the above commands to create a summary .txt file with the storage use of each team.  </li>
+</ul>
 <h2 id="nu-contacts-and-research-computing-help">NU Contacts and Research Computing Help</h2>
 <p>GMGI's two main contacts are: Greg Shomo (g.shomo@northeastern.edu) and Serena Caplins (s.caplins@northeastern.edu). </p>
 <p>If you need assistance, NU's support team is available at rchelp@northeastern.edu or consult the <a href="https://rc-docs.northeastern.edu/en/latest/faq.html#faq">Frequently Asked Questions (FAQs)</a>. Emailing the rchelp team will create a help ticket one of NU's team members will be assigned to your case. When creating a help ticket, CC Geoff Trussell (g.trussell@northeastern.edu) and Jon Grabowski (j.grabowski@northeastern.edu). </p>
@@ -1176,15 +1182,19 @@ eDNA  epiage  reference_genomes
 1. Interactive mode (immediate execution and feedback): <code>srun --pty bash</code> to claim a node and then utilize <code>bash scriptname.sh</code> to run a script.  <br />
 2. Batch jobs: using scripts to manage longer-running jobs: <code>sbatch scriptname.sh</code> to run a script.  </p>
 <p>Interactive mode would be equivalent to running a job directly in your terminal window without starting a tmux session. Using batch jobs and shell scripts would be similar to tmux session where you can turn off wifi, walk away, etc. Interactive requires you to stay connected. </p>
-<p>Introduction to Slurm scripts:  <br />
-- <a href="https://rc-docs.northeastern.edu/en/latest/slurmguide/index.html">Slurm - RC RTD (northeastern.edu)</a>   <br />
-- <a href="https://rc-docs.northeastern.edu/en/latest/best-practices/index.html">Best Practices - RC RTD (northeastern.edu)</a>    </p>
+<p>Introduction to Slurm scripts:    </p>
+<ul>
+<li><a href="https://rc-docs.northeastern.edu/en/latest/slurmguide/index.html">Slurm - RC RTD (northeastern.edu)</a>     </li>
+<li><a href="https://rc-docs.northeastern.edu/en/latest/best-practices/index.html">Best Practices - RC RTD (northeastern.edu)</a>    </li>
+</ul>
 <h2 id="packages-and-modules">Packages and modules</h2>
 <p>NU has some modules downloaded that are accessible for all users. Otherwise, larger packages should be installed in a conda environment by the user or simple packages can be downloaded to the <code>/work/gmgi/packages/</code> folder. Instructions for downloading to conda env: [https://rc-docs.northeastern.edu/en/latest/software/index.html]</p>
-<p>Common commands: <br />
-- To find already installed programs: <code>module avail</code>    <br />
-- To get information about a module: <code>module help [module/version]</code> or <code>module whatis [module/version]</code>. "help" will provide what the module is, package information including version and install date, and a link to the documentation/github. "whatis" will provide a short, one line description of the program.  <br />
-- To load a module: <code>module load [module/version]</code> (e.g., <code>module load bamUtil/v1.0.15</code>). Loading a module will put all the necessary executables and dependencies for that program in your path so you can call the commands from any location (i.e. your working directory).   </p>
+<p>Common commands:   </p>
+<ul>
+<li>To find already installed programs: <code>module avail</code>      </li>
+<li>To get information about a module: <code>module help [module/version]</code> or <code>module whatis [module/version]</code>. "help" will provide what the module is, package information including version and install date, and a link to the documentation/github. "whatis" will provide a short, one line description of the program.    </li>
+<li>To load a module: <code>module load [module/version]</code> (e.g., <code>module load bamUtil/v1.0.15</code>). Loading a module will put all the necessary executables and dependencies for that program in your path so you can call the commands from any location (i.e. your working directory).   </li>
+</ul>
 
 
 
