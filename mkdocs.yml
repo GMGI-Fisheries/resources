@@ -36,7 +36,7 @@ nav:
   - 'Computing Hardware':
     - GMGI: 'Computing_GMGI.md'
     - Northeastern University: 'Computing_NU.md'  
-  - Computing Beginner Resources: 'tbd.md'
+  - Computing Beginner Resources: 'Computing_Begin_Resources.md'
   - Data Management: 'tbd.md'
   - Data Transfer: 'Data_To_Server.md'
   - 'eDNA: metabarcoding':
