@@ -8,7 +8,7 @@ As GMGI's researchers, we have access to Northeastern's HPC resources through an
 
 Read the HPC resource documentation prior to getting started: [Research Computing - NURC RTD (northeastern.edu)](https://rc-docs.northeastern.edu/en/latest/welcome/index.html).
 
-![]()
+![](https://github.com/GMGI-Fisheries/resources/blob/master/img/NU_computing_resources.png?raw=true)
 
 ## Logging in
 
