@@ -65,16 +65,33 @@ Common commands:
 
 Replace "[module/version]" with the information for your module of interest, as it shows up in "module avail" list.
 
-## Running bioinformatic scripts 
+## Resource usage
 
-The GMGI RHEL does not currently have a job scheduler program so each user needs to be extremely careful with how much memory and resources their scripts take up. 
+The GMGI RHEL does not currently have a job scheduler program so each user needs to be extremely careful with how much memory and resources their scripts take up. RHEL has 128 processors (CPUs) that are available total so users need to split this. Users should use ~10-20 CPUs max at a time to allow other teams to use the server as well.
 
 Common commands:  
 - Check all jobs that are running: `top` and to exit that screen, click Q  
 - Check only our user: `top -u username` and to exit that screen, click Q  
 
-The most important aspects to watch are %CPU and %MEM. Users should use ~10-15 CPUs max 
+The most important aspects to watch are Job %CPU and %MEM, server %CPU, and load average. The load average is the average number of processes that are either running on the CPU or waiting for CPU time over the last 1, 5, and 15 minutes. 
+
+In the example below, user #1 is using a program called 'cd-hit' that is currently using 1598% CPU, which is the equivalent of using 16 CPU cores or processors. When running a job, this is the value that I would check on the most to make sure I'm not taking up the entire server. Programs will have different default CPU maximums so check default flags prior to running scripts. 
 
 ![](https://github.com/GMGI-Fisheries/resources/blob/master/img/GMGI_computing_top.png?raw=true)
 
+## Running a bioinformatic script 
 
+Using "tmux" terminal multiplexer will allow you to runs scripts in multiple windows within a single terminal window, and to jump back and forth between them. This also allows a user to start a script, log off and have that continue to run while the user's computer isn't connected to internet. This is also called using a 'screen' on other servers but screen was deprecated after RHEL7, and our system was upgraded from RHEL7 to RHEL8 OS in Sept. 2023.
+
+Common commands:   
+- Create a new session named "test": `tmux new -s test`  
+- Detach from a session: Press Ctrl+B, release, and then press D  
+- Reopen/attach a detached session: `tmux attach-session -t test`  
+- View and/or switch between sessions without detaching from tmux: Prese Ctrl+B, release, than press W. A list will appear and you can toggle between options using the up and down arrows. The select one, make sure it is highlighted and press Enter.  
+- End a tmux session (forever - not just detached): In the attached session, type `exit` and press enter. Or press Ctrl+D  
+
+Write everything in the tmux session to a text file: 
+- Output the history limit: `tmux display-message -p -F "#{history_limit}" -t test`  
+- Capture output to text file: `tmux capture-pane -Jp -S -### -t test > test.txt`. Replace the ### with the history limit above.  
+
+Note: the automatic limit is 2000 lines. If you know you're going to run verbose commands and want to be able to capture it all in a log file run the command below right before starting a new session (note must already have another session open): `tmux set-option -g history-limit 99999`
