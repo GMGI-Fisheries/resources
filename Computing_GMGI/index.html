@@ -1135,7 +1135,7 @@ prj  resources  usr  var
 <p>Replace "[module/version]" with the information for your module of interest, as it shows up in "module avail" list.</p>
 <h2 id="resource-usage">Resource usage</h2>
 <p>The GMGI RHEL does not currently have a job scheduler program so each user needs to be extremely careful with how much memory and resources their scripts take up. RHEL has 128 processors (CPUs) that are available total so users need to split this. Users should use CPU usage between 1-32 threads max at a time to allow other teams to use the server as well. </p>
-<p>Common commands:<br />
+<p>Common commands:  <br />
 - Check all jobs that are running: <code>top</code> and to exit that screen, click Q<br />
 - Check only our user: <code>top -u username</code> and to exit that screen, click Q  </p>
 <p>The most important aspects to watch are Job %CPU and %MEM, server %CPU, and load average. The load average is the average number of processes that are either running on the CPU or waiting for CPU time over the last 1, 5, and 15 minutes. </p>
@@ -1143,7 +1143,7 @@ prj  resources  usr  var
 <p><img alt="" src="https://github.com/GMGI-Fisheries/resources/blob/master/img/GMGI_computing_top.png?raw=true" /></p>
 <h2 id="running-a-bioinformatic-script">Running a bioinformatic script</h2>
 <p>Using "tmux" terminal multiplexer will allow you to runs scripts in multiple windows within a single terminal window, and to jump back and forth between them. This also allows a user to start a script, log off and have that continue to run while the user's computer isn't connected to internet. This is also called using a 'screen' on other servers but screen was deprecated after RHEL7, and our system was upgraded from RHEL7 to RHEL8 OS in Sept. 2023.</p>
-<p>Common commands: <br />
+<p>Common commands:   <br />
 - Create a new session named "test": <code>tmux new -s test</code><br />
 - Detach from a session: Press Ctrl+B, release, and then press D<br />
 - Reopen/attach a detached session: <code>tmux attach-session -t test</code><br />
