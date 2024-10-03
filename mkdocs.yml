@@ -31,15 +31,6 @@ markdown_extensions:
   - pymdownx.highlight
   - pymdownx.superfences
 
-plugins:
-  - search
-  - encryptcontent:
-    global_password: 'your_global_password'
-    title_prefix: '🔒 '
-    summary: 'This content is protected. Please enter the password to view it.'
-    placeholder: 'Enter password'
-    decryption_failure_message: 'Invalid password. Please try again.'
-
 nav:
   - Home: 'index.md'
 
