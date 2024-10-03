@@ -54,7 +54,9 @@ Fisheries folder (`work/gmgi/Fisheries/`) is split by the type of project. `refe
 eDNA  epiage  reference_genomes
 ```
 
-## Storage rules (while analyzing data, NOT just at the end of a project)
+## Storage rules
+
+While analyzing data, NOT just at the end of a project!
 
 Raw data files are backed up on AWS services and on GMGI RHEL Gadus immediately upon receiving data. If working on NU cluster, once user is happy with data analysis pipeline, raw and final data is to be removed from NU cluster and only kept on AWS services or GMGI's RHEL server. 
 
