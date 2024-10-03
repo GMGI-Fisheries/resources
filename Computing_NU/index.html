@@ -413,9 +413,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#storage-rules-while-analyzing-data-not-just-at-the-end-of-a-project" class="md-nav__link">
+  <a href="#storage-rules" class="md-nav__link">
     <span class="md-ellipsis">
-      Storage rules (while analyzing data, NOT just at the end of a project)
+      Storage rules
     </span>
   </a>
   
@@ -1011,9 +1011,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#storage-rules-while-analyzing-data-not-just-at-the-end-of-a-project" class="md-nav__link">
+  <a href="#storage-rules" class="md-nav__link">
     <span class="md-ellipsis">
-      Storage rules (while analyzing data, NOT just at the end of a project)
+      Storage rules
     </span>
   </a>
   
@@ -1109,7 +1109,8 @@ check_storage.sh  containers  databases  ecosystem-diversity  Fisheries  minicon
 <div class="highlight"><pre><span></span><code>[e.strand@login-00 Fisheries]$ ls
 eDNA  epiage  reference_genomes
 </code></pre></div>
-<h2 id="storage-rules-while-analyzing-data-not-just-at-the-end-of-a-project">Storage rules (while analyzing data, NOT just at the end of a project)</h2>
+<h2 id="storage-rules">Storage rules</h2>
+<p>While analyzing data, NOT just at the end of a project!</p>
 <p>Raw data files are backed up on AWS services and on GMGI RHEL Gadus immediately upon receiving data. If working on NU cluster, once user is happy with data analysis pipeline, raw and final data is to be removed from NU cluster and only kept on AWS services or GMGI's RHEL server. </p>
 <p>Compressing files:<br />
 - Gzip all fastq files (e.g., raw data, trimmed data), .fasta/.fa files (e.g., reference genomes), and large .txt files (e.g., intermediate files created during analysis): <code>gzip *.fastq</code> or create a slurm array with a sbatch script.  <br />
