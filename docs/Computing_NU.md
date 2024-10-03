@@ -8,6 +8,8 @@ As GMGI's researchers, we have access to Northeastern's HPC resources through an
 
 Read the HPC resource documentation prior to getting started: [Research Computing - NURC RTD (northeastern.edu)](https://rc-docs.northeastern.edu/en/latest/welcome/index.html).
 
+![]()
+
 ## Logging in
 
 Before creating an account with the NU Discovery Cluster, claim your Northeastern email and sponsored account.
