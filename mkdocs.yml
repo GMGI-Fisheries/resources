@@ -33,8 +33,6 @@ markdown_extensions:
 
 nav:
   - Home: 'index.md'
-
-  - Computing Best Practices: 'test.md'
   - 'Computing Hardware':
     - GMGI: 'Computing_GMGI.md'
     - Northeastern University: 'Computing_NU.md'  
@@ -53,7 +51,8 @@ nav:
     - 01-: 'PopGen/eDNA_01.md'
   - 'Epigenetic Aging':
     - 01-: 'EpiAge/eDNA_01.md'
-  
+  - 'Genome Assembly':
+    - coming soon!: 'tbd.md'
   - 'Laboratory Protocols':
     - 'eDNA metabarcoding':
       - 01-: 'eDNA/eDNA_01.md'
