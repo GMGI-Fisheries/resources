@@ -73,11 +73,11 @@ Space-related commands:
 
 GMGI's two main contacts are: Greg Shomo (g.shomo@northeastern.edu) and Serena Caplins (s.caplins@northeastern.edu). 
 
-If you need assistance, NU's support team is available at rchelp@northeastern.edu or consult the Frequently Asked Questions (FAQs): [https://rc-docs.northeastern.edu/en/latest/faq.html#faq]. Emailing the rchelp team will create a help ticket one of NU's team members will be assigned to your case. When creating a help ticket, CC Geoff Trussell (g.trussell@northeastern.edu) and Jon Grabowski (j.grabowski@northeastern.edu). 
+If you need assistance, NU's support team is available at rchelp@northeastern.edu or consult the [Frequently Asked Questions (FAQs)](https://rc-docs.northeastern.edu/en/latest/faq.html#faq). Emailing the rchelp team will create a help ticket one of NU's team members will be assigned to your case. When creating a help ticket, CC Geoff Trussell (g.trussell@northeastern.edu) and Jon Grabowski (j.grabowski@northeastern.edu). 
 
-RC Help hosts office hours to connect with RC staff and Graduate Research Assistants (GRAs) to ask questions about any RC-related questions that you might have (e.g., Setting up conda environments, Installing software, Optimizing the runtime of your sbatch scripts, Effectively using the Open onDemand website):
-- Wednesdays 3 pm - 4 pm: [zoom link](https://url2.mailanyone.net/scanner?m=1rzNQw-0008Ns-3f&d=4%7Cmail%2F90%2F1713906600%2F1rzNQw-0008Ns-3f%7Cin2e%7C57e1b682%7C28509242%7C14152682%7C6628242AF22ECB27DE9BAA81E1B29580&o=%2Fphto%3A%2Fntseertnstrhaso.zj.u%2Fom20%2F951142466&s=ruDKyxUNCNd62B7o2lO1X9v5I5U)
-- Thursdays 11 am - 12 pm: [zoom link](https://url2.mailanyone.net/scanner?m=1rzNQw-0008Ns-3f&d=4%7Cmail%2F90%2F1713906600%2F1rzNQw-0008Ns-3f%7Cin2e%7C57e1b682%7C28509242%7C14152682%7C6628242AF22ECB27DE9BAA81E1B29580&o=%2Fphto%3A%2Fntseertnstrhaso.zj.u%2Fom63%2F914254083&s=feG6PL708qP4uNB_somz55Vucz0)
+RC Help hosts office hours to connect with RC staff and Graduate Research Assistants (GRAs) to ask questions about any RC-related questions that you might have (e.g., Setting up conda environments, Installing software, Optimizing the runtime of your sbatch scripts, Effectively using the Open onDemand website):  
+- Wednesdays 3 pm - 4 pm: [zoom link](https://url2.mailanyone.net/scanner?m=1rzNQw-0008Ns-3f&d=4%7Cmail%2F90%2F1713906600%2F1rzNQw-0008Ns-3f%7Cin2e%7C57e1b682%7C28509242%7C14152682%7C6628242AF22ECB27DE9BAA81E1B29580&o=%2Fphto%3A%2Fntseertnstrhaso.zj.u%2Fom20%2F951142466&s=ruDKyxUNCNd62B7o2lO1X9v5I5U)  
+- Thursdays 11 am - 12 pm: [zoom link](https://url2.mailanyone.net/scanner?m=1rzNQw-0008Ns-3f&d=4%7Cmail%2F90%2F1713906600%2F1rzNQw-0008Ns-3f%7Cin2e%7C57e1b682%7C28509242%7C14152682%7C6628242AF22ECB27DE9BAA81E1B29580&o=%2Fphto%3A%2Fntseertnstrhaso.zj.u%2Fom63%2F914254083&s=feG6PL708qP4uNB_somz55Vucz0)  
 
 Ask 2-3 others at GMGI for assistance and/or attend office hours prior to creating a help ticket. We do not want to overwhelm the rchelp desk if we can troubleshoot internally first. GMGI has a #bioinformatics slack channel for this purpose.
 
@@ -91,9 +91,9 @@ Jobs are run either through:
 
 Interactive mode would be equivalent to running a job directly in your terminal window without starting a tmux session. Using batch jobs and shell scripts would be similar to tmux session where you can turn off wifi, walk away, etc. Interactive requires you to stay connected. 
 
-Introduction to Slurm scripts:  
-- [Slurm - RC RTD (northeastern.edu)](https://rc-docs.northeastern.edu/en/latest/slurmguide/index.html)   
-- [Best Practices - RC RTD (northeastern.edu)](https://rc-docs.northeastern.edu/en/latest/best-practices/index.html)  
+Introduction to Slurm scripts:    
+- [Slurm - RC RTD (northeastern.edu)](https://rc-docs.northeastern.edu/en/latest/slurmguide/index.html)     
+- [Best Practices - RC RTD (northeastern.edu)](https://rc-docs.northeastern.edu/en/latest/best-practices/index.html)    
 
 ## Packages and modules 
 
