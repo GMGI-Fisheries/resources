@@ -6,12 +6,13 @@ Shell: A shell is a command-line interface program that provides a user interfac
 Bash: short for Bourne-Again SHell, is a command-line shell and scripting language widely used in Unix-like operating systems, including Linux.     
 Linux/Unix: both operating systems that are used through a command line but Linux is an open-source version of Unix.  
 
-Tutorials: 
+Tutorials:   
+
 - [Bioinformatics | PNNL](https://www.pnnl.gov/explainer-articles/bioinformatics)   
 - [An Introduction to Linux Basics | DigitalOcean](https://www.digitalocean.com/community/tutorials/an-introduction-to-linux-basics)   
 - [The Bash Guide](https://guide.bash.academy/)   
-- [Introducing the Shell](http://swcarpentry.github.io/shell-novice/01-intro/)
-- [Introduction to the Command Line for Genomics](https://datacarpentry.org/shell-genomics/)
+- [Introducing the Shell](http://swcarpentry.github.io/shell-novice/01-intro/)  
+- [Introduction to the Command Line for Genomics](https://datacarpentry.org/shell-genomics/)  
 
 ## RStudio 
 

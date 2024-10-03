@@ -69,7 +69,7 @@ Replace "[module/version]" with the information for your module of interest, as 
 
 The GMGI RHEL does not currently have a job scheduler program so each user needs to be extremely careful with how much memory and resources their scripts take up. RHEL has 128 processors (CPUs) that are available total so users need to split this. Users should use CPU usage between 1-32 threads max at a time to allow other teams to use the server as well. 
 
-Common commands:  
+Common commands:    
 - Check all jobs that are running: `top` and to exit that screen, click Q  
 - Check only our user: `top -u username` and to exit that screen, click Q  
 
@@ -83,7 +83,7 @@ In the example below, user #1 is using a program called 'cd-hit' that is current
 
 Using "tmux" terminal multiplexer will allow you to runs scripts in multiple windows within a single terminal window, and to jump back and forth between them. This also allows a user to start a script, log off and have that continue to run while the user's computer isn't connected to internet. This is also called using a 'screen' on other servers but screen was deprecated after RHEL7, and our system was upgraded from RHEL7 to RHEL8 OS in Sept. 2023.
 
-Common commands:   
+Common commands:     
 - Create a new session named "test": `tmux new -s test`  
 - Detach from a session: Press Ctrl+B, release, and then press D  
 - Reopen/attach a detached session: `tmux attach-session -t test`  
