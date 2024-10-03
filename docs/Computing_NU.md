@@ -35,7 +35,8 @@ ssh username@login.discovery.neu.edu
 
 ## Server structure
 
-We have a 30 TB maximum in our working space `/work/gmgi`:  
+We have a 30 TB maximum in our working space `/work/gmgi`:
+
 - Each lab has their own subfolder that serves as their storage and working space (e.g., `work/gmgi/Fisheries/`).  
 - `databases/`: Shared folder for common databases for amplicon sequencing (i.e., 12S, 16S, 18S, COI) and NCBI nt database. View the README file for databases sources.
 - `containers/`: Shared folder for custom built containers.  
@@ -63,10 +64,12 @@ While analyzing data, NOT just at the end of a project!
 Raw data files are backed up on AWS services and on GMGI RHEL Gadus immediately upon receiving data. If working on NU cluster, once user is happy with data analysis pipeline, raw and final data is to be removed from NU cluster and only kept on AWS services or GMGI's RHEL server. 
 
 Compressing files:  
+
 - Gzip all fastq files (e.g., raw data, trimmed data), .fasta/.fa files (e.g., reference genomes), and large .txt files (e.g., intermediate files created during analysis): `gzip *.fastq` or create a slurm array with a sbatch script.    
 - [Genozip](https://www.genozip.com/standard) all .bam, .sam, .vcf files (e.g., intermediate files created during analysis). Genozip has been downloaded in /work/gmgi/packages for general use.   
 
 Space-related commands:  
+
 - List all files within a directory and human-readable sizes (folder size is not total size of folder contents): `ls -lha`  
 - Calculate total storage taken up by one directory (change path as needed): `du -shc .[^.]* /work/gmgi/fisheries`    
 - In /work/gmgi/, there is a `check_storage.sh` bash script that will use the above commands to create a summary .txt file with the storage use of each team.  
@@ -94,6 +97,7 @@ Jobs are run either through:
 Interactive mode would be equivalent to running a job directly in your terminal window without starting a tmux session. Using batch jobs and shell scripts would be similar to tmux session where you can turn off wifi, walk away, etc. Interactive requires you to stay connected. 
 
 Introduction to Slurm scripts:    
+
 - [Slurm - RC RTD (northeastern.edu)](https://rc-docs.northeastern.edu/en/latest/slurmguide/index.html)     
 - [Best Practices - RC RTD (northeastern.edu)](https://rc-docs.northeastern.edu/en/latest/best-practices/index.html)    
 
@@ -102,6 +106,7 @@ Introduction to Slurm scripts:
 NU has some modules downloaded that are accessible for all users. Otherwise, larger packages should be installed in a conda environment by the user or simple packages can be downloaded to the `/work/gmgi/packages/` folder. Instructions for downloading to conda env: [https://rc-docs.northeastern.edu/en/latest/software/index.html]
 
 Common commands:   
+
 - To find already installed programs: `module avail`      
 - To get information about a module: `module help [module/version]` or `module whatis [module/version]`. "help" will provide what the module is, package information including version and install date, and a link to the documentation/github. "whatis" will provide a short, one line description of the program.    
 - To load a module: `module load [module/version]` (e.g., `module load bamUtil/v1.0.15`). Loading a module will put all the necessary executables and dependencies for that program in your path so you can call the commands from any location (i.e. your working directory).   
