@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#downloading-sequencing-data-to-servers" class="md-skip">
+        <a href="#northeastern-university-computing-resources" class="md-skip">
           Skip to content
         </a>
       
@@ -395,36 +395,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#illumina-basespace-to-nu-discovery-cluster-or-gmgi-in-house-hpc" class="md-nav__link">
+  <a href="#logging-in" class="md-nav__link">
     <span class="md-ellipsis">
-      Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC
+      Logging in
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc" class="md-nav__link">
+  <a href="#server-structure" class="md-nav__link">
     <span class="md-ellipsis">
-      Globus to NU Discovery Cluster or GMGI in-house HPC
+      Server structure
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#hpc-to-personal-computer-or-vice-versa" class="md-nav__link">
+  <a href="#storage-rules-while-analyzing-data-not-just-at-the-end-of-a-project" class="md-nav__link">
     <span class="md-ellipsis">
-      HPC to personal computer or vice versa
+      Storage rules (while analyzing data, NOT just at the end of a project)
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#aws-back-up" class="md-nav__link">
+  <a href="#nu-contacts-and-research-computing-help" class="md-nav__link">
     <span class="md-ellipsis">
-      AWS Back-up
+      NU Contacts and Research Computing Help
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-a-bioinformatic-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running a bioinformatic script
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#packages-and-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      Packages and modules
     </span>
   </a>
   
@@ -975,36 +993,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#illumina-basespace-to-nu-discovery-cluster-or-gmgi-in-house-hpc" class="md-nav__link">
+  <a href="#logging-in" class="md-nav__link">
     <span class="md-ellipsis">
-      Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC
+      Logging in
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc" class="md-nav__link">
+  <a href="#server-structure" class="md-nav__link">
     <span class="md-ellipsis">
-      Globus to NU Discovery Cluster or GMGI in-house HPC
+      Server structure
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#hpc-to-personal-computer-or-vice-versa" class="md-nav__link">
+  <a href="#storage-rules-while-analyzing-data-not-just-at-the-end-of-a-project" class="md-nav__link">
     <span class="md-ellipsis">
-      HPC to personal computer or vice versa
+      Storage rules (while analyzing data, NOT just at the end of a project)
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#aws-back-up" class="md-nav__link">
+  <a href="#nu-contacts-and-research-computing-help" class="md-nav__link">
     <span class="md-ellipsis">
-      AWS Back-up
+      NU Contacts and Research Computing Help
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-a-bioinformatic-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running a bioinformatic script
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#packages-and-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      Packages and modules
     </span>
   </a>
   
@@ -1033,110 +1069,77 @@
   
 
 
-<h1 id="downloading-sequencing-data-to-servers">Downloading sequencing data to servers</h1>
-<p>Goal: Download .fastq files from sequencing center to HPC and/or move data between HPCs and personal computers.</p>
-<p>Table of Contents:<br />
-- <a href="#illumina-basespace-to-nu-discovery-cluster-or-gmgi-in-house-hpc">GMGI in-house sequencing to HPC</a>  <br />
-- <a href="#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc">External sequencing to HPC</a>  <br />
-- <a href="#hpc-to-personal-computer-or-vice-versa">HPC to Personal Computer</a><br />
-- <a href="#aws-back-up">HPC to AWS back-up</a>  </p>
-<p>To transfer data from HPC to HPC (e.g., GMGI to NU), use Globus instructions outlined in <a href="#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc">External sequencing to HPC</a>. </p>
-<h2 id="illumina-basespace-to-nu-discovery-cluster-or-gmgi-in-house-hpc">Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC</h2>
-<p><a href="https://developer.basespace.illumina.com/docs/content/documentation/cli/cli-overview#InstallBaseSpaceSequenceHubCLI">Illumina BaseSpace CLI instructions</a></p>
-<p>Connecting your user to Illumina BaseSpace:  </p>
-<p><em>Each user only needs to complete this once to set-up. If completed for previous projects, skip to downloading data steps.</em> </p>
+<h1 id="northeastern-university-computing-resources">Northeastern University Computing Resources</h1>
+<p>A high-performance computing resource for the Northeastern research community, the Discovery cluster is located in the <a href="https://www.mghpcc.org/">Massachusetts Green High Performance Computing Center</a> in Holyoke, Massachusetts.</p>
+<p>The Discovery cluster provides Northeastern researchers with access to more than 45,000 CPU cores and more than 400 GPUs. Connected to the university network over 10 Gbps Ethernet (GbE) for high-speed data transfer, Discovery provides 5 PB of available storage on a high-performance GPFS parallel file system. Compute nodes are connected with either 10 GbE or a high-performance HDR100 InfiniBand (IB) interconnect running at 200 Gbps, supporting all types and scales of computational workloads.</p>
+<p>As GMGI's researchers, we have access to Northeastern's HPC resources through an MOU established in Fall 2023. </p>
+<p>Read the HPC resource documentation prior to getting started: <a href="https://rc-docs.northeastern.edu/en/latest/welcome/index.html">Research Computing - NURC RTD (northeastern.edu)</a>.</p>
+<h2 id="logging-in">Logging in</h2>
+<p>Before creating an account with the NU Discovery Cluster, claim your Northeastern email and sponsored account.</p>
 <ol>
-<li>Create folder called bin: <code>mkdir $HOME/bin</code>  </li>
-<li>Download BaseSpace CLI: <code>wget "https://launch.basespace.illumina.com/CLI/latest/amd64-linux/bs" -O $HOME/bin/bs</code>  </li>
-<li>Change the file permissions to make the downloaded binary executable: <code>chmod u+x $HOME/bin/bs</code>  </li>
-<li>Authenticate your account: <code>bs auth</code>  </li>
-<li>Navigate to the webpage provided and authenticate use of BaseSpace CLI.  </li>
+<li>Log into (with the northeastern email and pw previously claimed): <a href="https://service.northeastern.edu/tech?id=tech_index_home">Home - Northeastern Tech Service Portal</a>.  </li>
+<li>Navigate to <a href="https://service.northeastern.edu/tech?id=sc_category&amp;sys_id=43a3aef7db45cdd0ca10819b13961998">High Performance Computing - Northeastern Tech Service Portal</a>.    </li>
+<li>Request an account (<a href="https://service.northeastern.edu/tech?id=sc_cat_item&amp;sys_id=0ae24596db535fc075892f17d496199c">Research Computing Access Request - Northeastern Tech Service Portal</a>). Fill out the form with your Northeastern email, and following options:  </li>
+<li>Select: I do not have access to Discovery. I am requesting a new account.  </li>
+<li>Affiliation with Northeastern University: Visiting Researcher (Greg says this answer doesn't really matter).   </li>
+<li>University Sponsor: Geoffrey Trusell  </li>
+<li>Gaussian: No (This is a specific program, if you don't know what it is, you don't need it).  </li>
+<li>Select: By clicking here, I acknowledge that I have read and agree to the following.  </li>
+<li>This triggers an email to Geoff Trusell to approve your account. Send an email to Geoff letting him know that you are activating your account that needs his approval.  </li>
+<li>Once Geoff approves the account sponsorship, then Greg and the computing team will finish setting up your account.</li>
 </ol>
-<p>Download data from each run to desired output path: </p>
-<ol>
-<li>Find the Run ID of desired download: Within Sequence Hub, navigate to Runs and select the desired run. The Run ID is in the webpage handle (e.g., https://basespace.illumina.com/run/123456789/details). </li>
-</ol>
-<p><img alt="" src="https://github.com/GMGI-Fisheries/resources/blob/master/img/Data_To_Server_basespace_runsPage.png?raw=true" /></p>
-<ol>
-<li>Navigate to <code>cd $HOME/bin</code> and download dataset: <code>bs download run -n run_name --extension=fastq.gz -o /local/output/path</code>. Replace <code>run_name</code> with the exact name of the run on BaseSpace.  </li>
-<li>Navigate to the output path <code>cd /local/output/path</code> and move all files out of subdirectories: <code>mv */* .</code> </li>
-</ol>
-<h2 id="globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc">Globus to NU Discovery Cluster or GMGI in-house HPC</h2>
-<p>External sequencing centers (e.g., UConn) will share data via Globus. Instructions from NU on <a href="https://rc-docs.northeastern.edu/en/latest/datamanagement/transferringdata.html">transfering data</a> and using <a href="https://rc-docs.northeastern.edu/en/latest/datamanagement/globus.html#using-globus">Globus</a>. Globus works by transferring data between 'endpoints'. NU's endpoint is called Discovery Cluster which is searchable but our in-house GMGI endpoint needs to be created for each user. </p>
-<p>Globus instructions: [https://docs.globus.org/globus-connect-server/v5.4/quickstart/]. Create a Globus account prior to instructions below. If transferring to NU, user needs to connect their NU account to their Globus account (see above NU instructions for this step). </p>
-<p>GMGI endpoint set-up (only need to do this once):<br />
-1. Navigate to the globusconnectpersonal-3.2.2 module that is already downloaded on GMGI's in-house server: <code>cd /data/resources/app_modules/globusconnectpersonal-3.2.2</code>.<br />
-2. Set-up an endpoint: <code>./globusconnectpersonal -setup --no-gui</code><br />
-3. This will then ask you to click on a log-in link. Once logged in, you receive a authorization code. Paste that in your terminal window where it asked for this code.
-4. Name your endpoint with your own user (change this to your first and last name): <code>user.name</code><br />
-5. If successfully, globus will output: </p>
-<div class="highlight"><pre><span></span><code>Input a value for the Endpoint Name: user.name
-
-registered new endpoint, id: [unique ID to you]
-
-setup completed successfully
+<p>You can operate on the Discovery Cluster in two ways:<br />
+1. via Linux operating system on your computer or ssh client<br />
+2. NU's Open On Demand (<a href="https://rc-docs.northeastern.edu/en/latest/using-ood/index.html">Open OnDemand (OOD) - RC RTD (northeastern.edu)</a>) GUI. <a href="https://rc-docs.northeastern.edu/en/latest/using-ood/accessingood.html#access-ood">Accessing Open OnDemand - RC RTD (northeastern.edu)</a>. With OOD interface, you can access plug-ins (i.e. RStudio) and launch the server from the web. Serena recommended using incognito window b/c OOD usually works better without the caching.</p>
+<div class="highlight"><pre><span></span><code>ssh username@login.discovery.neu.edu
 </code></pre></div>
-<p>Start Globus transfer:<br />
-1. [GMGI only] Navigate to the globusconnectpersonal-3.2.2 module that is already downloaded on GMGI's in-house server: <code>cd /data/resources/app_modules/globusconnectpersonal-3.2.2</code>.
-2. [GMGI only] Activate personal endpoint: <code>./globusconnectpersonal -start &amp;</code><br />
-3. [GMGI only] Your <code>user.name</code> endpoint will now appear as an option on the Globus online interface. <br />
-4. Log into Globus and Navigate to 'Collections' on the left hand panel. Confirm that your GMGI endpoint is activated (green icon):</p>
-<p><img alt="" src="https://github.com/GMGI-Fisheries/resources/blob/master/img/Data_To_Server_Globus_endpoints.png?raw=true" /></p>
-<ol>
-<li>Select the 'File Manager' on the left hand panel. Choose the sequencing center endpoint in the left side and the server end point on the right side. NU's Discovery Cluster is searchable but GMGI endpoint will the user.name set up in previous steps. </li>
-</ol>
-<p><img alt="" src="https://github.com/GMGI-Fisheries/resources/blob/master/img/Data_To_Server_Globus_transfer.png?raw=true" /></p>
-<ol>
-<li>Select all files that you want to transfer.  </li>
-<li>Select Start to begin the transfer.  </li>
-<li>Check the status of a transfer by selecting 'Activity' on the left hand panel.  </li>
-<li>[GMGI only] Once transfer is complete, deactivate the endpoint: <code>./globusconnectpersonal -stop</code>. </li>
-</ol>
-<h2 id="hpc-to-personal-computer-or-vice-versa">HPC to personal computer or vice versa</h2>
-<p>Users can do this via Globus or 'scp' (secure copy paste) commands detailed below. <a href="https://rc-docs.northeastern.edu/en/latest/datamanagement/transferringdata.html#transfer-data">NU instructions on transfer via terminal</a>. Make sure you're using "xfer.discovery.neu.edu" for the discovery cluster and not login.discovery.neu.edu, or you'll get an email warning you that you're using too much CPU!</p>
-<p>For all the below code, change content in &lt;&gt; and then delete the &lt;&gt;. All commands need to be run in own terminal and not logged onto either server. </p>
-<p>Transfer a file:
-- To NU from personal computer: <code>scp &lt;filename and path&gt; &lt;username&gt;@xfer.discovery.neu.edu:/path/</code> <br />
-- To personal computer from NU: <code>scp &lt;username&gt;@xfer.discovery.neu.edu:/path/ /output/path/</code>   </p>
-<p>Transfer a directory (a.k.a., repository) to personal computer from NU: <code>scp -r &lt;username&gt;@xfer.discovery.neu.edu:/path/ /output/path/</code>    </p>
-<p>To transfer directly from GMGI to NU or vice versa, use Globus. </p>
-<h2 id="aws-back-up">AWS Back-up</h2>
-<p>AWS is our Amazon Web Services S3 cloud-based storage to backup data long-term data storage and back-up. GMGI uploads data from our in-house server to AWS.</p>
-<p>What should be backed up:<br />
-- Raw data files such as fastq files directly from the sequencer<br />
-- Final result data files (i.e. count table, assemblies, etc.)  </p>
-<ol>
-<li>Make sure all files are compressed by:  </li>
-<li>Gzip all fastq files (e.g., raw data, trimmed data), .fasta/.fa files (e.g., reference genomes), and large .txt files (e.g., intermediate files created during analysis): <code>gzip *.fastq</code> or create a slurm array with a sbatch script.  </li>
-<li><a href="https://www.genozip.com/standard">Genozip</a> all .bam, .sam, .vcf files (e.g., intermediate files created during analysis). Genozip program is downloaded NU in <code>/work/gmgi/packages/</code> for general use.  </li>
-</ol>
-<p><strong>Prior to AWS back-up, check with Tim or Emma for approval of files and compression.</strong> </p>
-<ol>
-<li>Create a new screen session called AWS_tar (user can change this name to desired): <code>tmux new -s AWS_tar</code>  </li>
-<li>Create a txt file with file sizes of all desired input: <code>ls -l *gz &gt; file_size.txt</code>  </li>
-<li>Edit this file to be only file sizes and names: <code>awk '{print $5,$9}' file_size.txt &gt; file_size_edited.txt</code>  </li>
-<li>View this edited file: <code>head file_size_edited.txt</code></li>
-</ol>
-<div class="highlight"><pre><span></span><code>11400971821 Mae-263_S1_R1_001.fastq.gz
-
-12253428145 Mae-263_S1_R2_001.fastq.gz
-
-11962611469 Mae-266_S2_R1_001.fastq.gz
-
-12839131166 Mae-266_S2_R2_001.fastq.gz
-
-9691926610 Mae-274_S3_R1_001.fastq.gz
+<h2 id="server-structure">Server structure</h2>
+<p>We have a 30 TB maximum in our working space <code>/work/gmgi</code>:<br />
+- Each lab has their own subfolder that serves as their storage and working space (e.g., <code>work/gmgi/Fisheries/</code>).<br />
+- <code>databases/</code>: Shared folder for common databases for amplicon sequencing (i.e., 12S, 16S, 18S, COI) and NCBI nt database. View the README file for databases sources.
+- <code>containers/</code>: Shared folder for custom built containers.<br />
+- <code>packages/</code>: Shared folder for programs downloaded for all users.<br />
+- <code>miniconda3/</code> and <code>Miniconda3-latest-Linux-x86_64.sh</code>: Shared resource for building conda environments. Environments built here can be used by everyone. <em>Do not edit.</em><br />
+- <code>check_storage.sh</code>: Bash script built to calculate TB usage from each lab's folder and gmgi's work and output is <code>storage_summary_2024-09-23.txt</code> with the date calculated.</p>
+<div class="highlight"><pre><span></span><code>[e.strand@login-00 ~]$ cd /work/gmgi
+[e.strand@login-00 gmgi]$ ls
+check_storage.sh  containers  databases  ecosystem-diversity  Fisheries  miniconda3  Miniconda3-latest-Linux-x86_64.sh  packages  storage_summary_2024-09-23.txt
 </code></pre></div>
-<ol>
-<li>Sum the first column: <code>awk '{sum += $1} END {print sum}' file_size_edited.txt</code>. This value is in Byte (B), but convert to MB or TB for a more helpful value to work with. It's important to know the size of the data you are working for storage and cost purposes. Backing up to AWS costs $$/monthly based on TBs stored and our HPC systems have max TB storage limitations.  </li>
-<li>Tar all desired data to result in on zipped file: <code>tar -czvf HaddockEpiAge1_rawData_20231113.tar.gz ./*fastq.gz</code>. Tar file name needs to be a unique identifier that includes project name, date, and description of the files included.  </li>
-<li>Detach from a session: Press Ctrl+B, release, and then press D. This tar function will take awhile especially for large datasets.  </li>
-<li>Reopen/attach a detached session: <code>tmux attach-session -t AWS_tar</code>.  </li>
-<li>Check the tar file size: <code>ls -lha</code>. Example output: <code>-rw-rw-r--. 1 estrand science 1736366676523 Nov 15 17:54 HaddockEpiAge1_rawData_20231113.tar.gz</code>. This 1736366676523 value is the size in B which should match exactly the sum of all input file sizes calculated previously.   </li>
-<li>Once this tar function is complete, end a tmux session (forever - not just detached): In the attached session, type exit and press enter. Or press Ctrl+D.  </li>
-<li>Move the packed tar archive file to AWS transfer folder: <code>mv HaddockEpiAge1_rawData_20231113.tar.gz /data/prj/AWS-transfers</code>.  </li>
-<li>Notify Jen that there is a transfer waiting so she can move this to AWS services and then remove from the /AWS-transfers folder. </li>
-</ol>
+<p>Fisheries folder (<code>work/gmgi/Fisheries/</code>) is split by the type of project. <code>reference_genomes</code> includes .fasta reference files for organisms rather than a database (<code>Haddock_ref.fasta</code>). </p>
+<div class="highlight"><pre><span></span><code>[e.strand@login-00 Fisheries]$ ls
+eDNA  epiage  reference_genomes
+</code></pre></div>
+<h2 id="storage-rules-while-analyzing-data-not-just-at-the-end-of-a-project">Storage rules (while analyzing data, NOT just at the end of a project)</h2>
+<p>Raw data files are backed up on AWS services and on GMGI RHEL Gadus immediately upon receiving data. If working on NU cluster, once user is happy with data analysis pipeline, raw and final data is to be removed from NU cluster and only kept on AWS services or GMGI's RHEL server. </p>
+<p>Compressing files:<br />
+- Gzip all fastq files (e.g., raw data, trimmed data), .fasta/.fa files (e.g., reference genomes), and large .txt files (e.g., intermediate files created during analysis): <code>gzip *.fastq</code> or create a slurm array with a sbatch script.  <br />
+- <a href="https://www.genozip.com/standard">Genozip</a> all .bam, .sam, .vcf files (e.g., intermediate files created during analysis). Genozip has been downloaded in /work/gmgi/packages for general use.   </p>
+<p>Space-related commands:
+- List all files within a directory and human-readable sizes (folder size is not total size of folder contents): <code>ls -lha</code><br />
+- Calculate total storage taken up by one directory (change path as needed): <code>du -shc .[^.]* /work/gmgi/fisheries</code>  <br />
+- In /work/gmgi/, there is a <code>check_storage.sh</code> bash script that will use the above commands to create a summary .txt file with the storage use of each team.  </p>
+<h2 id="nu-contacts-and-research-computing-help">NU Contacts and Research Computing Help</h2>
+<p>GMGI's two main contacts are: Greg Shomo (g.shomo@northeastern.edu) and Serena Caplins (s.caplins@northeastern.edu). </p>
+<p>If you need assistance, NU's support team is available at rchelp@northeastern.edu or consult the Frequently Asked Questions (FAQs): [https://rc-docs.northeastern.edu/en/latest/faq.html#faq]. Emailing the rchelp team will create a help ticket one of NU's team members will be assigned to your case. When creating a help ticket, CC Geoff Trussell (g.trussell@northeastern.edu) and Jon Grabowski (j.grabowski@northeastern.edu). </p>
+<p>RC Help hosts office hours to connect with RC staff and Graduate Research Assistants (GRAs) to ask questions about any RC-related questions that you might have (e.g., Setting up conda environments, Installing software, Optimizing the runtime of your sbatch scripts, Effectively using the Open onDemand website):
+- Wednesdays 3 pm - 4 pm: <a href="https://url2.mailanyone.net/scanner?m=1rzNQw-0008Ns-3f&amp;d=4%7Cmail%2F90%2F1713906600%2F1rzNQw-0008Ns-3f%7Cin2e%7C57e1b682%7C28509242%7C14152682%7C6628242AF22ECB27DE9BAA81E1B29580&amp;o=%2Fphto%3A%2Fntseertnstrhaso.zj.u%2Fom20%2F951142466&amp;s=ruDKyxUNCNd62B7o2lO1X9v5I5U">zoom link</a>
+- Thursdays 11 am - 12 pm: <a href="https://url2.mailanyone.net/scanner?m=1rzNQw-0008Ns-3f&amp;d=4%7Cmail%2F90%2F1713906600%2F1rzNQw-0008Ns-3f%7Cin2e%7C57e1b682%7C28509242%7C14152682%7C6628242AF22ECB27DE9BAA81E1B29580&amp;o=%2Fphto%3A%2Fntseertnstrhaso.zj.u%2Fom63%2F914254083&amp;s=feG6PL708qP4uNB_somz55Vucz0">zoom link</a></p>
+<p>Ask 2-3 others at GMGI for assistance and/or attend office hours prior to creating a help ticket. We do not want to overwhelm the rchelp desk if we can troubleshoot internally first. GMGI has a #bioinformatics slack channel for this purpose.</p>
+<h2 id="running-a-bioinformatic-script">Running a bioinformatic script</h2>
+<p>Read through: <a href="https://rc-docs.northeastern.edu/en/latest/runningjobs/index.html">Running Jobs - RC RTD (northeastern.edu)</a> before starting. </p>
+<p>Jobs are run either through:<br />
+1. Interactive mode (immediate execution and feedback): <code>srun --pty bash</code> to claim a node and then utilize <code>bash scriptname.sh</code> to run a script.  <br />
+2. Batch jobs: using scripts to manage longer-running jobs: <code>sbatch scriptname.sh</code> to run a script.  </p>
+<p>Interactive mode would be equivalent to running a job directly in your terminal window without starting a tmux session. Using batch jobs and shell scripts would be similar to tmux session where you can turn off wifi, walk away, etc. Interactive requires you to stay connected. </p>
+<p>Introduction to Slurm scripts:<br />
+- <a href="https://rc-docs.northeastern.edu/en/latest/slurmguide/index.html">Slurm - RC RTD (northeastern.edu)</a> <br />
+- <a href="https://rc-docs.northeastern.edu/en/latest/best-practices/index.html">Best Practices - RC RTD (northeastern.edu)</a>  </p>
+<h2 id="packages-and-modules">Packages and modules</h2>
+<p>NU has some modules downloaded that are accessible for all users. Otherwise, larger packages should be installed in a conda environment by the user or simple packages can be downloaded to the <code>/work/gmgi/packages/</code> folder. Instructions for downloading to conda env: [https://rc-docs.northeastern.edu/en/latest/software/index.html]</p>
+<p>Common commands: <br />
+- To find already installed programs: <code>module avail</code>    <br />
+- To get information about a module: <code>module help [module/version]</code> or <code>module whatis [module/version]</code>. "help" will provide what the module is, package information including version and install date, and a link to the documentation/github. "whatis" will provide a short, one line description of the program.  <br />
+- To load a module: <code>module load [module/version]</code> (e.g., <code>module load bamUtil/v1.0.15</code>). Loading a module will put all the necessary executables and dependencies for that program in your path so you can call the commands from any location (i.e. your working directory).   </p>
 
 
 
