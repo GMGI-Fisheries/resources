@@ -73,6 +73,8 @@ Common commands:
 - Check all jobs that are running: `top` and to exit that screen, click Q  
 - Check only our user: `top -u username` and to exit that screen, click Q  
 
+The most important aspects to watch are %CPU and %MEM. Users should use ~10-15 CPUs max 
 
+![](https://github.com/GMGI-Fisheries/resources/blob/master/img/GMGI_computing_top.png?raw=true)
 
 
