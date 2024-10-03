@@ -64,7 +64,7 @@ Compressing files:
 - Gzip all fastq files (e.g., raw data, trimmed data), .fasta/.fa files (e.g., reference genomes), and large .txt files (e.g., intermediate files created during analysis): `gzip *.fastq` or create a slurm array with a sbatch script.    
 - [Genozip](https://www.genozip.com/standard) all .bam, .sam, .vcf files (e.g., intermediate files created during analysis). Genozip has been downloaded in /work/gmgi/packages for general use.   
 
-Space-related commands:
+Space-related commands:  
 - List all files within a directory and human-readable sizes (folder size is not total size of folder contents): `ls -lha`  
 - Calculate total storage taken up by one directory (change path as needed): `du -shc .[^.]* /work/gmgi/fisheries`    
 - In /work/gmgi/, there is a `check_storage.sh` bash script that will use the above commands to create a summary .txt file with the storage use of each team.  
