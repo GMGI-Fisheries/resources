@@ -67,7 +67,7 @@ Replace "[module/version]" with the information for your module of interest, as 
 
 ## Resource usage
 
-The GMGI RHEL does not currently have a job scheduler program so each user needs to be extremely careful with how much memory and resources their scripts take up. RHEL has 128 processors (CPUs) that are available total so users need to split this. Users should use ~10-20 CPUs max at a time to allow other teams to use the server as well.
+The GMGI RHEL does not currently have a job scheduler program so each user needs to be extremely careful with how much memory and resources their scripts take up. RHEL has 128 processors (CPUs) that are available total so users need to split this. Users should use CPU usage between 1-32 threads max at a time to allow other teams to use the server as well. 
 
 Common commands:  
 - Check all jobs that are running: `top` and to exit that screen, click Q  
