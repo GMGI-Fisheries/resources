@@ -37,7 +37,7 @@ nav:
     - GMGI: 'Computing_GMGI.md'
     - Northeastern University: 'Computing_NU.md'  
   - Computing Beginner Resources: 'Computing_Begin_Resources.md'
-  - Data Management: 'Data_management.md'
+  - Data Management: 'Data_Management.md'
   - Data Transfer: 'Data_To_Server.md'
   - 'eDNA: metabarcoding':
     - 01-ampliseq-12S-Riaz: 'eDNA/01-Metabarcoding ampliseq 12S Riaz.md'
