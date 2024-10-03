@@ -1,126 +1,103 @@
-# Downloading sequencing data to servers
+# Northeastern University Computing Resources 
 
-Goal: Download .fastq files from sequencing center to HPC and/or move data between HPCs and personal computers.
+A high-performance computing resource for the Northeastern research community, the Discovery cluster is located in the [Massachusetts Green High Performance Computing Center](https://www.mghpcc.org/) in Holyoke, Massachusetts.
 
-Table of Contents:  
-- [GMGI in-house sequencing to HPC](#illumina-basespace-to-nu-discovery-cluster-or-gmgi-in-house-hpc)    
-- [External sequencing to HPC](#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc)    
-- [HPC to Personal Computer](#hpc-to-personal-computer-or-vice-versa)  
-- [HPC to AWS back-up](#aws-back-up)  
+The Discovery cluster provides Northeastern researchers with access to more than 45,000 CPU cores and more than 400 GPUs. Connected to the university network over 10 Gbps Ethernet (GbE) for high-speed data transfer, Discovery provides 5 PB of available storage on a high-performance GPFS parallel file system. Compute nodes are connected with either 10 GbE or a high-performance HDR100 InfiniBand (IB) interconnect running at 200 Gbps, supporting all types and scales of computational workloads.
 
-To transfer data from HPC to HPC (e.g., GMGI to NU), use Globus instructions outlined in [External sequencing to HPC](#globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc). 
+As GMGI's researchers, we have access to Northeastern's HPC resources through an MOU established in Fall 2023. 
 
-## Illumina BaseSpace to NU Discovery Cluster or GMGI in-house HPC
+Read the HPC resource documentation prior to getting started: [Research Computing - NURC RTD (northeastern.edu)](https://rc-docs.northeastern.edu/en/latest/welcome/index.html).
 
-[Illumina BaseSpace CLI instructions](https://developer.basespace.illumina.com/docs/content/documentation/cli/cli-overview#InstallBaseSpaceSequenceHubCLI)
+## Logging in
 
-Connecting your user to Illumina BaseSpace:  
+Before creating an account with the NU Discovery Cluster, claim your Northeastern email and sponsored account.
 
-*Each user only needs to complete this once to set-up. If completed for previous projects, skip to downloading data steps.* 
+1. Log into (with the northeastern email and pw previously claimed): [Home - Northeastern Tech Service Portal](https://service.northeastern.edu/tech?id=tech_index_home).  
+2. Navigate to [High Performance Computing - Northeastern Tech Service Portal](https://service.northeastern.edu/tech?id=sc_category&sys_id=43a3aef7db45cdd0ca10819b13961998).    
+3. Request an account ([Research Computing Access Request - Northeastern Tech Service Portal](https://service.northeastern.edu/tech?id=sc_cat_item&sys_id=0ae24596db535fc075892f17d496199c)). Fill out the form with your Northeastern email, and following options:  
+- Select: I do not have access to Discovery. I am requesting a new account.  
+- Affiliation with Northeastern University: Visiting Researcher (Greg says this answer doesn't really matter).   
+- University Sponsor: Geoffrey Trusell  
+- Gaussian: No (This is a specific program, if you don't know what it is, you don't need it).  
+- Select: By clicking here, I acknowledge that I have read and agree to the following.  
+4. This triggers an email to Geoff Trusell to approve your account. Send an email to Geoff letting him know that you are activating your account that needs his approval.  
+5. Once Geoff approves the account sponsorship, then Greg and the computing team will finish setting up your account.
 
-1. Create folder called bin: `mkdir $HOME/bin`  
-2. Download BaseSpace CLI: `wget "https://launch.basespace.illumina.com/CLI/latest/amd64-linux/bs" -O $HOME/bin/bs`  
-3. Change the file permissions to make the downloaded binary executable: `chmod u+x $HOME/bin/bs`  
-4. Authenticate your account: `bs auth`  
-5. Navigate to the webpage provided and authenticate use of BaseSpace CLI.  
-
-Download data from each run to desired output path: 
-
-6. Find the Run ID of desired download: Within Sequence Hub, navigate to Runs and select the desired run. The Run ID is in the webpage handle (e.g., https://basespace.illumina.com/run/123456789/details). 
-
-![](https://github.com/GMGI-Fisheries/resources/blob/master/img/Data_To_Server_basespace_runsPage.png?raw=true)
-
-7. Navigate to `cd $HOME/bin` and download dataset: `bs download run -n run_name --extension=fastq.gz -o /local/output/path`. Replace `run_name` with the exact name of the run on BaseSpace.  
-8. Navigate to the output path `cd /local/output/path` and move all files out of subdirectories: `mv */* .` 
-
-## Globus to NU Discovery Cluster or GMGI in-house HPC
-
-External sequencing centers (e.g., UConn) will share data via Globus. Instructions from NU on [transfering data](https://rc-docs.northeastern.edu/en/latest/datamanagement/transferringdata.html) and using [Globus](https://rc-docs.northeastern.edu/en/latest/datamanagement/globus.html#using-globus). Globus works by transferring data between 'endpoints'. NU's endpoint is called Discovery Cluster which is searchable but our in-house GMGI endpoint needs to be created for each user. 
-
-Globus instructions: [https://docs.globus.org/globus-connect-server/v5.4/quickstart/]. Create a Globus account prior to instructions below. If transferring to NU, user needs to connect their NU account to their Globus account (see above NU instructions for this step). 
-
-GMGI endpoint set-up (only need to do this once):  
-1. Navigate to the globusconnectpersonal-3.2.2 module that is already downloaded on GMGI's in-house server: `cd /data/resources/app_modules/globusconnectpersonal-3.2.2`.  
-2. Set-up an endpoint: `./globusconnectpersonal -setup --no-gui`  
-3. This will then ask you to click on a log-in link. Once logged in, you receive a authorization code. Paste that in your terminal window where it asked for this code.
-4. Name your endpoint with your own user (change this to your first and last name): `user.name`  
-5. If successfully, globus will output: 
+You can operate on the Discovery Cluster in two ways:  
+1. via Linux operating system on your computer or ssh client  
+2. NU's Open On Demand ([Open OnDemand (OOD) - RC RTD (northeastern.edu)](https://rc-docs.northeastern.edu/en/latest/using-ood/index.html)) GUI. [Accessing Open OnDemand - RC RTD (northeastern.edu)](https://rc-docs.northeastern.edu/en/latest/using-ood/accessingood.html#access-ood). With OOD interface, you can access plug-ins (i.e. RStudio) and launch the server from the web. Serena recommended using incognito window b/c OOD usually works better without the caching.
 
 ```
-Input a value for the Endpoint Name: user.name
-
-registered new endpoint, id: [unique ID to you]
-
-setup completed successfully
+ssh username@login.discovery.neu.edu
 ```
 
-Start Globus transfer:  
-1. [GMGI only] Navigate to the globusconnectpersonal-3.2.2 module that is already downloaded on GMGI's in-house server: `cd /data/resources/app_modules/globusconnectpersonal-3.2.2`.
-2. [GMGI only] Activate personal endpoint: `./globusconnectpersonal -start &`  
-3. [GMGI only] Your `user.name` endpoint will now appear as an option on the Globus online interface.   
-4. Log into Globus and Navigate to 'Collections' on the left hand panel. Confirm that your GMGI endpoint is activated (green icon):
+## Server structure
 
-![](https://github.com/GMGI-Fisheries/resources/blob/master/img/Data_To_Server_Globus_endpoints.png?raw=true)
-
-5. Select the 'File Manager' on the left hand panel. Choose the sequencing center endpoint in the left side and the server end point on the right side. NU's Discovery Cluster is searchable but GMGI endpoint will the user.name set up in previous steps. 
-
-![](https://github.com/GMGI-Fisheries/resources/blob/master/img/Data_To_Server_Globus_transfer.png?raw=true)
-
-6. Select all files that you want to transfer.  
-7. Select Start to begin the transfer.  
-8. Check the status of a transfer by selecting 'Activity' on the left hand panel.  
-9. [GMGI only] Once transfer is complete, deactivate the endpoint: `./globusconnectpersonal -stop`. 
-
-## HPC to personal computer or vice versa
-
-Users can do this via Globus or 'scp' (secure copy paste) commands detailed below. [NU instructions on transfer via terminal](https://rc-docs.northeastern.edu/en/latest/datamanagement/transferringdata.html#transfer-data). Make sure you're using "xfer.discovery.neu.edu" for the discovery cluster and not login.discovery.neu.edu, or you'll get an email warning you that you're using too much CPU!
-
-For all the below code, change content in <> and then delete the <>. All commands need to be run in own terminal and not logged onto either server. 
-
-Transfer a file:
-- To NU from personal computer: `scp <filename and path> <username>@xfer.discovery.neu.edu:/path/`   
-- To personal computer from NU: `scp <username>@xfer.discovery.neu.edu:/path/ /output/path/`   
-
-Transfer a directory (a.k.a., repository) to personal computer from NU: `scp -r <username>@xfer.discovery.neu.edu:/path/ /output/path/`    
-
-To transfer directly from GMGI to NU or vice versa, use Globus. 
-
-## AWS Back-up
-
-AWS is our Amazon Web Services S3 cloud-based storage to backup data long-term data storage and back-up. GMGI uploads data from our in-house server to AWS.
-
-What should be backed up:  
-- Raw data files such as fastq files directly from the sequencer  
-- Final result data files (i.e. count table, assemblies, etc.)  
-
-1. Make sure all files are compressed by:  
-- Gzip all fastq files (e.g., raw data, trimmed data), .fasta/.fa files (e.g., reference genomes), and large .txt files (e.g., intermediate files created during analysis): `gzip *.fastq` or create a slurm array with a sbatch script.  
-- [Genozip](https://www.genozip.com/standard) all .bam, .sam, .vcf files (e.g., intermediate files created during analysis). Genozip program is downloaded NU in `/work/gmgi/packages/` for general use.  
-
-**Prior to AWS back-up, check with Tim or Emma for approval of files and compression.** 
-
-2. Create a new screen session called AWS_tar (user can change this name to desired): `tmux new -s AWS_tar`  
-3. Create a txt file with file sizes of all desired input: `ls -l *gz > file_size.txt`  
-4. Edit this file to be only file sizes and names: `awk '{print $5,$9}' file_size.txt > file_size_edited.txt`  
-5. View this edited file: `head file_size_edited.txt`
+We have a 30 TB maximum in our working space `/work/gmgi`:  
+- Each lab has their own subfolder that serves as their storage and working space (e.g., `work/gmgi/Fisheries/`).  
+- `databases/`: Shared folder for common databases for amplicon sequencing (i.e., 12S, 16S, 18S, COI) and NCBI nt database. View the README file for databases sources.
+- `containers/`: Shared folder for custom built containers.  
+- `packages/`: Shared folder for programs downloaded for all users.  
+- `miniconda3/` and `Miniconda3-latest-Linux-x86_64.sh`: Shared resource for building conda environments. Environments built here can be used by everyone. *Do not edit.*  
+- `check_storage.sh`: Bash script built to calculate TB usage from each lab's folder and gmgi's work and output is `storage_summary_2024-09-23.txt` with the date calculated.
 
 ```
-11400971821 Mae-263_S1_R1_001.fastq.gz
-
-12253428145 Mae-263_S1_R2_001.fastq.gz
-
-11962611469 Mae-266_S2_R1_001.fastq.gz
-
-12839131166 Mae-266_S2_R2_001.fastq.gz
-
-9691926610 Mae-274_S3_R1_001.fastq.gz
+[e.strand@login-00 ~]$ cd /work/gmgi
+[e.strand@login-00 gmgi]$ ls
+check_storage.sh  containers  databases  ecosystem-diversity  Fisheries  miniconda3  Miniconda3-latest-Linux-x86_64.sh  packages  storage_summary_2024-09-23.txt
 ```
 
-6. Sum the first column: `awk '{sum += $1} END {print sum}' file_size_edited.txt`. This value is in Byte (B), but convert to MB or TB for a more helpful value to work with. It's important to know the size of the data you are working for storage and cost purposes. Backing up to AWS costs $$/monthly based on TBs stored and our HPC systems have max TB storage limitations.  
-7. Tar all desired data to result in on zipped file: `tar -czvf HaddockEpiAge1_rawData_20231113.tar.gz ./*fastq.gz`. Tar file name needs to be a unique identifier that includes project name, date, and description of the files included.  
-8. Detach from a session: Press Ctrl+B, release, and then press D. This tar function will take awhile especially for large datasets.  
-9. Reopen/attach a detached session: `tmux attach-session -t AWS_tar`.  
-10. Check the tar file size: `ls -lha`. Example output: `-rw-rw-r--. 1 estrand science 1736366676523 Nov 15 17:54 HaddockEpiAge1_rawData_20231113.tar.gz`. This 1736366676523 value is the size in B which should match exactly the sum of all input file sizes calculated previously.   
-11. Once this tar function is complete, end a tmux session (forever - not just detached): In the attached session, type exit and press enter. Or press Ctrl+D.  
-12. Move the packed tar archive file to AWS transfer folder: `mv HaddockEpiAge1_rawData_20231113.tar.gz /data/prj/AWS-transfers`.  
-13. Notify Jen that there is a transfer waiting so she can move this to AWS services and then remove from the /AWS-transfers folder. 
+Fisheries folder (`work/gmgi/Fisheries/`) is split by the type of project. `reference_genomes` includes .fasta reference files for organisms rather than a database (`Haddock_ref.fasta`). 
+
+```
+[e.strand@login-00 Fisheries]$ ls
+eDNA  epiage  reference_genomes
+```
+
+## Storage rules (while analyzing data, NOT just at the end of a project)
+
+Raw data files are backed up on AWS services and on GMGI RHEL Gadus immediately upon receiving data. If working on NU cluster, once user is happy with data analysis pipeline, raw and final data is to be removed from NU cluster and only kept on AWS services or GMGI's RHEL server. 
+
+Compressing files:  
+- Gzip all fastq files (e.g., raw data, trimmed data), .fasta/.fa files (e.g., reference genomes), and large .txt files (e.g., intermediate files created during analysis): `gzip *.fastq` or create a slurm array with a sbatch script.    
+- [Genozip](https://www.genozip.com/standard) all .bam, .sam, .vcf files (e.g., intermediate files created during analysis). Genozip has been downloaded in /work/gmgi/packages for general use.   
+
+Space-related commands:
+- List all files within a directory and human-readable sizes (folder size is not total size of folder contents): `ls -lha`  
+- Calculate total storage taken up by one directory (change path as needed): `du -shc .[^.]* /work/gmgi/fisheries`    
+- In /work/gmgi/, there is a `check_storage.sh` bash script that will use the above commands to create a summary .txt file with the storage use of each team.  
+
+## NU Contacts and Research Computing Help
+
+GMGI's two main contacts are: Greg Shomo (g.shomo@northeastern.edu) and Serena Caplins (s.caplins@northeastern.edu). 
+
+If you need assistance, NU's support team is available at rchelp@northeastern.edu or consult the Frequently Asked Questions (FAQs): [https://rc-docs.northeastern.edu/en/latest/faq.html#faq]. Emailing the rchelp team will create a help ticket one of NU's team members will be assigned to your case. When creating a help ticket, CC Geoff Trussell (g.trussell@northeastern.edu) and Jon Grabowski (j.grabowski@northeastern.edu). 
+
+RC Help hosts office hours to connect with RC staff and Graduate Research Assistants (GRAs) to ask questions about any RC-related questions that you might have (e.g., Setting up conda environments, Installing software, Optimizing the runtime of your sbatch scripts, Effectively using the Open onDemand website):
+- Wednesdays 3 pm - 4 pm: [zoom link](https://url2.mailanyone.net/scanner?m=1rzNQw-0008Ns-3f&d=4%7Cmail%2F90%2F1713906600%2F1rzNQw-0008Ns-3f%7Cin2e%7C57e1b682%7C28509242%7C14152682%7C6628242AF22ECB27DE9BAA81E1B29580&o=%2Fphto%3A%2Fntseertnstrhaso.zj.u%2Fom20%2F951142466&s=ruDKyxUNCNd62B7o2lO1X9v5I5U)
+- Thursdays 11 am - 12 pm: [zoom link](https://url2.mailanyone.net/scanner?m=1rzNQw-0008Ns-3f&d=4%7Cmail%2F90%2F1713906600%2F1rzNQw-0008Ns-3f%7Cin2e%7C57e1b682%7C28509242%7C14152682%7C6628242AF22ECB27DE9BAA81E1B29580&o=%2Fphto%3A%2Fntseertnstrhaso.zj.u%2Fom63%2F914254083&s=feG6PL708qP4uNB_somz55Vucz0)
+
+Ask 2-3 others at GMGI for assistance and/or attend office hours prior to creating a help ticket. We do not want to overwhelm the rchelp desk if we can troubleshoot internally first. GMGI has a #bioinformatics slack channel for this purpose.
+
+## Running a bioinformatic script 
+
+Read through: [Running Jobs - RC RTD (northeastern.edu)](https://rc-docs.northeastern.edu/en/latest/runningjobs/index.html) before starting. 
+
+Jobs are run either through:  
+1. Interactive mode (immediate execution and feedback): `srun --pty bash` to claim a node and then utilize `bash scriptname.sh` to run a script.    
+2. Batch jobs: using scripts to manage longer-running jobs: `sbatch scriptname.sh` to run a script.  
+
+Interactive mode would be equivalent to running a job directly in your terminal window without starting a tmux session. Using batch jobs and shell scripts would be similar to tmux session where you can turn off wifi, walk away, etc. Interactive requires you to stay connected. 
+
+Introduction to Slurm scripts:  
+- [Slurm - RC RTD (northeastern.edu)](https://rc-docs.northeastern.edu/en/latest/slurmguide/index.html)   
+- [Best Practices - RC RTD (northeastern.edu)](https://rc-docs.northeastern.edu/en/latest/best-practices/index.html)  
+
+## Packages and modules 
+
+NU has some modules downloaded that are accessible for all users. Otherwise, larger packages should be installed in a conda environment by the user or simple packages can be downloaded to the `/work/gmgi/packages/` folder. Instructions for downloading to conda env: [https://rc-docs.northeastern.edu/en/latest/software/index.html]
+
+Common commands:   
+- To find already installed programs: `module avail`      
+- To get information about a module: `module help [module/version]` or `module whatis [module/version]`. "help" will provide what the module is, package information including version and install date, and a link to the documentation/github. "whatis" will provide a short, one line description of the program.    
+- To load a module: `module load [module/version]` (e.g., `module load bamUtil/v1.0.15`). Loading a module will put all the necessary executables and dependencies for that program in your path so you can call the commands from any location (i.e. your working directory).   
