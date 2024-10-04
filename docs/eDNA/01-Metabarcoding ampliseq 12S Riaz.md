@@ -370,7 +370,7 @@ View the `update_ncbi_nt.out` file to confirm the echo printed at the end.
 
 #### Download and/or update Mitofish database  
 
-Check [Mitofish webpage](https://mitofish.aori.u-tokyo.ac.jp/download/) for the most recent database version number. Compare to the `work/gmgi/databases/12S/reference_fasta/12S/Mitofish/` folder. If needed, update Mitofish database:
+Check [Mitofish webpage](https://mitofish.aori.u-tokyo.ac.jp/download/) for the most recent database version number. Compare to the `work/gmgi/databases/12S` folder. If needed, update Mitofish database:
 
 ```
 ## download db 

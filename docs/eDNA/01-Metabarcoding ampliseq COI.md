@@ -1,10 +1,10 @@
 # Metabarcoding workflow for COI amplicon sequencing 
 
-The COI region 
+The COI region is commonly used for metabarcoding practices and consequently there are many primer options to choose from. The Fisheries team at GMGI has optimized the Leray Geller set (outlined in red box below). Citation: [Leray et al 2013](https://link.springer.com/article/10.1186/1742-9994-10-34).
+
+We primarily use this set for invertebrate targets and 12S for vertebrate communities. 
 
 ![](https://github.com/GMGI-Fisheries/resources/blob/master/img/eDNA_meta_COI_primerset.png?raw=true)
-
-Citation: [Riaz et al. 2011](https://academic.oup.com/nar/article/39/21/e145/1105558)
 
 Workflow done on HPC. Scripts to run: 
 
@@ -170,13 +170,14 @@ We use ampliseq for the following programs:
 
 We skip the taxonomic assignment because we use 3-db approach described in the next section. 
 
-### 12S primer sequences (required)
+### COI primer sequences (required)
 
-Below is what we used for 12S amplicon sequencing. Ampliseq will automatically calculate the reverse compliment and include this for us.
+Below is what we used for COI amplicon sequencing. This results in ~313 bp expected ASV. 
 
-Riaz 12S amplicon F Original: ACTGGGATTAGATACCCC  
-Riaz 12S amplicon F Degenerate: ACTGGGATTAGATACCCY     
-Riaz 12S amplicon R: TAGAACAGGCTCCTCTAG     
+LG COI amplicon F: GGWACWGGWTGAACWGTWTAYCCYCC      
+LG COI amplicon R: TAIACYTCIGGRTGICCRAARAAYCA       
+
+Ampliseq will automatically calculate the reverse compliment and include this for us.
 
 ### Metadata sheet (optional) 
 
@@ -259,7 +260,7 @@ Update ampliseq workflow if needed: `nextflow pull nf-core/ampliseq`.
 ## 1. Set paths for project 
 ## 2. Adjust SBATCH options above (time, mem, ntasks, etc.) as desired  
 ## 3. Fill in F primer information based on primer type (no reverse compliment needed)
-## 4. Adjust parameters as needed (below is Fisheries team default for 12S)
+## 4. Adjust parameters as needed (below is Fisheries team default for COI)
 
 # LOAD MODULES
 module load singularity/3.10.3
@@ -272,20 +273,22 @@ output_dir=""
 nextflow run nf-core/ampliseq -resume \
    -profile singularity \
    --input ${metadata}/samplesheet.csv \
-   --FW_primer "" \
-   --RV_primer "TAGAACAGGCTCCTCTAG" \
+   --FW_primer "GGWACWGGWTGAACWGTWTAYCCYCC" \
+   --RV_primer "TAIACYTCIGGRTGICCRAARAAYCA" \
    --outdir ${output_dir} \
-   --trunclenf 100 \
-   --trunclenr 100 \
+   --trunclenf 220 \
+   --trunclenr 220 \
    --trunc_qmin 25 \
-   --max_len 200 \
    --max_ee 2 \
-   --min_len_asv 100 \
-   --max_len_asv 115 \
+   --min_len_asv 300 \
+   --max_len_asv 330 \
    --sample_inference pseudo \
    --skip_taxonomy \
    --ignore_failed_trimming
 ```
+
+Could add back in? 
+   --max_len 200 \
 
 To run:   
 - `sbatch 01b-ampliseq.sh` 
@@ -331,7 +334,7 @@ We add an ASV length filter that will output `asv_length_filter/` with:
 
 ### Populating /work/gmgi/databases folder 
 
-We use NCBI, Mitofish, and GMGI-12S databases. 
+We use NCBI, BOLD, and XX databases. 
 
 #### Download and/or update NBCI blast nt database
 
@@ -366,45 +369,20 @@ View the `update_ncbi_nt.out` file to confirm the echo printed at the end.
 
 *Emma is still troubleshooting the -remote flag to also avoid storing the nt db within our /work/gmgi folder.* 
 
-#### Download and/or update Mitofish database  
+#### Download and/or update BOLD database  
 
-Check [Mitofish webpage](https://mitofish.aori.u-tokyo.ac.jp/download/) for the most recent database version number. Compare to the `work/gmgi/databases/12S/reference_fasta/12S/Mitofish/` folder. If needed, update Mitofish database:
-
-```
-## download db 
-wget https://mitofish.aori.u-tokyo.ac.jp/species/detail/download/?filename=download%2F/complete_partial_mitogenomes.zip  
-
-## unzip 
-unzip 'index.html?filename=download%2F%2Fcomplete_partial_mitogenomes.zip'
-
-## clean headers 
-awk '/^>/ {print $1} !/^>/ {print}' mito-all > Mitofish_v4.02.fasta
-
-## remove excess files 
-rm mito-all* 
-rm index*
-
-## make NCBI db 
-## make sure fisheries_eDNA conda environment is activated or module load ncbi-blast+/2.13.0
-makeblastdb -in Mitofish_v4.02.fasta -dbtype nucl -out Mitofish_v4.02.fasta -parse_seqids
-```
-
-#### Download GMGI 12S 
-
-This is our in-house GMGI database that will include version numbers. Check `/work/gmgi/databases/12S/GMGI/` for current uploaded version number and check our Box folder for the most recent version number. 
-
-On OOD portal, click the Interactive Apps dropdown. Select Home Directory under the HTML Viewer section. Navigate to the `/work/gmgi/databases/12S/GMGI/` folder. In the top right hand corner of the portal, select Upload and add the most recent .fasta file from our Box folder. 
-
-To create a blast db from this reference fasta file (if updated): 
+Check [BOLD webpage]( ) for the most recent database version number. Compare to the `work/gmgi/databases/COI/BOLD` folder. If needed, update Mitofish database:
 
 ```
-cd /work/gmgi/databases/12S/GMGI/ 
 
-## make NCBI db 
-## make sure fisheries_eDNA conda environment is activated 
-### CHANGE THE VERSION NUMBER BELOW TO LATEST
-makeblastdb -in GMGI_Vert_Ref_2024v1.fasta -dbtype nucl -out GMGI_Vert_Ref_2024v1.fasta
+
+
+
+
 ```
+
+
+
 
 ### Running taxonomic ID script 
 
