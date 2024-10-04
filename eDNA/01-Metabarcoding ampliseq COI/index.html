@@ -577,9 +577,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#12s-primer-sequences-required" class="md-nav__link">
+  <a href="#coi-primer-sequences-required" class="md-nav__link">
     <span class="md-ellipsis">
-      12S primer sequences (required)
+      COI primer sequences (required)
     </span>
   </a>
   
@@ -662,18 +662,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#download-andor-update-mitofish-database" class="md-nav__link">
+  <a href="#download-andor-update-bold-database" class="md-nav__link">
     <span class="md-ellipsis">
-      Download and/or update Mitofish database
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#download-gmgi-12s" class="md-nav__link">
-    <span class="md-ellipsis">
-      Download GMGI 12S
+      Download and/or update BOLD database
     </span>
   </a>
   
@@ -1199,9 +1190,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#12s-primer-sequences-required" class="md-nav__link">
+  <a href="#coi-primer-sequences-required" class="md-nav__link">
     <span class="md-ellipsis">
-      12S primer sequences (required)
+      COI primer sequences (required)
     </span>
   </a>
   
@@ -1284,18 +1275,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#download-andor-update-mitofish-database" class="md-nav__link">
+  <a href="#download-andor-update-bold-database" class="md-nav__link">
     <span class="md-ellipsis">
-      Download and/or update Mitofish database
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#download-gmgi-12s" class="md-nav__link">
-    <span class="md-ellipsis">
-      Download GMGI 12S
+      Download and/or update BOLD database
     </span>
   </a>
   
@@ -1344,9 +1326,9 @@
 
 
 <h1 id="metabarcoding-workflow-for-coi-amplicon-sequencing">Metabarcoding workflow for COI amplicon sequencing</h1>
-<p>The COI region </p>
+<p>The COI region is commonly used for metabarcoding practices and consequently there are many primer options to choose from. The Fisheries team at GMGI has optimized the Leray Geller set (outlined in red box below). Citation: <a href="https://link.springer.com/article/10.1186/1742-9994-10-34">Leray et al 2013</a>.</p>
+<p>We primarily use this set for invertebrate targets and 12S for vertebrate communities. </p>
 <p><img alt="" src="https://github.com/GMGI-Fisheries/resources/blob/master/img/eDNA_meta_COI_primerset.png?raw=true" /></p>
-<p>Citation: <a href="https://academic.oup.com/nar/article/39/21/e145/1105558">Riaz et al. 2011</a></p>
 <p>Workflow done on HPC. Scripts to run: </p>
 <ol>
 <li>00-fastqc.sh   </li>
@@ -1485,11 +1467,11 @@ Nextflow: scalable and reproducible scientific workflows using software containe
 <li><a href="https://www.nature.com/articles/nmeth.3869">DADA2</a> performs fast and accurate sample inference from amplicon data with single-nucleotide resolution. It infers exact amplicon sequence variants (ASVs) from amplicon data with fewer false positives than many other methods while maintaining high sensitivity.  </li>
 </ul>
 <p>We skip the taxonomic assignment because we use 3-db approach described in the next section. </p>
-<h3 id="12s-primer-sequences-required">12S primer sequences (required)</h3>
-<p>Below is what we used for 12S amplicon sequencing. Ampliseq will automatically calculate the reverse compliment and include this for us.</p>
-<p>Riaz 12S amplicon F Original: ACTGGGATTAGATACCCC<br />
-Riaz 12S amplicon F Degenerate: ACTGGGATTAGATACCCY   <br />
-Riaz 12S amplicon R: TAGAACAGGCTCCTCTAG     </p>
+<h3 id="coi-primer-sequences-required">COI primer sequences (required)</h3>
+<p>Below is what we used for COI amplicon sequencing. This results in ~313 bp expected ASV. </p>
+<p>LG COI amplicon F: GGWACWGGWTGAACWGTWTAYCCYCC    <br />
+LG COI amplicon R: TAIACYTCIGGRTGICCRAARAAYCA       </p>
+<p>Ampliseq will automatically calculate the reverse compliment and include this for us.</p>
 <h3 id="metadata-sheet-optional">Metadata sheet (optional)</h3>
 <p>The metadata file has to follow the <a href="https://docs.qiime2.org/2021.2/tutorials/metadata/">QIIME2 specifications</a>. Below is a preview of the sample sheet used for this test. Keep the column headers the same for future use. The first column needs to be "ID" and can only contain numbers, letters, or "-". This is different than the sample sheet. NAs should be empty cells rather than "NA". </p>
 <h3 id="create-samplesheet-sheet-for-ampliseq">Create samplesheet sheet for ampliseq</h3>
@@ -1588,7 +1570,7 @@ sample_list %&gt;% write.csv(&quot;/work/gmgi/Fisheries/eDNA/offshore_wind2023/m
 ## 1. Set paths for project 
 ## 2. Adjust SBATCH options above (time, mem, ntasks, etc.) as desired  
 ## 3. Fill in F primer information based on primer type (no reverse compliment needed)
-## 4. Adjust parameters as needed (below is Fisheries team default for 12S)
+## 4. Adjust parameters as needed (below is Fisheries team default for COI)
 
 # LOAD MODULES
 module load singularity/3.10.3
@@ -1601,20 +1583,21 @@ output_dir=&quot;&quot;
 nextflow run nf-core/ampliseq -resume \
    -profile singularity \
    --input ${metadata}/samplesheet.csv \
-   --FW_primer &quot;&quot; \
-   --RV_primer &quot;TAGAACAGGCTCCTCTAG&quot; \
+   --FW_primer &quot;GGWACWGGWTGAACWGTWTAYCCYCC&quot; \
+   --RV_primer &quot;TAIACYTCIGGRTGICCRAARAAYCA&quot; \
    --outdir ${output_dir} \
-   --trunclenf 100 \
-   --trunclenr 100 \
+   --trunclenf 220 \
+   --trunclenr 220 \
    --trunc_qmin 25 \
-   --max_len 200 \
    --max_ee 2 \
-   --min_len_asv 100 \
-   --max_len_asv 115 \
+   --min_len_asv 300 \
+   --max_len_asv 330 \
    --sample_inference pseudo \
    --skip_taxonomy \
    --ignore_failed_trimming
 </code></pre></div>
+<p>Could add back in? 
+   --max_len 200 \</p>
 <p>To run: <br />
 - <code>sbatch 01b-ampliseq.sh</code> </p>
 <h4 id="files-generated-by-ampliseq">Files generated by ampliseq</h4>
@@ -1655,7 +1638,7 @@ nextflow run nf-core/ampliseq -resume \
 </ul>
 <h2 id="step-5-blast-asv-sequences-output-from-dada2-against-our-3-databases">Step 5: Blast ASV sequences (output from DADA2) against our 3 databases</h2>
 <h3 id="populating-workgmgidatabases-folder">Populating /work/gmgi/databases folder</h3>
-<p>We use NCBI, Mitofish, and GMGI-12S databases. </p>
+<p>We use NCBI, BOLD, and XX databases. </p>
 <h4 id="download-andor-update-nbci-blast-nt-database">Download and/or update NBCI blast nt database</h4>
 <p>NCBI is updated daily and therefore needs to be updated each time a project is analyzed. This is the not the most ideal method but we were struggling to get the <code>-remote</code> flag to work within slurm because I don't think NU slurm is connected to the internet? NU help desk was helping for awhile but we didn't get anywhere.</p>
 <p>Within <code>/work/gmgi/databases/ncbi</code>, there is a <code>update_nt.sh</code> script with the following code. To run <code>sbatch update_nt.sh</code>. This won't take long as it will check for updates rather than re-downloading every time. </p>
@@ -1682,35 +1665,9 @@ echo &quot;BLAST nt database update completed&quot;
 </code></pre></div>
 <p>View the <code>update_ncbi_nt.out</code> file to confirm the echo printed at the end.</p>
 <p><em>Emma is still troubleshooting the -remote flag to also avoid storing the nt db within our /work/gmgi folder.</em> </p>
-<h4 id="download-andor-update-mitofish-database">Download and/or update Mitofish database</h4>
-<p>Check <a href="https://mitofish.aori.u-tokyo.ac.jp/download/">Mitofish webpage</a> for the most recent database version number. Compare to the <code>work/gmgi/databases/12S/reference_fasta/12S/Mitofish/</code> folder. If needed, update Mitofish database:</p>
-<div class="highlight"><pre><span></span><code>## download db 
-wget https://mitofish.aori.u-tokyo.ac.jp/species/detail/download/?filename=download%2F/complete_partial_mitogenomes.zip  
-
-## unzip 
-unzip &#39;index.html?filename=download%2F%2Fcomplete_partial_mitogenomes.zip&#39;
-
-## clean headers 
-awk &#39;/^&gt;/ {print $1} !/^&gt;/ {print}&#39; mito-all &gt; Mitofish_v4.02.fasta
-
-## remove excess files 
-rm mito-all* 
-rm index*
-
-## make NCBI db 
-## make sure fisheries_eDNA conda environment is activated or module load ncbi-blast+/2.13.0
-makeblastdb -in Mitofish_v4.02.fasta -dbtype nucl -out Mitofish_v4.02.fasta -parse_seqids
-</code></pre></div>
-<h4 id="download-gmgi-12s">Download GMGI 12S</h4>
-<p>This is our in-house GMGI database that will include version numbers. Check <code>/work/gmgi/databases/12S/GMGI/</code> for current uploaded version number and check our Box folder for the most recent version number. </p>
-<p>On OOD portal, click the Interactive Apps dropdown. Select Home Directory under the HTML Viewer section. Navigate to the <code>/work/gmgi/databases/12S/GMGI/</code> folder. In the top right hand corner of the portal, select Upload and add the most recent .fasta file from our Box folder. </p>
-<p>To create a blast db from this reference fasta file (if updated): </p>
-<div class="highlight"><pre><span></span><code>cd /work/gmgi/databases/12S/GMGI/ 
-
-## make NCBI db 
-## make sure fisheries_eDNA conda environment is activated 
-### CHANGE THE VERSION NUMBER BELOW TO LATEST
-makeblastdb -in GMGI_Vert_Ref_2024v1.fasta -dbtype nucl -out GMGI_Vert_Ref_2024v1.fasta
+<h4 id="download-andor-update-bold-database">Download and/or update BOLD database</h4>
+<p>Check <a href="">BOLD webpage</a> for the most recent database version number. Compare to the <code>work/gmgi/databases/COI/BOLD</code> folder. If needed, update Mitofish database:</p>
+<div class="highlight"><pre><span></span><code>
 </code></pre></div>
 <h3 id="running-taxonomic-id-script">Running taxonomic ID script</h3>
 <p><code>02-taxonomicID.sh</code>: </p>
