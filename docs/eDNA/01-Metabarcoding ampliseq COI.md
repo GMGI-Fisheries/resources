@@ -2,7 +2,7 @@
 
 The COI region 
 
-![](https://www.researchgate.net/publication/309288139/figure/fig1/AS:565748204568577@1511896291884/Selection-of-potential-COI-primer-sets-for-DNA-metabarcoding-of-insects-targeting-the.png)
+![](https://github.com/GMGI-Fisheries/resources/blob/master/img/eDNA_meta_COI_primerset.png?raw=true)
 
 Citation: [Riaz et al. 2011](https://academic.oup.com/nar/article/39/21/e145/1105558)
 
