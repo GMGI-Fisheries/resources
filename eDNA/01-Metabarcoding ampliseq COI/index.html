@@ -452,6 +452,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../00-creating_eDNA_conda_env/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    00-Create-conda-env
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../01-Metabarcoding%20ampliseq%2012S%20Riaz/" class="md-nav__link">
         
   
@@ -540,9 +561,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#step-1-conda-environment-fisheries-edna" class="md-nav__link">
+  <a href="#step-1-confirm-conda-environment-is-available" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 1: Conda environment: Fisheries eDNA
+      Step 1: Confirm conda environment is available
     </span>
   </a>
   
@@ -633,13 +654,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-5-blast-asv-sequences-output-from-dada2-against-our-3-databases" class="md-nav__link">
+  <a href="#step-5-blast-asv-sequences-output-from-dada2-against-our-database-list" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 5: Blast ASV sequences (output from DADA2) against our 3 databases
+      Step 5: Blast ASV sequences (output from DADA2) against our database list
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Step 5: Blast ASV sequences (output from DADA2) against our 3 databases">
+    <nav class="md-nav" aria-label="Step 5: Blast ASV sequences (output from DADA2) against our database list">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -662,9 +683,27 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#download-andor-update-bold-database" class="md-nav__link">
+  <a href="#download-andor-update-coinr-program" class="md-nav__link">
     <span class="md-ellipsis">
-      Download and/or update BOLD database
+      Download and/or update COInr program
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#download-andor-update-mares-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      Download and/or update MARES program
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#download-andor-update-midori" class="md-nav__link">
+    <span class="md-ellipsis">
+      Download and/or update MIDORI
     </span>
   </a>
   
@@ -810,11 +849,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tbd.md" class="md-nav__link">
+      <a href="../../eDNA%20qPCR/qPCR-analysis/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    tbd
+    01-dfprep-analysis
   </span>
   
 
@@ -1153,9 +1192,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#step-1-conda-environment-fisheries-edna" class="md-nav__link">
+  <a href="#step-1-confirm-conda-environment-is-available" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 1: Conda environment: Fisheries eDNA
+      Step 1: Confirm conda environment is available
     </span>
   </a>
   
@@ -1246,13 +1285,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-5-blast-asv-sequences-output-from-dada2-against-our-3-databases" class="md-nav__link">
+  <a href="#step-5-blast-asv-sequences-output-from-dada2-against-our-database-list" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 5: Blast ASV sequences (output from DADA2) against our 3 databases
+      Step 5: Blast ASV sequences (output from DADA2) against our database list
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Step 5: Blast ASV sequences (output from DADA2) against our 3 databases">
+    <nav class="md-nav" aria-label="Step 5: Blast ASV sequences (output from DADA2) against our database list">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1275,9 +1314,27 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#download-andor-update-bold-database" class="md-nav__link">
+  <a href="#download-andor-update-coinr-program" class="md-nav__link">
     <span class="md-ellipsis">
-      Download and/or update BOLD database
+      Download and/or update COInr program
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#download-andor-update-mares-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      Download and/or update MARES program
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#download-andor-update-midori" class="md-nav__link">
+    <span class="md-ellipsis">
+      Download and/or update MIDORI
     </span>
   </a>
   
@@ -1337,25 +1394,7 @@
 <li>01b-ampliseq.sh</li>
 <li>02-taxonomicID.sh  </li>
 </ol>
-<h2 id="step-1-conda-environment-fisheries-edna">Step 1: Conda environment: Fisheries eDNA</h2>
-<p>Background information on <a href="https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html">Conda</a>. </p>
-<p>GMGI Fisheries has a conda environment set-up with all the packages needed for this workflow. Code below was used to create this conda environment. <strong>DO NOT REPEAT</strong> every time user is running this workflow.</p>
-<div class="highlight"><pre><span></span><code># Activate conda
-source ~/../../work/gmgi/miniconda3/bin/activate
-
-# Creating conda 
-conda create --name fisheries_eDNA
-
-# Installing packages needed for this workflow 
-conda install -c bioconda fastqc 
-conda install multiqc 
-conda install bioconda::nextflow 
-conda install conda-forge::singularity
-conda install bioconda::blast
-conda install nextflow
-conda install blast
-conda install singularity
-</code></pre></div>
+<h2 id="step-1-confirm-conda-environment-is-available">Step 1: Confirm conda environment is available</h2>
 <p>The conda environment is started within each slurm script, but to activate conda environment outside of the slurm script to update packages or check what is installed:</p>
 <div class="highlight"><pre><span></span><code># Activate conda
 source ~/../../work/gmgi/miniconda3/bin/activate
@@ -1636,9 +1675,15 @@ nextflow run nf-core/ampliseq -resume \
 <li><code>ASV_len_filt.tsv</code>: ASV length distribution after filtering.  </li>
 <li><code>stats.len.tsv</code>: Tracking read numbers through filtering, for each sample.  </li>
 </ul>
-<h2 id="step-5-blast-asv-sequences-output-from-dada2-against-our-3-databases">Step 5: Blast ASV sequences (output from DADA2) against our 3 databases</h2>
+<h2 id="step-5-blast-asv-sequences-output-from-dada2-against-our-database-list">Step 5: Blast ASV sequences (output from DADA2) against our database list</h2>
 <h3 id="populating-workgmgidatabases-folder">Populating /work/gmgi/databases folder</h3>
-<p>We use NCBI, BOLD, and XX databases. </p>
+<p>MIDORI: A database specifically for COI sequences  </p>
+<p>We use a program called <a href="https://github.com/meglecz/mkCOInr">COInr</a> that downloads NCBI and BOLD (Barcode of Life Database) databases to create one database for comparison. COInr is already downloaded in the conda environment and pulls NCBI And BOLD directly. </p>
+<p><img alt="" src="https://mkcoinr.readthedocs.io/en/latest/_images/COInr_flowchart_readme.png" /></p>
+<p>Alternative to COInr program:  </p>
+<ul>
+<li><a href="https://www.nature.com/articles/s41597-020-0549-9">MARES (MARine Eukaryote Species)</a> and <a href="https://github.com/wpearman1996/MARES_database_pipeline">github</a>: This database combines sequences from both GenBank and BOLD to increase taxonomic coverage and confidence for marine eukaryotes   </li>
+</ul>
 <h4 id="download-andor-update-nbci-blast-nt-database">Download and/or update NBCI blast nt database</h4>
 <p>NCBI is updated daily and therefore needs to be updated each time a project is analyzed. This is the not the most ideal method but we were struggling to get the <code>-remote</code> flag to work within slurm because I don't think NU slurm is connected to the internet? NU help desk was helping for awhile but we didn't get anywhere.</p>
 <p>Within <code>/work/gmgi/databases/ncbi</code>, there is a <code>update_nt.sh</code> script with the following code. To run <code>sbatch update_nt.sh</code>. This won't take long as it will check for updates rather than re-downloading every time. </p>
@@ -1665,10 +1710,25 @@ echo &quot;BLAST nt database update completed&quot;
 </code></pre></div>
 <p>View the <code>update_ncbi_nt.out</code> file to confirm the echo printed at the end.</p>
 <p><em>Emma is still troubleshooting the -remote flag to also avoid storing the nt db within our /work/gmgi folder.</em> </p>
-<h4 id="download-andor-update-bold-database">Download and/or update BOLD database</h4>
-<p>Check <a href="">BOLD webpage</a> for the most recent database version number. Compare to the <code>work/gmgi/databases/COI/BOLD</code> folder. If needed, update Mitofish database:</p>
-<div class="highlight"><pre><span></span><code>
+<h4 id="download-andor-update-coinr-program">Download and/or update COInr program</h4>
+<p>COInr database <a href="https://mkcoinr.readthedocs.io/en/latest/content/tutorial.html">instructions</a>. There are <a href="https://mkcoinr.readthedocs.io/en/latest/content/tutorial.html#add-custom-sequences-to-a-database">options</a> to include custom sequences if needed.</p>
+<p>Is this the most updated version of both BOLD and NCBI? </p>
+<div class="highlight"><pre><span></span><code>cd /work/gmgi/packages 
+git clone https://github.com/meglecz/mkCOInr.git
+
+cd /work/gmgi/databases/COI
+wget https://zenodo.org/record/6555985/files/COInr_2022_05_06.tar.gz
+tar -zxvf COInr_2022_05_06.tar.gz
+rm COInr_2022_05_06.tar.gz
+mv COInr_2022_05_06 COInr
+
+## converting database information for blast 
+perl /work/gmgi/packages/mkCOInr/scripts/format_db.pl -tsv COInr/COInr.tsv -outfmt blast -outdir /work/gmgi/databases/COI/COInr -out COInr_blast
 </code></pre></div>
+<h4 id="download-andor-update-mares-program">Download and/or update MARES program</h4>
+<p>MARES Github <a href="https://github.com/wpearman1996/MARES_database_pipeline">repo</a>. </p>
+<h4 id="download-andor-update-midori">Download and/or update MIDORI</h4>
+<p>MIDORI <a href="https://www.reference-midori.info/#:~:text=MIDORI2%20is%20a%20reference%20database%20of%20DNA%20and">webpage</a>.</p>
 <h3 id="running-taxonomic-id-script">Running taxonomic ID script</h3>
 <p><code>02-taxonomicID.sh</code>: </p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash

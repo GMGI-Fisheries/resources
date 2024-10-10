@@ -9,7 +9,7 @@
       
       
       
-        <link rel="prev" href="../../Data_To_Server/">
+        <link rel="prev" href="../00-creating_eDNA_conda_env/">
       
       
         <link rel="next" href="../01-Metabarcoding%20ampliseq%2012S%20MiFish/">
@@ -449,6 +449,27 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-creating_eDNA_conda_env/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    00-Create-conda-env
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -498,9 +519,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#step-1-conda-environment-fisheries-edna" class="md-nav__link">
+  <a href="#step-1-confirm-conda-environment-is-available" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 1: Conda environment: Fisheries eDNA
+      Step 1: Confirm conda environment is available
     </span>
   </a>
   
@@ -819,11 +840,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tbd.md" class="md-nav__link">
+      <a href="../../eDNA%20qPCR/qPCR-analysis/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    tbd
+    01-dfprep-analysis
   </span>
   
 
@@ -1162,9 +1183,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#step-1-conda-environment-fisheries-edna" class="md-nav__link">
+  <a href="#step-1-confirm-conda-environment-is-available" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 1: Conda environment: Fisheries eDNA
+      Step 1: Confirm conda environment is available
     </span>
   </a>
   
@@ -1356,25 +1377,7 @@
 <li>01b-ampliseq.sh</li>
 <li>02-taxonomicID.sh  </li>
 </ol>
-<h2 id="step-1-conda-environment-fisheries-edna">Step 1: Conda environment: Fisheries eDNA</h2>
-<p>Background information on <a href="https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html">Conda</a>. </p>
-<p>GMGI Fisheries has a conda environment set-up with all the packages needed for this workflow. Code below was used to create this conda environment. <strong>DO NOT REPEAT</strong> every time user is running this workflow.</p>
-<div class="highlight"><pre><span></span><code># Activate conda
-source ~/../../work/gmgi/miniconda3/bin/activate
-
-# Creating conda 
-conda create --name fisheries_eDNA
-
-# Installing packages needed for this workflow 
-conda install -c bioconda fastqc 
-conda install multiqc 
-conda install bioconda::nextflow 
-conda install conda-forge::singularity
-conda install bioconda::blast
-conda install nextflow
-conda install blast
-conda install singularity
-</code></pre></div>
+<h2 id="step-1-confirm-conda-environment-is-available">Step 1: Confirm conda environment is available</h2>
 <p>The conda environment is started within each slurm script, but to activate conda environment outside of the slurm script to update packages or check what is installed:</p>
 <div class="highlight"><pre><span></span><code># Activate conda
 source ~/../../work/gmgi/miniconda3/bin/activate
