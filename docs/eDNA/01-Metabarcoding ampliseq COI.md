@@ -14,29 +14,7 @@ Workflow done on HPC. Scripts to run:
 4. 01b-ampliseq.sh
 5. 02-taxonomicID.sh  
 
-## Step 1: Conda environment: Fisheries eDNA 
-
-Background information on [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html). 
-
-GMGI Fisheries has a conda environment set-up with all the packages needed for this workflow. Code below was used to create this conda environment. **DO NOT REPEAT** every time user is running this workflow.
-
-```
-# Activate conda
-source ~/../../work/gmgi/miniconda3/bin/activate
-
-# Creating conda 
-conda create --name fisheries_eDNA
-
-# Installing packages needed for this workflow 
-conda install -c bioconda fastqc 
-conda install multiqc 
-conda install bioconda::nextflow 
-conda install conda-forge::singularity
-conda install bioconda::blast
-conda install nextflow
-conda install blast
-conda install singularity
-```
+## Step 1: Confirm conda environment is available 
 
 The conda environment is started within each slurm script, but to activate conda environment outside of the slurm script to update packages or check what is installed:
 
@@ -330,11 +308,20 @@ We add an ASV length filter that will output `asv_length_filter/` with:
 - `ASV_len_filt.tsv`: ASV length distribution after filtering.  
 - `stats.len.tsv`: Tracking read numbers through filtering, for each sample.  
 
-## Step 5: Blast ASV sequences (output from DADA2) against our 3 databases 
+## Step 5: Blast ASV sequences (output from DADA2) against our database list 
 
 ### Populating /work/gmgi/databases folder 
 
-We use NCBI, BOLD, and XX databases. 
+MIDORI: A database specifically for COI sequences  
+
+We use a program called [COInr](https://github.com/meglecz/mkCOInr) that downloads NCBI and BOLD (Barcode of Life Database) databases to create one database for comparison. COInr is already downloaded in the conda environment and pulls NCBI And BOLD directly. 
+
+![](https://mkcoinr.readthedocs.io/en/latest/_images/COInr_flowchart_readme.png)
+
+Alternative to COInr program:  
+
+- [MARES (MARine Eukaryote Species)](https://www.nature.com/articles/s41597-020-0549-9) and [github](https://github.com/wpearman1996/MARES_database_pipeline): This database combines sequences from both GenBank and BOLD to increase taxonomic coverage and confidence for marine eukaryotes   
+
 
 #### Download and/or update NBCI blast nt database
 
@@ -369,19 +356,31 @@ View the `update_ncbi_nt.out` file to confirm the echo printed at the end.
 
 *Emma is still troubleshooting the -remote flag to also avoid storing the nt db within our /work/gmgi folder.* 
 
-#### Download and/or update BOLD database  
+#### Download and/or update COInr program  
 
-Check [BOLD webpage]( ) for the most recent database version number. Compare to the `work/gmgi/databases/COI/BOLD` folder. If needed, update Mitofish database:
-
-```
-
-
-
-
+COInr database [instructions](https://mkcoinr.readthedocs.io/en/latest/content/tutorial.html). There are [options](https://mkcoinr.readthedocs.io/en/latest/content/tutorial.html#add-custom-sequences-to-a-database) to include custom sequences if needed.
 
 ```
+cd /work/gmgi/packages 
+git clone https://github.com/meglecz/mkCOInr.git
 
+cd /work/gmgi/databases/COI
+wget https://zenodo.org/record/6555985/files/COInr_2022_05_06.tar.gz
+tar -zxvf COInr_2022_05_06.tar.gz
+rm COInr_2022_05_06.tar.gz
+mv COInr_2022_05_06 COInr
 
+## converting database information for blast 
+perl /work/gmgi/packages/mkCOInr/scripts/format_db.pl -tsv COInr/COInr.tsv -outfmt blast -outdir /work/gmgi/databases/COI -out COInr_blast
+```
+
+#### Download and/or update MARES program 
+
+MARES Github [repo](https://github.com/wpearman1996/MARES_database_pipeline). 
+
+#### Download and/or update MIDORI
+
+MIDORI [webpage](https://www.reference-midori.info/#:~:text=MIDORI2%20is%20a%20reference%20database%20of%20DNA%20and).
 
 
 ### Running taxonomic ID script 
