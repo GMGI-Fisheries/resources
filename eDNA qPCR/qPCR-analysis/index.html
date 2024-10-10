@@ -1507,7 +1507,7 @@ Fisheries team to make sure code reflect user’s needs.</em></p>
 <div class="highlight"><pre><span></span><code><span class="c1">## normalize data </span>
 <span class="n">normalized_df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">samples_df</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="c1">## take log10 of copy number </span>
-<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Sample_Copy_Num_normalized</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="n">Sample_Copy_Num</span><span class="p">))</span><span class="w"> </span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Sample_Copy_Num_normalized</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="n">Sample_Copy_Num</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="p">))</span><span class="w"> </span>
 
 <span class="c1">## create an outlier cut-off </span>
 <span class="n">cutoff</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">median</span><span class="p">(</span><span class="n">normalized_df</span><span class="o">$</span><span class="n">Sample_Copy_Num_normalized</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>
@@ -1524,11 +1524,7 @@ Fisheries team to make sure code reflect user’s needs.</em></p>
 <span class="w">           </span><span class="p">(</span><span class="nf">max</span><span class="p">(</span><span class="n">Sample_Copy_Num_normalized</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nf">min</span><span class="p">(</span><span class="n">Sample_Copy_Num_normalized</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">))</span>
 <span class="w">           </span><span class="p">)</span>
 
-<span class="c1">## note for later -- this doesn&#39;t make it 0-1?</span>
-<span class="c1">## equation from the Nicole&#39;s code </span>
-<span class="c1">## Norm &lt;-(logData-min(logData, na.rm=TRUE))/(max(logData, na.rm=TRUE)-min(logData, na.rm=TRUE))</span>
-
-<span class="c1">## note for later -- why are some copy number normalized negative values? These get marked as absent in next section</span>
+<span class="c1">### left off at some samples aren&#39;t getting a log transformed value? </span>
 </code></pre></div>
 <h2 id="adding-presentabsent-information">Adding present/absent information</h2>
 <div class="highlight"><pre><span></span><code><span class="n">normalized_df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">normalized_df</span><span class="w"> </span><span class="o">%&gt;%</span>
