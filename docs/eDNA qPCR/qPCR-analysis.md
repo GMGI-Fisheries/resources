@@ -389,10 +389,11 @@ Bar chart
 ``` r
 fieldsamples_df %>% 
   filter(!is.na(Relative_Abundance)) %>%
-  ggplot(., aes(x=Sample_Location, y=Relative_Abundance)) + 
+  ggplot(., aes(x=Sample_ID, y=Relative_Abundance)) + 
+  #ggplot(., aes(x=Sample_Location, y=Relative_Abundance)) + 
   #geom_point(size = 2, alpha=0.75, color = 'black', fill = '#426999', shape=21) +
-  geom_bar(stat = "identity", width = 0.7, fill = '#426999') +
-  facet_wrap(~Date) +
+  geom_bar(stat = "identity", width = 0.7, fill = '#426999', alpha=0.75) +
+  #facet_wrap(~Date) +
   labs(
     y="Relative Abundance",
     x = "Sample Location"
@@ -401,17 +402,18 @@ fieldsamples_df %>%
     ## theme variables
     theme(panel.background=element_rect(fill='white', colour='black'),
         legend.position = "none",
-        axis.text.y = element_text(size=6, color="grey20"),
-        axis.text.x = element_text(size=4, color="grey20", angle=90, hjust=1, vjust=0.5),
+        axis.text.y = element_text(size=8, color="grey20"),
+        axis.text.x = element_text(size=6, color="grey20", angle=90, hjust=1, vjust=0.5),
         axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=10, face="bold"),
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=10, face="bold"),
         # New theme elements for strip appearance
         strip.background = element_rect(fill = "white", color = "black"),
-        strip.text = element_text(face = "bold", size = 9))
+        strip.text = element_text(face = "bold", size = 9)
+        )
 ```
 
 ![](qPCR-analysis_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 ``` r
-ggsave("example output/Fieldsample_relative_abundance.png", width = 9.5, height=5.5)
+ggsave("example output/Fieldsample_relative_abundancev2.png", width = 9.5, height=5)
 ```
