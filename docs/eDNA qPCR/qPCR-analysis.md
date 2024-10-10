@@ -302,7 +302,7 @@ head(samples_df)
 ## normalize data 
 normalized_df <- samples_df %>%
   ## take log10 of copy number 
-  mutate(Sample_Copy_Num_normalized = log10(Sample_Copy_Num)) 
+  mutate(Sample_Copy_Num_normalized = log10(Sample_Copy_Num + 1)) 
   
 ## create an outlier cut-off 
 cutoff <- median(normalized_df$Sample_Copy_Num_normalized, na.rm = TRUE) + 
@@ -319,11 +319,7 @@ normalized_df <- normalized_df %>%
            (max(Sample_Copy_Num_normalized, na.rm=TRUE) - min(Sample_Copy_Num_normalized, na.rm=TRUE))
            )
 
-## note for later -- this doesn't make it 0-1?
-## equation from the Nicole's code 
-## Norm <-(logData-min(logData, na.rm=TRUE))/(max(logData, na.rm=TRUE)-min(logData, na.rm=TRUE))
-
-## note for later -- why are some copy number normalized negative values? These get marked as absent in next section
+### left off at some samples aren't getting a log transformed value? 
 ```
 
 ## Adding present/absent information
