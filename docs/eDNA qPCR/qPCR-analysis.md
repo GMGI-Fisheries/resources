@@ -280,7 +280,21 @@ samples_df <- filters_df %>% right_join(meta, ., by = "Sample_ID") %>%
 
   ## adding new SampleID back in
   unite(Sample_ID, Date, Sample_Location, sep = " ", remove=F)
+
+head(samples_df)
 ```
+
+    ## # A tibble: 6 × 8
+    ##   Sample_ID    Date                Sample_Location Sample_Type Number_of_Filters
+    ##   <chr>        <dttm>              <chr>           <chr>       <lgl>            
+    ## 1 2024-01-17 … 2024-01-17 00:00:00 DI Blank #1     Blank       NA               
+    ## 2 2024-01-17 … 2024-01-17 00:00:00 DI Blank #2     Blank       NA               
+    ## 3 2024-01-17 … 2024-01-17 00:00:00 GBP_OCA         Field       NA               
+    ## 4 2024-01-17 … 2024-01-17 00:00:00 IPC_GCO         Field       NA               
+    ## 5 2024-01-17 … 2024-01-17 00:00:00 IPC_BBC         Field       NA               
+    ## 6 2024-01-17 … 2024-01-17 00:00:00 NAN_EDI         Field       NA               
+    ## # ℹ 3 more variables: Sample_Cq <dbl>, Sample_Num_Replicates <dbl>,
+    ## #   Sample_Copy_Num <dbl>
 
 ## Normalizing data
 
@@ -301,7 +315,7 @@ normalized_df <- normalized_df %>%
   
   ## calculate relative abundance based on this log normalized value to a value 0-1 
   mutate(Relative_Abundance = 
-           Sample_Copy_Num_normalized - min(Sample_Copy_Num_normalized, na.rm=TRUE)/
+           (Sample_Copy_Num_normalized - min(Sample_Copy_Num_normalized, na.rm=TRUE))/
            (max(Sample_Copy_Num_normalized, na.rm=TRUE) - min(Sample_Copy_Num_normalized, na.rm=TRUE))
            )
 

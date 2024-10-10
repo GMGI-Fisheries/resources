@@ -360,6 +360,8 @@ View the `update_ncbi_nt.out` file to confirm the echo printed at the end.
 
 COInr database [instructions](https://mkcoinr.readthedocs.io/en/latest/content/tutorial.html). There are [options](https://mkcoinr.readthedocs.io/en/latest/content/tutorial.html#add-custom-sequences-to-a-database) to include custom sequences if needed.
 
+Is this the most updated version of both BOLD and NCBI? 
+
 ```
 cd /work/gmgi/packages 
 git clone https://github.com/meglecz/mkCOInr.git
@@ -371,7 +373,7 @@ rm COInr_2022_05_06.tar.gz
 mv COInr_2022_05_06 COInr
 
 ## converting database information for blast 
-perl /work/gmgi/packages/mkCOInr/scripts/format_db.pl -tsv COInr/COInr.tsv -outfmt blast -outdir /work/gmgi/databases/COI -out COInr_blast
+perl /work/gmgi/packages/mkCOInr/scripts/format_db.pl -tsv COInr/COInr.tsv -outfmt blast -outdir /work/gmgi/databases/COI/COInr -out COInr_blast
 ```
 
 #### Download and/or update MARES program 
