@@ -2,16 +2,17 @@
 
 ### Visualization
 
-Heatmaps:  
+Heatmaps:    
+
 - R package for using pheatmap with minimal coding: [Tidy Heatmaps](https://jbengler.github.io/tidyheatmaps/) 
 
-Picking color:  
-
+Picking color:   
+ 
 - [Coolors palette generator](https://coolors.co/?home)
 
 ### Data Analysis 
 
-Generalized Linear Models:   
+Generalized Linear Models:     
 
 - [Workshop 6: Generalized linear models in R](https://r.qcbs.ca/workshop06/book-en/index.html)
 
