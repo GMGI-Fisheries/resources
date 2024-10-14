@@ -252,8 +252,6 @@ normalized_df <- normalized_df %>%
            (Sample_Copy_Num_normalized - min(Sample_Copy_Num_normalized, na.rm=TRUE))/
            (max(Sample_Copy_Num_normalized, na.rm=TRUE) - min(Sample_Copy_Num_normalized, na.rm=TRUE))
            )
-
-### left off at some samples aren't getting a log transformed value? 
 ```
 
 ## Adding present/absent information
