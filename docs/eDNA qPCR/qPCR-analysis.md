@@ -117,7 +117,7 @@ spike_samples <- df %>%
   ## group by plate ID and sample ID 
   group_by(plate.ID, Sample_ID) %>%
 
-  ## calculate average of spikes per plate and sample 
+  ## calculate mean of spikes per plate and sample 
   ## ungroup by Sample_ID so the next calculation is only done grouped by Plate 
   mutate(Filter_Cq = mean(Cq)) %>% 
   ungroup(Sample_ID) %>%
@@ -218,7 +218,7 @@ filters_df <- df %>%
   ## group by plate ID and sample ID 
   group_by(plate.ID, Sample_ID) %>%
 
-  ## calculate average of Cq per plate and sample, replacing NaN with NA
+  ## calculate mean of Cq per plate and sample, replacing NaN with NA
   mutate(Filter_Cq = if_else(is.nan(mean(Cq, na.rm = TRUE)), NA_real_, mean(Cq, na.rm = TRUE))) %>%
   
   ## calculate # of replicates 
@@ -262,7 +262,7 @@ nrow(filters_df) == length(unique(filters_df$Sample_ID))
 samples_df <- filters_df %>% right_join(meta, ., by = "Sample_ID") %>%
   group_by(Date, Sample_Location) %>%
   
-  ## mutate to average
+  ## mutate to mean
   mutate(Sample_Cq = if_else(is.nan(mean(Filter_Cq, na.rm = TRUE)), 
                                     NA_real_, mean(Filter_Cq, na.rm = TRUE)),
          
@@ -404,7 +404,7 @@ fieldsamples_df %>%
   #facet_wrap(~Date) +
   labs(
     y="Relative Abundance",
-    x = "Sample Location"
+    x = "Sample ID"
   ) +
   theme_bw() +
     ## theme variables
@@ -429,9 +429,17 @@ ggsave("example output/Fieldsample_relative_abundancev2.png", width = 9.5, heigh
 ## Exporting data
 
 ``` r
-blank_df %>% mutate(Date = as.Date(Date)) %>%
+blank_df %>% mutate(Date = as.Date(Date)) %>% 
+  dplyr::select(Date, Sample_Location, Sample_Cq, Sample_Num_Replicates, Sample_Copy_Num, Relative_Abundance, Detection) %>%
+  dplyr::rename(`Number of Replicates` = Sample_Num_Replicates, `Mean Ct` = Sample_Cq,
+                `Mean Copy Number` = Sample_Copy_Num, `Relative Abundance` = Relative_Abundance,
+                Sample = Sample_Location) %>%
   write_xlsx("example output/Results_Blanks.xlsx")
 
 normalized_df %>% mutate(Date = as.Date(Date)) %>%
+  dplyr::select(Date, Sample_Location, Sample_Cq, Sample_Num_Replicates, Sample_Copy_Num, Relative_Abundance, Detection) %>%
+    dplyr::rename(`Number of Replicates` = Sample_Num_Replicates, `Mean Ct` = Sample_Cq,
+                `Mean Copy Number` = Sample_Copy_Num, `Relative Abundance` = Relative_Abundance,
+                Sample = Sample_Location) %>%
   write_xlsx("example output/Results.xlsx")
 ```
