@@ -420,7 +420,7 @@ taxonkit="/work/gmgi/databases/taxonkit"
 
 #### DATABASE QUERY ####
 ### NCBI database 
-blastn -db ${ncbi}/*.fasta \
+blastn -db ${ncbi}/"nt" \
    -query ${ASV_fasta}/ASV_seqs.len.fasta \
    -out ${out}/BLASTResults_NCBI.txt \
    -max_target_seqs 10 -perc_identity 100 -qcov_hsp_perc 95 \
