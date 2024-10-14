@@ -805,6 +805,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#exporting-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exporting data
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1241,6 +1250,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#exporting-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exporting data
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1627,6 +1645,13 @@ Fisheries team to make sure code reflect user’s needs.</em></p>
 </code></pre></div>
 <p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-13-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Fieldsample_relative_abundancev2.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">9.5</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">5</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="exporting-data">Exporting data</h2>
+<div class="highlight"><pre><span></span><code><span class="n">blank_df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as.Date</span><span class="p">(</span><span class="n">Date</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="s">&quot;example output/Results_Blanks.xlsx&quot;</span><span class="p">)</span>
+
+<span class="n">normalized_df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as.Date</span><span class="p">(</span><span class="n">Date</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="s">&quot;example output/Results.xlsx&quot;</span><span class="p">)</span>
 </code></pre></div>
 
 

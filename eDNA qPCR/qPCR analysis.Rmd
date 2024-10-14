@@ -348,6 +348,15 @@ fieldsamples_df %>%
 ggsave("example output/Fieldsample_relative_abundancev2.png", width = 9.5, height=5)
 ```
 
+## Exporting data 
+
+```{r}
+blank_df %>% mutate(Date = as.Date(Date)) %>%
+  write_xlsx("example output/Results_Blanks.xlsx")
+
+normalized_df %>% mutate(Date = as.Date(Date)) %>%
+  write_xlsx("example output/Results.xlsx")
+```
 
 
 
