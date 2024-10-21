@@ -729,6 +729,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#other-options-to-consider" class="md-nav__link">
+    <span class="md-ellipsis">
+      Other options to consider
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1360,6 +1369,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#other-options-to-consider" class="md-nav__link">
+    <span class="md-ellipsis">
+      Other options to consider
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1732,7 +1750,7 @@ echo &quot;BLAST nt database update completed&quot;
 <p><em>Emma is still troubleshooting the -remote flag to also avoid storing the nt db within our /work/gmgi folder.</em> </p>
 <h4 id="download-andor-update-coinr-program">Download and/or update COInr program</h4>
 <p>COInr database <a href="https://mkcoinr.readthedocs.io/en/latest/content/tutorial.html">instructions</a>. There are <a href="https://mkcoinr.readthedocs.io/en/latest/content/tutorial.html#add-custom-sequences-to-a-database">options</a> to include custom sequences if needed.</p>
-<p>Is this the most updated version of both BOLD and NCBI? </p>
+<p>The latest version of BOLD is 2015 so this 2022 set is the most updated. Use our own NCBI as well to catch recent entries. </p>
 <div class="highlight"><pre><span></span><code>cd /work/gmgi/packages 
 git clone https://github.com/meglecz/mkCOInr.git
 
@@ -1746,9 +1764,24 @@ mv COInr_2022_05_06 COInr
 perl /work/gmgi/packages/mkCOInr/scripts/format_db.pl -tsv COInr/COInr.tsv -outfmt blast -outdir /work/gmgi/databases/COI/COInr -out COInr_blast
 </code></pre></div>
 <h4 id="download-andor-update-mares-program">Download and/or update MARES program</h4>
-<p>MARES Github <a href="https://github.com/wpearman1996/MARES_database_pipeline">repo</a>. </p>
+<p>MARES Github <a href="https://github.com/wpearman1996/MARES_database_pipeline">repo</a>. Paper <a href="https://doi.org/10.1038/s41597-020-0549-9">link</a>. </p>
 <h4 id="download-andor-update-midori">Download and/or update MIDORI</h4>
-<p>MIDORI <a href="https://www.reference-midori.info/#:~:text=MIDORI2%20is%20a%20reference%20database%20of%20DNA%20and">webpage</a>.</p>
+<p>MIDORI <a href="https://www.reference-midori.info/#:~:text=MIDORI2%20is%20a%20reference%20database%20of%20DNA%20and">webpage</a>. MIDORI Reference pulls from GenBank</p>
+<p>Visit the <a href="https://www.reference-midori.info/download.php">MIDORI website</a> to check for the most updated db. This folder is already formatted for blast searching so we don't need to create a blast formatted db. </p>
+<div class="highlight"><pre><span></span><code>cd /work/gmgi/databases/COI/MIDORI
+
+## download zip file from MIDORI website for CO1 sequences in BLAST format from nucleotide reference
+wget https://www.reference-midori.info/download/Databases/GenBank261_2024-06-15/BLAST/uniq/fasta/MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta.zip
+unzip MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta.zip 
+
+## change notation if version is different 
+makeblastdb -in MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta -dbtype nucl -out MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta
+</code></pre></div>
+<h4 id="other-options-to-consider">Other options to consider</h4>
+<ul>
+<li>Download BOLD directly? <a href="https://www.boldsystems.org/">database webpage</a>. You can search for particular orders, primer sets, etc.  </li>
+<li>MARES Github <a href="https://github.com/wpearman1996/MARES_database_pipeline">repo</a>. Paper <a href="https://doi.org/10.1038/s41597-020-0549-9">link</a>. This looks similar to the COInr program? I'm nore sure which one is best to use. Trying the COInr first. </li>
+</ul>
 <h3 id="running-taxonomic-id-script">Running taxonomic ID script</h3>
 <p><code>02-taxonomicID.sh</code>: </p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
@@ -1766,15 +1799,14 @@ perl /work/gmgi/packages/mkCOInr/scripts/format_db.pl -tsv COInr/COInr.tsv -outf
 ## 1. Set paths for project; change db path if not 12S
 
 # Activate conda environment
-source /work/gmgi/miniconda3/bin/activate
-conda activate fisheries_eDNA
+source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 # SET PATHS 
 ASV_fasta=&quot;&quot;
 out=&quot;&quot;
 
-gmgi=&quot;/work/gmgi/databases/12S/GMGI&quot;
-mito=&quot;/work/gmgi/databases/12S/Mitofish&quot;
+COInr=&quot;/work/gmgi/databases/COI/COInr&quot;
+midori=&quot;/work/gmgi/databases/COI/MIDORI&quot;
 ncbi=&quot;/work/gmgi/databases/ncbi/nt&quot;
 taxonkit=&quot;/work/gmgi/databases/taxonkit&quot;
 
@@ -1783,21 +1815,20 @@ taxonkit=&quot;/work/gmgi/databases/taxonkit&quot;
 blastn -db ${ncbi}/&quot;nt&quot; \
    -query ${ASV_fasta}/ASV_seqs.len.fasta \
    -out ${out}/BLASTResults_NCBI.txt \
-   -max_target_seqs 10 -perc_identity 100 -qcov_hsp_perc 95 \
-   -outfmt &#39;6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore&#39; \
-   -verbose
+   -max_target_seqs 20 -perc_identity 99 -qcov_hsp_perc 95 \
+   -outfmt &#39;6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore&#39;
 
-## Mitofish database 
-blastn -db ${mito}/*.fasta \
+## MIDORI database 
+blastn -db ${midori}/*.fasta&quot; \
    -query ${ASV_fasta}/ASV_seqs.len.fasta \
-   -out ${out}/BLASTResults_Mito.txt \
-   -max_target_seqs 10 -perc_identity 100 -qcov_hsp_perc 95 \
+   -out ${out}/BLASTResults_midori.txt \
+   -max_target_seqs 10 -perc_identity 98 -qcov_hsp_perc 95 \
    -outfmt &#39;6  qseqid   sseqid  pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore&#39;
 
-## GMGI database 
-blastn -db ${gmgi}/*.fasta \
+## COInr database 
+blastn -db ${COInr}/*.fasta \
    -query ${ASV_fasta}/ASV_seqs.len.fasta \
-   -out ${out}/BLASTResults_GMGI.txt \
+   -out ${out}/BLASTResults_COInr.txt \
    -max_target_seqs 10 -perc_identity 98 -qcov_hsp_perc 95 \
    -outfmt &#39;6  qseqid   sseqid   pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore&#39;
 
