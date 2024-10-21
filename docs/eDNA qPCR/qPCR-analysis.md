@@ -69,7 +69,13 @@ df <-
   
   ## RI STRIPED BASS SPECIFIC CODE FOR SAMPLE ID MISMATCHES
   mutate(Sample_ID = gsub(" #1", "_1", Sample_ID),
-         Sample_ID = gsub(" #2", "_2", Sample_ID))
+         Sample_ID = gsub(" #2", "_2", Sample_ID)) %>%
+  
+  mutate(Sample_ID = case_when(
+    str_detect(Well, "4") & Sample_ID == "2/21/24_ONE_NTR" ~ paste0(Sample_ID, "_1"),
+    str_detect(Well, "5") & Sample_ID == "2/21/24_ONE_NTR" ~ paste0(Sample_ID, "_2"),
+    TRUE ~ Sample_ID
+  ))
 
 head(df)
 ```
@@ -97,6 +103,32 @@ meta <- read_xlsx("example input/client_metadata_example.xlsx") %>%
   mutate(Sample_ID = gsub(" #1", "_1", Sample_ID),
          Sample_ID = gsub(" #2", "_2", Sample_ID))
 ```
+
+## Evaluating No Template Controls (NTCs; Negatives)
+
+``` r
+NTC <- df %>% 
+  filter(grepl("neg", Sample_ID, ignore.case = TRUE))
+
+## Calculate number of negatives with Cq values 
+sum(!is.na(NTC$Cq))
+```
+
+    ## [1] 1
+
+``` r
+## Calculate number of negatives total 
+nrow(NTC)
+```
+
+    ## [1] 120
+
+``` r
+## Calculate number of plates
+length(unique(NTC$plate.ID))
+```
+
+    ## [1] 20
 
 ## Spike information
 
@@ -197,7 +229,7 @@ spike_samples %>% dplyr::select(Target, Sample_ID, Cq_diff) %>% distinct() %>%
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=12, face="bold"))
 ```
 
-![](qPCR-analysis_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](qPCR-analysis_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 ``` r
 ggsave("example output/Inhibition.png", width=5, height=4)
@@ -213,7 +245,7 @@ slope <- -3.386
 ## Complete calculations
 filters_df <- df %>% 
   ## subset out the spiked samples 
-  filter(!grepl("spike|pos", Sample_ID, ignore.case = TRUE)) %>%
+  filter(!grepl("spike|pos|neg", Sample_ID, ignore.case = TRUE)) %>%
 
   ## group by plate ID and sample ID 
   group_by(plate.ID, Sample_ID) %>%
@@ -262,20 +294,23 @@ nrow(filters_df) == length(unique(filters_df$Sample_ID))
 samples_df <- filters_df %>% right_join(meta, ., by = "Sample_ID") %>%
   group_by(Date, Sample_Location) %>%
   
-  ## mutate to mean
-  mutate(Sample_Cq = if_else(is.nan(mean(Filter_Cq, na.rm = TRUE)), 
+  ## mutate to mean Ct value
+  mutate(`Mean Ct` = if_else(is.nan(mean(Filter_Cq, na.rm = TRUE)), 
                                     NA_real_, mean(Filter_Cq, na.rm = TRUE)),
          
-         Sample_Num_Replicates = mean(Filter_Num_Replicates),
+         ## take highest value of number of replicates
+         `Number of Replicates` = max(Filter_Num_Replicates, na.rm=TRUE),
          
-         Sample_Copy_Num = if_else(is.nan(mean(Filter_Copy_Num, na.rm = TRUE)), 
-                                    NA_real_, mean(Filter_Copy_Num, na.rm = TRUE))) %>%
+         ## sum of 2 copy number values 
+         `Mean Copy Number` = ifelse(sum(Filter_Copy_Num, na.rm=TRUE) == 0, NA, 
+                            sum(Filter_Copy_Num, na.rm=TRUE))
+           ) %>%
   
   ungroup() %>%
   
   ## summarizing df 
   dplyr::select(Date, Sample_Location, Sample_Type, Number_of_Filters, 
-                Sample_Cq, Sample_Num_Replicates, Sample_Copy_Num) %>%
+                `Mean Ct`, `Number of Replicates`, `Mean Copy Number`) %>%
   distinct() %>%
 
   ## adding new SampleID back in
@@ -293,8 +328,15 @@ head(samples_df)
     ## 4 2024-01-17 … 2024-01-17 00:00:00 IPC_GCO         Field       NA               
     ## 5 2024-01-17 … 2024-01-17 00:00:00 IPC_BBC         Field       NA               
     ## 6 2024-01-17 … 2024-01-17 00:00:00 NAN_EDI         Field       NA               
-    ## # ℹ 3 more variables: Sample_Cq <dbl>, Sample_Num_Replicates <dbl>,
-    ## #   Sample_Copy_Num <dbl>
+    ## # ℹ 3 more variables: `Mean Ct` <dbl>, `Number of Replicates` <int>,
+    ## #   `Mean Copy Number` <dbl>
+
+``` r
+## Confirm that the number of samples output from qPCR matches the number of samples in the metadata  
+nrow(samples_df) == nrow(meta %>% dplyr::select(-Sample_ID) %>% distinct())
+```
+
+    ## [1] TRUE
 
 ## Normalizing data
 
@@ -302,22 +344,41 @@ head(samples_df)
 ## normalize data 
 normalized_df <- samples_df %>%
   ## take log10 of copy number 
-  mutate(Sample_Copy_Num_normalized = log10(Sample_Copy_Num + 1)) 
-  
+  mutate(`Mean Copy Number Normalized` = log10(`Mean Copy Number` + 1))
+        
 ## create an outlier cut-off 
-cutoff <- median(normalized_df$Sample_Copy_Num_normalized, na.rm = TRUE) + 
-  3*IQR(normalized_df$Sample_Copy_Num_normalized, na.rm=TRUE)
+cutoff <- quantile(normalized_df$`Mean Copy Number Normalized`, na.rm = TRUE, probs=0.75) + 
+  1.5*IQR(normalized_df$`Mean Copy Number Normalized`, na.rm=TRUE)
 
-## filter based on the outlier cut-off (if log sample copy num is above cut-off, change to NA)
-normalized_df <- normalized_df %>%
-  mutate(Sample_Copy_Num_normalized = 
-           if_else(Sample_Copy_Num_normalized > cutoff, NA_real_, Sample_Copy_Num_normalized)) %>%
-  
-  ## calculate relative abundance based on this log normalized value to a value 0-1 
-  mutate(Relative_Abundance = 
-           (Sample_Copy_Num_normalized - min(Sample_Copy_Num_normalized, na.rm=TRUE))/
-           (max(Sample_Copy_Num_normalized, na.rm=TRUE) - min(Sample_Copy_Num_normalized, na.rm=TRUE))
-           )
+## create an outlier cut-off 
+cutoff_below <- quantile(normalized_df$`Mean Copy Number Normalized`, na.rm = TRUE, probs=0.25) - 
+  1.5*IQR(normalized_df$`Mean Copy Number Normalized`, na.rm=TRUE)
+
+## Output the values that outside the cutoff
+normalized_df %>% filter(`Mean Copy Number Normalized` > cutoff) 
+```
+
+    ## # A tibble: 3 × 9
+    ##   Sample_ID    Date                Sample_Location Sample_Type Number_of_Filters
+    ##   <chr>        <dttm>              <chr>           <chr>       <lgl>            
+    ## 1 2024-01-18 … 2024-01-18 00:00:00 POP_SEC         Field       NA               
+    ## 2 2024-01-18 … 2024-01-18 00:00:00 POP_OUT         Field       NA               
+    ## 3 2024-01-18 … 2024-01-18 00:00:00 PJP_CFL         Field       NA               
+    ## # ℹ 4 more variables: `Mean Ct` <dbl>, `Number of Replicates` <int>,
+    ## #   `Mean Copy Number` <dbl>, `Mean Copy Number Normalized` <dbl>
+
+``` r
+normalized_df %>% filter(`Mean Copy Number Normalized` < cutoff_below) 
+```
+
+    ## # A tibble: 0 × 9
+    ## # ℹ 9 variables: Sample_ID <chr>, Date <dttm>, Sample_Location <chr>,
+    ## #   Sample_Type <chr>, Number_of_Filters <lgl>, Mean Ct <dbl>,
+    ## #   Number of Replicates <int>, Mean Copy Number <dbl>,
+    ## #   Mean Copy Number Normalized <dbl>
+
+``` r
+## the cutoff we move forward with is the cutoff (high) but confirm no values are below the lower cutoff value 
 ```
 
 ## Adding present/absent information
@@ -325,7 +386,7 @@ normalized_df <- normalized_df %>%
 ``` r
 normalized_df <- normalized_df %>%
   mutate(Detection = case_when(
-    is.na(Sample_Copy_Num_normalized) ~ "Absent",
+    is.na(`Mean Copy Number Normalized`) ~ "Absent",
     TRUE ~ "Present"
   ))
 ```
@@ -338,41 +399,9 @@ blank_df <- normalized_df %>% subset(Sample_Type == "Blank")
 detection_counts <- blank_df %>%
   count(Detection) %>%
   mutate(percentage = n / sum(n) * 100,
-         label = paste0(Detection, "\n", round(percentage, 1), "%"))
+         label = paste0(Detection, "\n", "n=", n, "\n", round(percentage, 1), "%"))
 
 ggplot(detection_counts, aes(x = "", y = n, fill = Detection)) +
-  geom_bar(stat = "identity", width = 1, color = "black", alpha=0.75) +
-  coord_polar("y", start = 0) +
-  geom_text(aes(label = label), 
-            position = position_stack(vjust = 0.5), 
-            size = 5,
-            fontface = "bold") + 
-  theme_void() +
-  theme(legend.position = "none",
-        #plot.title = element_text(hjust = 0.5, size = 16, face = "bold")
-        ) +
-  scale_fill_manual(values = c("#D2D4D4", "#426999"))
-```
-
-![](qPCR-analysis_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
-
-``` r
-ggsave("example output/Blanks_piechart.png", width=4, height=4)
-```
-
-## Sample preliminary data
-
-Pie chart
-
-``` r
-fieldsamples_df <- normalized_df %>% subset(Sample_Type == "Field")
-
-field_detection_counts <- fieldsamples_df %>%
-  count(Detection) %>%
-  mutate(percentage = n / sum(n) * 100,
-         label = paste0(Detection, "\n", round(percentage, 1), "%"))
-
-ggplot(field_detection_counts, aes(x = "", y = n, fill = Detection)) +
   geom_bar(stat = "identity", width = 1, color = "black", alpha=0.75) +
   coord_polar("y", start = 0) +
   geom_text(aes(label = label), 
@@ -389,6 +418,38 @@ ggplot(field_detection_counts, aes(x = "", y = n, fill = Detection)) +
 ![](qPCR-analysis_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 ``` r
+ggsave("example output/Blanks_piechart.png", width=4, height=4)
+```
+
+## Sample preliminary data
+
+Pie chart
+
+``` r
+fieldsamples_df <- normalized_df %>% subset(Sample_Type == "Field")
+
+field_detection_counts <- fieldsamples_df %>%
+  count(Detection) %>%
+  mutate(percentage = n / sum(n) * 100,
+         label = paste0(Detection, "\n", "n=", n, "\n", round(percentage, 1), "%"))
+
+ggplot(field_detection_counts, aes(x = "", y = n, fill = Detection)) +
+  geom_bar(stat = "identity", width = 1, color = "black", alpha=0.75) +
+  coord_polar("y", start = 0) +
+  geom_text(aes(label = label), 
+            position = position_stack(vjust = 0.5), 
+            size = 5,
+            fontface = "bold") + 
+  theme_void() +
+  theme(legend.position = "none",
+        #plot.title = element_text(hjust = 0.5, size = 16, face = "bold")
+        ) +
+  scale_fill_manual(values = c("#D2D4D4", "#426999"))
+```
+
+![](qPCR-analysis_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+``` r
 ggsave("example output/Fields_piechart.png", width=4, height=4)
 ```
 
@@ -396,20 +457,22 @@ Bar chart
 
 ``` r
 fieldsamples_df %>% 
-  filter(!is.na(Relative_Abundance)) %>%
-  ggplot(., aes(x=Sample_ID, y=Relative_Abundance)) + 
-  #ggplot(., aes(x=Sample_Location, y=Relative_Abundance)) + 
-  #geom_point(size = 2, alpha=0.75, color = 'black', fill = '#426999', shape=21) +
-  geom_bar(stat = "identity", width = 0.7, fill = '#426999', alpha=0.75) +
-  #facet_wrap(~Date) +
+  filter(!is.na(`Mean Copy Number Normalized`)) %>%
+  ggplot(., aes(x=Sample_ID, y=`Mean Copy Number Normalized`, fill = `Mean Copy Number Normalized` > cutoff)) + 
+  geom_bar(stat = "identity", width = 0.7, alpha=0.75) +
+  scale_fill_manual(values = c("#426999", "#c1121f"),
+                    labels = c("Normal", "Outlier"),
+                    ) +
   labs(
-    y="Relative Abundance",
-    x = "Sample ID"
+    y="Log-Normalized Copy Number",
+    x = "Sample ID",
+    fill = "Outlier detection",
+    #title = "Just plotting log normalized value"
   ) +
   theme_bw() +
     ## theme variables
     theme(panel.background=element_rect(fill='white', colour='black'),
-        legend.position = "none",
+        legend.position = "right",
         axis.text.y = element_text(size=8, color="grey20"),
         axis.text.x = element_text(size=6, color="grey20", angle=90, hjust=1, vjust=0.5),
         axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=10, face="bold"),
@@ -417,29 +480,48 @@ fieldsamples_df %>%
         # New theme elements for strip appearance
         strip.background = element_rect(fill = "white", color = "black"),
         strip.text = element_text(face = "bold", size = 9)
-        )
+    ) +
+  guides(fill = guide_legend(override.aes = list(alpha = 1)))
 ```
 
-![](qPCR-analysis_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](qPCR-analysis_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 ``` r
-ggsave("example output/Fieldsample_relative_abundancev2.png", width = 9.5, height=5)
+ggsave("example output/Fieldsamples_barchart.png", width = 9.5, height=5)
 ```
 
 ## Exporting data
 
 ``` r
 blank_df %>% mutate(Date = as.Date(Date)) %>% 
-  dplyr::select(Date, Sample_Location, Sample_Cq, Sample_Num_Replicates, Sample_Copy_Num, Relative_Abundance, Detection) %>%
-  dplyr::rename(`Number of Replicates` = Sample_Num_Replicates, `Mean Ct` = Sample_Cq,
-                `Mean Copy Number` = Sample_Copy_Num, `Relative Abundance` = Relative_Abundance,
-                Sample = Sample_Location) %>%
+  dplyr::select(Date, Sample_Location, `Mean Ct`, `Number of Replicates`, 
+                `Mean Copy Number`, `Mean Copy Number Normalized`, Detection) %>%
+  
+  unite(Sample, Date, Sample_Location, sep = " ", remove = TRUE) %>%
+  
+  # cut decimals down to 2
+  mutate(across(where(is.numeric), ~round(., 2))) %>%
+  
   write_xlsx("example output/Results_Blanks.xlsx")
 
-normalized_df %>% mutate(Date = as.Date(Date)) %>%
-  dplyr::select(Date, Sample_Location, Sample_Cq, Sample_Num_Replicates, Sample_Copy_Num, Relative_Abundance, Detection) %>%
-    dplyr::rename(`Number of Replicates` = Sample_Num_Replicates, `Mean Ct` = Sample_Cq,
-                `Mean Copy Number` = Sample_Copy_Num, `Relative Abundance` = Relative_Abundance,
-                Sample = Sample_Location) %>%
-  write_xlsx("example output/Results.xlsx")
+### adding some meta for Rich 
+rich_meta <- read_xlsx("C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/RI Striped Bass/metadata/eDNA_Data_RI_STB_2024.xlsx") %>%
+  dplyr::rename(Date = Sample_Date, Sample_Location = Station_Code) %>%
+  mutate(Sample_Time = format(Sample_Time, format = "%H:%M:%S"))
+
+
+normalized_df %>% full_join(rich_meta, ., by = c("Date", "Sample_Location")) %>%
+  mutate(Date = as.Date(Date)) %>%
+  dplyr::select(-Number_of_Filters) %>% write_xlsx("example output/Results.xlsx")
+
+
+  # dplyr::select(Date, Sample_Location, `Mean Ct`, `Number of Replicates`, 
+  #               `Mean Copy Number`, `Mean Copy Number Normalized`, Detection) %>%
+  # 
+  # unite(Sample, Date, Sample_Location, sep = " ", remove = FALSE) %>%
+  # 
+  # # cut decimals down to 2
+  # mutate(across(where(is.numeric), ~round(., 2))) %>%
+  # 
+  # write_xlsx("example output/Results.xlsx")
 ```

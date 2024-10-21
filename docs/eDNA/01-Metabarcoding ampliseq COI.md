@@ -360,7 +360,7 @@ View the `update_ncbi_nt.out` file to confirm the echo printed at the end.
 
 COInr database [instructions](https://mkcoinr.readthedocs.io/en/latest/content/tutorial.html). There are [options](https://mkcoinr.readthedocs.io/en/latest/content/tutorial.html#add-custom-sequences-to-a-database) to include custom sequences if needed.
 
-Is this the most updated version of both BOLD and NCBI? 
+The latest version of BOLD is 2015 so this 2022 set is the most updated. Use our own NCBI as well to catch recent entries. 
 
 ```
 cd /work/gmgi/packages 
@@ -378,12 +378,29 @@ perl /work/gmgi/packages/mkCOInr/scripts/format_db.pl -tsv COInr/COInr.tsv -outf
 
 #### Download and/or update MARES program 
 
-MARES Github [repo](https://github.com/wpearman1996/MARES_database_pipeline). 
+MARES Github [repo](https://github.com/wpearman1996/MARES_database_pipeline). Paper [link](https://doi.org/10.1038/s41597-020-0549-9). 
 
 #### Download and/or update MIDORI
 
-MIDORI [webpage](https://www.reference-midori.info/#:~:text=MIDORI2%20is%20a%20reference%20database%20of%20DNA%20and).
+MIDORI [webpage](https://www.reference-midori.info/#:~:text=MIDORI2%20is%20a%20reference%20database%20of%20DNA%20and). MIDORI Reference pulls from GenBank
 
+Visit the [MIDORI website](https://www.reference-midori.info/download.php) to check for the most updated db. This folder is already formatted for blast searching so we don't need to create a blast formatted db. 
+
+```
+cd /work/gmgi/databases/COI/MIDORI
+
+## download zip file from MIDORI website for CO1 sequences in BLAST format from nucleotide reference
+wget https://www.reference-midori.info/download/Databases/GenBank261_2024-06-15/BLAST/uniq/fasta/MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta.zip
+unzip MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta.zip 
+
+## change notation if version is different 
+makeblastdb -in MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta -dbtype nucl -out MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta
+```
+
+#### Other options to consider 
+
+- Download BOLD directly? [database webpage](https://www.boldsystems.org/). You can search for particular orders, primer sets, etc.  
+- MARES Github [repo](https://github.com/wpearman1996/MARES_database_pipeline). Paper [link](https://doi.org/10.1038/s41597-020-0549-9). This looks similar to the COInr program? I'm nore sure which one is best to use. Trying the COInr first. 
 
 ### Running taxonomic ID script 
 
@@ -405,15 +422,14 @@ MIDORI [webpage](https://www.reference-midori.info/#:~:text=MIDORI2%20is%20a%20r
 ## 1. Set paths for project; change db path if not 12S
 
 # Activate conda environment
-source /work/gmgi/miniconda3/bin/activate
-conda activate fisheries_eDNA
+source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 # SET PATHS 
 ASV_fasta=""
 out=""
 
-gmgi="/work/gmgi/databases/12S/GMGI"
-mito="/work/gmgi/databases/12S/Mitofish"
+COInr="/work/gmgi/databases/COI/COInr"
+midori="/work/gmgi/databases/COI/MIDORI"
 ncbi="/work/gmgi/databases/ncbi/nt"
 taxonkit="/work/gmgi/databases/taxonkit"
 
@@ -422,21 +438,20 @@ taxonkit="/work/gmgi/databases/taxonkit"
 blastn -db ${ncbi}/"nt" \
    -query ${ASV_fasta}/ASV_seqs.len.fasta \
    -out ${out}/BLASTResults_NCBI.txt \
-   -max_target_seqs 10 -perc_identity 100 -qcov_hsp_perc 95 \
-   -outfmt '6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore' \
-   -verbose
+   -max_target_seqs 20 -perc_identity 99 -qcov_hsp_perc 95 \
+   -outfmt '6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore'
 
-## Mitofish database 
-blastn -db ${mito}/*.fasta \
+## MIDORI database 
+blastn -db ${midori}/*.fasta" \
    -query ${ASV_fasta}/ASV_seqs.len.fasta \
-   -out ${out}/BLASTResults_Mito.txt \
-   -max_target_seqs 10 -perc_identity 100 -qcov_hsp_perc 95 \
+   -out ${out}/BLASTResults_midori.txt \
+   -max_target_seqs 10 -perc_identity 98 -qcov_hsp_perc 95 \
    -outfmt '6  qseqid   sseqid  pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore'
 
-## GMGI database 
-blastn -db ${gmgi}/*.fasta \
+## COInr database 
+blastn -db ${COInr}/*.fasta \
    -query ${ASV_fasta}/ASV_seqs.len.fasta \
-   -out ${out}/BLASTResults_GMGI.txt \
+   -out ${out}/BLASTResults_COInr.txt \
    -max_target_seqs 10 -perc_identity 98 -qcov_hsp_perc 95 \
    -outfmt '6  qseqid   sseqid   pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore'
 

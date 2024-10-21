@@ -373,7 +373,7 @@ wget https://mitofish.aori.u-tokyo.ac.jp/species/detail/download/?filename=downl
 unzip 'index.html?filename=download%2F%2Fcomplete_partial_mitogenomes.zip'
 
 ## clean headers 
-awk '/^>/ {print $1} !/^>/ {print}' mito-all > Mitofish_v4.02.fasta
+awk '/^>/ {print $1} !/^>/ {print}' mito-all > Mitofish_v4.05.fasta
 
 ## remove excess files 
 rm mito-all* 
