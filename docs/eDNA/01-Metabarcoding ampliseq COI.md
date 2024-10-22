@@ -374,6 +374,9 @@ mv COInr_2022_05_06 COInr
 
 ## converting database information for blast 
 perl /work/gmgi/packages/mkCOInr/scripts/format_db.pl -tsv COInr/COInr.tsv -outfmt blast -outdir /work/gmgi/databases/COI/COInr -out COInr_blast
+
+## creating list of sseqID and taxIDs for R df step 
+awk '{print $1 "\t" $2}' COInr.tsv > COInr_taxIDlist.tsv
 ```
 
 #### Download and/or update MARES program 
