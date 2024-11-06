@@ -35,11 +35,13 @@ nav:
   - Home: 'index.md'
   - 'Computing Hardware':
     - GMGI: 'Computing_GMGI.md'
-    - Northeastern University: 'Computing_NU.md'  
-  - Computing Beginner Resources: 'Computing_Begin_Resources.md'
-  - R Resources: 'Data Visualization in R.md'
+    - Northeastern University: 'Computing_NU.md'
   - Data Management: 'Data_Management.md'
   - Data Transfer: 'Data_To_Server.md'
+  - Computing Beginner Resources: 'Computing_Begin_Resources.md'
+  - R Resources: 'Data Visualization in R.md'
+  - Intro to Github: 'tbd.md'
+  - Intro to HPC: 'tbd.md'
   - 'eDNA: 12S metabarcoding':
     - 00-Create-conda-env: 'eDNA/00-creating_eDNA_conda_env.md'
     - 01-ampliseq-12S: 'eDNA/01-Metabarcoding ampliseq 12S Riaz.md'
