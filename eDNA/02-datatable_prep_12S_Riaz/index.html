@@ -1719,9 +1719,9 @@ directory to the Rproject directory, select ‘Knit’ and ‘Knit Directory’
 <span class="c1">### 1. change paths of input and output as desired </span>
 
 <span class="c1">## GMGI Fish database</span>
-<span class="n">path_GMGIdb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;../../../../Projects/eDNA/Metabarcoding Lab Resources/Reference Databases/GMGI_Vert_Ref.xlsx&quot;</span>
-<span class="n">path_fishbase_tax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;../../../../Projects/eDNA/Metabarcoding Lab Resources/Reference Databases/taxonomic_classification_fishbase.csv&quot;</span>
-<span class="n">path_mitofish_tax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;../../../../Projects/eDNA/Metabarcoding Lab Resources/Reference Databases/taxonomic_classification_mitofish.csv&quot;</span>
+<span class="n">path_GMGIdb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/Metabarcoding Lab Resources/Reference Databases/GMGI_Vert_Ref.xlsx&quot;</span>
+<span class="n">path_fishbase_tax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/Metabarcoding Lab Resources/Reference Databases/taxonomic_classification_fishbase.csv&quot;</span>
+<span class="n">path_mitofish_tax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/Metabarcoding Lab Resources/Reference Databases/taxonomic_classification_mitofish.csv&quot;</span>
 
 <span class="c1">## BLAST results</span>
 <span class="n">path_blast_gmgi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_input/BLASTResults_GMGI.txt&quot;</span>
@@ -1736,12 +1736,21 @@ directory to the Rproject directory, select ‘Knit’ and ‘Knit Directory’
 
 <span class="c1"># output paths </span>
 <span class="n">path_choice_required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_output/Taxonomic_assignments/Choice_required_GMGI_multiplehits.xlsx&quot;</span>
+<span class="n">path_choice_required_edited</span><span class="o">=</span><span class="s">&quot;example_output/Taxonomic_assignments/Choice_required_GMGI_multiplehits_edited.xlsx&quot;</span>
+
 <span class="n">path_disagree_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_output/Taxonomic_assignments/SampleReport_taxonomic_ID.xlsx&quot;</span>
+<span class="n">path_disagree_list_edited</span><span class="o">=</span><span class="s">&quot;example_output/Taxonomic_assignments/SampleReport_taxonomic_ID_edited.xlsx&quot;</span>
+
+<span class="n">path_commonnames_add</span><span class="o">=</span><span class="s">&quot;example_output/Taxonomic_assignments/CommonNames_required.xlsx&quot;</span>
+<span class="n">path_commonnames_add_edited</span><span class="o">=</span><span class="s">&quot;example_output/Taxonomic_assignments/CommonNames_required_edited.xlsx&quot;</span>
 
 <span class="n">results_rawreads_matrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_output/Results_rawreads_matrix.xlsx&quot;</span>
 <span class="n">results_rawreads_long</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_output/Results_rawreads_long.xlsx&quot;</span>
 <span class="n">results_relab_matrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_output/Results_relab_matrix.xlsx&quot;</span>
 <span class="n">results_relab_long</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_output/Results_relab_long.xlsx&quot;</span>
+
+<span class="n">reads_filtered_out</span><span class="o">=</span><span class="s">&quot;example_output/ASV_reads_filtered_out.xlsx&quot;</span>
+<span class="n">ASV_breakdown_sheet</span><span class="o">=</span><span class="s">&quot;example_output/ASV_breakdown.xlsx&quot;</span>
 </code></pre></div>
 <h3 id="load-project-metadata">Load project metadata</h3>
 <p>Metadata specific to each project. This contains information about each
@@ -1868,7 +1877,7 @@ spreadsheet, user needs to mark ‘x’ on the choices desired while leaving
 the other entries blank.</p>
 <h4 id="choosing-one-of-several-hits">Choosing one of several hits.</h4>
 <p>Load choice edited dataset. No user edits.</p>
-<div class="highlight"><pre><span></span><code><span class="n">multiple_hit_choice_edited</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&quot;example_output/Taxonomic_assignments/Choice_required_GMGI_multiplehits_edited.xlsx&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<div class="highlight"><pre><span></span><code><span class="n">multiple_hit_choice_edited</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="n">path_choice_required_edited</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="c1">## selecting the choices made</span>
 <span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="o">!</span><span class="nf">is.na</span><span class="p">(</span><span class="n">Choice</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="c1">## selecting only columns needed </span>
@@ -1978,8 +1987,8 @@ Mitofish 100%, and finally NCBI 100%.</p>
 <span class="w">              </span><span class="nf">group_by</span><span class="p">(</span><span class="n">ASV_ID</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">mutate</span><span class="p">(</span><span class="n">NCBI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">paste0</span><span class="p">(</span><span class="n">NCBI</span><span class="p">,</span><span class="w"> </span><span class="n">collapse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;;&quot;</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">distinct</span><span class="p">(),</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ASV_ID&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">Species_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ifelse</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">Species_name</span><span class="p">),</span><span class="w"> </span><span class="n">NCBI</span><span class="p">,</span><span class="w"> </span><span class="n">Species_name</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
 
-<span class="w">  </span><span class="c1">## 4. if Species name is STILL not filled, call it &quot;unassigned&quot;</span>
-<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">Species_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ifelse</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">Species_name</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;unassigned&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Species_name</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">  </span>
+<span class="w">  </span><span class="c1">## 4. if Species name is STILL not filled, call it &quot;Unassigned&quot;</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">Species_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ifelse</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">Species_name</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;Unassigned&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Species_name</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">  </span>
 
 <span class="w">  </span><span class="c1">## removing Mito spp and NCBI spp</span>
 <span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">Mito</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">NCBI</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
@@ -1991,7 +2000,7 @@ Mitofish 100%, and finally NCBI 100%.</p>
 <p>Override any annotations with edited taxonomic identification table.<br />
 No user edits.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## read in edited df </span>
-<span class="n">taxonomic_choice</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&quot;example_output/Taxonomic_assignments/SampleReport_taxonomic_ID_edited.xlsx&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="n">taxonomic_choice</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="n">path_disagree_list_edited</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">    </span><span class="c1">## selecting only columns needed </span>
 <span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">ASV_ID</span><span class="p">,</span><span class="w"> </span><span class="n">Choice</span><span class="p">)</span><span class="w">  </span>
 
@@ -2027,38 +2036,38 @@ No user edits.</p>
 <span class="w">  </span><span class="nf">relocate</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="n">Common_name</span><span class="p">,</span><span class="w"> </span><span class="n">Category</span><span class="p">),</span><span class="w"> </span><span class="n">.after</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Species_name</span><span class="p">)</span>
 
 <span class="c1">### print entries with no common name</span>
-<span class="n">ASV_table_taxID_edited</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">Species_name</span><span class="p">,</span><span class="w"> </span><span class="n">Common_name</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">Common_name</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">distinct</span><span class="p">()</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>## # A tibble: 2 × 2
-##   Species_name    Common_name
-##   &lt;chr&gt;           &lt;chr&gt;      
-## 1 Cololabis saira &lt;NA&gt;       
-## 2 unassigned      &lt;NA&gt;
+<span class="n">ASV_table_taxID_edited</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">Species_name</span><span class="p">,</span><span class="w"> </span><span class="n">Common_name</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+<span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">Common_name</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">distinct</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NA</span><span class="p">,</span>
+<span class="w">         </span><span class="n">Common_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">case_when</span><span class="p">(</span><span class="n">Species_name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Unassigned&quot;</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="s">&quot;Unassigned&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">TRUE</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">Common_name</span><span class="p">),</span>
+<span class="w">         </span><span class="n">Category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">case_when</span><span class="p">(</span><span class="n">Species_name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Unassigned&quot;</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="s">&quot;Unassigned&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">TRUE</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">Category</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+<span class="w">  </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="n">path_commonnames_add</span><span class="p">)</span>
 </code></pre></div>
 <p>Editing common names and category when needed.</p>
-<div class="highlight"><pre><span></span><code><span class="c1">### User edits:</span>
-<span class="c1">### 1. Add mutate cases using the format ifelse(grepl(&#39;&#39;, Species_name), &quot;&quot;, Common_name</span>
-<span class="c1">### example: ifelse(grepl(&#39;unassigned&#39;, Species_name), &quot;unassigned&quot;, Common_name)</span>
-<span class="c1">### 2. Add mutate cases using the format ifelse(grepl(&#39;&#39;, Species_name), &quot;&quot;, Category</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## read in edited df </span>
+<span class="n">commonNames_annotated</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="n">path_commonnames_add_edited</span><span class="p">)</span>
 
-<span class="n">ASV_table_taxID_edited</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ASV_table_taxID_edited</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
-<span class="w">  </span><span class="c1"># changing specific entries for Common name</span>
-<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Common_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ifelse</span><span class="p">(</span><span class="nf">grepl</span><span class="p">(</span><span class="s">&#39;unassigned&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">Species_name</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;unassigned&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Common_name</span><span class="p">),</span>
+<span class="c1"># Create a new edited df</span>
+<span class="n">ASV_table_taxID_annotated</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ASV_table_taxID_edited</span><span class="w"> </span>
 
-<span class="w">         </span><span class="c1">## example from example dataset - change for your own data</span>
-<span class="w">         </span><span class="n">Common_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ifelse</span><span class="p">(</span><span class="nf">grepl</span><span class="p">(</span><span class="s">&#39;Cololabis saira&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">Species_name</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;Pacific Saury&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Common_name</span><span class="p">)</span>
-<span class="w">         </span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="c1"># Loop through each row of the dataframe</span>
+<span class="nf">for </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">commonNames_annotated</span><span class="o">$</span><span class="n">Species_name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1"># Extract the current row (will do this for each ASV_ID in the choice df)</span>
+<span class="w">  </span><span class="n">current_row</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">commonNames_annotated</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">subset</span><span class="p">(</span><span class="n">Species_name</span><span class="o">==</span><span class="n">i</span><span class="p">)</span>
 
-<span class="w">  </span><span class="c1"># changing specific entries for category</span>
-<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ifelse</span><span class="p">(</span><span class="nf">grepl</span><span class="p">(</span><span class="s">&#39;unassigned&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">Species_name</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;unassigned&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Category</span><span class="p">),</span>
-
-<span class="w">         </span><span class="c1">## example from example dataset - change for your own data</span>
-<span class="w">         </span><span class="n">Category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ifelse</span><span class="p">(</span><span class="nf">grepl</span><span class="p">(</span><span class="s">&#39;Cololabis saira&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">Species_name</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;Teleost Fish&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Category</span><span class="p">)</span>
-<span class="w">         </span><span class="p">)</span>
+<span class="w">  </span><span class="c1"># Apply filter based on the current row&#39;s condition</span>
+<span class="w">  </span><span class="n">ASV_table_taxID_annotated</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ASV_table_taxID_annotated</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">    </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Common_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">case_when</span><span class="p">(</span>
+<span class="w">          </span><span class="n">Species_name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">current_row</span><span class="o">$</span><span class="n">Species_name</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">current_row</span><span class="o">$</span><span class="n">Common_name</span><span class="p">,</span>
+<span class="w">           </span><span class="kc">TRUE</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">Common_name</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">    </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">case_when</span><span class="p">(</span>
+<span class="w">          </span><span class="n">Species_name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">current_row</span><span class="o">$</span><span class="n">Species_name</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">current_row</span><span class="o">$</span><span class="n">Category</span><span class="p">,</span>
+<span class="w">           </span><span class="kc">TRUE</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">Category</span><span class="p">))</span><span class="w">  </span>
+<span class="p">}</span>
 
 <span class="c1">## printing list of species name without common names </span>
 <span class="c1">## after additions to mutate function above, this output should be zero </span>
-<span class="n">ASV_table_taxID_edited</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">Species_name</span><span class="p">,</span><span class="w"> </span><span class="n">Common_name</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">Common_name</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">distinct</span><span class="p">()</span>
+<span class="n">ASV_table_taxID_annotated</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">Species_name</span><span class="p">,</span><span class="w"> </span><span class="n">Common_name</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">Common_name</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">distinct</span><span class="p">()</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>## # A tibble: 0 × 2
 ## # ℹ 2 variables: Species_name &lt;chr&gt;, Common_name &lt;chr&gt;
@@ -2067,7 +2076,7 @@ No user edits.</p>
 <h3 id="filter-out-reads-that-are-less-than-01-of-asv-row-total-per-sample">Filter out reads that are less than 0.1% of ASV (row) total per sample.</h3>
 <p>Create an output of what you’re losing with filtering.</p>
 <p>No user edits.</p>
-<div class="highlight"><pre><span></span><code><span class="n">ASV_table_taxID_filtered</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ASV_table_taxID_edited</span><span class="w"> </span><span class="o">%&gt;%</span>
+<div class="highlight"><pre><span></span><code><span class="n">ASV_table_taxID_filtered</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ASV_table_taxID_annotated</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="c1">## telling the df we are doing the following function by rows (ASVs)</span>
 <span class="w">  </span><span class="nf">rowwise</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span>
 
@@ -2078,12 +2087,11 @@ No user edits.</p>
 <span class="c1">## output of what we&#39;re losing</span>
 <span class="n">ASV_table_taxID_edited</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">rowwise</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="nf">across</span><span class="p">(</span><span class="n">.cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="m">7</span><span class="o">:</span><span class="nf">ncol</span><span class="p">(</span><span class="n">.</span><span class="p">)),</span><span class="w">            </span>
-<span class="w">                </span><span class="n">.fns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="nf">ifelse</span><span class="p">((</span><span class="n">.x</span><span class="o">/</span><span class="n">ASV_sum</span><span class="p">)</span><span class="o">&gt;</span><span class="m">0.001</span><span class="p">,</span><span class="w"> </span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">.x</span><span class="p">)))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">ungroup</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="s">&quot;example_output/ASV_reads_filtered_out.xlsx&quot;</span><span class="p">)</span>
-
+<span class="w">                </span><span class="n">.fns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="nf">ifelse</span><span class="p">((</span><span class="n">.x</span><span class="o">/</span><span class="n">ASV_sum</span><span class="p">)</span><span class="o">&gt;</span><span class="m">0.001</span><span class="p">,</span><span class="w"> </span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">.x</span><span class="p">)))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">ungroup</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="n">reads_filtered_out</span><span class="p">)</span>
 
 <span class="c1">## Export ASV break-down for 03-data_quality.Rmd</span>
 <span class="n">ASV_table_taxID_filtered</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">ASV_ID</span><span class="p">,</span><span class="w"> </span><span class="n">Species_name</span><span class="p">,</span><span class="w"> </span><span class="n">Common_name</span><span class="p">,</span><span class="w"> </span><span class="n">Category</span><span class="p">,</span><span class="w"> </span><span class="n">ASV_sum</span><span class="p">,</span><span class="w"> </span><span class="n">ASV_rank</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
-<span class="w">  </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="s">&quot;example_output/ASV_breakdown.xlsx&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="n">ASV_breakdown_sheet</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="collapsing-read-counts-by-species-name">Collapsing read counts by species name</h2>
 <p>No user edits.</p>
@@ -2113,29 +2121,25 @@ No user edits.</p>
 <span class="w">  </span><span class="nf">left_join</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">meta</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sampleID&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="n">results_rawreads_long</span><span class="p">)</span>
 </code></pre></div>
-<p>Relative Abundance</p>
-<div class="highlight"><pre><span></span><code><span class="c1">## Creating matrix from edited collapsed df</span>
-<span class="n">data.matrix</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.matrix</span><span class="p">(</span><span class="n">ASV_table_taxID_collapsed</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
-<span class="w">                           </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">Common_name</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">Category</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">column_to_rownames</span><span class="p">(</span><span class="n">var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Species_name&quot;</span><span class="p">))</span>
+<p>Relative Abundance No user edits.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">### Calculating relative abundance</span>
+<span class="n">df_relab</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ASV_table_taxID_collapsed</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+<span class="w">  </span><span class="nf">gather</span><span class="p">(</span><span class="s">&quot;sampleID&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;reads&quot;</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="o">:</span><span class="nf">last_col</span><span class="p">())</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">group_by</span><span class="p">(</span><span class="n">sampleID</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 
-<span class="c1">## Calculating relative abundance</span>
-<span class="n">data_relativeab</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.data.frame</span><span class="p">(</span><span class="nf">make_relative</span><span class="p">(</span><span class="n">data.matrix</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
-<span class="w">  </span><span class="c1">## moving rownames to a column</span>
-<span class="w">  </span><span class="nf">rownames_to_column</span><span class="p">(</span><span class="n">var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Species_name&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="c1">### total</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">sample_total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">reads</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">group_by</span><span class="p">(</span><span class="n">sampleID</span><span class="p">,</span><span class="w"> </span><span class="n">Species_name</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 
-<span class="w">  </span><span class="c1">## adding common name and category back in</span>
-<span class="w">  </span><span class="nf">right_join</span><span class="p">(</span><span class="n">ASV_table_taxID_collapsed</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">Species_name</span><span class="p">,</span><span class="w"> </span><span class="n">Common_name</span><span class="p">,</span><span class="w"> </span><span class="n">Category</span><span class="p">),</span><span class="w"> </span><span class="n">.</span><span class="p">)</span><span class="w">  </span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>## Joining with `by = join_by(Species_name)`
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1">## Exporting matrix</span>
-<span class="n">data_relativeab</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="n">results_relab_matrix</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">## relab</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">relab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reads</span><span class="o">/</span><span class="n">sample_total</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">ungroup</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">reads</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">sample_total</span><span class="p">)</span><span class="w"> </span>
 
-<span class="c1">## Relative abundance long format with metadata </span>
-<span class="n">data_relativeab</span><span class="w"> </span><span class="o">%&gt;%</span>
-<span class="w">  </span><span class="nf">gather</span><span class="p">(</span><span class="s">&quot;sampleID&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;relab&quot;</span><span class="p">,</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">4</span><span class="o">:</span><span class="nf">last_col</span><span class="p">()))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="n">df_relab</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">left_join</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">meta</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sampleID&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="n">results_relab_long</span><span class="p">)</span>
+
+<span class="n">df_relab</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">spread</span><span class="p">(</span><span class="n">sampleID</span><span class="p">,</span><span class="w"> </span><span class="n">relab</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="n">results_relab_matrix</span><span class="p">)</span>
 </code></pre></div>
 
 
