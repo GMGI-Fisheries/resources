@@ -76,12 +76,21 @@ path_output_summary = "example_input/overall_summary.tsv"
 
 # output paths 
 path_choice_required = "example_output/Taxonomic_assignments/Choice_required_GMGI_multiplehits.xlsx"
+path_choice_required_edited="example_output/Taxonomic_assignments/Choice_required_GMGI_multiplehits_edited.xlsx"
+
 path_disagree_list = "example_output/Taxonomic_assignments/SampleReport_taxonomic_ID.xlsx"
+path_disagree_list_edited="example_output/Taxonomic_assignments/SampleReport_taxonomic_ID_edited.xlsx"
+
+path_commonnames_add="example_output/Taxonomic_assignments/CommonNames_required.xlsx"
+path_commonnames_add_edited="example_output/Taxonomic_assignments/CommonNames_required_edited.xlsx"
 
 results_rawreads_matrix = "example_output/Results_rawreads_matrix.xlsx"
 results_rawreads_long = "example_output/Results_rawreads_long.xlsx"
 results_relab_matrix = "example_output/Results_relab_matrix.xlsx"
 results_relab_long = "example_output/Results_relab_long.xlsx"
+
+reads_filtered_out="example_output/ASV_reads_filtered_out.xlsx"
+ASV_breakdown_sheet="example_output/ASV_breakdown.xlsx"
 ```
 
 ### Load project metadata 
@@ -234,7 +243,7 @@ Based on the output above, user needs to make some choices. In the excel spreads
 Load choice edited dataset. No user edits. 
 
 ```{r}
-multiple_hit_choice_edited <- read_xlsx("example_output/Taxonomic_assignments/Choice_required_GMGI_multiplehits_edited.xlsx") %>%
+multiple_hit_choice_edited <- read_xlsx(path_choice_required_edited) %>%
   ## selecting the choices made
   filter(!is.na(Choice)) %>%
   ## selecting only columns needed 
@@ -349,8 +358,8 @@ ASV_table_taxID <- ASV_table %>%
               group_by(ASV_ID) %>% mutate(NCBI = paste0(NCBI, collapse = ";")) %>% distinct(), by = "ASV_ID") %>%
   mutate(., Species_name = ifelse(is.na(Species_name), NCBI, Species_name)) %>%
   
-  ## 4. if Species name is STILL not filled, call it "unassigned"
-  mutate(., Species_name = ifelse(is.na(Species_name), "unassigned", Species_name)) %>%  
+  ## 4. if Species name is STILL not filled, call it "Unassigned"
+  mutate(., Species_name = ifelse(is.na(Species_name), "Unassigned", Species_name)) %>%  
 
   ## removing Mito spp and NCBI spp
   dplyr::select(-Mito, -NCBI) %>%
@@ -366,7 +375,7 @@ No user edits.
 
 ```{r}
 ## read in edited df 
-taxonomic_choice <- read_xlsx("example_output/Taxonomic_assignments/SampleReport_taxonomic_ID_edited.xlsx") %>%
+taxonomic_choice <- read_xlsx(path_disagree_list_edited) %>%
     ## selecting only columns needed 
   dplyr::select(ASV_ID, Choice)  
 
@@ -407,35 +416,41 @@ ASV_table_taxID_edited <- ASV_table_taxID_edited %>%
   relocate(., c(Common_name, Category), .after = Species_name)
 
 ### print entries with no common name
-ASV_table_taxID_edited %>% dplyr::select(Species_name, Common_name) %>% filter(is.na(Common_name)) %>% distinct()
+ASV_table_taxID_edited %>% dplyr::select(Species_name, Common_name) %>% 
+  filter(is.na(Common_name)) %>% distinct() %>%
+  mutate(Category = NA,
+         Common_name = case_when(Species_name == "Unassigned" ~ "Unassigned", TRUE ~ Common_name),
+         Category = case_when(Species_name == "Unassigned" ~ "Unassigned", TRUE ~ Category)) %>% 
+  write_xlsx(path_commonnames_add)
 ```
 
 Editing common names and category when needed.
 
 ```{r}
-### User edits:
-### 1. Add mutate cases using the format ifelse(grepl('', Species_name), "", Common_name
-### example: ifelse(grepl('unassigned', Species_name), "unassigned", Common_name)
-### 2. Add mutate cases using the format ifelse(grepl('', Species_name), "", Category
+## read in edited df 
+commonNames_annotated <- read_xlsx(path_commonnames_add_edited)
 
-ASV_table_taxID_edited <- ASV_table_taxID_edited %>% 
-  # changing specific entries for Common name
-  mutate(Common_name = ifelse(grepl('unassigned', Species_name), "unassigned", Common_name),
-         
-         ## example from example dataset - change for your own data
-         Common_name = ifelse(grepl('Cololabis saira', Species_name), "Pacific Saury", Common_name)
-         ) %>%
+# Create a new edited df
+ASV_table_taxID_annotated <- ASV_table_taxID_edited 
+
+# Loop through each row of the dataframe
+for (i in commonNames_annotated$Species_name) {
+  # Extract the current row (will do this for each ASV_ID in the choice df)
+  current_row <- commonNames_annotated %>% subset(Species_name==i)
   
-  # changing specific entries for category
-  mutate(Category = ifelse(grepl('unassigned', Species_name), "unassigned", Category),
-         
-         ## example from example dataset - change for your own data
-         Category = ifelse(grepl('Cololabis saira', Species_name), "Teleost Fish", Category)
-         )
+  # Apply filter based on the current row's condition
+  ASV_table_taxID_annotated <- ASV_table_taxID_annotated %>%
+    mutate(Common_name = case_when(
+          Species_name == current_row$Species_name ~ current_row$Common_name,
+           TRUE ~ Common_name)) %>%
+    mutate(Category = case_when(
+          Species_name == current_row$Species_name ~ current_row$Category,
+           TRUE ~ Category))  
+}
 
 ## printing list of species name without common names 
 ## after additions to mutate function above, this output should be zero 
-ASV_table_taxID_edited %>% dplyr::select(Species_name, Common_name) %>% filter(is.na(Common_name)) %>% distinct()
+ASV_table_taxID_annotated %>% dplyr::select(Species_name, Common_name) %>% filter(is.na(Common_name)) %>% distinct()
 ```
 
 ## Filtering: Filter ASV by less than 0.1% reads and then collapse by group
@@ -447,7 +462,7 @@ Create an output of what you're losing with filtering.
 No user edits.
 
 ```{r}
-ASV_table_taxID_filtered <- ASV_table_taxID_edited %>%
+ASV_table_taxID_filtered <- ASV_table_taxID_annotated %>%
   ## telling the df we are doing the following function by rows (ASVs)
   rowwise() %>%
   
@@ -458,12 +473,11 @@ ASV_table_taxID_filtered <- ASV_table_taxID_edited %>%
 ## output of what we're losing
 ASV_table_taxID_edited %>% rowwise() %>%
   mutate(across(.cols = (7:ncol(.)),            
-                .fns = ~ ifelse((.x/ASV_sum)>0.001, NA, .x))) %>% ungroup() %>% write_xlsx("example_output/ASV_reads_filtered_out.xlsx")
-
+                .fns = ~ ifelse((.x/ASV_sum)>0.001, NA, .x))) %>% ungroup() %>% write_xlsx(reads_filtered_out)
 
 ## Export ASV break-down for 03-data_quality.Rmd
 ASV_table_taxID_filtered %>% dplyr::select(ASV_ID, Species_name, Common_name, Category, ASV_sum, ASV_rank) %>%
-  write_xlsx("example_output/ASV_breakdown.xlsx")
+  write_xlsx(ASV_breakdown_sheet)
 ```
 
 
@@ -502,27 +516,26 @@ ASV_table_taxID_collapsed %>%
 ```
 
 Relative Abundance
+No user edits.
 
 ```{r}
-## Creating matrix from edited collapsed df
-data.matrix <- as.matrix(ASV_table_taxID_collapsed %>% 
-                           dplyr::select(-Common_name, -Category) %>% column_to_rownames(var = "Species_name"))
-
-## Calculating relative abundance
-data_relativeab <- as.data.frame(make_relative(data.matrix)) %>%
-  ## moving rownames to a column
-  rownames_to_column(var = "Species_name") %>%
+### Calculating relative abundance
+df_relab <- ASV_table_taxID_collapsed %>% 
+  gather("sampleID", "reads", 4:last_col()) %>%
+  group_by(sampleID) %>%
   
-  ## adding common name and category back in
-  right_join(ASV_table_taxID_collapsed %>% dplyr::select(Species_name, Common_name, Category), .)  
+  ### total
+  mutate(sample_total = sum(reads)) %>%
+  group_by(sampleID, Species_name) %>%
   
-## Exporting matrix
-data_relativeab %>% write_xlsx(results_relab_matrix)
+  ## relab
+  mutate(relab = reads/sample_total) %>% ungroup() %>%
+  select(-reads, -sample_total) 
 
-## Relative abundance long format with metadata 
-data_relativeab %>%
-  gather("sampleID", "relab", c(4:last_col())) %>%
+df_relab %>%
   left_join(., meta, by = "sampleID") %>%
   write_xlsx(results_relab_long)
+
+df_relab %>% spread(sampleID, relab) %>% write_xlsx(results_relab_matrix)
 ```
 
