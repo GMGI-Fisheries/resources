@@ -48,6 +48,7 @@ nav:
     - 03-data-quality: 'eDNA/03-data_quality.md'
     - 04-relative-abund-heatmap: 'eDNA/04-relative_abundance_heatmap.md'
   - 'eDNA: COI metabarcoding':
+    - 00-Create-conda-env: 'eDNA/00-creating_eDNA_conda_env.md'
     - 01-ampliseq-COI: 'eDNA/01-Metabarcoding ampliseq COI.md'
   - 'eDNA: qPCR':
     - 01-dfprep-analysis: 'eDNA qPCR/qPCR-analysis.md'
