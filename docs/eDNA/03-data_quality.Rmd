@@ -119,6 +119,50 @@ df %>%
 
 ggsave("example_output/Figures/SampleReport_FilteringStats.png", width = 10, height=8)
 ```
+Condensed plot (also used in contract reporting)
+
+```{r}
+### User edits:
+### 1. Change paths of output to desired folder (data/figures is suggested data structure)
+### 2. Change x axis and color, size based on metadata desired 
+### 3. Change custom colors and sizes if desired and number of colors and sizes based on metadata variable chosen 
+
+df %>% 
+  subset(measure == "cutadapt_total_processed" | measure == "nonchim") %>%
+
+  ## USER EDITS IN LINE BELOW 
+  ggplot(., aes(x=measure, y=value)) + 
+  
+  ## adding points in jitter format 
+  geom_boxplot(outlier.shape = NA, fill=NA, aes(color = measure)) +
+  geom_jitter(width=0.15, shape=21, alpha=0.5, size=2.5, color = 'black', aes(fill = measure)) + 
+
+  ## graph asthetics 
+  theme_bw() +
+  labs(
+    y="Number of reads",
+    x="Bioinformatic Step"
+    ) + 
+  
+  ## USER EDITS IN MANUAL CODE BELOW 
+  # scale_color_manual(values = c("red3", "lightblue", "purple2", "gold", "green4", "black")) +
+  # scale_size_manual(values = c(21,17)) +
+  scale_fill_manual(values = c("#264653", "#2a9d8f")) +
+  scale_color_manual(values = c("#264653", "#2a9d8f")) +
+  scale_x_discrete(labels = c("cutadapt_total_processed" = "Start", 
+                              "nonchim" = "Final")) +
+  
+  theme(panel.background=element_rect(fill='white', colour='black'),
+        strip.background=element_rect(fill='white', colour='black'),
+        strip.text = element_text(size = 10, face="bold"),
+        legend.position = "none",
+        axis.text.y = element_text(size=10, color="black"),
+        axis.text.x = element_text(size=10, color="black"),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=11, face="bold"),
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=11, face="bold"))
+
+ggsave("example_output/Figures/SampleReport_FilteringStats_Condensed.png", width = 3, height=4)
+```
 
 
 ## Plot unassigned taxonomy
@@ -151,7 +195,6 @@ species_summary <- results %>%
 ## species in addition to category
 ## metadata option add-in
 ```
-
 
 ### Raw Reads Plotting 
 

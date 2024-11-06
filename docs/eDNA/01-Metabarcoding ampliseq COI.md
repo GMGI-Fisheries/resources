@@ -132,6 +132,112 @@ Notes:
 
 - Depending on the number of files per project, multiqc can be quick to run without a slurm script. To do this, run each line separately in the command line after activating the conda environment.  
 
+## Step 3: Downloading and updating reference databases 
+
+### Download and/or update BOLD database 
+
+Visit the [Figshare cite for v4](https://figshare.scilifelab.se/articles/dataset/COI_reference_sequences_from_BOLD_DB/20514192/4) and check for any latest versions. If a new version is available, download the COI references sequences from this webpage: bold_clustered.assignTaxonomy.fasta.gz and bold_clustered.addSpecies.fasta.gz. Via NU Cluster OOD, upload these files to `/work/gmgi/databases/COI/BOLD`. 
+
+I downloaded `taxref_reformat_coidb.sh` from the ampliseq [github page](https://github.com/nf-core/ampliseq/blob/2.8.0/bin/taxref_reformat_coidb.sh). I then changed the first line to be only .gz files (`for f in *.gz; do` instead of `for f in $(ls); do`)
+
+```
+# Start on a computing node 
+srun --pty bash 
+
+# Activate conda environment
+source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
+
+cd /work/gmgi/databases/COI/BOLD 
+## upload new .gz files via OOD 
+
+# Edit names to reflect the version #
+mv bold_clustered.addspecies.fasta.gz bold_v4_clustered.addspecies.fasta.gz                                                                                           
+mv bold_clustered.assigntaxonomy.fasta.gz bold_v4_clustered.assigntaxonomy.fasta.gz 
+
+bash taxref_reformat_coidb.sh
+```
+
+These resulting files `addSpecies.fna` and `assignTaxonomy.fna` will be fed into the ampliseq script below.
+
+#### Download and/or update NBCI blast nt database
+
+NCBI is updated daily and therefore needs to be updated each time a project is analyzed. This is the not the most ideal method but we were struggling to get the `-remote` flag to work within slurm because I don't think NU slurm is connected to the internet? NU help desk was helping for awhile but we didn't get anywhere.
+
+Within `/work/gmgi/databases/ncbi`, there is a `update_nt.sh` script with the following code. To run `sbatch update_nt.sh`. This won't take long as it will check for updates rather than re-downloading every time. 
+
+```
+#!/bin/bash
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=24:00:00
+#SBATCH --job-name=update_ncbi_nt
+#SBATCH --mem=50G
+#SBATCH --output=%x_%j.out
+#SBATCH --error=%x_%j.err
+
+# Activate conda environment
+source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
+
+# Create output directory if it doesn't exist
+cd /work/gmgi/databases/ncbi/nt
+
+# Update BLAST nt database
+update_blastdb.pl --decompress nt
+
+# Print completion message
+echo "BLAST nt database update completed"
+```
+
+View the `update_ncbi_nt.out` file to confirm the echo printed at the end.
+
+*Emma is still troubleshooting the -remote flag to also avoid storing the nt db within our /work/gmgi folder.* 
+
+### Other options 
+
+- [COInr](https://github.com/meglecz/mkCOInr): downloads NCBI and BOLD (Barcode of Life Database) databases to create one database for comparison. COInr is already downloaded in the conda environment and pulls NCBI And BOLD directly.  
+- [MARES (MARine Eukaryote Species)](https://www.nature.com/articles/s41597-020-0549-9) and [github](https://github.com/wpearman1996/MARES_database_pipeline): This database combines sequences from both GenBank and BOLD to increase taxonomic coverage and confidence for marine eukaryotes. MARES Github [repo](https://github.com/wpearman1996/MARES_database_pipeline). Paper [link](https://doi.org/10.1038/s41597-020-0549-9).     
+- [MIDORI](https://www.reference-midori.info/#:~:text=MIDORI2%20is%20a%20reference%20database%20of%20DNA%20and): A database specifically for COI sequences. MIDORI Reference pulls from GenBank.    
+
+**COInr**
+
+![](https://mkcoinr.readthedocs.io/en/latest/_images/COInr_flowchart_readme.png)
+
+COInr database [instructions](https://mkcoinr.readthedocs.io/en/latest/content/tutorial.html). There are [options](https://mkcoinr.readthedocs.io/en/latest/content/tutorial.html#add-custom-sequences-to-a-database) to include custom sequences if needed.
+
+The latest version of BOLD is 2015 so this 2022 set is the most updated. Use our own NCBI as well to catch recent entries. 
+
+```
+cd /work/gmgi/packages 
+git clone https://github.com/meglecz/mkCOInr.git
+
+cd /work/gmgi/databases/COI
+wget https://zenodo.org/record/6555985/files/COInr_2022_05_06.tar.gz
+tar -zxvf COInr_2022_05_06.tar.gz
+rm COInr_2022_05_06.tar.gz
+mv COInr_2022_05_06 COInr
+
+## converting database information for blast 
+perl /work/gmgi/packages/mkCOInr/scripts/format_db.pl -tsv COInr/COInr.tsv -outfmt blast -outdir /work/gmgi/databases/COI/COInr -out COInr_blast
+
+## creating list of sseqID and taxIDs for R df step 
+awk '{print $1 "\t" $2}' COInr.tsv > COInr_taxIDlist.tsv
+```
+
+**MIDORI**
+
+Visit the [MIDORI website](https://www.reference-midori.info/download.php) to check for the most updated db. This folder is already formatted for blast searching so we don't need to create a blast formatted db. 
+
+```
+cd /work/gmgi/databases/COI/MIDORI
+
+## download zip file from MIDORI website for CO1 sequences in BLAST format from nucleotide reference
+wget https://www.reference-midori.info/download/Databases/GenBank261_2024-06-15/BLAST/uniq/fasta/MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta.zip
+unzip MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta.zip 
+
+## change notation if version is different 
+makeblastdb -in MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta -dbtype nucl -out MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta
+```
+
 ## Step 4: nf-core/ampliseq 
 
 [Nf-core](https://nf-co.re/): A community effort to collect a curated set of analysis pipelines built using [Nextflow](https://www.nextflow.io/).  
@@ -144,9 +250,11 @@ Nextflow: scalable and reproducible scientific workflows using software containe
 We use ampliseq for the following programs:  
 
 - [Cutadapt](https://journal.embnet.org/index.php/embnetjournal/article/view/200) is trimming primer sequences from sequencing reads. Primer sequences are non-biological sequences that often introduce point mutations that do not reflect sample sequences. This is especially true for degenerated PCR primer. If primer trimming would be omitted, artifactual amplicon sequence variants might be computed by the denoising tool or sequences might be lost due to become labelled as PCR chimera.  
-- [DADA2](https://www.nature.com/articles/nmeth.3869) performs fast and accurate sample inference from amplicon data with single-nucleotide resolution. It infers exact amplicon sequence variants (ASVs) from amplicon data with fewer false positives than many other methods while maintaining high sensitivity.  
+- [DADA2](https://www.nature.com/articles/nmeth.3869) performs fast and accurate sample inference from amplicon data with single-nucleotide resolution. It infers exact amplicon sequence variants (ASVs) from amplicon data with fewer false positives than many other methods while maintaining high sensitivity.   
 
 We skip the taxonomic assignment because we use 3-db approach described in the next section. 
+
+Should we try BOLD through ampliseq?
 
 ### COI primer sequences (required)
 
@@ -220,6 +328,8 @@ sample_list %>% write.csv("/work/gmgi/Fisheries/eDNA/offshore_wind2023/metadata/
 
 Update ampliseq workflow if needed: `nextflow pull nf-core/ampliseq`. 
 
+Testing this on OSW work first. 
+
 `01b-ampliseq.sh`:
 
 ```
@@ -245,8 +355,10 @@ module load singularity/3.10.3
 module load nextflow/23.10.1
 
 # SET PATHS 
-metadata="" 
-output_dir=""
+metadata="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/metadata" 
+output_dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/ampliseq_COIdb_results"
+addSpecies="/work/gmgi/databases/COI/BOLD/addSpecies.fna"
+assignTaxonomy="/work/gmgi/databases/COI/BOLD/assignTaxonomy.fna"
 
 nextflow run nf-core/ampliseq -resume \
    -profile singularity \
@@ -260,13 +372,30 @@ nextflow run nf-core/ampliseq -resume \
    --max_ee 2 \
    --min_len_asv 300 \
    --max_len_asv 330 \
+   --dada_ref_tax_custom ${assignTaxonomy} \
+   --dada_ref_tax_custom_sp ${addSpecies} \
+   --dada2_addspecies_allowmultiple TRUE \
    --sample_inference pseudo \
-   --skip_taxonomy \
    --ignore_failed_trimming
 ```
 
 Could add back in? 
    --max_len 200 \
+   --skip_taxonomy 
+
+From zach paper: removing the co-amplified putative nuclear mitochondrial 
+pseudogenes (NUMTs) is highly recommended (Creedy et al., 2022; 
+Porter & Hajibabaei, 2021; Song et al., 2008). - MetaWorks 
+and VTAM implement a step of removing putative NUMTs OR multisample features matrix may be processed with metaMATE 
+(Andújar et al., 2021) to remove putative NUMTs and other erroneous sequences (based on, e.g., length and relative read abundance)
+
+DnoisE program - https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-021-04115-6
+
+python package called BOLDigger has been developed to help automate batch query submissions to the BOLD identification engine and can be used to identify COI, ITS, rbcL, and matK sequences (Buchner and Leese, 2020)
+
+In addition to the potential of amino acid translation, the protein coding nature of COI leads to relatively stricter expectations of amplicon length
+
+Use QIIME2 and trained classifier?
 
 To run:   
 - `sbatch 01b-ampliseq.sh` 
@@ -308,104 +437,8 @@ We add an ASV length filter that will output `asv_length_filter/` with:
 - `ASV_len_filt.tsv`: ASV length distribution after filtering.  
 - `stats.len.tsv`: Tracking read numbers through filtering, for each sample.  
 
-## Step 5: Blast ASV sequences (output from DADA2) against our database list 
 
-### Populating /work/gmgi/databases folder 
-
-MIDORI: A database specifically for COI sequences  
-
-We use a program called [COInr](https://github.com/meglecz/mkCOInr) that downloads NCBI and BOLD (Barcode of Life Database) databases to create one database for comparison. COInr is already downloaded in the conda environment and pulls NCBI And BOLD directly. 
-
-![](https://mkcoinr.readthedocs.io/en/latest/_images/COInr_flowchart_readme.png)
-
-Alternative to COInr program:  
-
-- [MARES (MARine Eukaryote Species)](https://www.nature.com/articles/s41597-020-0549-9) and [github](https://github.com/wpearman1996/MARES_database_pipeline): This database combines sequences from both GenBank and BOLD to increase taxonomic coverage and confidence for marine eukaryotes   
-
-
-#### Download and/or update NBCI blast nt database
-
-NCBI is updated daily and therefore needs to be updated each time a project is analyzed. This is the not the most ideal method but we were struggling to get the `-remote` flag to work within slurm because I don't think NU slurm is connected to the internet? NU help desk was helping for awhile but we didn't get anywhere.
-
-Within `/work/gmgi/databases/ncbi`, there is a `update_nt.sh` script with the following code. To run `sbatch update_nt.sh`. This won't take long as it will check for updates rather than re-downloading every time. 
-
-```
-#!/bin/bash
-#SBATCH --partition=short
-#SBATCH --nodes=1
-#SBATCH --time=24:00:00
-#SBATCH --job-name=update_ncbi_nt
-#SBATCH --mem=50G
-#SBATCH --output=%x_%j.out
-#SBATCH --error=%x_%j.err
-
-# Activate conda environment
-source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
-
-# Create output directory if it doesn't exist
-cd /work/gmgi/databases/ncbi/nt
-
-# Update BLAST nt database
-update_blastdb.pl --decompress nt
-
-# Print completion message
-echo "BLAST nt database update completed"
-```
-
-View the `update_ncbi_nt.out` file to confirm the echo printed at the end.
-
-*Emma is still troubleshooting the -remote flag to also avoid storing the nt db within our /work/gmgi folder.* 
-
-#### Download and/or update COInr program  
-
-COInr database [instructions](https://mkcoinr.readthedocs.io/en/latest/content/tutorial.html). There are [options](https://mkcoinr.readthedocs.io/en/latest/content/tutorial.html#add-custom-sequences-to-a-database) to include custom sequences if needed.
-
-The latest version of BOLD is 2015 so this 2022 set is the most updated. Use our own NCBI as well to catch recent entries. 
-
-```
-cd /work/gmgi/packages 
-git clone https://github.com/meglecz/mkCOInr.git
-
-cd /work/gmgi/databases/COI
-wget https://zenodo.org/record/6555985/files/COInr_2022_05_06.tar.gz
-tar -zxvf COInr_2022_05_06.tar.gz
-rm COInr_2022_05_06.tar.gz
-mv COInr_2022_05_06 COInr
-
-## converting database information for blast 
-perl /work/gmgi/packages/mkCOInr/scripts/format_db.pl -tsv COInr/COInr.tsv -outfmt blast -outdir /work/gmgi/databases/COI/COInr -out COInr_blast
-
-## creating list of sseqID and taxIDs for R df step 
-awk '{print $1 "\t" $2}' COInr.tsv > COInr_taxIDlist.tsv
-```
-
-#### Download and/or update MARES program 
-
-MARES Github [repo](https://github.com/wpearman1996/MARES_database_pipeline). Paper [link](https://doi.org/10.1038/s41597-020-0549-9). 
-
-#### Download and/or update MIDORI
-
-MIDORI [webpage](https://www.reference-midori.info/#:~:text=MIDORI2%20is%20a%20reference%20database%20of%20DNA%20and). MIDORI Reference pulls from GenBank
-
-Visit the [MIDORI website](https://www.reference-midori.info/download.php) to check for the most updated db. This folder is already formatted for blast searching so we don't need to create a blast formatted db. 
-
-```
-cd /work/gmgi/databases/COI/MIDORI
-
-## download zip file from MIDORI website for CO1 sequences in BLAST format from nucleotide reference
-wget https://www.reference-midori.info/download/Databases/GenBank261_2024-06-15/BLAST/uniq/fasta/MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta.zip
-unzip MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta.zip 
-
-## change notation if version is different 
-makeblastdb -in MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta -dbtype nucl -out MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta
-```
-
-#### Other options to consider 
-
-- Download BOLD directly? [database webpage](https://www.boldsystems.org/). You can search for particular orders, primer sets, etc.  
-- MARES Github [repo](https://github.com/wpearman1996/MARES_database_pipeline). Paper [link](https://doi.org/10.1038/s41597-020-0549-9). This looks similar to the COInr program? I'm nore sure which one is best to use. Trying the COInr first. 
-
-### Running taxonomic ID script 
+## Step 5: Running additional taxonomic assignment ID script 
 
 `02-taxonomicID.sh`: 
 
@@ -450,13 +483,6 @@ blastn -db ${midori}/*.fasta" \
    -out ${out}/BLASTResults_midori.txt \
    -max_target_seqs 10 -perc_identity 98 -qcov_hsp_perc 95 \
    -outfmt '6  qseqid   sseqid  pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore'
-
-## COInr database 
-blastn -db ${COInr}/*.fasta \
-   -query ${ASV_fasta}/ASV_seqs.len.fasta \
-   -out ${out}/BLASTResults_COInr.txt \
-   -max_target_seqs 10 -perc_identity 98 -qcov_hsp_perc 95 \
-   -outfmt '6  qseqid   sseqid   pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore'
 
 ############################
 

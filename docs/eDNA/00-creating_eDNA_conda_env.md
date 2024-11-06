@@ -25,6 +25,7 @@ conda install singularity
 conda install -c bioconda vsearch -y
 pip install nsdpy
 conda install wget
+conda install -c bioconda coidb
 ```
 
 The conda environment is started within each slurm script, but to activate conda environment outside of the slurm script to update packages or check what is installed:

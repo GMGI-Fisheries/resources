@@ -40,14 +40,15 @@ nav:
   - R Resources: 'Data Visualization in R.md'
   - Data Management: 'Data_Management.md'
   - Data Transfer: 'Data_To_Server.md'
-  - 'eDNA: metabarcoding':
+  - 'eDNA: 12S metabarcoding':
     - 00-Create-conda-env: 'eDNA/00-creating_eDNA_conda_env.md'
     - 01-ampliseq-12S-Riaz: 'eDNA/01-Metabarcoding ampliseq 12S Riaz.md'
     - 01-ampliseq-12S-MiFish: 'eDNA/01-Metabarcoding ampliseq 12S MiFish.md'
-    - 01-ampliseq-COI: 'eDNA/01-Metabarcoding ampliseq COI.md'
     - 02-dfprep-12S-Riaz: 'eDNA/02-datatable_prep_12S_Riaz.md'
     - 03-data-quality: 'eDNA/03-data_quality.md'
     - 04-relative-abund-heatmap: 'eDNA/04-relative_abundance_heatmap.md'
+  - 'eDNA: COI metabarcoding':
+    - 01-ampliseq-COI: 'eDNA/01-Metabarcoding ampliseq COI.md'
   - 'eDNA: qPCR':
     - 01-dfprep-analysis: 'eDNA qPCR/qPCR-analysis.md'
   - 'PopGen':
