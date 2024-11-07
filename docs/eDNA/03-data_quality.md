@@ -75,15 +75,25 @@ options(scipen=999)
 
 filtering_stats <- read_tsv("example_input/overall_summary.tsv", show_col_types = FALSE) %>% dplyr::rename(sampleID = sample)
 
-meta <- read.csv("example_input/metadata.csv", header=TRUE)
+meta <- read_excel("example_input/metadata.xlsx")
 
 results <- read_xlsx("example_output/Results_rawreads_long.xlsx") %>%
-  mutate(Category = factor(Category, levels = c("Human", "Livestock", "Other", "unassigned", "Bird",
-                                                "Elasmobranch", "Marine Mammal", "Sea Turtle", "Teleost Fish")))
+  ## calculate sum of reads 
+  group_by(sampleID) %>%
+  mutate(`Number of reads` = sum(reads)) %>%
+  
+  ## calculate relative abundance
+  group_by(sampleID, Species_name) %>%
+  mutate(`Relative Abundance` = reads/`Number of reads`) %>%
+  
+  ## factor the Category list 
+  mutate(Category = factor(Category, levels = c("Human", "Livestock", "Other", "Unassigned", "Bird",
+                                                "Sea Turtle", "Elasmobranch", "Marine Mammal", "Teleost Fish")))
                                                        
 ASV_breakdown <- read_xlsx("example_output/ASV_breakdown.xlsx") %>%
-  mutate(Category = factor(Category, levels = c("Human", "Livestock", "Other", "unassigned", "Bird",
-                                                "Elasmobranch", "Marine Mammal", "Sea Turtle", "Teleost Fish")))
+  ## factor the Category list 
+  mutate(Category = factor(Category, levels = c("Human", "Livestock", "Other", "Unassigned", "Bird",
+                                                "Sea Turtle", "Elasmobranch", "Marine Mammal", "Teleost Fish")))
 ```
 
 ## Sequence data
@@ -118,11 +128,13 @@ Suggested webpage to choose colors: <https://coolors.co/>
 ### 3. Change custom colors and sizes if desired and number of colors and sizes based on metadata variable chosen 
 
 df %>% 
+  
+  filter(!is.na(Month)) %>% 
   ## USER EDITS IN LINE BELOW 
-  ggplot(., aes(x=Project, y=value, color=Site, shape=SampleType)) + 
+  ggplot(., aes(x=Month, y=value)) + 
   
   ## adding points in jitter format 
-  geom_jitter(width=0.15, alpha=0.5) + 
+  geom_jitter(width=0.15, alpha=0.5, fill="#0077b6", color='black', size=1, shape=21) + 
   
   ## option for additional boxplots if desired (uncomment to add)
   #geom_boxplot() +
@@ -135,29 +147,90 @@ df %>%
   ## graph asthetics 
   theme_bw() +
   ylab("Number of reads") + 
-  
-  ## USER EDITS IN MANUAL CODE BELOW 
-  scale_color_manual(values = c("red3", "lightblue", "purple2", "gold", "green4", "black")) +
-  scale_size_manual(values = c(21,17)) +
-  
-  
+
   theme(panel.background=element_rect(fill='white', colour='black'),
         strip.background=element_rect(fill='white', colour='black'),
         strip.text = element_text(size = 10, face="bold"),
         legend.position = "right",
         axis.text.y = element_text(size=7, color="grey30"),
-        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.x = element_text(angle=45, hjust=1),
         axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=11, face="bold"),
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=11, face="bold"))
 ```
 
+    ## Warning: Removed 45 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
 ![](03-data_quality_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 ``` r
-ggsave("example_output/Figures/SampleReport_FilteringStats.png", width = 10, height=8)
+ggsave("example_output/Figures/SampleReport_FilteringStats.png", width = 11, height=9)
 ```
 
-## Plot unassigned taxonomy
+    ## Warning: Removed 45 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+Condensed plot (also used in contract reporting)
+
+``` r
+### User edits:
+### 1. Change paths of output to desired folder (data/figures is suggested data structure)
+### 2. Change x axis and color, size based on metadata desired 
+### 3. Change custom colors and sizes if desired and number of colors and sizes based on metadata variable chosen 
+
+df %>% 
+  subset(measure == "cutadapt_total_processed" | measure == "nonchim") %>%
+
+  ## USER EDITS IN LINE BELOW 
+  ggplot(., aes(x=measure, y=value)) + 
+  
+  ## adding points in jitter format 
+  geom_boxplot(outlier.shape = NA, fill=NA, aes(color = measure)) +
+  geom_jitter(width=0.15, shape=21, alpha=0.25, size=1.5, color = 'black', aes(fill = measure)) + 
+
+  ## graph asthetics 
+  theme_bw() +
+  labs(
+    y="Number of reads",
+    x="Bioinformatic Step"
+    ) + 
+  
+  ## USER EDITS IN MANUAL CODE BELOW 
+  # scale_color_manual(values = c("red3", "lightblue", "purple2", "gold", "green4", "black")) +
+  # scale_size_manual(values = c(21,17)) +
+  scale_fill_manual(values = c("#264653", "#2a9d8f")) +
+  scale_color_manual(values = c("#264653", "#2a9d8f")) +
+  scale_x_discrete(labels = c("cutadapt_total_processed" = "Start", 
+                              "nonchim" = "Final")) +
+  
+  theme(panel.background=element_rect(fill='white', colour='black'),
+        strip.background=element_rect(fill='white', colour='black'),
+        strip.text = element_text(size = 10, face="bold"),
+        legend.position = "none",
+        axis.text.y = element_text(size=10, color="black"),
+        axis.text.x = element_text(size=10, color="black"),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=11, face="bold"),
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=11, face="bold"))
+```
+
+    ## Warning: Removed 10 rows containing non-finite outside the scale range
+    ## (`stat_boxplot()`).
+
+    ## Warning: Removed 10 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+![](03-data_quality_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+``` r
+ggsave("example_output/Figures/SampleReport_FilteringStats_Condensed.png", width = 4, height=5)
+```
+
+    ## Warning: Removed 10 rows containing non-finite outside the scale range
+    ## (`stat_boxplot()`).
+    ## Removed 10 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+## Plot taxonomy
 
 ### Data transformation
 
@@ -165,25 +238,20 @@ No user edits.
 
 ``` r
 results_summary <- results %>% 
-  group_by(Category, Project) %>%
-  summarise(sum_reads = sum(reads))
-```
+  group_by(Category) %>%
+  reframe(sum_reads = sum(reads))
 
-    ## `summarise()` has grouped output by 'Category'. You can override using the
-    ## `.groups` argument.
-
-``` r
 general_stats <- results %>% 
   group_by(Category) %>%
-  summarise(sum_reads = sum(reads)) %>% ungroup() %>%
+  reframe(sum_reads = sum(reads)) %>% 
   mutate(total = sum(sum_reads),
          percent = sum_reads/total*100) %>% dplyr::select(Category, percent) %>% distinct() %>%
   ## round to 2 decimal places 
-  mutate(across(c('percent'), round, 4))
+  mutate(across(c('percent'), round, 3))
 ```
 
     ## Warning: There was 1 warning in `mutate()`.
-    ## ℹ In argument: `across(c("percent"), round, 4)`.
+    ## ℹ In argument: `across(c("percent"), round, 3)`.
     ## Caused by warning:
     ## ! The `...` argument of `across()` is deprecated as of dplyr 1.1.0.
     ## Supply arguments directly to `.fns` through an anonymous function instead.
@@ -197,66 +265,86 @@ general_stats <- results %>%
 ``` r
 ASV_summary <- ASV_breakdown %>%
   group_by(Category) %>%
-  summarise(count = n_distinct(ASV_ID))
+  reframe(count = n_distinct(ASV_ID))
 
 species_summary <- results %>%
   group_by(Category) %>%
-  summarise(count = n_distinct(Species_name))
-
-## species in addition to category
-## metadata option add-in
+  reframe(count = n_distinct(Species_name))
 ```
 
-### Raw Reads Plotting
-
-With metadata
+### All categories
 
 ``` r
-### User edits:
-### 1. Change paths of output to desired folder (data/figures is suggested data structure)
-### 2. Change x axis and color, size based on metadata desired 
-### 3. Change custom colors and sizes if desired and number of colors and sizes based on metadata variable chosen 
-### 4. Comment out any categories that do not show up in your dataset
+fill_colors <- c("Human" = "#e76f51", 
+                 "Livestock" = "#FF740A", 
+                 "Other" = "#FE9E20", 
+                 "Unassigned" = "#FFC571",
+                 "Bird" = "#FFECC2",
+                 "Sea Turtle" = "#C8D2B1", 
+                 "Elasmobranch" = "#DCF1F9",
+                 "Marine Mammal" ="#8CD0EC",
+                 "Teleost Fish" = "#3FB1DE"
+                 )
 
-# Check how many categories 
-unique(results_summary$Category)
-```
-
-    ## [1] Human        Livestock    unassigned   Teleost Fish
-    ## 9 Levels: Human Livestock Other unassigned Bird Elasmobranch ... Teleost Fish
-
-``` r
-## Based on this output, comment/uncomment the categories present for color 
-
-ggplot(results_summary, aes(fill=Category, y=sum_reads, x=Project)) + 
-    geom_bar(position="stack", stat="identity") +
-    scale_fill_brewer(palette = "RdYlBu") +
-    # scale_fill_manual(values = c("#9f040e", # Human
-    #                              "#e30613", # Livestock
-    #                              "#fb747d", # Other
-    #                              "#ff0000", # unassigned
-    #                              "#03045e", # Bird
-    #                              "#023e8a", # Elasmobranch
-    #                              "#0077b6", # Marine mammal
-    #                              "#0096c7", # Sea Turtle
-    #                              "#48cae4" # Teleost Fish 
-    #                              )) +
-    labs(fill = "Category") +
+results %>% group_by(sampleID, Category) %>%
+  reframe(group_sum = sum(reads),
+         group_relab = group_sum/`Number of reads`
+           ) %>% distinct() %>%
+  
+ggplot(., aes(y=group_relab, x=Category)) + 
+  geom_boxplot(outlier.shape = NA, aes(color=Category), fill=NA) +
+  geom_jitter(aes(fill=Category), width=0.2, shape=21, color='black', size = 0.75, alpha=0.35) +
+    scale_color_manual(values = fill_colors) +
+    scale_fill_manual(values = fill_colors) +
+    labs(color = "Category") +
     theme_bw() + 
-    xlab(" Month") + ylab("Raw reads") +
+    xlab("Category") + ylab("Relative abundance") +
     theme(panel.background=element_rect(fill='white', colour='black'),
+          legend.position = "none",
         axis.text.y = element_text(size=7, color="grey30"),
-        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.x = element_text(size=7, angle=45, hjust=1),
         axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=11, face="bold"),
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=11, face="bold"))
 ```
 
-![](03-data_quality_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](03-data_quality_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 ``` r
-## add % stacked as well
+ggsave("example_output/Figures/Categories_relative_abundance.png", width = 5, height = 4)
+```
 
-ggsave("example_output/Figures/Rawreads_percategory.png", width = 8, height = 5)
+Human specific by Sample Type
+
+``` r
+results %>% group_by(sampleID, Category) %>%
+  reframe(group_sum = sum(reads),
+         group_relab = group_sum/`Number of reads`
+           ) %>% distinct() %>%
+  
+  ## subset to include Human and metadata 
+  subset(Category == "Human") %>%
+  left_join(., meta, by = "sampleID") %>%
+  
+  ggplot(., aes(x=SampleType, y=group_relab)) +
+  geom_boxplot(outlier.shape=NA, fill=NA, color = "#e76f51") +
+  geom_jitter(fill="#e76f51", shape=21, alpha=0.5, width=0.2) +
+  labs(
+    x = "Sample Type",
+    y = "Relative Abundance"
+  ) +
+  theme_bw() +
+  theme(panel.background=element_rect(fill='white', colour='black'),
+          legend.position = "none",
+        axis.text.y = element_text(size=7, color="grey30"),
+        axis.text.x = element_text(size=7),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=11, face="bold"),
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=11, face="bold"))
+```
+
+![](03-data_quality_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+``` r
+ggsave("example_output/Figures/Human.png", width=4, height=3)
 ```
 
 Reads Piechart
@@ -273,24 +361,27 @@ piechart <- general_stats %>%
 
 piechart_reads <- general_stats %>% 
   ggplot(., aes(x="", y = percent, fill = Category)) +
-  geom_col(color = "black") +
+  geom_col(color = "black", width=1.25) +
   geom_label_repel(data = piechart,
                    aes(y = pos, label = paste0(percent, "%")),
                    size = 3, nudge_x = 1, show.legend = FALSE) +
   coord_polar(theta = "y") +
-  scale_fill_brewer(palette = "RdYlBu") +
+  scale_fill_manual(values = fill_colors) +
   theme_bw() +
   theme(
     plot.background = element_rect(fill = "white", colour = NA),
+    plot.margin = margin(t = 5, r = 5, b = 5, l = 5, unit = "pt"),
+    #legend.position = "none",
     panel.border = element_blank(),  # Remove panel border
     panel.grid = element_blank(),    # Remove grid lines
     axis.ticks = element_blank(),    # Remove axis ticks
     axis.text = element_blank(),     # Remove axis text
-    axis.title = element_blank(),     # Remove axis titles
-    legend.position = "none"
-  ) +
-  ggtitle("% of raw reads") +
+    axis.title = element_blank()     # Remove axis titles
+      ) +
+  ggtitle("Raw reads (%)") +
   xlab("") + ylab("") + labs(fill = "Category")
+
+ggsave("example_output/Figures/Category_breakdown_percent_rawreads.png", width=4, height=3)
 ```
 
 ASV Piechart
@@ -307,24 +398,27 @@ piechart_ASV <- ASV_summary %>%
 
 piechart_ASV <- ASV_summary %>% 
   ggplot(., aes(x="", y = count, fill = Category)) +
-  geom_col(color = "black") +
+  geom_col(color = "black", width=1.25) +
   geom_label_repel(data = piechart_ASV,
                    aes(y = pos, label = paste0(count)),
                    size = 3, nudge_x = 1, show.legend = FALSE) +
   coord_polar(theta = "y") +
-  scale_fill_brewer(palette = "RdYlBu") +
+  scale_fill_manual(values = fill_colors) +
   theme_bw() +
   theme(
     plot.background = element_rect(fill = "white", colour = NA),
+    plot.margin = margin(t = 5, r = 5, b = 5, l = 5, unit = "pt"),
     panel.border = element_blank(),  # Remove panel border
     panel.grid = element_blank(),    # Remove grid lines
     axis.ticks = element_blank(),    # Remove axis ticks
     axis.text = element_blank(),     # Remove axis text
-    axis.title = element_blank(),     # Remove axis titles
-    legend.position = "none"
-  ) +
-  ggtitle("# of ASVs") +
+    #legend.position = "none"
+    axis.title = element_blank()     # Remove axis titles
+      ) +
+  ggtitle("Number of ASVs") +
   xlab("") + ylab("") + labs(fill = "Category")
+
+ggsave("example_output/Figures/Category_breakdown_ASVs.png", width=4, height=3)
 ```
 
 Number of species pie chart
@@ -335,39 +429,38 @@ piechart_spp <- species_summary %>%
          pos = count/2 + lead(csum, 1),
          pos = if_else(is.na(pos), count/2, pos))
 
-piechart_spp <- species_summary %>% 
+piechart_species_plot <- species_summary %>% 
   ggplot(., aes(x="", y = count, fill = Category)) +
-  geom_col(color = "black") +
+  geom_col(color = "black", width=1.25) +
   geom_label_repel(data = piechart_spp,
                    aes(y = pos, label = paste0(count)),
                    size = 3, nudge_x = 1, show.legend = FALSE) +
   coord_polar(theta = "y") +
-  scale_fill_brewer(palette = "RdYlBu") +
+  scale_fill_manual(values = fill_colors) +
   theme_bw() +
   theme(
     plot.background = element_rect(fill = "white", colour = NA),
+    plot.margin = margin(t = 5, r = 5, b = 5, l = 5, unit = "pt"),
     panel.border = element_blank(),  # Remove panel border
     panel.grid = element_blank(),    # Remove grid lines
     axis.ticks = element_blank(),    # Remove axis ticks
     axis.text = element_blank(),     # Remove axis text
     axis.title = element_blank()     # Remove axis titles
   ) +
-  ggtitle("# of species") +
+  ggtitle("Number of species") +
   xlab("") + ylab("") + labs(fill = "Category")
+
+ggsave("example_output/Figures/Category_breakdown_species.png", width=4, height=3)
 ```
 
 Plot together and export
 
 ``` r
-plot_grid(piechart_reads, piechart_ASV, piechart_spp, 
-          ncol=3, 
-          rel_widths = c(2,2,3.075) 
-          #align = "hv"
-          )
-```
-
-![](03-data_quality_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
-
-``` r
-ggsave("example_output/Category_breakdown.png", width=10, height=4)
+# plot_grid(piechart_reads, piechart_ASV, piechart_species_plot, 
+#           ncol=3, 
+#           #rel_widths = c(2,2,3.075) 
+#           align = "vh"
+#           )
+# 
+# ggsave("example_output/Figures/Category_breakdown.png", width=14, height=4)
 ```
