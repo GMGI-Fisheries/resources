@@ -379,8 +379,12 @@ piechart_reads <- general_stats %>%
     axis.title = element_blank()     # Remove axis titles
       ) +
   ggtitle("Raw reads (%)") +
-  xlab("") + ylab("") + labs(fill = "Category")
+  xlab("") + ylab("") + labs(fill = "Category"); piechart_reads
+```
 
+![](03-data_quality_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+``` r
 ggsave("example_output/Figures/Category_breakdown_percent_rawreads.png", width=4, height=3)
 ```
 
@@ -416,8 +420,12 @@ piechart_ASV <- ASV_summary %>%
     axis.title = element_blank()     # Remove axis titles
       ) +
   ggtitle("Number of ASVs") +
-  xlab("") + ylab("") + labs(fill = "Category")
+  xlab("") + ylab("") + labs(fill = "Category"); piechart_ASV
+```
 
+![](03-data_quality_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+``` r
 ggsave("example_output/Figures/Category_breakdown_ASVs.png", width=4, height=3)
 ```
 
@@ -448,8 +456,12 @@ piechart_species_plot <- species_summary %>%
     axis.title = element_blank()     # Remove axis titles
   ) +
   ggtitle("Number of species") +
-  xlab("") + ylab("") + labs(fill = "Category")
+  xlab("") + ylab("") + labs(fill = "Category"); piechart_species_plot
+```
 
+![](03-data_quality_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+``` r
 ggsave("example_output/Figures/Category_breakdown_species.png", width=4, height=3)
 ```
 
