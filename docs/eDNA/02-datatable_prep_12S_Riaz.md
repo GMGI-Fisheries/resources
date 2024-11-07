@@ -124,9 +124,9 @@ IDs match those used in the ASV_table.len.tsv file.
 ### 1. change path of metadata file
 
 ## EXCEL
-# meta <- read_excel("example_input/metadata.xlsx")
+meta <- read_excel("example_input/metadata.xlsx")
 ## CSV 
-meta <- read.csv("example_input/metadata.csv", header = TRUE)
+# meta <- read.csv("example_input/metadata.csv", header = TRUE)
 ```
 
 ### Load database metadata
@@ -167,7 +167,7 @@ Blast_GMGI <- read.table(path_blast_gmgi, header=F, col.names = blast_col_header
 length(unique(Blast_GMGI$ASV_ID)) 
 ```
 
-    ## [1] 61
+    ## [1] 986
 
 ### Mitofish database
 
@@ -368,8 +368,8 @@ Disagree <- Blast_GMGI_edited %>% group_by(ASV_ID) %>%
 ```
 
     ## Warning in full_join(., Blast_NCBI %>% dplyr::select(ASV_ID, Species_name) %>% : Detected an unexpected many-to-many relationship between `x` and `y`.
-    ## ℹ Row 3 of `x` matches multiple rows in `y`.
-    ## ℹ Row 10 of `y` matches multiple rows in `x`.
+    ## ℹ Row 36 of `x` matches multiple rows in `y`.
+    ## ℹ Row 201 of `y` matches multiple rows in `x`.
     ## ℹ If a many-to-many relationship is expected, set `relationship =
     ##   "many-to-many"` to silence this warning.
 

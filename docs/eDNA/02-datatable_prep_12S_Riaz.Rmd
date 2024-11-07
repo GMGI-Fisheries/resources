@@ -102,9 +102,9 @@ Metadata specific to each project. This contains information about each sample (
 ### 1. change path of metadata file
 
 ## EXCEL
-# meta <- read_excel("example_input/metadata.xlsx")
+meta <- read_excel("example_input/metadata.xlsx")
 ## CSV 
-meta <- read.csv("example_input/metadata.csv", header = TRUE)
+# meta <- read.csv("example_input/metadata.csv", header = TRUE)
 ```
 
 ### Load database metadata
