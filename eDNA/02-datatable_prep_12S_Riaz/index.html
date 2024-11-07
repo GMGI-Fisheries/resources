@@ -1760,9 +1760,9 @@ IDs match those used in the ASV_table.len.tsv file.</p>
 <span class="c1">### 1. change path of metadata file</span>
 
 <span class="c1">## EXCEL</span>
-<span class="c1"># meta &lt;- read_excel(&quot;example_input/metadata.xlsx&quot;)</span>
+<span class="n">meta</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_excel</span><span class="p">(</span><span class="s">&quot;example_input/metadata.xlsx&quot;</span><span class="p">)</span>
 <span class="c1">## CSV </span>
-<span class="n">meta</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read.csv</span><span class="p">(</span><span class="s">&quot;example_input/metadata.csv&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+<span class="c1"># meta &lt;- read.csv(&quot;example_input/metadata.csv&quot;, header = TRUE)</span>
 </code></pre></div>
 <h3 id="load-database-metadata">Load database metadata</h3>
 <p>No user edits in this section because paths have already been set above.</p>
@@ -1790,7 +1790,7 @@ default.</p>
 <span class="c1">## Check how many ASVs were identified with the GMGI Database</span>
 <span class="nf">length</span><span class="p">(</span><span class="nf">unique</span><span class="p">(</span><span class="n">Blast_GMGI</span><span class="o">$</span><span class="n">ASV_ID</span><span class="p">))</span><span class="w"> </span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>## [1] 61
+<div class="highlight"><pre><span></span><code>## [1] 986
 </code></pre></div>
 <h3 id="mitofish-database">Mitofish database</h3>
 <p>No user edits.</p>
@@ -1952,8 +1952,8 @@ the next section.</p>
 <span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Choice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NA</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>## Warning in full_join(., Blast_NCBI %&gt;% dplyr::select(ASV_ID, Species_name) %&gt;% : Detected an unexpected many-to-many relationship between `x` and `y`.
-## ℹ Row 3 of `x` matches multiple rows in `y`.
-## ℹ Row 10 of `y` matches multiple rows in `x`.
+## ℹ Row 36 of `x` matches multiple rows in `y`.
+## ℹ Row 201 of `y` matches multiple rows in `x`.
 ## ℹ If a many-to-many relationship is expected, set `relationship =
 ##   &quot;many-to-many&quot;` to silence this warning.
 </code></pre></div>
