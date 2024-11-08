@@ -56,8 +56,6 @@ df <- read_xlsx("example_output/Results_relab_matrix.xlsx") %>%
   
   ## making species_name rownames instead of column 
   column_to_rownames(var = "Species_name")
-
-head(df)
 ```
 
 ### Metadata
