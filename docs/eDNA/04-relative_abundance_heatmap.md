@@ -58,7 +58,20 @@ library(ggh4x) ## for facet wrap options
 
 ``` r
 library(tidytext)
+library(forcats)
+library(scales)
 ```
+
+    ## 
+    ## Attaching package: 'scales'
+    ## 
+    ## The following object is masked from 'package:readr':
+    ## 
+    ##     col_factor
+    ## 
+    ## The following object is masked from 'package:purrr':
+    ## 
+    ##     discard
 
 ## Load data
 
@@ -260,4 +273,38 @@ df_average %>%
 
 ``` r
 ggsave("example_output/Figures/Relative_abundance_sampletype.png", width = 7, height = 14) 
+```
+
+## Top Species List visual
+
+``` r
+top_list <- read_xlsx("example_output/Results_rawreads_long.xlsx") %>%
+  filter(!Category == "Other" & !Category == "Livestock" & !Category == "unassigned" & !Category == "Human") %>%
+  group_by(Species_name) %>%
+  summarise(total = sum(reads),
+            log = log10(total)) %>% 
+  arrange(desc(total)) %>%
+  head(25) 
+
+ggplot(top_list, aes(x = fct_reorder(Species_name, log), y = log)) +
+  geom_segment(aes(xend = Species_name, yend = 0), color = "#006e90") +  # Lollipop stick
+  geom_point(size = 3, color = "#006e90") +  # Lollipop head
+  coord_flip() +  # Flip coordinates for horizontal lollipop chart
+  labs(
+       x = "",
+       y = "Normalized Reads") +
+  theme_bw() +
+  theme(axis.text.y = element_text(size = 8, face="italic"),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=12, face="bold"),
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=12, face="bold")) +
+  scale_y_continuous(
+    labels = comma,
+    limits = c(0, max(top_list$log) + 1.5)  # Set the upper limit to max value + 2
+  )
+```
+
+![](04-relative_abundance_heatmap_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+``` r
+ggsave("example_output/Figures/Top_species.png", width=6, height=6)
 ```
