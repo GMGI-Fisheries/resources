@@ -12,7 +12,7 @@
         <link rel="prev" href="../03-data_quality/">
       
       
-        <link rel="next" href="../00-creating_eDNA_conda_env/">
+        <link rel="next" href="../05-biodiversity/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -677,10 +677,40 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#top-species-list-visual" class="md-nav__link">
+    <span class="md-ellipsis">
+      Top Species List visual
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-biodiversity/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    05-biodiversity
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -1197,6 +1227,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#top-species-list-visual" class="md-nav__link">
+    <span class="md-ellipsis">
+      Top Species List visual
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1268,10 +1307,45 @@ manuscript/report.</p>
 ##     guide_axis_logticks
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">tidytext</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">forcats</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">scales</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## 
+## Attaching package: &#39;scales&#39;
+## 
+## The following object is masked from &#39;package:readr&#39;:
+## 
+##     col_factor
+## 
+## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     discard
 </code></pre></div>
 <h2 id="load-data">Load data</h2>
 <div class="highlight"><pre><span></span><code><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&quot;example_output/Results_relab_long.xlsx&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="nf">across</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="n">relab</span><span class="p">),</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span><span class="n">.x</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">)))</span>
+
+<span class="n">taxlevels</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_excel</span><span class="p">(</span>
+<span class="w">  </span><span class="s">&quot;C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/Metabarcoding Lab Resources/Reference Databases/GMGI_Vert_Ref.xlsx&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="s">&quot;Species_name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Kingdom&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Phylum&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Class&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Order&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Family&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Genus&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;species&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">distinct</span><span class="p">()</span>
+
+<span class="n">df_annotated</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">left_join</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">taxlevels</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Species_name&quot;</span><span class="p">)</span>
+
+<span class="c1">## bringing in common names information for those not in our db</span>
+<span class="n">commonNames_annotated</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&quot;example_output/Taxonomic_assignments/CommonNames_required_edited.xlsx&quot;</span><span class="p">)</span>
+
+<span class="c1"># Loop through each row of the dataframe to add taxonomic level information from required edited worksheet </span>
+<span class="nf">for </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">commonNames_annotated</span><span class="o">$</span><span class="n">Species_name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1"># Extract the current row (will do this for each ASV_ID in the choice df)</span>
+<span class="w">  </span><span class="n">current_row</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">commonNames_annotated</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">subset</span><span class="p">(</span><span class="n">Species_name</span><span class="o">==</span><span class="n">i</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1"># Apply filter based on the current row&#39;s condition</span>
+<span class="n">df_annotated</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df_annotated</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="nf">across</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="n">Common_name</span><span class="p">,</span><span class="w"> </span><span class="n">Category</span><span class="p">,</span><span class="w"> </span><span class="n">Kingdom</span><span class="p">,</span><span class="w"> </span><span class="n">Phylum</span><span class="p">,</span><span class="w"> </span><span class="n">Class</span><span class="p">,</span><span class="w"> </span><span class="n">Order</span><span class="p">,</span><span class="w"> </span><span class="n">Family</span><span class="p">,</span><span class="w"> </span><span class="n">Genus</span><span class="p">,</span><span class="w"> </span><span class="n">species</span><span class="p">),</span>
+<span class="w">                </span><span class="o">~</span><span class="nf">case_when</span><span class="p">(</span><span class="n">Species_name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">current_row</span><span class="o">$</span><span class="n">Species_name</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">current_row</span><span class="p">[[</span><span class="nf">cur_column</span><span class="p">()]],</span>
+<span class="w">                           </span><span class="kc">TRUE</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">.x</span><span class="p">)))</span>
+<span class="p">}</span>
 </code></pre></div>
 <h2 id="remove-categories">Remove Categories</h2>
 <p>If you want to plot relative abundance without human, other, or
@@ -1279,20 +1353,33 @@ livestock categories. As FYI/warning, relative abundance is calculated
 with these categories included. Relative abundance can also be thought
 of as proportion of total reads, which is calculated from the total
 reads for that sample.</p>
-<div class="highlight"><pre><span></span><code><span class="n">df_filtered</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
-<span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Other&quot;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Livestock&quot;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;unassigned&quot;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Human&quot;</span><span class="p">)</span><span class="w"> </span>
+<div class="highlight"><pre><span></span><code><span class="n">df_filtered</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df_annotated</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+<span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Other&quot;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Livestock&quot;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Unassigned&quot;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Human&quot;</span><span class="p">)</span><span class="w"> </span>
+
+<span class="n">df_average</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df_annotated</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">group_by</span><span class="p">(</span><span class="n">SampleType</span><span class="p">,</span><span class="w"> </span><span class="n">Species_name</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="c1">### average relative abundance by sample Type</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">avg_relab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">mean</span><span class="p">(</span><span class="n">relab</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">))</span>
 </code></pre></div>
+<p>If targeted species heatmap is desired, replace df_annotated with
+df_filtered in the heatmap code below. If so, remember to change the
+file name exported.</p>
 <h2 id="plot">Plot</h2>
 <p>reverse label order: scale y discrete limits reverse limits=rev</p>
 <p><a href="https://coolors.co/">https://coolors.co/</a> (hit tools on the top right hand side)</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## if subset of categories is desired, replace df below with df_filtered</span>
-<span class="n">df</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="n">df_annotated</span><span class="w"> </span><span class="o">%&gt;%</span>
 
 <span class="w">  </span><span class="c1">## replace zeros with NAs for plotting</span>
 <span class="w">  </span><span class="nf">replace_with_na_all</span><span class="p">(</span><span class="n">condition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">~</span><span class="n">.x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0.00000</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 
+<span class="w">  </span><span class="c1"># Create a factor for Common_name ordered by Order within each Category</span>
+<span class="w">  </span><span class="nf">group_by</span><span class="p">(</span><span class="n">Category</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Common_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">factor</span><span class="p">(</span><span class="n">Common_name</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">unique</span><span class="p">(</span><span class="n">Common_name</span><span class="p">[</span><span class="nf">order</span><span class="p">(</span><span class="n">Order</span><span class="p">,</span><span class="w"> </span><span class="nf">desc</span><span class="p">(</span><span class="n">Common_name</span><span class="p">))])))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">ungroup</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span>
+
 <span class="w">  </span><span class="c1">## ggplot basic options (USER EDIT: X AND Y AXIS)</span>
-<span class="w">  </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">Site</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">Common_name</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sampleID</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Common_name</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
 <span class="w">  </span><span class="nf">geom_tile</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">relab</span><span class="p">),</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;black&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 
 <span class="w">  </span><span class="c1">## x, y, and legend labels (USER EDITS IF DESIRED)</span>
@@ -1352,11 +1439,95 @@ reads for that sample.</p>
 </code></pre></div>
 <p><img alt="" src="../04-relative_abundance_heatmap_files/figure-gfm/unnamed-chunk-4-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="c1">## USER EDITS WIDTH AND HEIGHT TO DESIRED   </span>
-<span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example_output/Figures/Relative_abundance.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">7</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">)</span><span class="w">  </span>
+<span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example_output/Figures/Relative_abundance.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">22</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">14</span><span class="p">)</span><span class="w">  </span>
+</code></pre></div>
+<p>Heatmap plot by sample type</p>
+<div class="highlight"><pre><span></span><code><span class="n">df_average</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">Species_name</span><span class="p">,</span><span class="w"> </span><span class="n">Common_name</span><span class="p">,</span><span class="w"> </span><span class="n">Category</span><span class="p">,</span><span class="w"> </span><span class="n">SampleType</span><span class="p">,</span><span class="w"> </span><span class="n">Kingdom</span><span class="o">:</span><span class="n">avg_relab</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 
+<span class="w">  </span><span class="c1">## replace zeros with NAs for plotting</span>
+<span class="w">  </span><span class="nf">replace_with_na_all</span><span class="p">(</span><span class="n">condition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">~</span><span class="n">.x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0.00000</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 
-<span class="c1">## Group by family or order from gmgi_db info? this would break down teleost fish more</span>
-<span class="c1">## ecological niche? functional groups? would probably require more metadata..</span>
+<span class="w">  </span><span class="c1"># Create a factor for Common_name ordered by Order within each Category</span>
+<span class="w">  </span><span class="nf">group_by</span><span class="p">(</span><span class="n">Category</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Common_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">factor</span><span class="p">(</span><span class="n">Common_name</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">unique</span><span class="p">(</span><span class="n">Common_name</span><span class="p">[</span><span class="nf">order</span><span class="p">(</span><span class="n">Order</span><span class="p">,</span><span class="w"> </span><span class="nf">desc</span><span class="p">(</span><span class="n">Common_name</span><span class="p">))])))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">ungroup</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span>
+
+<span class="w">    </span><span class="c1">## ggplot basic options (USER EDIT: X AND Y AXIS)</span>
+<span class="w">  </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SampleType</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Common_name</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">geom_tile</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">avg_relab</span><span class="p">),</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;black&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="c1">## x, y, and legend labels (USER EDITS IF DESIRED)</span>
+<span class="w">  </span><span class="nf">ylab</span><span class="p">(</span><span class="s">&quot;Common name&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">xlab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">labs</span><span class="p">(</span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Relative Abundance (%)&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="c1">## color of the tile options; direction=1 will flip the low/high (USER EDITS IF DESIRED)</span>
+<span class="w">  </span><span class="nf">scale_fill_gradient</span><span class="p">(</span><span class="n">na.value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;white&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">low</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;lightskyblue2&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">high</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#0C4D66&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>
+
+<span class="w">  </span><span class="c1">## facet grid with Category and project variables</span>
+<span class="w">  </span><span class="nf">facet_grid2</span><span class="p">(</span><span class="n">Category</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">SampleType</span><span class="p">,</span><span class="w"> </span>
+<span class="w">              </span><span class="n">scales</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;free&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">space</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;free&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">              </span><span class="n">labeller</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">labeller</span><span class="p">(</span><span class="n">Category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">label_wrap_gen</span><span class="p">(</span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">)))</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="c1">## graph theme options</span>
+<span class="w">  </span><span class="nf">theme_classic</span><span class="p">()</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">theme</span><span class="p">(</span>
+<span class="w">    </span><span class="c1">## axis text </span>
+<span class="w">    </span><span class="n">axis.text.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">angle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">90</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="o">=</span><span class="s">&quot;grey25&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">hjust</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">),</span>
+<span class="w">    </span><span class="n">axis.text.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">colour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;black&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">8</span><span class="p">),</span>
+
+<span class="w">    </span><span class="c1">## legend text and title </span>
+<span class="w">    </span><span class="n">legend.text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="o">=</span><span class="s">&quot;black&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="n">legend.title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="o">=</span><span class="s">&quot;black&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="n">legend.position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">-0.4</span><span class="p">,</span><span class="w"> </span><span class="m">-0.05</span><span class="p">),</span><span class="w"> </span>
+<span class="w">    </span><span class="n">legend.key.height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">unit</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;mm&#39;</span><span class="p">),</span>
+<span class="w">    </span><span class="n">legend.direction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;horizontal&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">legend.key.width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">unit</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;mm&#39;</span><span class="p">),</span>
+<span class="w">    </span><span class="n">legend.title.align</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.5</span><span class="p">,</span>
+<span class="w">    </span><span class="n">legend.title.position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;top&quot;</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">## axis titles </span>
+<span class="w">    </span><span class="n">axis.title.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">14</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="n">axis.title.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">14</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
+
+<span class="w">    </span><span class="c1">## facet wrap labels</span>
+<span class="w">    </span><span class="n">strip.text.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;black&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;bold&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">12</span><span class="p">),</span>
+<span class="w">    </span><span class="n">strip.text.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;black&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;bold&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">12</span><span class="p">,</span><span class="w"> </span><span class="n">angle</span><span class="o">=</span><span class="m">0</span><span class="p">),</span>
+<span class="w">    </span><span class="n">strip.background.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_blank</span><span class="p">(),</span>
+<span class="w">    </span><span class="n">strip.clip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;off&quot;</span>
+<span class="w">    </span><span class="p">)</span>
+</code></pre></div>
+<p><img alt="" src="../04-relative_abundance_heatmap_files/figure-gfm/unnamed-chunk-5-1.png" /><!-- --></p>
+<div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example_output/Figures/Relative_abundance_sampletype.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">7</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">14</span><span class="p">)</span><span class="w"> </span>
+</code></pre></div>
+<h2 id="top-species-list-visual">Top Species List visual</h2>
+<div class="highlight"><pre><span></span><code><span class="n">top_list</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&quot;example_output/Results_rawreads_long.xlsx&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Other&quot;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Livestock&quot;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;unassigned&quot;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Human&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">group_by</span><span class="p">(</span><span class="n">Species_name</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">summarise</span><span class="p">(</span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">reads</span><span class="p">),</span>
+<span class="w">            </span><span class="n">log</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="n">total</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+<span class="w">  </span><span class="nf">arrange</span><span class="p">(</span><span class="nf">desc</span><span class="p">(</span><span class="n">total</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">head</span><span class="p">(</span><span class="m">25</span><span class="p">)</span><span class="w"> </span>
+
+<span class="nf">ggplot</span><span class="p">(</span><span class="n">top_list</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">fct_reorder</span><span class="p">(</span><span class="n">Species_name</span><span class="p">,</span><span class="w"> </span><span class="n">log</span><span class="p">),</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">log</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">geom_segment</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">xend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Species_name</span><span class="p">,</span><span class="w"> </span><span class="n">yend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#006e90&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">  </span><span class="c1"># Lollipop stick</span>
+<span class="w">  </span><span class="nf">geom_point</span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#006e90&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">  </span><span class="c1"># Lollipop head</span>
+<span class="w">  </span><span class="nf">coord_flip</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w">  </span><span class="c1"># Flip coordinates for horizontal lollipop chart</span>
+<span class="w">  </span><span class="nf">labs</span><span class="p">(</span>
+<span class="w">       </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Normalized Reads&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">theme_bw</span><span class="p">()</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">theme</span><span class="p">(</span><span class="n">axis.text.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;italic&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="n">axis.title.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">12</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="n">axis.title.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">12</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">scale_y_continuous</span><span class="p">(</span>
+<span class="w">    </span><span class="n">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">comma</span><span class="p">,</span>
+<span class="w">    </span><span class="n">limits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">top_list</span><span class="o">$</span><span class="n">log</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1.5</span><span class="p">)</span><span class="w">  </span><span class="c1"># Set the upper limit to max value + 2</span>
+<span class="w">  </span><span class="p">)</span>
+</code></pre></div>
+<p><img alt="" src="../04-relative_abundance_heatmap_files/figure-gfm/unnamed-chunk-6-1.png" /><!-- --></p>
+<div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example_output/Figures/Top_species.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">6</span><span class="p">)</span>
 </code></pre></div>
 
 

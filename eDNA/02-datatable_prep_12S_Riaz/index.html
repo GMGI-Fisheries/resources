@@ -902,6 +902,27 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-biodiversity/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    05-biodiversity
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2038,9 +2059,12 @@ No user edits.</p>
 <span class="c1">### print entries with no common name</span>
 <span class="n">ASV_table_taxID_edited</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">Species_name</span><span class="p">,</span><span class="w"> </span><span class="n">Common_name</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
 <span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">Common_name</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">distinct</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span>
-<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NA</span><span class="p">,</span>
-<span class="w">         </span><span class="n">Common_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">case_when</span><span class="p">(</span><span class="n">Species_name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Unassigned&quot;</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="s">&quot;Unassigned&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">TRUE</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">Common_name</span><span class="p">),</span>
-<span class="w">         </span><span class="n">Category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">case_when</span><span class="p">(</span><span class="n">Species_name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Unassigned&quot;</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="s">&quot;Unassigned&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">TRUE</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">Category</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">Kingdom</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">Phylum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">Class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">Order</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">Family</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">Genus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">species</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NA</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span>
+<span class="w">    </span><span class="nf">across</span><span class="p">(</span><span class="nf">everything</span><span class="p">(),</span><span class="w"> </span><span class="o">~</span><span class="nf">case_when</span><span class="p">(</span>
+<span class="w">      </span><span class="n">Species_name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Unassigned&quot;</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="s">&quot;Unassigned&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="kc">TRUE</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">.x</span>
+<span class="w">    </span><span class="p">)))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
 <span class="w">  </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="n">path_commonnames_add</span><span class="p">)</span>
 </code></pre></div>
 <p>Editing common names and category when needed.</p>

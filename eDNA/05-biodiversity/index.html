@@ -1,0 +1,2385 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../04-relative_abundance_heatmap/">
+      
+      
+        <link rel="next" href="../00-creating_eDNA_conda_env/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.37">
+    
+    
+      
+        <title>05-biodiversity - GMGI Fisheries Handbook</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#phyloseq-diversity-metrics-edna-metabarcoding-base-script" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="GMGI Fisheries Handbook" class="md-header__button md-logo" aria-label="GMGI Fisheries Handbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            GMGI Fisheries Handbook
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              05-biodiversity
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/GMGI-Fisheries/resources" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="GMGI Fisheries Handbook" class="md-nav__button md-logo" aria-label="GMGI Fisheries Handbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    GMGI Fisheries Handbook
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/GMGI-Fisheries/resources" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Computing Hardware
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Computing Hardware
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Computing_GMGI/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GMGI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Computing_NU/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Northeastern University
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Management/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Data Management
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_To_Server/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Data Transfer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Computing_Begin_Resources/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Computing Beginner Resources
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data%20Visualization%20in%20R/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    R Resources
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tbd.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Intro to Github
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tbd.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Intro to HPC
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    eDNA: 12S metabarcoding
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            eDNA: 12S metabarcoding
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-creating_eDNA_conda_env/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    00-Create-conda-env
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-Metabarcoding%20ampliseq%2012S%20Riaz/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    01-ampliseq-12S
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-datatable_prep_12S_Riaz/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    02-dfprep-12S
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-data_quality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    03-data-quality
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-relative_abundance_heatmap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    04-relative-abund-heatmap
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    05-biodiversity
+  </span>
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    eDNA: COI metabarcoding
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            eDNA: COI metabarcoding
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-creating_eDNA_conda_env/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    00-Create-conda-env
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-Metabarcoding%20ampliseq%20COI/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    01-ampliseq-COI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    eDNA: qPCR
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            eDNA: qPCR
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../eDNA%20qPCR/qPCR-analysis/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    01-dfprep-analysis
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Population Genomics
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            Population Genomics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PopGen/eDNA_01/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    01-
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Epigenetic Aging
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            Epigenetic Aging
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../EpiAge/eDNA_01/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    01-
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+        
+          
+          <label class="md-nav__link" for="__nav_14" id="__nav_14_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Genome Assembly
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_14">
+            <span class="md-nav__icon md-icon"></span>
+            Genome Assembly
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tbd.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    coming soon!
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+        
+          
+          <label class="md-nav__link" for="__nav_15" id="__nav_15_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Laboratory Protocols
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_15">
+            <span class="md-nav__icon md-icon"></span>
+            Laboratory Protocols
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_15_1" id="__nav_15_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    eDNA metabarcoding
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_15_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_15_1">
+            <span class="md-nav__icon md-icon"></span>
+            eDNA metabarcoding
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../eDNA_01.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    01-
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/GMGI-Fisheries/resources/blob/master/docs/eDNA/05-biodiversity.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="phyloseq-diversity-metrics-edna-metabarcoding-base-script">Phyloseq Diversity Metrics: eDNA metabarcoding base script</h1>
+<p>This script analyzes your relative abundance matrix to assess alpha and
+beta diversity. Figures produced are potentially part of the main
+figures of your manuscript/report.</p>
+<h1 id="load-libraries">Load libraries</h1>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span><span class="w"> </span><span class="c1">## for plotting</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span><span class="w"> </span><span class="c1">## for data manipulation </span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.4     ✔ readr     2.1.5
+## ✔ forcats   1.0.0     ✔ stringr   1.5.1
+## ✔ lubridate 1.9.3     ✔ tibble    3.2.1
+## ✔ purrr     1.0.2     ✔ tidyr     1.3.1
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">phyloseq</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">knitr</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">readxl</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">writexl</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">cowplot</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## 
+## Attaching package: &#39;cowplot&#39;
+## 
+## The following object is masked from &#39;package:lubridate&#39;:
+## 
+##     stamp
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## for stats</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">pairwiseAdonis</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## Loading required package: vegan
+## Loading required package: permute
+## Loading required package: lattice
+## This is vegan 2.6-8
+## Loading required package: cluster
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">lme4</span><span class="p">)</span><span class="w"> </span><span class="c1">## for stats</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## Loading required package: Matrix
+## 
+## Attaching package: &#39;Matrix&#39;
+## 
+## The following objects are masked from &#39;package:tidyr&#39;:
+## 
+##     expand, pack, unpack
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">car</span><span class="p">)</span><span class="w"> </span><span class="c1">## for stats</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## Loading required package: carData
+## 
+## Attaching package: &#39;car&#39;
+## 
+## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     recode
+## 
+## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     some
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span><span class="w"> </span><span class="c1">## for stats</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">vegan</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="s">&quot;microbiome&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1">## for alpha diversity functions</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## 
+## microbiome R package (microbiome.github.com)
+##     
+## 
+## 
+##  Copyright (C) 2011-2022 Leo Lahti, 
+##     Sudarshan Shetty et al. &lt;microbiome.github.io&gt;
+## 
+## 
+## Attaching package: &#39;microbiome&#39;
+## 
+## The following object is masked from &#39;package:vegan&#39;:
+## 
+##     diversity
+## 
+## The following object is masked from &#39;package:ggplot2&#39;:
+## 
+##     alpha
+## 
+## The following object is masked from &#39;package:base&#39;:
+## 
+##     transform
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## set seed</span>
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
+</code></pre></div>
+<h1 id="load-data">Load data</h1>
+<p>Before continuing with analyses, decide on what data you’re going to use
+an input. Relative abundance, raw reads, rarefied counts (can be done in
+phyloseq), variance stabilizing transformation (vst) from DESeq2? The
+input will impact your interpretation and thus is important to decide
+<strong>before</strong> conducting any stats to avoid bias towards a particular
+result.</p>
+<p>On the Fisheries team, we have traditionally used relative abundance and
+the following code uses that dataset.</p>
+<h3 id="relative-abundance-data">Relative Abundance data</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">## Relative abundance matrix </span>
+<span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&quot;example_output/Results_relab_matrix.xlsx&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="c1">## removing common_name and category for now </span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">Common_name</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">Category</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+
+<span class="w">  </span><span class="c1">## Remove columns with NA values</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="nf">where</span><span class="p">(</span><span class="o">~!</span><span class="nf">any</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">.</span><span class="p">))))</span><span class="w"> </span><span class="o">%&gt;%</span>
+
+<span class="w">  </span><span class="c1">## making species_name rownames instead of column </span>
+<span class="w">  </span><span class="nf">column_to_rownames</span><span class="p">(</span><span class="n">var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Species_name&quot;</span><span class="p">)</span>
+
+<span class="nf">head</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>##                                    Aug_501_2_S Aug_501_3_B Aug_501_3_S
+## Alopias vulpinus                   0.000000000   0.0000000   0.0000000
+## Ammodytes americanus or hexapterus 0.000000000   0.0000000   0.0000000
+## Ammodytes dubius                   0.008895254   0.8093603   0.2390657
+## Anas sp                            0.000000000   0.0000000   0.0000000
+## Anatidae sp                        0.000000000   0.0000000   0.0000000
+## Anguilla rostrata                  0.007288326   0.0000000   0.0000000
+##                                    Aug_501_4_B Aug_501_4_S Aug_DI_Blank_1A
+## Alopias vulpinus                             0 0.002853176       0.0000000
+## Ammodytes americanus or hexapterus           0 0.000000000       0.0000000
+## Ammodytes dubius                             0 0.115591716       0.4005637
+## Anas sp                                      0 0.000000000       0.0000000
+## Anatidae sp                                  0 0.000000000       0.0000000
+## Anguilla rostrata                            0 0.000000000       0.0000000
+##                                    Aug_DI_Blank_2B Aug_REV_02_B Aug_REV_03_B
+## Alopias vulpinus                         0.0000000  0.000000000  0.000000000
+## Ammodytes americanus or hexapterus       0.0000000  0.000000000  0.000000000
+## Ammodytes dubius                         0.3928289  0.399336426  0.298295539
+## Anas sp                                  0.0000000  0.000000000  0.005214206
+## Anatidae sp                              0.0000000  0.000000000  0.000000000
+## Anguilla rostrata                        0.0000000  0.002411524  0.000000000
+##                                    Aug_REV_04_B Aug_REV_05_B Aug_REV_07_B
+## Alopias vulpinus                      0.0000000    0.0000000   0.00000000
+## Ammodytes americanus or hexapterus    0.0000000    0.0000000   0.00000000
+## Ammodytes dubius                      0.2271532    0.2076953   0.08695869
+## Anas sp                               0.0000000    0.0000000   0.00000000
+## Anatidae sp                           0.0000000    0.0000000   0.00000000
+## Anguilla rostrata                     0.0000000    0.0000000   0.00000000
+##                                    Aug_REV_09_B Aug_REV_11_B Aug_REV_12_B
+## Alopias vulpinus                    0.000000000   0.00000000    0.0000000
+## Ammodytes americanus or hexapterus  0.000000000   0.00000000    0.0000000
+## Ammodytes dubius                    0.255894688   0.37196591    0.2386415
+## Anas sp                             0.006818453   0.01603580    0.0000000
+## Anatidae sp                         0.000000000   0.02145884    0.0000000
+## Anguilla rostrata                   0.028172894   0.01172690    0.0000000
+##                                    Aug_REV_13_B Aug_REV_14_B Aug_REV_15_B
+## Alopias vulpinus                     0.00000000     0.000000    0.0000000
+## Ammodytes americanus or hexapterus   0.00000000     0.000000    0.0000000
+## Ammodytes dubius                     0.09625431     0.156506    0.1865236
+## Anas sp                              0.00000000     0.000000    0.0000000
+## Anatidae sp                          0.00000000     0.000000    0.0000000
+## Anguilla rostrata                    0.03483771     0.000000    0.0000000
+##                                    Aug_REV_16_B Aug_REV_17_B Aug_REV_C1_B
+## Alopias vulpinus                    0.000000000    0.0000000    0.0000000
+## Ammodytes americanus or hexapterus  0.020028691    0.0000000    0.0000000
+## Ammodytes dubius                    0.336961640    0.8968235    0.2352717
+## Anas sp                             0.000000000    0.0000000    0.0000000
+## Anatidae sp                         0.004413101    0.0000000    0.0000000
+## Anguilla rostrata                   0.070762930    0.0000000    0.0000000
+##                                    Aug_REV_C2_B Aug_REV_C3_B Aug_REV_C4_B
+## Alopias vulpinus                    0.000000000   0.00000000    0.0000000
+## Ammodytes americanus or hexapterus  0.000000000   0.00000000    0.0000000
+## Ammodytes dubius                    0.244368799   0.00000000    0.4364533
+## Anas sp                             0.019843574   0.03230385    0.0000000
+## Anatidae sp                         0.006054391   0.00000000    0.0000000
+## Anguilla rostrata                   0.029468820   0.00000000    0.0000000
+##                                    Aug_REV_C5_B Aug_REV_C6_B Aug_SF_01_B
+## Alopias vulpinus                      0.0000000   0.00000000   0.0000000
+## Ammodytes americanus or hexapterus    0.0000000   0.00000000   0.0000000
+## Ammodytes dubius                      0.3343964   0.00000000   0.2303577
+## Anas sp                               0.0000000   0.00000000   0.0000000
+## Anatidae sp                           0.0000000   0.00000000   0.0000000
+## Anguilla rostrata                     0.0000000   0.01530692   0.1017468
+##                                    Aug_SF_01_S Aug_SF_02_B Aug_SF_02_S
+## Alopias vulpinus                   0.000000000  0.00000000 0.000000000
+## Ammodytes americanus or hexapterus 0.000000000  0.00000000 0.009978711
+## Ammodytes dubius                   0.362676351  0.05161662 0.300049922
+## Anas sp                            0.005956735  0.00000000 0.000000000
+## Anatidae sp                        0.010638520  0.04189699 0.011189469
+## Anguilla rostrata                  0.023126764  0.16063587 0.020026281
+##                                    Aug_SF_S3_B  Aug_SF_S3_S Aug_VW_C1_B
+## Alopias vulpinus                    0.00000000 0.0000000000           0
+## Ammodytes americanus or hexapterus  0.00000000 0.0004342882           0
+## Ammodytes dubius                    0.02530407 0.2604243453           0
+## Anas sp                             0.00000000 0.0076057577           0
+## Anatidae sp                         0.00000000 0.0155486603           0
+## Anguilla rostrata                   0.00000000 0.0528231590           0
+##                                    Aug_VW_C1_S Aug_VW_C2_B Aug_VW_C2_S
+## Alopias vulpinus                      0.000000   0.0000000   0.0000000
+## Ammodytes americanus or hexapterus    0.000000   0.0000000   0.0000000
+## Ammodytes dubius                      0.182844   0.1050828   0.0962259
+## Anas sp                               0.000000   0.0000000   0.0000000
+## Anatidae sp                           0.000000   0.0000000   0.0000000
+## Anguilla rostrata                     0.000000   0.0000000   0.0000000
+##                                    Aug_VW_C3_B Aug_VW_C3_S Aug_VW_S5_B
+## Alopias vulpinus                    0.00000000   0.0000000           0
+## Ammodytes americanus or hexapterus  0.00000000   0.0000000           0
+## Ammodytes dubius                    0.00000000   0.2212705           0
+## Anas sp                             0.00000000   0.0000000           0
+## Anatidae sp                         0.06441899   0.0000000           0
+## Anguilla rostrata                   0.00000000   0.0000000           0
+##                                    Aug_VW_S5_S Aug_VW_S6_B Aug_VW_S7_B
+## Alopias vulpinus                             0           0           0
+## Ammodytes americanus or hexapterus           0           0           0
+## Ammodytes dubius                             0           0           0
+## Anas sp                                      0           0           0
+## Anatidae sp                                  0           0           0
+## Anguilla rostrata                            0           0           0
+##                                    Aug_VW_S7_S July_501_1_B July_501_1_S
+## Alopias vulpinus                             0    0.0000000    0.0000000
+## Ammodytes americanus or hexapterus           0    0.0000000    0.0000000
+## Ammodytes dubius                             0    0.4229793    0.2453757
+## Anas sp                                      0    0.0000000    0.0000000
+## Anatidae sp                                  0    0.0000000    0.0000000
+## Anguilla rostrata                            0    0.0000000    0.0000000
+##                                    July_501_2_B July_501_2_S July_501_3_B
+## Alopias vulpinus                      0.0000000  0.000000000    0.0000000
+## Ammodytes americanus or hexapterus    0.0000000  0.000000000    0.0000000
+## Ammodytes dubius                      0.4660976  0.006514321    0.9109061
+## Anas sp                               0.0000000  0.000000000    0.0000000
+## Anatidae sp                           0.0000000  0.000000000    0.0000000
+## Anguilla rostrata                     0.0000000  0.000000000    0.0000000
+##                                    July_501_3_S July_501_4_B July_501_4_S
+## Alopias vulpinus                      0.0000000    0.0000000     0.000000
+## Ammodytes americanus or hexapterus    0.0000000    0.0000000     0.000000
+## Ammodytes dubius                      0.4365487    0.3736816     0.328322
+## Anas sp                               0.0000000    0.0000000     0.000000
+## Anatidae sp                           0.0000000    0.0000000     0.000000
+## Anguilla rostrata                     0.0000000    0.0000000     0.000000
+##                                    July_DI_Blank_1_NA July_REV_01_B
+## Alopias vulpinus                           0.00000000     0.0000000
+## Ammodytes americanus or hexapterus         0.00000000     0.0000000
+## Ammodytes dubius                           0.09632366     0.9649197
+## Anas sp                                    0.00000000     0.0000000
+## Anatidae sp                                0.00000000     0.0000000
+## Anguilla rostrata                          0.00000000     0.0000000
+##                                    July_REV_02_B July_REV_03_B July_REV_04_B
+## Alopias vulpinus                       0.0000000   0.000000000     0.0000000
+## Ammodytes americanus or hexapterus     0.0000000   0.006465817     0.0000000
+## Ammodytes dubius                       0.9999805   0.988157590     0.5954835
+## Anas sp                                0.0000000   0.000000000     0.0000000
+## Anatidae sp                            0.0000000   0.000000000     0.0000000
+## Anguilla rostrata                      0.0000000   0.000000000     0.0000000
+##                                    July_REV_05_B July_REV_06_B July_REV_07_B
+## Alopias vulpinus                               0   0.000000000     0.0000000
+## Ammodytes americanus or hexapterus             0   0.000263129     0.0000000
+## Ammodytes dubius                               1   0.483082995     0.9870346
+## Anas sp                                        0   0.000000000     0.0000000
+## Anatidae sp                                    0   0.000000000     0.0000000
+## Anguilla rostrata                              0   0.000000000     0.0000000
+##                                    July_REV_08_B July_REV_09_B July_REV_10_B
+## Alopias vulpinus                       0.0000000    0.00000000     0.0000000
+## Ammodytes americanus or hexapterus     0.0000000    0.01420435     0.0000000
+## Ammodytes dubius                       0.4853068    0.95362029     0.9977123
+## Anas sp                                0.0000000    0.00000000     0.0000000
+## Anatidae sp                            0.0000000    0.00000000     0.0000000
+## Anguilla rostrata                      0.0000000    0.00000000     0.0000000
+##                                    July_REV_11_B July_REV_12_B July_REV_13_B
+## Alopias vulpinus                       0.0000000     0.0000000     0.0000000
+## Ammodytes americanus or hexapterus     0.0000000     0.0000000     0.0000000
+## Ammodytes dubius                       0.7637137     0.7693507     0.9997334
+## Anas sp                                0.0000000     0.0000000     0.0000000
+## Anatidae sp                            0.0000000     0.0000000     0.0000000
+## Anguilla rostrata                      0.0000000     0.0000000     0.0000000
+##                                    July_REV_14_B July_REV_15_B July_REV_16_B
+## Alopias vulpinus                       0.0000000     0.0000000     0.0000000
+## Ammodytes americanus or hexapterus     0.0000000     0.0000000     0.0000000
+## Ammodytes dubius                       0.2435897     0.3519598     0.5928478
+## Anas sp                                0.0000000     0.0000000     0.0000000
+## Anatidae sp                            0.0000000     0.0000000     0.0000000
+## Anguilla rostrata                      0.0000000     0.0000000     0.0000000
+##                                    July_REV_17_B July_REV_C1_B July_REV_C2_B
+## Alopias vulpinus                     0.000000000     0.0000000     0.0000000
+## Ammodytes americanus or hexapterus   0.000000000     0.0000000     0.0000000
+## Ammodytes dubius                     0.008347938     0.9995276     0.5290667
+## Anas sp                              0.000000000     0.0000000     0.0000000
+## Anatidae sp                          0.000000000     0.0000000     0.0000000
+## Anguilla rostrata                    0.000000000     0.0000000     0.0000000
+##                                    July_REV_C3_B July_REV_C4_B July_REV_C5_B
+## Alopias vulpinus                       0.0000000     0.0000000     0.0000000
+## Ammodytes americanus or hexapterus     0.0000000     0.0000000     0.0000000
+## Ammodytes dubius                       0.7050704     0.2653705     0.5413439
+## Anas sp                                0.0000000     0.0000000     0.0000000
+## Anatidae sp                            0.0000000     0.0000000     0.0000000
+## Anguilla rostrata                      0.0000000     0.0000000     0.0000000
+##                                    July_REV_C6_B July_SF_01_B July_SF_02_B
+## Alopias vulpinus                       0.0000000     0.000000    0.0000000
+## Ammodytes americanus or hexapterus     0.0000000     0.000000    0.0000000
+## Ammodytes dubius                       0.2327494     0.849587    0.9794068
+## Anas sp                                0.0000000     0.000000    0.0000000
+## Anatidae sp                            0.0000000     0.000000    0.0000000
+## Anguilla rostrata                      0.0000000     0.000000    0.0000000
+##                                    July_VW_C1_B July_VW_C1_S July_VW_C2_B
+## Alopias vulpinus                      0.0000000  0.000000000 0.0005000938
+## Ammodytes americanus or hexapterus    0.0000000  0.035730405 0.0000000000
+## Ammodytes dubius                      0.4790822  0.001542049 0.3253422517
+## Anas sp                               0.0000000  0.000000000 0.0000000000
+## Anatidae sp                           0.0000000  0.000000000 0.0000000000
+## Anguilla rostrata                     0.0000000  0.000000000 0.0000000000
+##                                    July_VW_C2_S July_VW_C3_B July_VW_C3_S
+## Alopias vulpinus                     0.00000000    0.0000000 0.0000000000
+## Ammodytes americanus or hexapterus   0.00000000    0.0000000 0.0000000000
+## Ammodytes dubius                     0.04112309    0.2980928 0.0008246367
+## Anas sp                              0.00000000    0.0000000 0.0000000000
+## Anatidae sp                          0.00000000    0.0000000 0.0000000000
+## Anguilla rostrata                    0.00000000    0.0000000 0.0000000000
+##                                    July_VW_S5_B July_VW_S5_S July_VW_S6_B
+## Alopias vulpinus                      0.0000000    0.0000000    0.0000000
+## Ammodytes americanus or hexapterus    0.0000000    0.0000000    0.0000000
+## Ammodytes dubius                      0.5089808    0.3831676    0.3732275
+## Anas sp                               0.0000000    0.0000000    0.0000000
+## Anatidae sp                           0.0000000    0.0000000    0.0000000
+## Anguilla rostrata                     0.0000000    0.0000000    0.0000000
+##                                    July_VW_S6_S July_VW_S7_B July_VW_S7_S
+## Alopias vulpinus                    0.000000000    0.0000000    0.0000000
+## Ammodytes americanus or hexapterus  0.007094035    0.0000000    0.0000000
+## Ammodytes dubius                    0.264887117    0.5520945    0.4818049
+## Anas sp                             0.000000000    0.0000000    0.0000000
+## Anatidae sp                         0.000000000    0.0000000    0.0000000
+## Anguilla rostrata                   0.007275269    0.0000000    0.0000000
+##                                    Jun_501_1_B Jun_501_1_S Jun_501_2_B
+## Alopias vulpinus                   0.000000000   0.0000000   0.0000000
+## Ammodytes americanus or hexapterus 0.000000000   0.0000000   0.0000000
+## Ammodytes dubius                   0.553902172   0.5077043   0.6435418
+## Anas sp                            0.003334634   0.0000000   0.0000000
+## Anatidae sp                        0.006975794   0.0000000   0.0000000
+## Anguilla rostrata                  0.017490572   0.0000000   0.0000000
+##                                    Jun_501_2_S Jun_501_3_B Jun_501_3_S
+## Alopias vulpinus                             0   0.0000000   0.0000000
+## Ammodytes americanus or hexapterus           0   0.0000000   0.0000000
+## Ammodytes dubius                             0   0.4865053   0.8222463
+## Anas sp                                      0   0.0000000   0.0000000
+## Anatidae sp                                  0   0.0000000   0.0000000
+## Anguilla rostrata                            0   0.0000000   0.0000000
+##                                    Jun_501_4_B Jun_501_4_S Jun_DI_Blank_2A
+## Alopias vulpinus                     0.0000000 0.000000000      0.00000000
+## Ammodytes americanus or hexapterus   0.0000000 0.006951700      0.00000000
+## Ammodytes dubius                     0.3614614 0.400643446      0.01217538
+## Anas sp                              0.0000000 0.008399971      0.00000000
+## Anatidae sp                          0.0000000 0.006413771      0.00000000
+## Anguilla rostrata                    0.0000000 0.004634467      0.00000000
+##                                    Jun_DI_Blank_2B Jun_Field_Blank_2
+## Alopias vulpinus                                 0                 0
+## Ammodytes americanus or hexapterus               0                 0
+## Ammodytes dubius                                 0                 0
+## Anas sp                                          0                 0
+## Anatidae sp                                      0                 0
+## Anguilla rostrata                                0                 0
+##                                    Jun_REV_01_B Jun_REV_02_B Jun_REV_03_B
+## Alopias vulpinus                     0.00000000            0            0
+## Ammodytes americanus or hexapterus   0.00000000            0            0
+## Ammodytes dubius                     0.08522286            0            0
+## Anas sp                              0.00000000            0            0
+## Anatidae sp                          0.00000000            0            0
+## Anguilla rostrata                    0.00000000            0            0
+##                                    Jun_REV_04_B Jun_REV_05_B Jun_REV_06_B
+## Alopias vulpinus                              0    0.0000000   0.00000000
+## Ammodytes americanus or hexapterus            0    0.0000000   0.00000000
+## Ammodytes dubius                              0    0.2630283   0.05571442
+## Anas sp                                       0    0.0000000   0.00000000
+## Anatidae sp                                   0    0.0000000   0.00000000
+## Anguilla rostrata                             0    0.0000000   0.00000000
+##                                    Jun_REV_07_B Jun_REV_08_B Jun_REV_09_B
+## Alopias vulpinus                    0.000000000    0.0000000    0.0000000
+## Ammodytes americanus or hexapterus  0.000000000    0.0000000    0.0000000
+## Ammodytes dubius                    0.560419859    0.3972842    0.5555054
+## Anas sp                             0.005064819    0.0000000    0.0000000
+## Anatidae sp                         0.000000000    0.0000000    0.0000000
+## Anguilla rostrata                   0.000000000    0.0000000    0.0000000
+##                                    Jun_REV_10_B Jun_REV_11_B Jun_REV_12_B
+## Alopias vulpinus                      0.0000000  0.000000000    0.0000000
+## Ammodytes americanus or hexapterus    0.0000000  0.000000000    0.0000000
+## Ammodytes dubius                      0.3146028  0.006248299    0.5557419
+## Anas sp                               0.0000000  0.000000000    0.0000000
+## Anatidae sp                           0.0000000  0.000000000    0.0000000
+## Anguilla rostrata                     0.0000000  0.000000000    0.2495512
+##                                    Jun_REV_13_B Jun_REV_14_B Jun_REV_15_B
+## Alopias vulpinus                      0.0000000  0.000000000   0.00000000
+## Ammodytes americanus or hexapterus    0.0000000  0.000000000   0.01091502
+## Ammodytes dubius                      0.1224335  0.448982371   0.67679839
+## Anas sp                               0.0000000  0.000000000   0.00000000
+## Anatidae sp                           0.0000000  0.004221551   0.00000000
+## Anguilla rostrata                     0.0000000  0.000000000   0.00000000
+##                                    Jun_REV_16_B Jun_REV_17_B Jun_REV_C1_B
+## Alopias vulpinus                     0.00000000    0.0000000    0.0000000
+## Ammodytes americanus or hexapterus   0.04414789    0.0000000    0.0000000
+## Ammodytes dubius                     0.38447936    0.6686256    0.1671164
+## Anas sp                              0.00000000    0.0000000    0.0000000
+## Anatidae sp                          0.00000000    0.0000000    0.0000000
+## Anguilla rostrata                    0.00000000    0.0000000    0.0000000
+##                                    Jun_REV_C2_B Jun_REV_C3_B Jun_REV_C4_B
+## Alopias vulpinus                      0.0000000   0.00000000            0
+## Ammodytes americanus or hexapterus    0.0000000   0.00000000            0
+## Ammodytes dubius                      0.2978565   0.34934218            0
+## Anas sp                               0.0000000   0.07532891            0
+## Anatidae sp                           0.0000000   0.00000000            0
+## Anguilla rostrata                     0.0000000   0.00000000            0
+##                                    Jun_REV_C5_B Jun_REV_C6_B Jun_SF_01_B
+## Alopias vulpinus                     0.00000000   0.00000000   0.0000000
+## Ammodytes americanus or hexapterus   0.00000000   0.00000000   0.0000000
+## Ammodytes dubius                     0.02234184   0.09669678   0.3696358
+## Anas sp                              0.00000000   0.00000000   0.0000000
+## Anatidae sp                          0.00000000   0.00000000   0.0000000
+## Anguilla rostrata                    0.00000000   0.00000000   0.0000000
+##                                    Jun_SF_01_S Jun_SF_02_B Jun_SF_02_S
+## Alopias vulpinus                      0.000000           0   0.0000000
+## Ammodytes americanus or hexapterus    0.000000           0   0.0000000
+## Ammodytes dubius                      0.341421           0   0.2580404
+## Anas sp                               0.000000           0   0.0000000
+## Anatidae sp                           0.000000           0   0.0000000
+## Anguilla rostrata                     0.000000           0   0.0000000
+##                                    Jun_SF_S3_B Jun_SF_S3_S Jun_VW_C1_B
+## Alopias vulpinus                   0.000000000   0.0000000   0.0000000
+## Ammodytes americanus or hexapterus 0.008553946   0.0000000   0.0000000
+## Ammodytes dubius                   0.493059024   0.7520058   0.6474856
+## Anas sp                            0.011925574   0.0000000   0.0000000
+## Anatidae sp                        0.010624792   0.0000000   0.0000000
+## Anguilla rostrata                  0.022019647   0.0000000   0.0000000
+##                                    Jun_VW_C1_S Jun_VW_C2_B Jun_VW_C2_S
+## Alopias vulpinus                     0.0000000 0.000000000 0.000000000
+## Ammodytes americanus or hexapterus   0.0000000 0.006211288 0.000000000
+## Ammodytes dubius                     0.3314139 0.819288144 0.735375069
+## Anas sp                              0.0000000 0.000000000 0.000000000
+## Anatidae sp                          0.0000000 0.000000000 0.008527248
+## Anguilla rostrata                    0.0000000 0.000000000 0.000000000
+##                                    Jun_VW_C3_B Jun_VW_C3_S Jun_VW_S5_B
+## Alopias vulpinus                      0.000000 0.000000000   0.0000000
+## Ammodytes americanus or hexapterus    0.000000 0.006780504   0.0000000
+## Ammodytes dubius                      0.434209 0.895576084   0.7709426
+## Anas sp                               0.000000 0.000000000   0.0000000
+## Anatidae sp                           0.000000 0.002032078   0.0000000
+## Anguilla rostrata                     0.000000 0.002882233   0.0000000
+##                                    Jun_VW_S5_S Jun_VW_S6_B  Jun_VW_S6_S
+## Alopias vulpinus                   0.000000000   0.0000000 0.0000000000
+## Ammodytes americanus or hexapterus 0.002462950   0.0000000 0.0000000000
+## Ammodytes dubius                   0.758856065   0.6542361 0.0001388361
+## Anas sp                            0.001717028   0.0000000 0.0000000000
+## Anatidae sp                        0.005165158   0.0000000 0.0000000000
+## Anguilla rostrata                  0.006516263   0.0000000 0.0000000000
+##                                    Jun_VW_S7_B Jun_VW_S7_S May_501_1_B
+## Alopias vulpinus                    0.00000000   0.0000000  0.00000000
+## Ammodytes americanus or hexapterus  0.00000000   0.0000000  0.00000000
+## Ammodytes dubius                    0.60832536   0.6630717  0.09361122
+## Anas sp                             0.00000000   0.0000000  0.00000000
+## Anatidae sp                         0.02479037   0.0000000  0.00000000
+## Anguilla rostrata                   0.00000000   0.0000000  0.00000000
+##                                    May_501_1_S May_501_2_B May_501_3_B
+## Alopias vulpinus                     0.0000000           0   0.0000000
+## Ammodytes americanus or hexapterus   0.0000000           0   0.1740651
+## Ammodytes dubius                     0.6564693           0   0.2593299
+## Anas sp                              0.0000000           0   0.0000000
+## Anatidae sp                          0.0000000           0   0.0000000
+## Anguilla rostrata                    0.0000000           0   0.0000000
+##                                    May_501_3_S May_501_4_B May_501_4_S
+## Alopias vulpinus                     0.0000000           0   0.0000000
+## Ammodytes americanus or hexapterus   0.0000000           0   0.0000000
+## Ammodytes dubius                     0.9773074           0   0.7689454
+## Anas sp                              0.0000000           0   0.0000000
+## Anatidae sp                          0.0000000           0   0.0000000
+## Anguilla rostrata                    0.0000000           0   0.0000000
+##                                    May_DI_Blank_1 May_DI_Blank_1A
+## Alopias vulpinus                      0.000000000               0
+## Ammodytes americanus or hexapterus    0.000000000               0
+## Ammodytes dubius                      0.287485304               0
+## Anas sp                               0.013907699               0
+## Anatidae sp                           0.026014615               0
+## Anguilla rostrata                     0.002463054               0
+##                                    May_DI_Blank_2 May_REV_01_B May_REV_02_B
+## Alopias vulpinus                      0.000000000            0            0
+## Ammodytes americanus or hexapterus    0.008389107            0            0
+## Ammodytes dubius                      0.377233513            0            0
+## Anas sp                               0.002440747            0            0
+## Anatidae sp                           0.004774039            0            0
+## Anguilla rostrata                     0.016118138            0            0
+##                                    May_REV_03_B May_REV_04_B May_REV_05_B
+## Alopias vulpinus                    0.000000000   0.00000000  0.000000000
+## Ammodytes americanus or hexapterus  0.000000000   0.00000000  0.000000000
+## Ammodytes dubius                    0.000000000   0.00000000  0.000000000
+## Anas sp                             0.000000000   0.00000000  0.000000000
+## Anatidae sp                         0.005256393   0.00000000  0.000000000
+## Anguilla rostrata                   0.000000000   0.01760324  0.002729802
+##                                    May_REV_06_B May_REV_07_B May_REV_08_B
+## Alopias vulpinus                              0    0.0000000            0
+## Ammodytes americanus or hexapterus            0    0.0000000            0
+## Ammodytes dubius                              0    0.6005543            0
+## Anas sp                                       0    0.0000000            0
+## Anatidae sp                                   0    0.0000000            0
+## Anguilla rostrata                             0    0.0000000            0
+##                                    May_REV_09_B May_REV_10_B May_REV_11_B
+## Alopias vulpinus                     0.00000000 0.0000000000     0.000000
+## Ammodytes americanus or hexapterus   0.00000000 0.0000000000     0.000000
+## Ammodytes dubius                     0.08200841 0.0007326924     0.000000
+## Anas sp                              0.00000000 0.0000000000     0.000000
+## Anatidae sp                          0.00000000 0.0000000000     0.000000
+## Anguilla rostrata                    0.00000000 0.0000000000     0.110522
+##                                    May_REV_12_B May_REV_15_B May_REV_16_B
+## Alopias vulpinus                   0.0000000000    0.0000000  0.000000000
+## Ammodytes americanus or hexapterus 0.0000000000    0.0000000  0.005737453
+## Ammodytes dubius                   0.0001521375    0.3509752  0.185411171
+## Anas sp                            0.0000000000    0.0000000  0.005964038
+## Anatidae sp                        0.0000000000    0.0000000  0.013360416
+## Anguilla rostrata                  0.0000000000    0.0000000  0.033486008
+##                                    May_REV_17_B May_REV_C1_B  May_REV_C2
+## Alopias vulpinus                     0.00000000  0.000000000 0.000000000
+## Ammodytes americanus or hexapterus   0.01138926  0.022276335 0.000000000
+## Ammodytes dubius                     0.29881758  0.220084776 0.337308224
+## Anas sp                              0.01544183  0.011038961 0.003425429
+## Anatidae sp                          0.02061086  0.008766234 0.000000000
+## Anguilla rostrata                    0.01499235  0.020553752 0.028730179
+##                                    May_REV_C3  May_REV_C4  May_REV_C5
+## Alopias vulpinus                   0.00000000 0.000000000 0.000000000
+## Ammodytes americanus or hexapterus 0.01133031 0.000000000 0.007016897
+## Ammodytes dubius                   0.28459011 0.245943174 0.137309787
+## Anas sp                            0.01101185 0.005909188 0.000000000
+## Anatidae sp                        0.00166770 0.006031659 0.004790320
+## Anguilla rostrata                  0.02451268 0.016158415 0.000000000
+##                                       May_SF_01 May_SF_01_S May_SF_02_B
+## Alopias vulpinus                   0.000000e+00           0  0.00000000
+## Ammodytes americanus or hexapterus 0.000000e+00           0  0.00000000
+## Ammodytes dubius                   0.000000e+00           0  0.17239682
+## Anas sp                            1.679036e-05           0  0.00000000
+## Anatidae sp                        0.000000e+00           0  0.01448638
+## Anguilla rostrata                  0.000000e+00           0  0.00000000
+##                                    May_SF_02_S May_SF_S3_S May_VW_C1_B
+## Alopias vulpinus                    0.00000000  0.00000000           0
+## Ammodytes americanus or hexapterus  0.00000000  0.00000000           0
+## Ammodytes dubius                    0.09098395  0.00000000           0
+## Anas sp                             0.00000000  0.00000000           0
+## Anatidae sp                         0.00000000  0.01310541           0
+## Anguilla rostrata                   0.00000000  0.00000000           0
+##                                    May_VW_C1_S May_VW_C2_B May_VW_C2_S
+## Alopias vulpinus                     0.0000000   0.0000000   0.0000000
+## Ammodytes americanus or hexapterus   0.0000000   0.0000000   0.0000000
+## Ammodytes dubius                     0.2980298   0.1479414   0.4382999
+## Anas sp                              0.0000000   0.0000000   0.0000000
+## Anatidae sp                          0.0000000   0.0000000   0.0000000
+## Anguilla rostrata                    0.0000000   0.0000000   0.0000000
+##                                    May_VW_C3_B May_VW_C3_S May_VW_S5_B
+## Alopias vulpinus                   0.000000000   0.0000000   0.0000000
+## Ammodytes americanus or hexapterus 0.021058153   0.0000000   0.0000000
+## Ammodytes dubius                   0.337131315   0.9196195   0.3219611
+## Anas sp                            0.003515272   0.0000000   0.0000000
+## Anatidae sp                        0.020076108   0.0000000   0.0000000
+## Anguilla rostrata                  0.023680657   0.0000000   0.0000000
+##                                    May_VW_S5_S May_VW_S6_B May_VW_S6_S
+## Alopias vulpinus                     0.0000000  0.00000000   0.0000000
+## Ammodytes americanus or hexapterus   0.0000000  0.00864120   0.0000000
+## Ammodytes dubius                     0.4096192  0.33516319   0.3290112
+## Anas sp                              0.0000000  0.01290515   0.0000000
+## Anatidae sp                          0.0000000  0.02058851   0.0000000
+## Anguilla rostrata                    0.0000000  0.02969318   0.0000000
+##                                    May_VW_S7_B May_VW_S7_S Nov_501_1_B
+## Alopias vulpinus                             0           0           0
+## Ammodytes americanus or hexapterus           0           0           0
+## Ammodytes dubius                             0           0           0
+## Anas sp                                      0           0           0
+## Anatidae sp                                  0           0           0
+## Anguilla rostrata                            0           0           0
+##                                    Nov_501_1_S Nov_501_2_B  Nov_501_2_S
+## Alopias vulpinus                             0           0 0.0004410127
+## Ammodytes americanus or hexapterus           0           0 0.0000000000
+## Ammodytes dubius                             0           0 0.0000000000
+## Anas sp                                      0           0 0.0000000000
+## Anatidae sp                                  0           0 0.0000000000
+## Anguilla rostrata                            0           0 0.0000000000
+##                                    Nov_501_3_B Nov_501_3_S Nov_501_4_B
+## Alopias vulpinus                             0           0 0.008888988
+## Ammodytes americanus or hexapterus           0           0 0.000000000
+## Ammodytes dubius                             0           0 0.000000000
+## Anas sp                                      0           0 0.000000000
+## Anatidae sp                                  0           0 0.000000000
+## Anguilla rostrata                            0           0 0.000000000
+##                                    Nov_501_4_S Nov_REV_01_B Nov_REV_02_B
+## Alopias vulpinus                             0            0            0
+## Ammodytes americanus or hexapterus           0            0            0
+## Ammodytes dubius                             0            0            0
+## Anas sp                                      0            0            0
+## Anatidae sp                                  0            0            0
+## Anguilla rostrata                            0            0            0
+##                                    Nov_REV_03_B Nov_REV_04_B Nov_REV_05_B
+## Alopias vulpinus                              0            0            0
+## Ammodytes americanus or hexapterus            0            0            0
+## Ammodytes dubius                              0            0            0
+## Anas sp                                       0            0            0
+## Anatidae sp                                   0            0            0
+## Anguilla rostrata                             0            0            0
+##                                    Nov_REV_06_B Nov_REV_07_B Nov_REV_08_B
+## Alopias vulpinus                              0            0            0
+## Ammodytes americanus or hexapterus            0            0            0
+## Ammodytes dubius                              0            0            0
+## Anas sp                                       0            0            0
+## Anatidae sp                                   0            0            0
+## Anguilla rostrata                             0            0            0
+##                                    Nov_REV_09_B Nov_REV_10_B Nov_REV_11_B
+## Alopias vulpinus                              0            0            0
+## Ammodytes americanus or hexapterus            0            0            0
+## Ammodytes dubius                              0            0            0
+## Anas sp                                       0            0            0
+## Anatidae sp                                   0            0            0
+## Anguilla rostrata                             0            0            0
+##                                    Nov_REV_12_B Nov_REV_13_B Nov_REV_14_B
+## Alopias vulpinus                              0            0            0
+## Ammodytes americanus or hexapterus            0            0            0
+## Ammodytes dubius                              0            0            0
+## Anas sp                                       0            0            0
+## Anatidae sp                                   0            0            0
+## Anguilla rostrata                             0            0            0
+##                                    Nov_REV_15_B Nov_REV_16_B Nov_REV_17_B
+## Alopias vulpinus                              0            0            0
+## Ammodytes americanus or hexapterus            0            0            0
+## Ammodytes dubius                              0            0            0
+## Anas sp                                       0            0            0
+## Anatidae sp                                   0            0            0
+## Anguilla rostrata                             0            0            0
+##                                    Nov_REV_C1_B Nov_REV_C2_B Nov_REV_C3_B
+## Alopias vulpinus                              0            0            0
+## Ammodytes americanus or hexapterus            0            0            0
+## Ammodytes dubius                              0            0            0
+## Anas sp                                       0            0            0
+## Anatidae sp                                   0            0            0
+## Anguilla rostrata                             0            0            0
+##                                    Nov_REV_C4_B Nov_REV_C5_B Nov_REV_C6_B
+## Alopias vulpinus                              0            0            0
+## Ammodytes americanus or hexapterus            0            0            0
+## Ammodytes dubius                              0            0            0
+## Anas sp                                       0            0            0
+## Anatidae sp                                   0            0            0
+## Anguilla rostrata                             0            0            0
+##                                     Nov_SF_01_B Nov_SF_01_S Nov_SF_02_B
+## Alopias vulpinus                   0.0002847955           0           0
+## Ammodytes americanus or hexapterus 0.0000000000           0           0
+## Ammodytes dubius                   0.0000000000           0           0
+## Anas sp                            0.0000000000           0           0
+## Anatidae sp                        0.0000000000           0           0
+## Anguilla rostrata                  0.0000000000           0           0
+##                                    Nov_SF_02_S Nov_SF_S3_S Nov_VW_C1_B
+## Alopias vulpinus                   0.002244326           0           0
+## Ammodytes americanus or hexapterus 0.000000000           0           0
+## Ammodytes dubius                   0.000000000           0           0
+## Anas sp                            0.000000000           0           0
+## Anatidae sp                        0.000000000           0           0
+## Anguilla rostrata                  0.000000000           0           0
+##                                    Nov_VW_C1_S Nov_VW_C2_B Nov_VW_C2_S
+## Alopias vulpinus                             0           0           0
+## Ammodytes americanus or hexapterus           0           0           0
+## Ammodytes dubius                             0           0           0
+## Anas sp                                      0           0           0
+## Anatidae sp                                  0           0           0
+## Anguilla rostrata                            0           0           0
+##                                    Nov_VW_C3_B Nov_VW_C3_S Nov_VW_S5_B
+## Alopias vulpinus                             0           0           0
+## Ammodytes americanus or hexapterus           0           0           0
+## Ammodytes dubius                             0           0           0
+## Anas sp                                      0           0           0
+## Anatidae sp                                  0           0           0
+## Anguilla rostrata                            0           0           0
+##                                    Nov_VW_S5_S Nov_VW_S6_B Nov_VW_S6_S
+## Alopias vulpinus                             0           0           0
+## Ammodytes americanus or hexapterus           0           0           0
+## Ammodytes dubius                             0           0           0
+## Anas sp                                      0           0           0
+## Anatidae sp                                  0           0           0
+## Anguilla rostrata                            0           0           0
+##                                    Nov_VW_S7_B Nov_VW_S7_S Oct_501_1_B
+## Alopias vulpinus                             0           0           0
+## Ammodytes americanus or hexapterus           0           0           0
+## Ammodytes dubius                             0           0           0
+## Anas sp                                      0           0           0
+## Anatidae sp                                  0           0           0
+## Anguilla rostrata                            0           0           0
+##                                    Oct_501_1_S Oct_501_2_B Oct_501_2_S
+## Alopias vulpinus                             0           0           0
+## Ammodytes americanus or hexapterus           0           0           0
+## Ammodytes dubius                             0           0           0
+## Anas sp                                      0           0           0
+## Anatidae sp                                  0           0           0
+## Anguilla rostrata                            0           0           0
+##                                    Oct_501_3_B Oct_501_3_S Oct_501_4_B
+## Alopias vulpinus                             0           0           0
+## Ammodytes americanus or hexapterus           0           0           0
+## Ammodytes dubius                             0           0           0
+## Anas sp                                      0           0           0
+## Anatidae sp                                  0           0           0
+## Anguilla rostrata                            0           0           0
+##                                    Oct_501_4_S Oct_REV_01_B Oct_REV_02_B
+## Alopias vulpinus                             0 0.000000e+00 0.0003168656
+## Ammodytes americanus or hexapterus           0 1.631620e-02 0.0000000000
+## Ammodytes dubius                             0 6.788989e-05 0.0000000000
+## Anas sp                                      0 0.000000e+00 0.0000000000
+## Anatidae sp                                  0 0.000000e+00 0.0000000000
+## Anguilla rostrata                            0 0.000000e+00 0.0000000000
+##                                    Oct_REV_03_B Oct_REV_04_B Oct_REV_05_B
+## Alopias vulpinus                              0            0 9.307001e-05
+## Ammodytes americanus or hexapterus            0            0 0.000000e+00
+## Ammodytes dubius                              0            0 0.000000e+00
+## Anas sp                                       0            0 0.000000e+00
+## Anatidae sp                                   0            0 0.000000e+00
+## Anguilla rostrata                             0            0 0.000000e+00
+##                                    Oct_REV_07_B Oct_REV_08_B Oct_REV_09_B
+## Alopias vulpinus                              0 0.0000000000            0
+## Ammodytes americanus or hexapterus            0 0.0000000000            0
+## Ammodytes dubius                              0 0.0002083985            0
+## Anas sp                                       0 0.0000000000            0
+## Anatidae sp                                   0 0.0000000000            0
+## Anguilla rostrata                             0 0.0000000000            0
+##                                    Oct_REV_10_B Oct_REV_11_B Oct_REV_12_B
+## Alopias vulpinus                              0    0.0000000            0
+## Ammodytes americanus or hexapterus            0    0.0000000            0
+## Ammodytes dubius                              0    0.3940138            0
+## Anas sp                                       0    0.0000000            0
+## Anatidae sp                                   0    0.0000000            0
+## Anguilla rostrata                             0    0.0000000            0
+##                                    Oct_REV_13_B Oct_REV_14_B Oct_REV_15_B
+## Alopias vulpinus                     0.00000000            0            0
+## Ammodytes americanus or hexapterus   0.00000000            0            0
+## Ammodytes dubius                     0.08006923            0            0
+## Anas sp                              0.00000000            0            0
+## Anatidae sp                          0.00000000            0            0
+## Anguilla rostrata                    0.00000000            0            0
+##                                    Oct_REV_16_B Oct_REV_17_B Oct_REV_C1_B
+## Alopias vulpinus                              0            0            0
+## Ammodytes americanus or hexapterus            0            0            0
+## Ammodytes dubius                              0            0            0
+## Anas sp                                       0            0            0
+## Anatidae sp                                   0            0            0
+## Anguilla rostrata                             0            0            0
+##                                    Oct_REV_C2_B Oct_REV_C3_B Oct_REV_C4_B
+## Alopias vulpinus                              0    0.0000000            0
+## Ammodytes americanus or hexapterus            0    0.0000000            0
+## Ammodytes dubius                              0    0.1987887            0
+## Anas sp                                       0    0.0000000            0
+## Anatidae sp                                   0    0.0000000            0
+## Anguilla rostrata                             0    0.0000000            0
+##                                    Oct_REV_C6_B Oct_SF_01_B Oct_SF_01_S
+## Alopias vulpinus                              0 0.000000000 0.000000000
+## Ammodytes americanus or hexapterus            0 0.000000000 0.000000000
+## Ammodytes dubius                              0 0.000000000 0.001702323
+## Anas sp                                       0 0.000000000 0.000000000
+## Anatidae sp                                   0 0.000000000 0.000000000
+## Anguilla rostrata                             0 0.003453779 0.000000000
+##                                    Oct_SF_02_B Oct_SF_02_S Oct_SF_S3_B
+## Alopias vulpinus                     0.0000000           0           0
+## Ammodytes americanus or hexapterus   0.0000000           0           0
+## Ammodytes dubius                     0.3854812           0           0
+## Anas sp                              0.0000000           0           0
+## Anatidae sp                          0.0000000           0           0
+## Anguilla rostrata                    0.0000000           0           0
+##                                    Oct_SF_S3_S Oct_VW_C1_B Oct_VW_C1_S
+## Alopias vulpinus                     0.0000000    0.000000           0
+## Ammodytes americanus or hexapterus   0.0000000    0.000000           0
+## Ammodytes dubius                     0.1832748    0.197804           0
+## Anas sp                              0.0000000    0.000000           0
+## Anatidae sp                          0.0000000    0.000000           0
+## Anguilla rostrata                    0.0000000    0.000000           0
+##                                    Oct_VW_C2_B Oct_VW_C2_S Oct_VW_C3_B
+## Alopias vulpinus                             0   0.0000000           0
+## Ammodytes americanus or hexapterus           0   0.0000000           0
+## Ammodytes dubius                             0   0.1431663           0
+## Anas sp                                      0   0.0000000           0
+## Anatidae sp                                  0   0.0000000           0
+## Anguilla rostrata                            0   0.0000000           0
+##                                    Oct_VW_C3_S Oct_VW_S5_B Oct_VW_S5_S
+## Alopias vulpinus                     0.0000000           0           0
+## Ammodytes americanus or hexapterus   0.0000000           0           0
+## Ammodytes dubius                     0.1350632           0           0
+## Anas sp                              0.0000000           0           0
+## Anatidae sp                          0.0000000           0           0
+## Anguilla rostrata                    0.0000000           0           0
+##                                    Oct_VW_S6_B Oct_VW_S6_S Oct_VW_S7_B
+## Alopias vulpinus                             0           0   0.0000000
+## Ammodytes americanus or hexapterus           0           0   0.0000000
+## Ammodytes dubius                             0           0   0.2057803
+## Anas sp                                      0           0   0.0000000
+## Anatidae sp                                  0           0   0.0000000
+## Anguilla rostrata                            0           0   0.0000000
+##                                    Oct_VW_S7_S Sep_501_1_B Sep_501_1_S
+## Alopias vulpinus                     0.0000000           0           0
+## Ammodytes americanus or hexapterus   0.0000000           0           0
+## Ammodytes dubius                     0.0392718           0           0
+## Anas sp                              0.0000000           0           0
+## Anatidae sp                          0.0000000           0           0
+## Anguilla rostrata                    0.0000000           0           0
+##                                    Sep_501_2_B Sep_501_3_B Sep_501_3_S
+## Alopias vulpinus                             0  0.00000000           0
+## Ammodytes americanus or hexapterus           0  0.00000000           0
+## Ammodytes dubius                             0  0.06462949           0
+## Anas sp                                      0  0.00000000           0
+## Anatidae sp                                  0  0.00000000           0
+## Anguilla rostrata                            0  0.00000000           0
+##                                    Sep_501_4_B Sep_DI_Blank_1B Sep_DI_Blank_2A
+## Alopias vulpinus                             0               0    0.000000e+00
+## Ammodytes americanus or hexapterus           0               0    0.000000e+00
+## Ammodytes dubius                             0               0    2.903137e-05
+## Anas sp                                      0               0    0.000000e+00
+## Anatidae sp                                  0               0    0.000000e+00
+## Anguilla rostrata                            0               0    0.000000e+00
+##                                    Sep_DI_Blank_2B Sep_REV_01_B Sep_REV_02_B
+## Alopias vulpinus                                 0     0.000000            0
+## Ammodytes americanus or hexapterus               0     0.000000            0
+## Ammodytes dubius                                 0     0.669963            0
+## Anas sp                                          0     0.000000            0
+## Anatidae sp                                      0     0.000000            0
+## Anguilla rostrata                                0     0.000000            0
+##                                    Sep_REV_03_B Sep_REV_04_B Sep_REV_05_B
+## Alopias vulpinus                              0    0.0000000            0
+## Ammodytes americanus or hexapterus            0    0.0000000            0
+## Ammodytes dubius                              0    0.0000000            0
+## Anas sp                                       0    0.0000000            0
+## Anatidae sp                                   0    0.0000000            0
+## Anguilla rostrata                             0    0.1386064            0
+##                                    Sep_REV_06_B Sep_REV_07_B Sep_REV_08_B
+## Alopias vulpinus                     0.01269151            0            0
+## Ammodytes americanus or hexapterus   0.00000000            0            0
+## Ammodytes dubius                     0.00000000            0            0
+## Anas sp                              0.00000000            0            0
+## Anatidae sp                          0.00000000            0            0
+## Anguilla rostrata                    0.00000000            0            0
+##                                    Sep_REV_09_B Sep_REV_10_B Sep_REV_11_B
+## Alopias vulpinus                              0            0 0.000000e+00
+## Ammodytes americanus or hexapterus            0            0 0.000000e+00
+## Ammodytes dubius                              0            0 9.561886e-05
+## Anas sp                                       0            0 0.000000e+00
+## Anatidae sp                                   0            0 0.000000e+00
+## Anguilla rostrata                             0            0 1.727116e-02
+##                                    Sep_REV_12_B Sep_REV_13_B Sep_REV_14_B
+## Alopias vulpinus                              0            0            0
+## Ammodytes americanus or hexapterus            0            0            0
+## Ammodytes dubius                              0            0            0
+## Anas sp                                       0            0            0
+## Anatidae sp                                   0            0            0
+## Anguilla rostrata                             0            0            0
+##                                    Sep_REV_15_B Sep_REV_16_B Sep_REV_17_B
+## Alopias vulpinus                              0            0            0
+## Ammodytes americanus or hexapterus            0            0            0
+## Ammodytes dubius                              0            0            0
+## Anas sp                                       0            0            0
+## Anatidae sp                                   0            0            0
+## Anguilla rostrata                             0            0            0
+##                                    Sep_REV_C1_B Sep_REV_C2_B Sep_REV_C3_B
+## Alopias vulpinus                              0            0            0
+## Ammodytes americanus or hexapterus            0            0            0
+## Ammodytes dubius                              0            0            0
+## Anas sp                                       0            0            0
+## Anatidae sp                                   0            0            0
+## Anguilla rostrata                             0            0            0
+##                                    Sep_REV_C4_B Sep_REV_C5_B Sep_REV_C6_B
+## Alopias vulpinus                              0            0            0
+## Ammodytes americanus or hexapterus            0            0            0
+## Ammodytes dubius                              0            0            0
+## Anas sp                                       0            0            0
+## Anatidae sp                                   0            0            0
+## Anguilla rostrata                             0            0            0
+##                                    Sep_SF_01_B Sep_SF_01_S Sep_SF_02_B
+## Alopias vulpinus                             0           0   0.0000000
+## Ammodytes americanus or hexapterus           0           0   0.0000000
+## Ammodytes dubius                             0           0   0.0000000
+## Anas sp                                      0           0   0.0000000
+## Anatidae sp                                  0           0   0.0000000
+## Anguilla rostrata                            0           0   0.5924364
+##                                    Sep_SF_02_S Sep_SF_S3_S Sep_VW_C1_S
+## Alopias vulpinus                             0           0   0.0000000
+## Ammodytes americanus or hexapterus           0           0   0.0000000
+## Ammodytes dubius                             0           0   0.1779126
+## Anas sp                                      0           0   0.0000000
+## Anatidae sp                                  0           0   0.0000000
+## Anguilla rostrata                            0           0   0.0000000
+##                                    Sep_VW_C2_B Sep_VW_C2_S Sep_VW_C3_S
+## Alopias vulpinus                   0.000000000           0           0
+## Ammodytes americanus or hexapterus 0.000000000           0           0
+## Ammodytes dubius                   0.052482874           0           0
+## Anas sp                            0.008635142           0           0
+## Anatidae sp                        0.000000000           0           0
+## Anguilla rostrata                  0.117119982           0           0
+##                                    Sep_VW_S5_B Sep_VW_S5_S Sep_VW_S6_B
+## Alopias vulpinus                   0.000000000  0.00000000   0.0000000
+## Ammodytes americanus or hexapterus 0.000000000  0.00000000   0.0000000
+## Ammodytes dubius                   0.009943791  0.01816071   0.2433989
+## Anas sp                            0.000000000  0.00000000   0.0000000
+## Anatidae sp                        0.000000000  0.00000000   0.0000000
+## Anguilla rostrata                  0.006781358  0.00000000   0.0000000
+##                                    Sep_VW_S6_S Sep_VW_S7_B Sep_VW_S7_S
+## Alopias vulpinus                             0   0.0000000           0
+## Ammodytes americanus or hexapterus           0   0.0000000           0
+## Ammodytes dubius                             0   0.1829516           0
+## Anas sp                                      0   0.0000000           0
+## Anatidae sp                                  0   0.0000000           0
+## Anguilla rostrata                            0   0.0000000           0
+</code></pre></div>
+<h3 id="metadata">Metadata</h3>
+<div class="highlight"><pre><span></span><code><span class="n">meta</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&quot;example_input/metadata.xlsx&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+
+<span class="w">  </span><span class="c1">## rownames are also needed in phyloseq meta table</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">sampleID2</span><span class="o">=</span><span class="n">sampleID</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">column_to_rownames</span><span class="p">(</span><span class="n">var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sampleID2&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">## filter for samples found in df above </span>
+</code></pre></div>
+<h1 id="create-phyloseq-object">Create phyloseq object</h1>
+<div class="highlight"><pre><span></span><code><span class="c1">## Create ASV (OTU) table and meta table </span>
+<span class="n">otu</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">otu_table</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">taxa_are_rows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">T</span><span class="p">)</span>
+<span class="n">meta_phyloseq</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">sample_data</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+
+<span class="c1">## Merge metadata and OTU table into one phyloseq &quot;object&quot;</span>
+<span class="n">phylo_obj</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">merge_phyloseq</span><span class="p">(</span><span class="n">otu</span><span class="p">,</span><span class="w"> </span><span class="n">meta_phyloseq</span><span class="p">)</span>
+
+<span class="c1">## view phyloseq obj </span>
+<span class="c1">## expected output = otu_table() with taxa and sample numbers and sample_data() with the sample and column numbers</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">phylo_obj</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 107 taxa and 325 samples ]
+## sample_data() Sample Data:       [ 325 samples by 10 sample variables ]
+</code></pre></div>
+<h3 id="subsetting-phyloseq-object">Subsetting phyloseq object</h3>
+<p>Optional if you’d like to break your data up by a certain variable
+(surface water, bottom water). If desired, uncomment the code chunk
+below.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># surface &lt;- subset_samples(phylo_obj, SampleType == &quot;Surface Water&quot;)</span>
+<span class="c1"># bottom &lt;- subset_samples(phylo_obj, SampleType == &quot;Bottom Water&quot;) </span>
+</code></pre></div>
+<h1 id="alpha-diversity">Alpha Diversity</h1>
+<p>Comparing the species diversity (shannon index or species richness) at
+each site.</p>
+<h2 id="calculating-shannon-index-and-species-richness">Calculating Shannon Index and Species Richness</h2>
+<p>The alpha function in the microbiome package calculates several alpha
+diversity indices. The most relevant are likely observed (species
+richness) and diversity_shannon (shannon index).</p>
+<p><a href="https://microbiome.github.io/tutorials/Alphadiversity.html">https://microbiome.github.io/tutorials/Alphadiversity.html</a></p>
+<p>Or use plot_richness function from:<br />
+<a href="https://rstudio-pubs-static.s3.amazonaws.com/1071936_6115f873acbc4dc4a30b1380cc3885fb.html">https://rstudio-pubs-static.s3.amazonaws.com/1071936_6115f873acbc4dc4a30b1380cc3885fb.html</a></p>
+<div class="highlight"><pre><span></span><code><span class="n">fill_col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;cyan4&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;deeppink4&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;#ed6a5a&quot;</span><span class="p">)</span>
+
+<span class="c1">## Calculate</span>
+<span class="n">alpha_div</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">estimate_richness</span><span class="p">(</span><span class="n">phylo_obj</span><span class="p">,</span><span class="w"> </span><span class="n">measures</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Shannon&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Simpson&quot;</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">rownames_to_column</span><span class="p">(</span><span class="n">var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sampleID&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">left_join</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">meta</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sampleID&quot;</span><span class="p">)</span><span class="w"> </span>
+
+<span class="n">alpha_div</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">gather</span><span class="p">(</span><span class="s">&quot;measurement&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;value&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Shannon</span><span class="o">:</span><span class="n">Simpson</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">SampleType</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">value</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">geom_boxplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SampleType</span><span class="p">),</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">outlier.shape</span><span class="o">=</span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">show.legend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">geom_jitter</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="m">0.2</span><span class="p">,</span><span class="w"> </span><span class="n">shape</span><span class="o">=</span><span class="m">21</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SampleType</span><span class="p">),</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;black&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="o">=</span><span class="m">0.5</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">facet_wrap</span><span class="p">(</span><span class="o">~</span><span class="n">measurement</span><span class="p">,</span><span class="w"> </span><span class="n">scales</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;free_y&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">strip.position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;left&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="c1">## labels</span>
+<span class="w">  </span><span class="nf">labs</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">&quot;Sample Type&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Sample Type&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fill_col</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">scale_color_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fill_col</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="c1">## theme options</span>
+<span class="w">  </span><span class="nf">theme_bw</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>
+<span class="w">  </span><span class="nf">theme</span><span class="p">(</span><span class="n">panel.background</span><span class="o">=</span><span class="nf">element_blank</span><span class="p">(),</span>
+<span class="w">        </span><span class="n">strip.background</span><span class="o">=</span><span class="nf">element_blank</span><span class="p">(),</span>
+<span class="w">        </span><span class="n">strip.text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="n">legend.position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;none&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">strip.clip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;off&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">strip.placement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;outside&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">axis.text.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="o">=</span><span class="s">&quot;grey30&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="n">axis.text.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="o">=</span><span class="s">&quot;grey30&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="n">axis.title.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="n">axis.title.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p><img alt="" src="../05-biodiversity_files/figure-gfm/unnamed-chunk-6-1.png" /><!-- --></p>
+<div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example_output/Figures/alpha_diversity.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="statistics">Statistics</h2>
+<p>Test: T-test or ANOVA - Type I, II, and III:<br />
+- * indicates an interaction (SampleType*Month). Usually we are
+interested in the interaction of our factors.<br />
+- + indicates an additive effect (SampleType + Month)</p>
+<p>T-test to be used when only two groups to compare and ANOVA to be used
+with 3+ groups. Al</p>
+<p>non-parametric Kolmogorov-Smirnov test for two-group comparisons when
+there are no relevant covariates</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Create model </span>
+<span class="n">aov</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">aov</span><span class="p">(</span><span class="n">Shannon</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">SampleType</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">alpha_div</span><span class="p">)</span>
+
+<span class="c1">## ANOVA test on above model</span>
+<span class="nf">Anova</span><span class="p">(</span><span class="n">aov</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;III&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## Anova Table (Type III tests)
+## 
+## Response: Shannon
+##              Sum Sq  Df F value    Pr(&gt;F)    
+## (Intercept)  10.880   1 28.7312 1.589e-07 ***
+## SampleType    2.308   2  3.0478   0.04884 *  
+## Residuals   121.935 322                      
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+</code></pre></div>
+<p>Test: If 3+ groups, Tukey Post Hoc Comparisons</p>
+<div class="highlight"><pre><span></span><code><span class="nf">TukeyHSD</span><span class="p">(</span><span class="n">aov</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = Shannon ~ SampleType, data = alpha_div)
+## 
+## $SampleType
+##                          diff         lwr       upr     p adj
+## Control-Blank       0.4623737  0.01228584 0.9124616 0.0425023
+## Inside WEA-Blank    0.3613299 -0.06740447 0.7900642 0.1176828
+## Inside WEA-Control -0.1010438 -0.29204877 0.0899611 0.4272387
+</code></pre></div>
+<h1 id="beta-diversity">Beta Diversity</h1>
+<p>Comparing the community assemblages between sites/groups.</p>
+<p>Resources (Read before continuing):<br />
+- <a href="https://ourcodingclub.github.io/tutorials/ordination/">https://ourcodingclub.github.io/tutorials/ordination/</a> -
+<a href="https://uw.pressbooks.pub/appliedmultivariatestatistics/chapter/comparison-of-ordination-techniques/">https://uw.pressbooks.pub/appliedmultivariatestatistics/chapter/comparison-of-ordination-techniques/</a></p>
+<p>Common options:<br />
+- Principal Components Analysis (PCA): Euclidean distance measure<br />
+- Principal Coordinates Analysis (PCoA): Dissimilarity distance based<br />
+- Non-metric MultiDimensional Scaling (NMDS): Dissimilarity distance
+based</p>
+<p>PCoA and NMDS handle zero’s in community matrices much better than PCA.
+For metabarcoding data, usually PCoA and NMDS are more appropriate. The
+differences between PCoA and NMDS are minor compared to difference
+between PCA. NMDS is iterative and used a different ordering method (see
+resource links above for more info).</p>
+<p>NMDS requires evaluation of the output ‘stress value’: This value tells
+you how well the model fit your data. This is helpful to include on your
+NMDS plot in reports/manuscripts/presentations.</p>
+<p>Stress (0-1 scale) Interpretation <code>&lt; 0.05</code> = Excellent representation
+with no prospect of misinterpretation <code>&lt; 0.10</code> = Good ordination with no
+real disk of drawing false inferences <code>&lt; 0.20</code> = Can be useful but has
+potential to mislead. In particular, shouldn’t place too much reliance
+on the details <code>&gt; 0.20</code> = Could be dangerous to interpret <code>&gt; 0.35</code> =
+Samples placed essentially at random; little relation to original ranked
+distances</p>
+<p>If your stress value is &gt;0.2, do not include in analyses and try PCoA
+instead.</p>
+<h2 id="calculating-dissimilarity-matrix">Calculating dissimilarity matrix</h2>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bray Curtis Dissimilarity Matrix (used in statistics)</span>
+<span class="n">bray_df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">phyloseq</span><span class="o">::</span><span class="nf">distance</span><span class="p">(</span><span class="n">phylo_obj</span><span class="p">,</span><span class="w"> </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;bray&quot;</span><span class="p">)</span>
+
+<span class="c1">## Sample information</span>
+<span class="n">sample_df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">data.frame</span><span class="p">(</span><span class="nf">sample_data</span><span class="p">(</span><span class="n">phylo_obj</span><span class="p">))</span>
+</code></pre></div>
+<h2 id="plotting">Plotting</h2>
+<h3 id="pcoa">PCoA</h3>
+<p><a href="https://www.rdocumentation.org/packages/phyloseq/versions/1.16.2/topics/ordinate">https://www.rdocumentation.org/packages/phyloseq/versions/1.16.2/topics/ordinate</a></p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Conduct PCoA </span>
+<span class="n">pcoa</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">ordinate</span><span class="p">(</span><span class="n">physeq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phylo_obj</span><span class="p">,</span><span class="w"> </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;PCoA&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;bray&quot;</span><span class="p">)</span>
+
+<span class="c1">## Plotting</span>
+<span class="nf">plot_ordination</span><span class="p">(</span><span class="n">phylo_obj</span><span class="p">,</span><span class="w"> </span><span class="n">pcoa</span><span class="p">,</span><span class="w"> </span>
+
+<span class="w">                </span><span class="c1">## USER EDITS shape, color, alpha, fill, etc. as desired based on project metadata</span>
+<span class="w">                </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Depth&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="c1">## Point and point aesthetics</span>
+<span class="w">  </span><span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Depth</span><span class="p">),</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">.</span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">scale_color_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;green4&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;gold3&quot;</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="c1">## Labels: USER EDITS as desired</span>
+<span class="w">  </span><span class="nf">labs</span><span class="p">(</span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Sample Type&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">ggtitle</span><span class="p">(</span><span class="s">&quot;PCoA example&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="c1">## Theme: USER EDITS as desired</span>
+<span class="w">  </span><span class="nf">theme_bw</span><span class="p">()</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">theme</span><span class="p">(</span>
+<span class="w">    </span><span class="n">legend.title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">face</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;bold&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">12</span><span class="p">),</span>
+<span class="w">    </span><span class="n">legend.position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;right&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">axis.title.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="n">axis.title.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="p">)</span><span class="w"> </span>
+</code></pre></div>
+<p><img alt="" src="../05-biodiversity_files/figure-gfm/unnamed-chunk-10-1.png" /><!-- --></p>
+<div class="highlight"><pre><span></span><code><span class="c1">## USER EDITS WIDTH AND HEIGHT TO DESIRED   </span>
+<span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example_output/Figures/PCoA_phyloseq.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="nmds">NMDS</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">## Calculating NMDS </span>
+<span class="c1">## filtering for the sake of example visual</span>
+<span class="n">phylo_obj_filtered</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">prune_samples</span><span class="p">(</span><span class="nf">sample_data</span><span class="p">(</span><span class="n">phylo_obj</span><span class="p">)</span><span class="o">$</span><span class="n">SampleType</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s">&quot;Blank&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">phylo_obj</span><span class="p">)</span>
+
+<span class="n">NMDS</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">ordinate</span><span class="p">(</span><span class="n">physeq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phylo_obj_filtered</span><span class="p">,</span><span class="w"> </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;NMDS&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;bray&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## Run 0 stress 0.2313732 
+## Run 1 stress 0.2495084 
+## Run 2 stress 0.2346765 
+## Run 3 stress 0.2457704 
+## Run 4 stress 0.2481374 
+## Run 5 stress 0.2360292 
+## Run 6 stress 0.2377895 
+## Run 7 stress 0.237543 
+## Run 8 stress 0.2442771 
+## Run 9 stress 0.2434889 
+## Run 10 stress 0.2538366 
+## Run 11 stress 0.2454598 
+## Run 12 stress 0.236795 
+## Run 13 stress 0.2361073 
+## Run 14 stress 0.2456342 
+## Run 15 stress 0.2375375 
+## Run 16 stress 0.2483309 
+## Run 17 stress 0.2331353 
+## Run 18 stress 0.2391534 
+## Run 19 stress 0.2405843 
+## Run 20 stress 0.2308905 
+## ... New best solution
+## ... Procrustes: rmse 0.02822854  max resid 0.1826603 
+## *** Best solution was not repeated -- monoMDS stopping criteria:
+##      1: no. of iterations &gt;= maxit
+##     18: stress ratio &gt; sratmax
+##      1: scale factor of the gradient &lt; sfgrmin
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## Plotting</span>
+<span class="nf">plot_ordination</span><span class="p">(</span><span class="n">phylo_obj_filtered</span><span class="p">,</span><span class="w"> </span><span class="n">NMDS</span><span class="p">,</span><span class="w"> </span>
+
+<span class="w">                </span><span class="c1">## USER EDITS shape, color, alpha, fill, etc. as desired based on project metadata</span>
+<span class="w">                </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;SampleType&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="c1">## Point and point aesthetics</span>
+<span class="w">  </span><span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SampleType</span><span class="p">),</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">.</span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">scale_color_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fill_col</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="c1">## Labels: USER EDITS as desired</span>
+<span class="w">  </span><span class="nf">labs</span><span class="p">(</span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Sample Type&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">ggtitle</span><span class="p">(</span><span class="s">&quot;NMDS example&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="c1">## adding stress value to plot (user edits x and y to desired location)</span>
+<span class="w">  </span><span class="nf">annotate</span><span class="p">(</span><span class="n">geom</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;label&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1.2</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1.8</span><span class="p">,</span><span class="w"> </span>
+<span class="w">           </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sprintf</span><span class="p">(</span><span class="s">&quot;Stress: %.6f&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">NMDS</span><span class="o">$</span><span class="n">stress</span><span class="p">),</span><span class="w"> </span><span class="n">hjust</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">vjust</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span>
+<span class="w">           </span><span class="n">label.size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">fontface</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;italic&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey30&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2.75</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;white&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="c1">## Theme: USER EDITS as desired</span>
+<span class="w">  </span><span class="nf">theme_bw</span><span class="p">()</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">theme</span><span class="p">(</span>
+<span class="w">    </span><span class="n">legend.title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">face</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;bold&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">12</span><span class="p">),</span>
+<span class="w">    </span><span class="n">legend.position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;right&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">axis.title.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="n">axis.title.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="p">)</span><span class="w"> </span>
+</code></pre></div>
+<p><img alt="" src="../05-biodiversity_files/figure-gfm/unnamed-chunk-11-1.png" /><!-- --></p>
+<div class="highlight"><pre><span></span><code><span class="c1">## USER EDITS WIDTH AND HEIGHT TO DESIRED   </span>
+<span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example_output/Figures/NMDS_phyloseq.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="statistics_1">Statistics</h2>
+<p>Test: PERMANOVA - * indicates an interaction (SampleType*Month).
+Usually we are interested in the interaction of our factors.<br />
+- + indicates an additive effect (SampleType + Month)</p>
+<p>The output will tell you which factors significantly impact the
+community assemblage (matrix).</p>
+<div class="highlight"><pre><span></span><code><span class="nf">adonis2</span><span class="p">(</span><span class="n">bray_df</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">SampleType</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sample_df</span><span class="p">,</span><span class="w"> </span><span class="n">permutations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">99</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## Permutation test for adonis under reduced model
+## Permutation: free
+## Number of permutations: 99
+## 
+## adonis2(formula = bray_df ~ SampleType, data = sample_df, permutations = 99)
+##           Df SumOfSqs      R2      F Pr(&gt;F)   
+## Model      2    2.024 0.01842 3.0217   0.01 **
+## Residual 322  107.839 0.98158                 
+## Total    324  109.863 1.00000                 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+</code></pre></div>
+<p>Additional test: Pairwise PERMANOVA</p>
+<p>The output will tell you which specific variable within each factor is
+driving the significant effects.</p>
+<div class="highlight"><pre><span></span><code><span class="nf">pairwise.adonis2</span><span class="p">(</span><span class="n">bray_df</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">SampleType</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sample_df</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## $parent_call
+## [1] &quot;bray_df ~ SampleType , strata = Null , permutations 999&quot;
+## 
+## $`Inside WEA_vs_Blank`
+##           Df SumOfSqs      R2      F Pr(&gt;F)    
+## Model      1    1.434 0.01691 4.2478  0.001 ***
+## Residual 247   83.362 0.98309                  
+## Total    248   84.796 1.00000                  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## $`Inside WEA_vs_Control`
+##           Df SumOfSqs      R2      F Pr(&gt;F)  
+## Model      1    0.639 0.00606 1.8952  0.049 *
+## Residual 311  104.859 0.99394                
+## Total    312  105.498 1.00000                
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## $Blank_vs_Control
+##          Df SumOfSqs      R2      F Pr(&gt;F)   
+## Model     1   1.1454 0.04005 3.5878  0.002 **
+## Residual 86  27.4558 0.95995                 
+## Total    87  28.6012 1.00000                 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## attr(,&quot;class&quot;)
+## [1] &quot;pwadstrata&quot; &quot;list&quot;
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.action.edit", "content.code.copy"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d6f25eb3.min.js"></script>
+      
+    
+  </body>
+</html>
