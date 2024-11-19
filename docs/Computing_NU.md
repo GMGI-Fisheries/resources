@@ -6,7 +6,7 @@ The Discovery cluster provides Northeastern researchers with access to more than
 
 As GMGI's researchers, we have access to Northeastern's HPC resources through an MOU established in Fall 2023. 
 
-Read the HPC resource documentation prior to getting started: [Research Computing - NURC RTD (northeastern.edu)](https://rc-docs.northeastern.edu/en/latest/welcome/index.html).
+Read the HPC resource documentation prior to getting started: [Research Computing - NURC RTD (northeastern.edu)](https://rc-docs.northeastern.edu/en/latest/index.html).
 
 ![](https://github.com/GMGI-Fisheries/resources/blob/master/img/NU_computing_resources.png?raw=true)
 
@@ -27,7 +27,7 @@ Before creating an account with the NU Discovery Cluster, claim your Northeaster
 
 You can operate on the Discovery Cluster in two ways:  
 1. via Linux operating system on your computer or ssh client  
-2. NU's Open On Demand ([Open OnDemand (OOD) - RC RTD (northeastern.edu)](https://rc-docs.northeastern.edu/en/latest/using-ood/index.html)) GUI. [Accessing Open OnDemand - RC RTD (northeastern.edu)](https://rc-docs.northeastern.edu/en/latest/using-ood/accessingood.html#access-ood). With OOD interface, you can access plug-ins (i.e. RStudio) and launch the server from the web. Serena recommended using incognito window b/c OOD usually works better without the caching.
+2. NU's Open On Demand ([Open OnDemand (OOD) - RC RTD (northeastern.edu)](https://ood.discovery.neu.edu/pun/sys/dashboard)) GUI. [Accessing Open OnDemand - RC RTD (northeastern.edu)](https://rc.northeastern.edu/ood/). With OOD interface, you can access plug-ins (i.e. RStudio) and launch the server from the web. Serena recommended using incognito window b/c OOD usually works better without the caching.
 
 ```
 ssh username@login.discovery.neu.edu
