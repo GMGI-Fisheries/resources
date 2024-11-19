@@ -138,7 +138,7 @@ jitter_pos <- position_jitter(width = 0.45, seed = 123)
 spike_samples %>% dplyr::select(Target, Sample_ID, Cq_diff) %>% distinct() %>%
   
   ggplot(., aes(x=Target, y = Cq_diff)) + 
-  geom_hline(yintercept = c(-2, 2), linetype = "dotted", color = "grey50") +
+  geom_hline(yintercept = c(-2, 2), linetype = "dotted", color = "grey50", size=1.5) +
   
   geom_jitter(aes(fill = abs(Cq_diff) > 2), 
               size = 2, alpha = 0.5, color = 'black', shape = 21, #width = 0.45,
@@ -172,7 +172,7 @@ spike_samples %>% dplyr::select(Target, Sample_ID, Cq_diff) %>% distinct() %>%
         axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=12, face="bold"),
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=12, face="bold"))
 
-ggsave("example output/Inhibition.png", width=5, height=4)
+ggsave("example output/Inhibition.png", width=4, height=4)
 ```
 
 ## Filter data Cq, Number of Replicates, and Copy Num calculations 
@@ -312,7 +312,7 @@ ggplot(detection_counts, aes(x = "", y = n, fill = Detection)) +
   theme(legend.position = "none",
         #plot.title = element_text(hjust = 0.5, size = 16, face = "bold")
         ) +
-  scale_fill_manual(values = c("#D2D4D4", "#426999"))
+  scale_fill_manual(values = c("#e9ecef", "#a9d6e5"))
 
 ggsave("example output/Blanks_piechart.png", width=4, height=4)
 ```
@@ -340,7 +340,7 @@ ggplot(field_detection_counts, aes(x = "", y = n, fill = Detection)) +
   theme(legend.position = "none",
         #plot.title = element_text(hjust = 0.5, size = 16, face = "bold")
         ) +
-  scale_fill_manual(values = c("#D2D4D4", "#426999"))
+  scale_fill_manual(values = c("#e9ecef", "#a9d6e5"))
 
 ggsave("example output/Fields_piechart.png", width=4, height=4)
 ```
@@ -351,8 +351,8 @@ Bar chart
 fieldsamples_df %>% 
   filter(!is.na(`Mean Copy Number Normalized`)) %>%
   ggplot(., aes(x=Sample_ID, y=`Mean Copy Number Normalized`, fill = `Mean Copy Number Normalized` > cutoff)) + 
-  geom_bar(stat = "identity", width = 0.7, alpha=0.75) +
-  scale_fill_manual(values = c("#426999", "#c1121f"),
+  geom_bar(stat = "identity", width = 0.7) +
+  scale_fill_manual(values = c("#a9d6e5", "#780000"),
                     labels = c("Normal", "Outlier"),
                     ) +
   labs(
@@ -374,7 +374,7 @@ fieldsamples_df %>%
         strip.background = element_rect(fill = "white", color = "black"),
         strip.text = element_text(face = "bold", size = 9)
     ) +
-  guides(fill = guide_legend(override.aes = list(alpha = 1)))
+  guides(fill = guide_legend(override.aes = list(alpha = 1))) 
 
 ggsave("example output/Fieldsamples_barchart.png", width = 9.5, height=5)
 ```
