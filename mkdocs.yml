@@ -38,29 +38,27 @@ nav:
     - Northeastern University: 'Computing_NU.md'
   - Data Management: 'Data_Management.md'
   - Data Transfer: 'Data_To_Server.md'
-  - Computing Beginner Resources: 'Computing_Begin_Resources.md'
-  - R Resources: 'Data Visualization in R.md'
-  - Intro to Github: 'tbd.md'
-  - Intro to HPC: 'tbd.md'
+  - 'Computing Beginner Resources': 
+    - Basics: 'Computing_Begin_Resources.md'
+    - R Resources: 'Data Visualization in R.md'
+    - Intro to Github: 'tbd.md'
+    - Intro to HPC: 'tbd.md'
   - 'eDNA: 12S metabarcoding':
-    - 00-Create-conda-env: 'eDNA/00-creating_eDNA_conda_env.md'
-    - 01-ampliseq-12S: 'eDNA/01-Metabarcoding ampliseq 12S Riaz.md'
-    - 02-dfprep-12S: 'eDNA/02-datatable_prep_12S_Riaz.md'
-    - 03-data-quality: 'eDNA/03-data_quality.md'
-    - 04-relative-abund-heatmap: 'eDNA/04-relative_abundance_heatmap.md'
-    - 05-biodiversity: 'eDNA/05-biodiversity.md'
+    - 00-Create-conda-env: '00-creating_eDNA_conda_env.md'
+    - 01-ampliseq-12S: 'eDNA 12S metab/01-Metabarcoding ampliseq 12S Riaz.md'
+    - 02-dfprep-12S: 'eDNA 12S metab/02-datatable_prep_12S_Riaz.md'
+    - 03-data-quality: 'eDNA 12S metab/03-data_quality.md'
+    - 04-relative-abund-heatmap: 'eDNA 12S metab/04-relative_abundance_heatmap.md'
+    - 05-biodiversity: 'eDNA 12S metab/05-biodiversity.md'
   - 'eDNA: COI metabarcoding':
-    - 00-Create-conda-env: 'eDNA/00-creating_eDNA_conda_env.md'
-    - 01-ampliseq-COI: 'eDNA/01-Metabarcoding ampliseq COI.md'
+    - 00-Create-conda-env: '00-creating_eDNA_conda_env.md'
+    - 01-ampliseq-COI: 'eDNA COI metab/01-Metabarcoding ampliseq COI.md'
   - 'eDNA: qPCR':
     - 01-dfprep-analysis: 'eDNA qPCR/qPCR-analysis.md'
   - 'Population Genomics':
-    - 01-: 'PopGen/eDNA_01.md'
+    - coming soon!: 'PopGen/eDNA_01.md'
   - 'Epigenetic Aging':
-    - 01-: 'EpiAge/eDNA_01.md'
+    - coming soon!: 'EpiAge/eDNA_01.md'
   - 'Genome Assembly':
     - coming soon!: 'tbd.md'
-  - 'Laboratory Protocols':
-    - 'eDNA metabarcoding':
-      - 01-: 'eDNA/eDNA_01.md'
 
