@@ -2,9 +2,10 @@
 
 This is the bioinformatic handbook for the Fisheries team at Gloucester Marine Genomics Institute.
 
-![](https://nfg-sofun.s3.amazonaws.com/uploads/ui_configuration/main_logo/2242/welcome_logo_GMGI_BLUE.png)
+![](https://gmgi.org/wp-content/uploads/2021/04/gmgi-logo-350.jpg)
 
 Team:    
+
 - Research Scientist, [Tim O'Donnell](https://gmgi.org/about/team/research-team/tim-odonnell/)    
 - Postdoctoral Scientist, [Emma Strand](https://gmgi.org/team/research/emma-strand-ph-d/); [github](https://github.com/emmastrand)      
 - Research Associate, [Dylan Comb](https://gmgi.org/about/team/research-team/dylan-comb/)    
@@ -13,6 +14,7 @@ Team:
 ## Recent News  
 
 2024:    
+
 - Tim was featured in the Gloucester Times with Offshore Wind eDNA project featured: https://www.gloucestertimes.com/news/gmgi-pioneers-edna-to-guide-fisheries-and-wind-farms/article_9e58ea48-4608-11ef-b765-13acd0817184.html?utm_source=ground.news&utm_medium=referral  
 - Tim joined OceanX - GMGI collaboration in Indonesia: https://gmgi.org/news/gmgi-oceanx-team-up-in-indonesia/  
 - NOAA ‘Omics report Q3 feature our epigenetic aging project: https://oceanexplorer.noaa.gov/technology/omics/media/FY24Q3-Report.pdf     
@@ -24,9 +26,11 @@ Team:
 ## Recent Presentations 
 
 *Upcoming in 2025*:  
+
 - Emma will present our epigenetic aging work at the Plant and Animal Genome Conference in San Diego, CA  
 
 2024:  
+
 - Emma along with Research Scientist Shelly Wanamaker served on a panel for Coastal Acidification in Massachusetts: A Community Conversation in Gloucester, MA  
 - Tim attended the Mid Atlantic/Northeastern Division American Fisheries Society Meeting in New Brunswick, NJ and presented a talk  
 - Tim presented the team's eDNA work at the University of Connecticut's coastal campus Avery Point    

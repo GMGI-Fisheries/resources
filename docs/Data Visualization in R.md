@@ -17,6 +17,9 @@ Generalized Linear Models:
 
 - [Workshop 6: Generalized linear models in R](https://r.qcbs.ca/workshop06/book-en/index.html)
 
+Functional Gene Annotation:  
+- [GOSemSim and clusterProfiler with visualization suggestions](https://yulab-smu.top/biomedical-knowledge-mining-book/enrichplot.html )
+
 ### Tips and Tricks
 
 Export an image as ggsave("file.svg") and open in powerpoint. The image is vectorized and edit-able.  
