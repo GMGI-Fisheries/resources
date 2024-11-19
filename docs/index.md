@@ -15,11 +15,11 @@ Team:
 
 2024:    
 
-- Tim was featured in the Gloucester Times with Offshore Wind eDNA project featured: https://www.gloucestertimes.com/news/gmgi-pioneers-edna-to-guide-fisheries-and-wind-farms/article_9e58ea48-4608-11ef-b765-13acd0817184.html?utm_source=ground.news&utm_medium=referral  
-- Tim joined OceanX - GMGI collaboration in Indonesia: https://gmgi.org/news/gmgi-oceanx-team-up-in-indonesia/  
-- NOAA ‘Omics report Q3 feature our epigenetic aging project: https://oceanexplorer.noaa.gov/technology/omics/media/FY24Q3-Report.pdf     
-- Emma was featured in Seattle Aquarium's alumni stories: https://www.seattleaquarium.org/stories/the-ripple-effect-part-1/     
-- Emma was featured in the Journal of Experimental Biology's Early Career Spotlight: https://journals.biologists.com/jeb/article/227/11/jeb248033/353086/ECR-Spotlight-Emma-Strand  
+- Tim and the offshore wind eDNA project were featured in the [Gloucester Times](https://www.gloucestertimes.com/news/gmgi-pioneers-edna-to-guide-fisheries-and-wind-farms/article_9e58ea48-4608-11ef-b765-13acd0817184.html?utm_source=ground.news&utm_medium=referral)   
+- Tim joined [OceanX - GMGI collaboration in Indonesia](https://gmgi.org/news/gmgi-oceanx-team-up-in-indonesia/)    
+- Our epigenetic aging project was featured in [NOAA ‘Omics Q3 report](https://oceanexplorer.noaa.gov/technology/omics/media/FY24Q3-Report.pdf)       
+- Emma was featured in [Seattle Aquarium's alumni stories](https://www.seattleaquarium.org/stories/the-ripple-effect-part-1/)     
+- Emma was featured in the [Journal of Experimental Biology's Early Career Spotlight](https://journals.biologists.com/jeb/article/227/11/jeb248033/353086/ECR-Spotlight-Emma-Strand)  
 
 ---
 
