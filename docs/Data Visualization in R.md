@@ -1,10 +1,19 @@
 # Data Visualization and Analysis in R
 
+## Data wrangling 
+
+- [Top 10 Must-Know {dplyr} Commands for Data Wrangling in R](https://www.youtube.com/watch?v=XcK4chr2jws)
+
+
 ### Visualization
 
 Picking color:   
  
 - [Coolors palette generator](https://coolors.co/?home)
+
+Basic plots:  
+- [Tidyplots](https://jbengler.github.io/tidyplots/articles/tidyplots.html) 
+- [R graph gallery](https://r-graph-gallery.com/)
 
 Heatmaps:    
 
@@ -18,7 +27,10 @@ Generalized Linear Models:
 - [Workshop 6: Generalized linear models in R](https://r.qcbs.ca/workshop06/book-en/index.html)
 
 Functional Gene Annotation:  
-- [GOSemSim and clusterProfiler with visualization suggestions](https://yulab-smu.top/biomedical-knowledge-mining-book/enrichplot.html )
+- [GOSemSim and clusterProfiler with visualization suggestions](https://yulab-smu.top/biomedical-knowledge-mining-book/enrichplot.html)
+
+General:  
+- [Computation Genomics in R](https://compgenomr.github.io/book/)  
 
 ### Tips and Tricks
 

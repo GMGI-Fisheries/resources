@@ -27,7 +27,7 @@ Before creating an account with the NU Discovery Cluster, claim your Northeaster
 
 You can operate on the Discovery Cluster in two ways:  
 1. via Linux operating system on your computer or ssh client  
-2. NU's Open On Demand ([Open OnDemand (OOD) - RC RTD (northeastern.edu)](https://ood.discovery.neu.edu/pun/sys/dashboard)) GUI. [Accessing Open OnDemand - RC RTD (northeastern.edu)](https://rc.northeastern.edu/ood/). With OOD interface, you can access plug-ins (i.e. RStudio) and launch the server from the web. Serena recommended using incognito window b/c OOD usually works better without the caching.
+2. NU's Open On Demand ([Open OnDemand (OOD) - RC RTD (northeastern.edu)](https://ood.discovery.neu.edu/pun/sys/dashboard)) GUI. [Accessing Open OnDemand - RC RTD (northeastern.edu)](https://rc.northeastern.edu/ood/). With OOD interface, you can access plug-ins (i.e. RStudio) and launch the server from the web. Serena recommended using incognito window because OOD usually works better without the caching.
 
 ```
 ssh username@login.discovery.neu.edu

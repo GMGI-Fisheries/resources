@@ -132,7 +132,7 @@ Notes:
 
 - Depending on the number of files per project, multiqc can be quick to run without a slurm script. To do this, run each line separately in the command line after activating the conda environment.  
 
-## Step 3: Downloading and updating reference databases 
+## Step 4: Downloading and updating reference databases 
 
 ### Download and/or update BOLD database 
 
