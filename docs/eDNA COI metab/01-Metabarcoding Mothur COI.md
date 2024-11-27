@@ -344,6 +344,8 @@ source /work/gmgi/miniconda3/bin/activate eDNA_COI
 dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data"
 proj_name="OSW_2023_invert" 
 
+cd ${dir}
+
 mothur "#unique.seqs(fasta=${proj_name}.paired.trim.contigs.good.fasta)"
 
 mothur "#count.seqs(name=${proj_name}.paired.trim.contigs.good.names, group=${proj_name}.paired.contigs.good.groups)"
@@ -353,8 +355,21 @@ mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.fasta, 
 
 OSW example output: 
 
+```
+                Start   End     NBases  Ambigs  Polymer NumSeqs
+Minimum:        1       213     213     0       3       1
+2.5%-tile:      1       251     251     0       4       169441
+25%-tile:       1       365     365     0       5       1694401
+Median:         1       365     365     0       6       3388802
+75%-tile:       1       365     365     0       6       5083203
+97.5%-tile:     1       368     368     0       7       6608163
+Maximum:        1       400     400     0       105     6777603
+Mean:   1       361     361     0       5
+# of unique seqs:       3169531
+total # of seqs:        6777603
+```
 
-
+There are 3,169,531 unique sequences in this OSW example dataset. 
 
 ## Step 7: Taxonomic Assignment with Mothur 
 
@@ -397,9 +412,13 @@ dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data"
 proj_name="OSW_2023_invert" 
 ref="/work/gmgi/databases/COI/MZG_v2023-m07-15_NorthAtlantic_modeA.fasta"
 
+cd ${dir}
+
 mothur "#align.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.fasta, reference=${ref}, flip=T)"
-mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, count=)"
+mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, count=${proj_name}.paired.trim.contigs.good.count_table)"
 ```
+
+*running 11-27-2024 OSW* 
 
 
 
