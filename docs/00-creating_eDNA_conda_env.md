@@ -70,6 +70,7 @@ conda create --name eDNA_COI mothur
 
 # Installing different versions of packages
 conda install -c conda-forge gsl=2.5
+conda install -c bioconda mafft
 ```
 
 The gsl version downgraded mothur (1.48 -> 1.44) and vsearch (2.15 -> 2.13) as well.

@@ -18,6 +18,8 @@ Workflow done on HPC. Scripts to run:
 
 *Descriptions of Mothur steps are from [A. Huffmyer](https://github.com/AHuffmyer/ASH_Putnam_Lab_Notebook/blob/master/_posts/2022-01-12-16S-Analysis-in-Mothr-Part-1.md#makecontigs) and [E. Strand](https://github.com/emmastrand/EmmaStrand_Notebook/blob/master/_posts/2022-01-24-KBay-Bleached-Pairs-16S-Analysis-Mothur.md) Mothur for 16S notebook posts.* 
 
+[Mothur program page](https://mothur.org/)
+
 ## Step 1: Confirm conda environment is available 
 
 The conda environment is started within each slurm script, but to activate conda environment outside of the slurm script to update packages or check what is installed:
@@ -322,7 +324,7 @@ Changed the name of the log files to:
 
 ## Step 6: Determining and counting unique sequences with Mothur
 
-Identifying unique sequences (ASVs) and counting those. 
+Identifying unique sequences and counting those. 
 
 `03-Mothur-unique.sh`
 
@@ -380,7 +382,7 @@ https://metazoogene.org/mzgdb/. Navigate to the [Worlds oceans](https://www.st.n
 Download and update database:
 
 ```
-cd /work/gmgi/databases/COI
+cd /work/gmgi/databases/COI/MetaZooGene
 
 wget https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGfasta-coi__T4000000__o00__A.fasta.gz
 wget https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGfasta-coi__T4000000__o02__A.fasta.gz
@@ -391,6 +393,38 @@ gunzip -c MZGfasta-coi__T4000000__o00__A.fasta.gz > MZG_v2023-m07-15_Global_mode
 gunzip -c MZGfasta-coi__T4000000__o02__A.fasta.gz > MZG_v2023-m07-15_NorthAtlantic_modeA.fasta
 ```
 
+Align the database prior to using as input in Mothur:
+
+`MZG_align.sh`
+
+```
+#!/bin/bash
+#SBATCH --error="%x_error.%j" #if your job fails, the error report will be put in this file
+#SBATCH --output="%x_output.%j" #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=10:00:00
+#SBATCH --job-name=MZG_MAFFT
+#SBATCH --mem=50GB
+#SBATCH --ntasks=24
+#SBATCH --cpus-per-task=2
+
+### changing name format to MAFFT_xxx_aligned.fasta 
+
+# Assign input and output file names from command-line arguments
+INPUT_FILE=$1
+OUTPUT_FILE=$2
+
+# Run MAFFT with the provided input and output files
+mafft --auto "$INPUT_FILE" > "$OUTPUT_FILE"
+```
+
+Use format `sbatch MZG_align.sh input output`    
+Example: `sbatch MZG_align.sh MZG_v2023-m07-15_NorthAtlantic_modeA.fasta MAFFT_MZG_v2023-m07-15_NorthAtlantic_modeA_aligned.fasta`   
+
+
+Running taxonomic assignment via Mothur: 
+
 `04-Mothur-tax.sh`
 
 ```
@@ -399,7 +433,7 @@ gunzip -c MZGfasta-coi__T4000000__o02__A.fasta.gz > MZG_v2023-m07-15_NorthAtlant
 #SBATCH --output=output/"%x_output.%j" #once your job is completed, any final job report comments will be put in this file
 #SBATCH --partition=short
 #SBATCH --nodes=1
-#SBATCH --time=10:00:00
+#SBATCH --time=24:00:00
 #SBATCH --job-name=mothur_tax
 #SBATCH --mem=50GB
 #SBATCH --ntasks=24
@@ -410,15 +444,92 @@ source /work/gmgi/miniconda3/bin/activate eDNA_COI
 
 dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data"
 proj_name="OSW_2023_invert" 
-ref="/work/gmgi/databases/COI/MZG_v2023-m07-15_NorthAtlantic_modeA.fasta"
+ref="/work/gmgi/databases/COI/MAFFT_MZG_v2023-m07-15_NorthAtlantic_modeA_aligned.fasta"
 
 cd ${dir}
 
-mothur "#align.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.fasta, reference=${ref}, flip=T)"
+mothur "#align.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.fasta, reference=${ref}, flip=T, processors=48)"
 mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, count=${proj_name}.paired.trim.contigs.good.count_table)"
 ```
 
-*running 11-27-2024 OSW* 
+## Step 8: QC Taxonomic Alignment 
+
+`05-Mothur-taxQC.sh`
+
+```
+#!/bin/bash
+#SBATCH --error=output/"%x_error.%j" #if your job fails, the error report will be put in this file
+#SBATCH --output=output/"%x_output.%j" #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=10:00:00
+#SBATCH --job-name=mothur_taxQC
+#SBATCH --mem=50GB
+#SBATCH --ntasks=24
+#SBATCH --cpus-per-task=2
+
+# Activate conda environment
+source /work/gmgi/miniconda3/bin/activate eDNA_COI
+
+dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data"
+proj_name="OSW_2023_invert" 
+
+cd ${dir}
+
+## Identifying those that don't meet the criteria 
+
+mothur "#screen.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, count=${proj_name}.paired.trim.contigs.good.count_table, start=1968, end=11550, maxhomop=8)"
+mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, count=${proj_name}.paired.trim.contigs.good.count_table)"
+mothur "#count.groups(count=${proj_name}.paired.trim.contigs.good.count_table)"
+
+## Filtering those out
+mothur "#filter.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, vertical=T, trump=.)"
+mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.fasta, count=${proj_name}.paired.trim.contigs.good.count_table)"
+
+## ID unique sequences again
+mothur "#unique.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.fasta, count=${proj_name}.paired.trim.contigs.good.good.count_table)"
+```
+
+## Step 9: Pre-clustering aka denoising
+
+Now we need to further polish and cluster the data with pre.cluster. The purpose of this step is to remove noise due to sequencing error. The rational behind this step assumes that the most abundant sequences are the most trustworthy and likely do not have sequencing errors. Pre-clustering then looks at the relationship between abundant and rare sequences - rare sequences that are "close" (e.g., 1 nt difference) to highly abundant sequences are likely due to sequencing error. This step will pool sequences and look at the maximum differences between sequences within this group to form ASV groupings.
+
+In this step, the number of sequences is not reduced, but they are grouped into amplicon sequence variants ASV's which reduces the error rate. 
+
+Other programs that conduct this "denoising" are DADA2, UNOISE, and DEBLUR. However, these programs remove the rare sequences, which can distort the relative abundance of remaining sequences. DADA2 also removes all sigletons (sequences with single representation) which disproportionately affects the sequence relative abundance. Mothur avoids the removal of rare sequences for this reason.
+
+`06-Mothur-denoise.sh`
+
+```
+#!/bin/bash
+#SBATCH --error=output/"%x_error.%j" #if your job fails, the error report will be put in this file
+#SBATCH --output=output/"%x_output.%j" #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=10:00:00
+#SBATCH --job-name=mothur_taxQC
+#SBATCH --mem=50GB
+#SBATCH --ntasks=24
+#SBATCH --cpus-per-task=2
+
+# Activate conda environment
+source /work/gmgi/miniconda3/bin/activate eDNA_COI
+
+dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data"
+proj_name="OSW_2023_invert" 
+
+cd ${dir}
+
+mothur "#pre.cluster(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.unique.fasta, count=${proj_name}.paired.trim.contigs.good.unique.good.filter.count_table, diffs=1)"
+mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.unique.precluster.fasta, count=${proj_name}.paired.trim.contigs.good.unique.good.filter.unique.precluster.count_table)"
 
 
+```
+
+
+
+
+Currently on:  
+- creating MAFFT version of ref  
+- re-run the mothur tax script 
 
