@@ -18,7 +18,11 @@ Workflow done on HPC. Scripts to run:
 
 *Descriptions of Mothur steps are from [A. Huffmyer](https://github.com/AHuffmyer/ASH_Putnam_Lab_Notebook/blob/master/_posts/2022-01-12-16S-Analysis-in-Mothr-Part-1.md#makecontigs) and [E. Strand](https://github.com/emmastrand/EmmaStrand_Notebook/blob/master/_posts/2022-01-24-KBay-Bleached-Pairs-16S-Analysis-Mothur.md) Mothur for 16S notebook posts.* 
 
+#### Workflow 
+
 [Mothur program page](https://mothur.org/)
+
+![](https://github.com/GMGI-Fisheries/resources/blob/master/img/eDNA_meta_COI_workflow.png?raw=true)
 
 ## Step 1: Confirm conda environment is available 
 
