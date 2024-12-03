@@ -1,5 +1,7 @@
 # eDNA Metabarcoding for COI target region
 
+### Primer set 
+
 The COI region is commonly used for metabarcoding practices and consequently there are many primer options to choose from. The Fisheries team at GMGI has optimized the Leray Geller set (outlined in red box below). Citation: [Leray et al 2013](https://link.springer.com/article/10.1186/1742-9994-10-34).
 
 We primarily use this set for invertebrate targets and 12S for vertebrate communities. 
@@ -18,7 +20,7 @@ Workflow done on HPC. Scripts to run:
 
 *Descriptions of Mothur steps are from [A. Huffmyer](https://github.com/AHuffmyer/ASH_Putnam_Lab_Notebook/blob/master/_posts/2022-01-12-16S-Analysis-in-Mothr-Part-1.md#makecontigs) and [E. Strand](https://github.com/emmastrand/EmmaStrand_Notebook/blob/master/_posts/2022-01-24-KBay-Bleached-Pairs-16S-Analysis-Mothur.md) Mothur for 16S notebook posts.* 
 
-#### Workflow 
+### Workflow 
 
 [Mothur program page](https://mothur.org/)
 
