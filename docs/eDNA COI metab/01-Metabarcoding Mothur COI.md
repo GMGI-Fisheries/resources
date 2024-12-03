@@ -57,7 +57,7 @@ Background information on [FASTQC](https://hbctraining.github.io/Intro-to-rnaseq
 #SBATCH --time=20:00:00
 #SBATCH --job-name=fastqc
 #SBATCH --mem=3GB
-#SBATCH --ntasks=24
+#SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2
 
 ### USER TO-DO ### 
@@ -67,8 +67,8 @@ Background information on [FASTQC](https://hbctraining.github.io/Intro-to-rnaseq
 source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 ## SET PATHS 
-raw_path=""
-out_dir=""
+raw_path=$1
+out_dir=$2
 
 ## CREATE SAMPLE LIST FOR SLURM ARRAY
 ### 1. Create list of all .gz files in raw data path
@@ -78,14 +78,14 @@ ls -d ${raw_path}/*.gz > ${raw_path}/rawdata
 mapfile -t FILENAMES < ${raw_path}/rawdata
 
 ### 3. Create variable i that will assign each row of FILENAMES to a task ID
-i=${FILENAMES[$SLURM_ARRAY_TASK_ID]}
+i=${FILENAMES[$SLURM_ARRAY_TASK_ID - 1]}
 
 ## RUN FASTQC PROGRAM 
 fastqc ${i} --outdir ${out_dir}
 ```
 
 To run:    
-- Start slurm array (e.g., with 138 files) = `sbatch --array=0-137 00-fastqc.sh`.
+- Start slurm array (e.g., with 138 files) = `sbatch --array=1-138 /work/gmgi/scripts/00-fastqc.sh /path/to/raw/data /path/to/output/directory`.
 
 Notes:  
 
@@ -119,15 +119,16 @@ source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 ## SET PATHS 
 ## fastqc_output = output from 00-fastqc.sh; fastqc program
-fastqc_output="" 
-multiqc_dir="" 
+fastqc_output=$1
+multiqc_dir=$2
+filename=$3
 
 ## RUN MULTIQC 
-multiqc --interactive ${fastqc_output} -o ${multiqc_dir} --filename multiqc_raw.html
+multiqc --interactive ${fastqc_output} -o ${multiqc_dir} --filename multiqc_${filename}.html
 ```
 
 To run:  
-- `sbatch 00-multiqc.sh` 
+- Navigate to fastqc output and run `sbatch /work/gmgi/scripts/00-multiqc.sh /path/to/fastqc/data /path/to/multiqc/output/directory filename` 
 
 Notes:  
 
@@ -176,8 +177,8 @@ Run time: ~30-45 min for 30-40 files (from previous project; update values with 
 #SBATCH --nodes=1
 #SBATCH --time=10:00:00
 #SBATCH --job-name=mothur_setup
-#SBATCH --mem=50GB
-#SBATCH --ntasks=24
+#SBATCH --mem=10GB
+#SBATCH --ntasks=3
 #SBATCH --cpus-per-task=3
 
 # Activate conda environment
@@ -187,9 +188,13 @@ source /work/gmgi/miniconda3/bin/activate eDNA_COI
 oligo_file="/work/gmgi/databases/COI/mothur_oligos_LG"
 
 ## User specific paths
-rawdata_dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/raw_data"
-proj_name="OSW_2023_invert" 
-output_dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data"
+#rawdata_dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/raw_data"
+#proj_name="OSW_2023_invert" 
+#output_dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data"
+
+rawdata_dir=$1
+output_dir=$2
+proj_name=$3
 
 ## Make symlinks from raw data with new name (_ instead of -)
 for file in ${rawdata_dir}/*.gz; do
@@ -207,13 +212,24 @@ mothur "#make.file(inputdir=., type=gz, prefix=${proj_name})"
 mothur "#make.contigs(inputdir=., outputdir=., file=${proj_name}.paired.files, trimoverlap=F, oligos=${oligo_file}, pdiffs=5, checkorient=T)"
 
 ## Create a summary file with trimmed contigs 
-mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.fasta)"
+mothur "#summary.seqs(fasta=current)"
 
 ## Count the number of sequences that were removed and the number that were kept by counting sequences in each fasta file
 ## This will be in the output file created by the .sh script 
 grep -c "^>" ${proj_name}.paired.trim.contigs.fasta
 grep -c "^>" ${proj_name}.paired.scrap.contigs.fasta 
 ```
+
+To run: `sbatch /work/gmgi/scripts/eDNA/COI/Mothur/01-Mothur-setup.sh /path/to/raw/data /path/to/output/directory project_prefix`  
+
+Example: 
+
+```
+sbatch /work/gmgi/scripts/eDNA/COI/Mothur/01-Mothur-setup.sh \
+    /work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/raw_data \
+    /work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data \
+    OSW_2023_invert
+```            
 
 The logfiles will be named with the run ID so I used `mv` to change these to names that reflect the step:  
 - `mothur.make.contigs.logfile`  
@@ -281,22 +297,32 @@ Check the 25%-tile, median, and 75%-tile values from the table above. That will 
 #SBATCH --nodes=1
 #SBATCH --time=10:00:00
 #SBATCH --job-name=mothur_QC
-#SBATCH --mem=50GB
-#SBATCH --ntasks=24
+#SBATCH --mem=10GB
+#SBATCH --ntasks=6
 #SBATCH --cpus-per-task=2
 
 # Activate conda environment
 source /work/gmgi/miniconda3/bin/activate eDNA_COI
 
-dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data"
-proj_name="OSW_2023_invert" 
+dir=$1
+proj_name=$2
 
 cd ${dir}
 
 mothur "#screen.seqs(inputdir=., outputdir=., fasta=${proj_name}.paired.trim.contigs.fasta, group=${proj_name}.paired.contigs.groups, maxambig=0, maxlength=400, minlength=200)"
 
-mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.fasta)"
+mothur "#summary.seqs(fasta=current)"
 ```
+
+To run: `sbatch /work/gmgi/scripts/eDNA/COI/Mothur/02-Mothur-QC.sh /path/to/output/directory project_prefix`  
+
+Example: 
+
+```
+sbatch /work/gmgi/scripts/eDNA/COI/Mothur/02-Mothur-QC \
+    /work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data \
+    OSW_2023_invert
+```   
 
 Output files:    
 - proj_name.trim.contigs.good.fasta   
@@ -384,13 +410,18 @@ Download and update database:
 ```
 cd /work/gmgi/databases/COI/MetaZooGene
 
+## Global 
 wget https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGfasta-coi__T4000000__o00__A.fasta.gz
+
+## North Atlantic 
 wget https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGfasta-coi__T4000000__o02__A.fasta.gz
+wget https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGmothur-coi__T4000000__o02__A.txt.gz
 
 ## unzip into new name file 
 ## replace with version number 
 gunzip -c MZGfasta-coi__T4000000__o00__A.fasta.gz > MZG_v2023-m07-15_Global_modeA.fasta
 gunzip -c MZGfasta-coi__T4000000__o02__A.fasta.gz > MZG_v2023-m07-15_NorthAtlantic_modeA.fasta
+gunzip -c MZGmothur-coi__T4000000__o02__A.txt.gz > MZG_v2023-m07-15-NorthAtlantic_modeA.txt
 ```
 
 Align the database prior to using as input in Mothur:
@@ -444,13 +475,17 @@ source /work/gmgi/miniconda3/bin/activate eDNA_COI
 
 dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data"
 proj_name="OSW_2023_invert" 
-ref="/work/gmgi/databases/COI/MAFFT_MZG_v2023-m07-15_NorthAtlantic_modeA_aligned.fasta"
+ref="/work/gmgi/databases/COI/MetaZooGene/MAFFT_MZG_v2023-m07-15_NorthAtlantic_modeA_aligned.fasta"
 
 cd ${dir}
 
 mothur "#align.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.fasta, reference=${ref}, flip=T, processors=48)"
-mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, count=${proj_name}.paired.trim.contigs.good.count_table)"
+mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align)"
 ```
+
+Checking output info for the cut off values   
+- Paola group used  start=12316, end=20349 but I don't know where they got that from 
+
 
 ## Step 8: QC Taxonomic Alignment 
 
@@ -465,7 +500,7 @@ mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, 
 #SBATCH --time=10:00:00
 #SBATCH --job-name=mothur_taxQC
 #SBATCH --mem=50GB
-#SBATCH --ntasks=24
+#SBATCH --ntasks=6
 #SBATCH --cpus-per-task=2
 
 # Activate conda environment
@@ -477,26 +512,31 @@ proj_name="OSW_2023_invert"
 cd ${dir}
 
 ## Identifying those that don't meet the criteria 
-
-mothur "#screen.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, count=${proj_name}.paired.trim.contigs.good.count_table, start=1968, end=11550, maxhomop=8)"
-mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, count=${proj_name}.paired.trim.contigs.good.count_table)"
+mothur "#screen.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, count=${proj_name}.paired.trim.contigs.good.count_table, optimize=start, criteria=90, maxhomop=8)"
+mothur "#summary.seqs(fasta=current, count=current)"
 mothur "#count.groups(count=${proj_name}.paired.trim.contigs.good.count_table)"
 
 ## Filtering those out
-mothur "#filter.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, vertical=T, trump=.)"
-mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.fasta, count=${proj_name}.paired.trim.contigs.good.count_table)"
+mothur "#filter.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.align, vertical=T, trump=.)"
+mothur "#summary.seqs(fasta=current, count=current)"
 
 ## ID unique sequences again
 mothur "#unique.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.fasta, count=${proj_name}.paired.trim.contigs.good.good.count_table)"
 ```
 
-## Step 9: Pre-clustering aka denoising
+## Step 9: Denoise and remove chimeras 
+
+#### Denoising 
 
 Now we need to further polish and cluster the data with pre.cluster. The purpose of this step is to remove noise due to sequencing error. The rational behind this step assumes that the most abundant sequences are the most trustworthy and likely do not have sequencing errors. Pre-clustering then looks at the relationship between abundant and rare sequences - rare sequences that are "close" (e.g., 1 nt difference) to highly abundant sequences are likely due to sequencing error. This step will pool sequences and look at the maximum differences between sequences within this group to form ASV groupings.
 
 In this step, the number of sequences is not reduced, but they are grouped into amplicon sequence variants ASV's which reduces the error rate. 
 
 Other programs that conduct this "denoising" are DADA2, UNOISE, and DEBLUR. However, these programs remove the rare sequences, which can distort the relative abundance of remaining sequences. DADA2 also removes all sigletons (sequences with single representation) which disproportionately affects the sequence relative abundance. Mothur avoids the removal of rare sequences for this reason.
+
+#### Removing chimeras 
+
+At this point we have removed as much sequencing error as we can and it is time to turn our attention to removing chimeras. We'll do this using the VSEARCH algorithm that is called within mothur using the chimera.vsearch command. 
 
 `06-Mothur-denoise.sh`
 
@@ -507,9 +547,9 @@ Other programs that conduct this "denoising" are DADA2, UNOISE, and DEBLUR. Howe
 #SBATCH --partition=short
 #SBATCH --nodes=1
 #SBATCH --time=10:00:00
-#SBATCH --job-name=mothur_taxQC
+#SBATCH --job-name=mothur_denoise
 #SBATCH --mem=50GB
-#SBATCH --ntasks=24
+#SBATCH --ntasks=6
 #SBATCH --cpus-per-task=2
 
 # Activate conda environment
@@ -520,16 +560,31 @@ proj_name="OSW_2023_invert"
 
 cd ${dir}
 
-mothur "#pre.cluster(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.unique.fasta, count=${proj_name}.paired.trim.contigs.good.unique.good.filter.count_table, diffs=1)"
-mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.unique.precluster.fasta, count=${proj_name}.paired.trim.contigs.good.unique.good.filter.unique.precluster.count_table)"
+## Denoise 
+mothur "#set.logfile(name=${proj_name}.precluster.log)"
+mothur "#pre.cluster(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.unique.fasta, count=${proj_name}.paired.trim.contigs.good.unique.good.filter.count_table, diffs=1, method=unoise)"
 
+## Remove chimeras 
+mothur "#set.logfile(name=${proj_name}.chimeraVsearch.log)"
+mothur "#chimera.vsearch(fasta=current, count=current, dereplicate=t)"
+
+mothur "#set.logfile(name=${proj_name}.removeChimeras.log)"
+mothur "#remove.seqs(fasta=current, accnos=current)"
+
+## Produce summary file 
+mothur "#summary.seqs(fasta=current, count=current, log=%x.${proj_name}.summarypostfilter.log)"
+```
+
+## Step 10: Classify sequences 
+
+Fasta reference file:  
+Taxonomy file:  
+
+
+`.sh`
 
 ```
 
 
 
-
-Currently on:  
-- creating MAFFT version of ref  
-- re-run the mothur tax script 
-
+```
