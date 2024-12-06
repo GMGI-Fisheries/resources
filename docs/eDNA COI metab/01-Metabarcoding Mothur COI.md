@@ -218,12 +218,7 @@ mothur "#make.file(inputdir=., type=gz, prefix=${proj_name})"
 mothur "#make.contigs(inputdir=., outputdir=., file=${proj_name}.paired.files, trimoverlap=F, oligos=${oligo_file}, pdiffs=5, checkorient=T)"
 
 ## Create a summary file with trimmed contigs 
-mothur "#summary.seqs(fasta=current)"
-
-## Count the number of sequences that were removed and the number that were kept by counting sequences in each fasta file
-## This will be in the output file created by the .sh script 
-grep -c "^>" ${proj_name}.paired.trim.contigs.fasta
-grep -c "^>" ${proj_name}.paired.scrap.contigs.fasta 
+mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.fasta)"
 ```
 
 To run: `sbatch /work/gmgi/scripts/eDNA/COI/Mothur/01-Mothur-setup.sh /path/to/raw/data /path/to/output/directory project_prefix`  
@@ -237,15 +232,52 @@ sbatch /work/gmgi/scripts/eDNA/COI/Mothur/01-Mothur-setup.sh \
     OSW_2023_invert
 ```            
 
+#### Assess output (data from OSW example): 
+
+Count the number of sequences that were removed and the number that were kept by counting sequences in each fasta file
+
+```
+proj_name="OSW_2023_invert"
+grep -c "^>" ${proj_name}.paired.trim.contigs.fasta
+## output = 10,272,910
+
+grep -c "^>" ${proj_name}.paired.scrap.contigs.fasta 
+## output = 3,033,941
+```
+
 The logfiles will be named with the run ID so I used `mv` to change these to names that reflect the step:  
-- `mothur.make.contigs.logfile`  
-- `mothur.summaryseqs.trimmed.logfile`  
+- `mothur.01setup.makecontigs.logfile`  
+- `mothur.01setup.summary.contigs.logfile`  
+
+Summary of OSW data from `mothur.01setup.summary.contigs.logfile`: 
+
+```
+                Start   End     NBases  Ambigs  Polymer NumSeqs
+Minimum:        1       124     124     0       3       1
+2.5%-tile:      1       251     251     0       4       256823
+25%-tile:       1       365     365     0       5       2568228
+Median:         1       365     365     0       6       5136456
+75%-tile:       1       365     365     1       6       7704683
+97.5%-tile:     1       404     404     8       8       10016088
+Maximum:        1       502     502     191     233     10272910
+Mean:   1       363     363     1       5
+# of Seqs:      10272910
+It took 193 secs to summarize 10272910 sequences.
+```
+
+This table shows quantile values about the distribution of sequences for a few things:   
+- Start position: All at 1 now, will start at different point after some QC.  
+- End position: We see that there are some sequences that are very short and we may need to remove those later.  
+- Number of bases: length. we see most are in expected range here, but one is super long! This might tell us there is no overlap so they are butted up against each other. We will remove things like this.  
+- Ambigs: Number of ambiguous calls in sequences. Here there are a few that have ambiguous base calls. We will remove any sequence with an ambiguous call or any longer than we would expect for COI region.  
+- Polymer: Length of polymer repeats.  
+- NumSeqs: Number of sequences.  
 
 Output:    
 - proj_name.contigs.groups                 
 - proj_name.contigs.report                                        
 - proj_name.scrap.contigs.fasta            
-- proj_name.trim.contigs.fasta 
+- proj_name.trim.contigs.fasta   
 - proj_name.trim.contigs.summary  
 
 Descriptions of contig files:   
@@ -254,36 +286,6 @@ Descriptions of contig files:
 - Groups file = what group each sequence belongs to map sequence to each sample from the trimmed sequence file.  
 - Contigs report file = information on sequences that were aligned and paired together.  
 
-View the output file (`less mothur_setup.output*`) to check how many sequences were kept/lost with certain parameters. Troubleshoot this as needed. Shift+G to reach the end of the output file and view summary table (example below): 
-
-```
-## OSW data example - room for troubleshooting here 
-10,430,038 reads in the trimmed fasta 
-2,876,813 reads in the scrapped fasta 
-
-                Start   End     NBases  Ambigs  Polymer NumSeqs
-Minimum:        1       124     124     0       3       1
-2.5%-tile:      1       251     251     0       4       260751
-25%-tile:       1       365     365     0       5       2607510
-Median:         1       365     365     0       6       5215020
-75%-tile:       1       365     365     1       6       7822529
-97.5%-tile:     1       404     404     8       8       10169288
-Maximum:        1       502     502     191     233     10430038
-Mean:   1       363     363     1       5
-# of Seqs:      10430038
-```
-
-This table shows quantile values about the distribution of sequences for a few things:   
-- Start position: All at 1 now, will start at different point after some QC.  
-- End position: We see that there are some sequences that are very short and we may need to remove those later.  
-- Number of bases: length. we see most are in expected range here, but one is super long! This might tell us there is no overlap so they are butted up against each other. We will remove things like this.  
-- Ambigs: Number of ambiguous calls in sequences. Here there are a few that have ambiguous base calls. We will remove any sequence with an ambiguous call or any longer than we would expect for V4 region.  
-- Polymer: Length of polymer repeats.  
-- NumSeqs: Number of sequences.  
-
-View contigs report for quality assessment (`less proj_name.contigs.report`)  
- 
-**Conduct quality assessment before proceeding with next steps.** 
 
 ## Step 5: QC'ing seqs via Mothur 
 
@@ -317,15 +319,17 @@ cd ${dir}
 
 mothur "#screen.seqs(inputdir=., outputdir=., fasta=${proj_name}.paired.trim.contigs.fasta, group=${proj_name}.paired.contigs.groups, maxambig=0, maxlength=400, minlength=200)"
 
-mothur "#summary.seqs(fasta=current)"
+mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.fasta)"
 ```
 
 To run: `sbatch /work/gmgi/scripts/eDNA/COI/Mothur/02-Mothur-QC.sh /path/to/output/directory project_prefix`  
 
 Example: 
 
+Running OSW from invertebrate/scripts folder 
+
 ```
-sbatch /work/gmgi/scripts/eDNA/COI/Mothur/02-Mothur-QC \
+sbatch 02-Mothur-QC.sh \
     /work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data \
     OSW_2023_invert
 ```   
@@ -335,24 +339,24 @@ Output files:
 - proj_name.trim.contigs.bad.accnos    
 - proj_name.contigs.good.groups  
 
-OSW example: Removed 3,652,435 sequences that fall outside of 200-400 bp length bin with no ambiguous calls so 6,777,603 remaining sequences. 
+OSW example: Removed 3,596,140 sequences that fall outside of 200-400 bp length bin with no ambiguous calls so 6,676,770 remaining sequences. 
 
 ```
                 Start   End     NBases  Ambigs  Polymer NumSeqs
 Minimum:        1       213     213     0       3       1
-2.5%-tile:      1       251     251     0       4       169441
-25%-tile:       1       365     365     0       5       1694401
-Median:         1       365     365     0       6       3388802
-75%-tile:       1       365     365     0       6       5083203
-97.5%-tile:     1       368     368     0       7       6608163
-Maximum:        1       400     400     0       105     6777603
-Mean:   1       361     361     0       5
-# of Seqs:      6777603
+2.5%-tile:      1       251     251     0       4       166920
+25%-tile:       1       365     365     0       5       1669193
+Median:         1       365     365     0       6       3338386
+75%-tile:       1       365     365     0       6       5007578
+97.5%-tile:     1       368     368     0       7       6509851
+Maximum:        1       400     400     0       105     6676770
+Mean:   1       360     360     0       5
+# of Seqs:      6676770
 ```
 
 Changed the name of the log files to:    
-- mothur.screen.seqs.summary.logfile   
-- mothur.screen.seqs.logfile  
+- mothur.02contigQC.screenseqs.logfile      
+- mothur.02contigQC.summary.logfile   
 
 ## Step 6: Determining and counting unique sequences with Mothur
 
@@ -368,8 +372,8 @@ Identifying unique sequences and counting those.
 #SBATCH --nodes=1
 #SBATCH --time=10:00:00
 #SBATCH --job-name=mothur_uniq
-#SBATCH --mem=50GB
-#SBATCH --ntasks=24
+#SBATCH --mem=5GB
+#SBATCH --ntasks=6
 #SBATCH --cpus-per-task=2
 
 # Activate conda environment
@@ -392,18 +396,23 @@ OSW example output:
 ```
                 Start   End     NBases  Ambigs  Polymer NumSeqs
 Minimum:        1       213     213     0       3       1
-2.5%-tile:      1       251     251     0       4       169441
-25%-tile:       1       365     365     0       5       1694401
-Median:         1       365     365     0       6       3388802
-75%-tile:       1       365     365     0       6       5083203
-97.5%-tile:     1       368     368     0       7       6608163
-Maximum:        1       400     400     0       105     6777603
-Mean:   1       361     361     0       5
-# of unique seqs:       3169531
-total # of seqs:        6777603
+2.5%-tile:      1       251     251     0       4       166920
+25%-tile:       1       365     365     0       5       1669193
+Median:         1       365     365     0       6       3338386
+75%-tile:       1       365     365     0       6       5007578
+97.5%-tile:     1       368     368     0       7       6509851
+Maximum:        1       400     400     0       105     6676770
+Mean:   1       360     360     0       5
+# of unique seqs:       3138754
+total # of seqs:        6676770
 ```
 
-There are 3,169,531 unique sequences in this OSW example dataset. 
+There are 3,138,754 unique sequences in this OSW example dataset. 
+
+Changing the log file names to:  
+- mothur.03unique.uniqueseqs.logfile  
+- mothur.03unique.countseqs.logfile    
+- mothur.03unique.summary.logfile  
 
 ## Step 7: Taxonomic Assignment with Mothur 
 
@@ -418,6 +427,7 @@ cd /work/gmgi/databases/COI/MetaZooGene
 
 ## Global 
 wget https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGfasta-coi__T4000000__o00__A.fasta.gz
+wget https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGmothur-coi__T4000000__o00__A.txt.gz
 
 ## North Atlantic 
 wget https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGfasta-coi__T4000000__o02__A.fasta.gz
@@ -428,6 +438,7 @@ wget https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-s
 gunzip -c MZGfasta-coi__T4000000__o00__A.fasta.gz > MZG_v2023-m07-15_Global_modeA.fasta
 gunzip -c MZGfasta-coi__T4000000__o02__A.fasta.gz > MZG_v2023-m07-15_NorthAtlantic_modeA.fasta
 gunzip -c MZGmothur-coi__T4000000__o02__A.txt.gz > MZG_v2023-m07-15-NorthAtlantic_modeA.txt
+gunzip -c MZGmothur-coi__T4000000__o00__A.txt.gz > MZG_v2023-m07-15-Global_modeA.txt
 ```
 
 Align the database prior to using as input in Mothur:
@@ -446,6 +457,9 @@ Align the database prior to using as input in Mothur:
 #SBATCH --ntasks=24
 #SBATCH --cpus-per-task=2
 
+# Activate conda environment
+source /work/gmgi/miniconda3/bin/activate eDNA_COI
+
 ### changing name format to MAFFT_xxx_aligned.fasta 
 
 # Assign input and output file names from command-line arguments
@@ -456,9 +470,9 @@ OUTPUT_FILE=$2
 mafft --auto "$INPUT_FILE" > "$OUTPUT_FILE"
 ```
 
-Use format `sbatch MZG_align.sh input output`    
-Example: `sbatch MZG_align.sh MZG_v2023-m07-15_NorthAtlantic_modeA.fasta MAFFT_MZG_v2023-m07-15_NorthAtlantic_modeA_aligned.fasta`   
-
+Use format: `sbatch MZG_align.sh input output`    
+Example: `sbatch MZG_align.sh MZG_v2023-m07-15_NorthAtlantic_modeA.fasta MAFFT_MZG_v2023-m07-15_NorthAtlantic_modeA_aligned.fasta`     
+`sbatch MZG_align.sh MZG_v2023-m07-15_Global_modeA.fasta MAFFT_MZG_v2023-m07-15_Global_modeA_aligned.fasta` 
 
 Running taxonomic assignment via Mothur: 
 
@@ -472,8 +486,8 @@ Running taxonomic assignment via Mothur:
 #SBATCH --nodes=1
 #SBATCH --time=24:00:00
 #SBATCH --job-name=mothur_tax
-#SBATCH --mem=50GB
-#SBATCH --ntasks=24
+#SBATCH --mem=20GB
+#SBATCH --ntasks=12
 #SBATCH --cpus-per-task=2
 
 # Activate conda environment
@@ -481,7 +495,8 @@ source /work/gmgi/miniconda3/bin/activate eDNA_COI
 
 dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data"
 proj_name="OSW_2023_invert" 
-ref="/work/gmgi/databases/COI/MetaZooGene/MAFFT_MZG_v2023-m07-15_NorthAtlantic_modeA_aligned.fasta"
+#ref="/work/gmgi/databases/COI/MetaZooGene/MAFFT_MZG_v2023-m07-15_NorthAtlantic_modeA_aligned.fasta"
+ref="/work/gmgi/databases/COI/MetaZooGene/MAFFT_MZG_v2023-m07-15_Global_modeA_aligned.fasta"
 
 cd ${dir}
 
@@ -489,9 +504,27 @@ mothur "#align.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.fasta, re
 mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align)"
 ```
 
-Checking output info for the cut off values   
-- Paola group used  start=12316, end=20349 but I don't know where they got that from 
+Atlantic comparison:
 
+```
+                Start   End     NBases  Ambigs  Polymer NumSeqs
+Minimum:        0       0       0       0       1       1
+2.5%-tile:      1836    7145    5       0       1       78469
+25%-tile:       6781    7145    365     0       5       784689
+Median:         22391   24785   365     0       6       1569378
+75%-tile:       22508   25827   365     0       6       2354066
+97.5%-tile:     93935   93943   368     0       7       3060286
+Maximum:        121316  121316  400     0       26      3138754
+Mean:   20928   28519   337     0       5
+# of Seqs:      3138754
+```
+
+World comparison
+
+```
+
+
+```
 
 ## Step 8: QC Taxonomic Alignment 
 
@@ -554,7 +587,7 @@ At this point we have removed as much sequencing error as we can and it is time 
 #SBATCH --nodes=1
 #SBATCH --time=10:00:00
 #SBATCH --job-name=mothur_denoise
-#SBATCH --mem=50GB
+#SBATCH --mem=20GB
 #SBATCH --ntasks=6
 #SBATCH --cpus-per-task=2
 
@@ -567,19 +600,17 @@ proj_name="OSW_2023_invert"
 cd ${dir}
 
 ## Denoise 
-mothur "#set.logfile(name=${proj_name}.precluster.log)"
 mothur "#pre.cluster(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.unique.fasta, count=${proj_name}.paired.trim.contigs.good.unique.good.filter.count_table, diffs=1, method=unoise)"
 
 ## Remove chimeras 
-mothur "#set.logfile(name=${proj_name}.chimeraVsearch.log)"
 mothur "#chimera.vsearch(fasta=current, count=current, dereplicate=t)"
-
-mothur "#set.logfile(name=${proj_name}.removeChimeras.log)"
 mothur "#remove.seqs(fasta=current, accnos=current)"
 
 ## Produce summary file 
 mothur "#summary.seqs(fasta=current, count=current, log=%x.${proj_name}.summarypostfilter.log)"
 ```
+
+Stuck here b/c steps are removing almost all reads from samples.. why 
 
 ## Step 10: Classify sequences 
 
