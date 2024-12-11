@@ -27,8 +27,112 @@ library(strex) ## for data transformation
 library(writexl) ## for excel output
 library(purrr) ## for data transformation
 library(tidyverse) ## for data table manipulation
-library(ggrepel)  # For geom_text_repel
+library(ggrepel)  ## For geom_text_repel
+library(drc) ## for LOD calculations
+library(ggpubr)
 ```
+
+## Evaluating standard curve  
+
+### Reading in data
+
+```{r}
+### USER EDITS:
+## 1. Replace path of file with your own standard curve
+std_curve <- read_xlsx("example standard curve.xlsx", skip = 19) %>%
+  group_by(Sample) %>%
+  
+  ## calculate detection rates (number of Cqs present / number of replicates)
+  mutate(detection_rate = sum(!is.na(Cq)) / n(),
+         
+  ## calculate Cq stats - mean, SD, and CV 
+         Cq_mean = mean(Cq, na.rm=TRUE),
+         Cq_sd = sd(Cq, na.rm=TRUE),
+         Cq_cv = (Cq_sd / Cq_mean) * 100 
+         ) %>%
+  ungroup()
+
+## confirming negatives were clean and filter them out
+std_curve %>% filter(Sample == "neg")
+std_curve <- std_curve %>% filter(!Sample == "neg")
+```
+
+### Calculating LOD and LOQ 
+
+```{r}
+LOD <- std_curve %>%
+  filter(detection_rate < 0.95) %>%      # Change the threshold as needed
+  slice(1) %>%                        # Get the first occurrence
+  dplyr::select(Sample, detection_rate)      # Select relevant columns
+
+LOD_threshold <- as.numeric(LOD$Sample[1])
+
+LOQ <- std_curve %>%
+  filter(Cq_cv > 35.00) %>%      # Change the threshold as needed
+  slice(1) %>%                        # Get the first occurrence
+  dplyr::select(Sample, Cq_cv) 
+
+LOQ_threshold <- as.numeric(LOQ$Sample[1])
+```
+
+### Plotting standard curve 
+
+```{r}
+std_curve %>% 
+  ## Taking only those detections with >50% to make curve 
+  filter(detection_rate > 0.50) %>%
+  
+  ## Plotting that std. curve 
+  ggplot(., aes(x = log10(`Starting Quantity (SQ)`), y = Cq)) +
+  
+  geom_smooth(method = 'lm', se = FALSE, color = "darkred") +
+
+  stat_regline_equation(size = 4, color = 'darkred',
+                        aes(label = after_stat(rr.label)), hjust=1,
+                        label.x.npc = "right", label.y.npc = "top") +
+  
+  geom_point(color = 'black', fill = 'white', shape = 21, size = 3.5, alpha=0.8) +
+  
+  ## ADDING LOD LINE -- if no line shows up, all st. curve is qualitative 
+  geom_vline(xintercept=log10(LOD_threshold), linetype="dashed", color = "grey40") +
+  geom_text(aes(x = log10(LOD_threshold), y = max(std_curve$Cq, na.rm=TRUE) * 0.3,
+                label = paste("LOD =", LOD_threshold, "copies")), 
+            angle = 90, vjust = -0.5, hjust = -0.1, color = "grey40", size = 4) +
+  
+  ## ADDING LOQ LINE -- if no line shows up, all st. curve is quantitative 
+  geom_vline(xintercept=log10(LOQ_threshold), linetype="dashed", color = "grey40") +
+  geom_text(aes(x = log10(LOQ_threshold), y = max(std_curve$Cq, na.rm=TRUE) * 0.3, 
+                label = paste("LOQ =", LOQ_threshold, "copies")), 
+            angle = 90, vjust = -0.5, hjust = -0.1, color = "grey40", size = 4) +
+
+  theme_bw() +
+  
+  labs(
+    x = "Normalized standard concentrations",
+    y = "Cq"
+  ) +
+  
+  theme(axis.text.y = element_text(size=10, color="grey20"),
+        axis.text.x = element_text(size=10, color="grey20"),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=12, face="bold"),
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=12, face="bold"))
+
+ggsave("example output/Standard_curve.png", width=6, height=4)
+```
+
+### Calculating slope and y-intercept
+
+These values get fed in later in data calculations.
+
+```{r}
+# Fit a linear model to calculate slope and intercept
+linear_model <- lm(Cq_mean ~ log10(`Starting Quantity (SQ)`), data = std_curve)
+
+# Extract slope and y-intercept
+slope <- coef(linear_model)[2]      # Slope (m)
+y_intercept <- coef(linear_model)[1] # Y-intercept (b)
+```
+
 
 ## Reading in datafiles and merging into one large dataframe 
 
@@ -178,10 +282,6 @@ ggsave("example output/Inhibition.png", width=4, height=4)
 ## Filter data Cq, Number of Replicates, and Copy Num calculations 
 
 ```{r}
-## USER EDITS: Replace values below with species-specific assay values for copy number calculation
-yint <- 38.183
-slope <- -3.386
-
 ## Complete calculations
 filters_df <- df %>% 
   ## subset out the spiked samples 
@@ -197,7 +297,7 @@ filters_df <- df %>%
   mutate(Filter_Num_Replicates = sum(!is.na(Cq))) %>%
   
   ## calculate copy number 
-  mutate(Filter_Copy_Num = 10^((Filter_Cq-yint)/slope)) %>%
+  mutate(Filter_Copy_Num = 10^((Filter_Cq-y_intercept)/slope)) %>%
   
   ## summarize df with specific columns 
   dplyr::select(plate.ID, Sample_ID, Filter_Cq, Filter_Num_Replicates, Filter_Copy_Num) %>% 
@@ -350,11 +450,11 @@ Bar chart
 ```{r}
 fieldsamples_df %>% 
   filter(!is.na(`Mean Copy Number Normalized`)) %>%
-  ggplot(., aes(x=Sample_ID, y=`Mean Copy Number Normalized`, fill = `Mean Copy Number Normalized` > cutoff)) + 
-  geom_bar(stat = "identity", width = 0.7) +
-  scale_fill_manual(values = c("#a9d6e5", "#780000"),
-                    labels = c("Normal", "Outlier"),
-                    ) +
+  ggplot(., aes(x=Sample_ID, y=`Mean Copy Number Normalized`)) + 
+  geom_bar(stat = "identity", width = 0.7, fill = "#a9d6e5") +
+  # scale_fill_manual(values = c("#a9d6e5", "#780000"),
+  #                   labels = c("Normal", "Outlier"),
+  #                   ) +
   labs(
     y="Log-Normalized Copy Number",
     x = "Sample ID",

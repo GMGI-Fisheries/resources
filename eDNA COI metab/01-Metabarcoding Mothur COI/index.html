@@ -9,10 +9,6 @@
       
       
       
-        <link rel="prev" href="../../00-creating_eDNA_conda_env/">
-      
-      
-        <link rel="next" href="../../eDNA%20qPCR/qPCR-analysis/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -20,7 +16,7 @@
     
     
       
-        <title>01-ampliseq-COI - GMGI Fisheries Handbook</title>
+        <title>eDNA Metabarcoding for COI target region - GMGI Fisheries Handbook</title>
       
     
     
@@ -72,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#metabarcoding-workflow-for-coi-amplicon-sequencing" class="md-skip">
+        <a href="#edna-metabarcoding-for-coi-target-region" class="md-skip">
           Skip to content
         </a>
       
@@ -108,7 +104,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              01-ampliseq-COI
+              eDNA Metabarcoding for COI target region
             
           </span>
         </div>
@@ -686,19 +682,17 @@
       
   
   
-    
   
   
-  
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -712,7 +706,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             eDNA: COI metabarcoding
@@ -744,30 +738,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    01-ampliseq-COI
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../01-Metabarcoding%20ampliseq%20COI/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -776,176 +750,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#step-1-confirm-conda-environment-is-available" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 1: Confirm conda environment is available
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-2-assess-quality-of-raw-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 2: Assess quality of raw data
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-3-visualize-quality-of-raw-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 3: Visualize quality of raw data
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-4-downloading-and-updating-reference-databases" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 4: Downloading and updating reference databases
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Step 4: Downloading and updating reference databases">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#download-andor-update-bold-database" class="md-nav__link">
-    <span class="md-ellipsis">
-      Download and/or update BOLD database
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Download and/or update BOLD database">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#download-andor-update-nbci-blast-nt-database" class="md-nav__link">
-    <span class="md-ellipsis">
-      Download and/or update NBCI blast nt database
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#other-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      Other options
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-4-nf-coreampliseq" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 4: nf-core/ampliseq
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Step 4: nf-core/ampliseq">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#coi-primer-sequences-required" class="md-nav__link">
-    <span class="md-ellipsis">
-      COI primer sequences (required)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#metadata-sheet-optional" class="md-nav__link">
-    <span class="md-ellipsis">
-      Metadata sheet (optional)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#create-samplesheet-sheet-for-ampliseq" class="md-nav__link">
-    <span class="md-ellipsis">
-      Create samplesheet sheet for ampliseq
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#run-nf-coreampliseq-cutadapt-dada2" class="md-nav__link">
-    <span class="md-ellipsis">
-      Run nf-core/ampliseq (Cutadapt &amp; DADA2)
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Run nf-core/ampliseq (Cutadapt & DADA2)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#files-generated-by-ampliseq" class="md-nav__link">
-    <span class="md-ellipsis">
-      Files generated by ampliseq
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-5-running-additional-taxonomic-assignment-id-script" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 5: Running additional taxonomic assignment ID script
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1237,6 +1041,24 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#primer-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      Primer set
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Workflow
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#step-1-confirm-conda-environment-is-available" class="md-nav__link">
     <span class="md-ellipsis">
       Step 1: Confirm conda environment is available
@@ -1264,43 +1086,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-4-downloading-and-updating-reference-databases" class="md-nav__link">
+  <a href="#step-4-set-up-mothur-program" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 4: Downloading and updating reference databases
+      Step 4: Set-up Mothur program
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Step 4: Downloading and updating reference databases">
+    <nav class="md-nav" aria-label="Step 4: Set-up Mothur program">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#download-andor-update-bold-database" class="md-nav__link">
+  <a href="#create-primer-file" class="md-nav__link">
     <span class="md-ellipsis">
-      Download and/or update BOLD database
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Download and/or update BOLD database">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#download-andor-update-nbci-blast-nt-database" class="md-nav__link">
-    <span class="md-ellipsis">
-      Download and/or update NBCI blast nt database
+      Create primer file
     </span>
   </a>
   
 </li>
         
-      </ul>
-    </nav>
+          <li class="md-nav__item">
+  <a href="#mothur-program-set-up-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mothur program set-up project
+    </span>
+  </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#other-options" class="md-nav__link">
+  <a href="#assess-output-data-from-osw-example" class="md-nav__link">
     <span class="md-ellipsis">
-      Other options
+      Assess output (data from OSW example):
     </span>
   </a>
   
@@ -1312,63 +1128,66 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-4-nf-coreampliseq" class="md-nav__link">
+  <a href="#step-5-qcing-seqs-via-mothur" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 4: nf-core/ampliseq
+      Step 5: QC'ing seqs via Mothur
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Step 4: nf-core/ampliseq">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-determining-and-counting-unique-sequences-with-mothur" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 6: Determining and counting unique sequences with Mothur
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-7-taxonomic-assignment-with-mothur" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 7: Taxonomic Assignment with Mothur
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-8-qc-taxonomic-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 8: QC Taxonomic Alignment
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-9-denoise-and-remove-chimeras" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 9: Denoise and remove chimeras
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 9: Denoise and remove chimeras">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#coi-primer-sequences-required" class="md-nav__link">
+  <a href="#denoising" class="md-nav__link">
     <span class="md-ellipsis">
-      COI primer sequences (required)
+      Denoising
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#metadata-sheet-optional" class="md-nav__link">
+  <a href="#removing-chimeras" class="md-nav__link">
     <span class="md-ellipsis">
-      Metadata sheet (optional)
+      Removing chimeras
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#create-samplesheet-sheet-for-ampliseq" class="md-nav__link">
-    <span class="md-ellipsis">
-      Create samplesheet sheet for ampliseq
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#run-nf-coreampliseq-cutadapt-dada2" class="md-nav__link">
-    <span class="md-ellipsis">
-      Run nf-core/ampliseq (Cutadapt &amp; DADA2)
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Run nf-core/ampliseq (Cutadapt & DADA2)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#files-generated-by-ampliseq" class="md-nav__link">
-    <span class="md-ellipsis">
-      Files generated by ampliseq
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -1378,9 +1197,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-5-running-additional-taxonomic-assignment-id-script" class="md-nav__link">
+  <a href="#step-10-classify-sequences" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 5: Running additional taxonomic assignment ID script
+      Step 10: Classify sequences
     </span>
   </a>
   
@@ -1401,7 +1220,7 @@
                   
 
   
-    <a href="https://github.com/GMGI-Fisheries/resources/blob/master/docs/eDNA COI metab/01-Metabarcoding ampliseq COI.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/GMGI-Fisheries/resources/blob/master/docs/eDNA COI metab/01-Metabarcoding Mothur COI.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -1409,25 +1228,33 @@
   
 
 
-<h1 id="metabarcoding-workflow-for-coi-amplicon-sequencing">Metabarcoding workflow for COI amplicon sequencing</h1>
+<h1 id="edna-metabarcoding-for-coi-target-region">eDNA Metabarcoding for COI target region</h1>
+<h3 id="primer-set">Primer set</h3>
 <p>The COI region is commonly used for metabarcoding practices and consequently there are many primer options to choose from. The Fisheries team at GMGI has optimized the Leray Geller set (outlined in red box below). Citation: <a href="https://link.springer.com/article/10.1186/1742-9994-10-34">Leray et al 2013</a>.</p>
 <p>We primarily use this set for invertebrate targets and 12S for vertebrate communities. </p>
 <p><img alt="" src="https://github.com/GMGI-Fisheries/resources/blob/master/img/eDNA_meta_COI_primerset.png?raw=true" /></p>
+<h3 id="workflow">Workflow</h3>
+<p><a href="https://mothur.org/">Mothur program page</a></p>
+<p><img alt="" src="https://github.com/GMGI-Fisheries/resources/blob/master/img/eDNA_meta_COI_workflow.png?raw=true" /></p>
 <p>Workflow done on HPC. Scripts to run: </p>
 <ol>
-<li>00-fastqc.sh   </li>
-<li>00-multiqc.sh  </li>
-<li>01a-metadata.R</li>
-<li>01b-ampliseq.sh</li>
-<li>02-taxonomicID.sh  </li>
+<li>Confirm conda environment is available      </li>
+<li>Assess quality of raw data (00-fastqc.sh)        </li>
+<li>Visualize quality of raw data (00-multiqc.sh)     </li>
+<li>Set-up Mothur program (01-Mothur-setup.sh)  </li>
+<li>QC'ing seqs via Mothur (02-Mothur-QC.sh)      </li>
+<li>Determining and counting unique sequences with Mothur (03-Mothur-unique.sh)   </li>
+<li>Taxonomic Assignment with Mothur (04-Mothur-tax.sh)  </li>
 </ol>
+<p><em>Descriptions of Mothur steps are from <a href="https://github.com/AHuffmyer/ASH_Putnam_Lab_Notebook/blob/master/_posts/2022-01-12-16S-Analysis-in-Mothr-Part-1.md#makecontigs">A. Huffmyer</a> and <a href="https://github.com/emmastrand/EmmaStrand_Notebook/blob/master/_posts/2022-01-24-KBay-Bleached-Pairs-16S-Analysis-Mothur.md">E. Strand</a> Mothur for 16S notebook posts.</em> </p>
 <h2 id="step-1-confirm-conda-environment-is-available">Step 1: Confirm conda environment is available</h2>
 <p>The conda environment is started within each slurm script, but to activate conda environment outside of the slurm script to update packages or check what is installed:</p>
 <div class="highlight"><pre><span></span><code># Activate conda
-source ~/../../work/gmgi/miniconda3/bin/activate
+source /work/gmgi/miniconda3/bin/activate
 
 # Activate fisheries eDNA conda environment 
 conda activate fisheries_eDNA
+conda activate eDNA_COI
 
 # List all available environments 
 conda env list 
@@ -1437,9 +1264,6 @@ conda list
 
 # Update a package
 conda update [package name]
-
-# Update nextflow ampliseq workflow 
-nextflow pull nf-core/ampliseq
 </code></pre></div>
 <h2 id="step-2-assess-quality-of-raw-data">Step 2: Assess quality of raw data</h2>
 <p>Background information on <a href="https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon-flipped/lessons/05_qc_running_fastqc_interactively.html">FASTQC</a>. </p>
@@ -1452,19 +1276,18 @@ nextflow pull nf-core/ampliseq
 #SBATCH --time=20:00:00
 #SBATCH --job-name=fastqc
 #SBATCH --mem=3GB
-#SBATCH --ntasks=24
+#SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2
 
 ### USER TO-DO ### 
 ## 1. Set paths for your project
 
 # Activate conda environment
-source ~/../../work/gmgi/miniconda3/bin/activate
-conda activate fisheries_eDNA
+source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 ## SET PATHS 
-raw_path=&quot;&quot;
-out_dir=&quot;&quot;
+raw_path=$1
+out_dir=$2
 
 ## CREATE SAMPLE LIST FOR SLURM ARRAY
 ### 1. Create list of all .gz files in raw data path
@@ -1474,13 +1297,13 @@ ls -d ${raw_path}/*.gz &gt; ${raw_path}/rawdata
 mapfile -t FILENAMES &lt; ${raw_path}/rawdata
 
 ### 3. Create variable i that will assign each row of FILENAMES to a task ID
-i=${FILENAMES[$SLURM_ARRAY_TASK_ID]}
+i=${FILENAMES[$SLURM_ARRAY_TASK_ID - 1]}
 
 ## RUN FASTQC PROGRAM 
 fastqc ${i} --outdir ${out_dir}
 </code></pre></div>
 <p>To run:  <br />
-- Start slurm array (e.g., with 138 files) = <code>sbatch --array=0-137 00-fastqc.sh</code>.</p>
+- Start slurm array (e.g., with 138 files) = <code>sbatch --array=1-138 /work/gmgi/scripts/00-fastqc.sh /path/to/raw/data /path/to/output/directory</code>.</p>
 <p>Notes:  </p>
 <ul>
 <li>This is going to output <em>many</em> error and output files. After job completes, use <code>cat *output.* &gt; ../fastqc_output.txt</code> to create one file with all the output and <code>cat *error.* &gt; ../fastqc_error.txt</code> to create one file with all of the error message outputs. </li>
@@ -1505,355 +1328,406 @@ fastqc ${i} --outdir ${out_dir}
 ## 2. Optional: change file name (multiqc_raw.html) as desired
 
 # Activate conda environment
-source ~/../../work/gmgi/miniconda3/bin/activate
-conda activate fisheries_eDNA
+source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 ## SET PATHS 
 ## fastqc_output = output from 00-fastqc.sh; fastqc program
-fastqc_output=&quot;&quot; 
-multiqc_dir=&quot;&quot; 
+fastqc_output=$1
+multiqc_dir=$2
+filename=$3
 
 ## RUN MULTIQC 
-multiqc --interactive ${fastqc_output} -o ${multiqc_dir} --filename multiqc_raw.html
+multiqc --interactive ${fastqc_output} -o ${multiqc_dir} --filename multiqc_${filename}.html
 </code></pre></div>
 <p>To run:<br />
-- <code>sbatch 00-multiqc.sh</code> </p>
+- Navigate to fastqc output and run <code>sbatch /work/gmgi/scripts/00-multiqc.sh /path/to/fastqc/data /path/to/multiqc/output/directory filename</code> </p>
 <p>Notes:  </p>
 <ul>
 <li>Depending on the number of files per project, multiqc can be quick to run without a slurm script. To do this, run each line separately in the command line after activating the conda environment.  </li>
 </ul>
-<h2 id="step-4-downloading-and-updating-reference-databases">Step 4: Downloading and updating reference databases</h2>
-<h3 id="download-andor-update-bold-database">Download and/or update BOLD database</h3>
-<p>Visit the <a href="https://figshare.scilifelab.se/articles/dataset/COI_reference_sequences_from_BOLD_DB/20514192/4">Figshare cite for v4</a> and check for any latest versions. If a new version is available, download the COI references sequences from this webpage: bold_clustered.assignTaxonomy.fasta.gz and bold_clustered.addSpecies.fasta.gz. Via NU Cluster OOD, upload these files to <code>/work/gmgi/databases/COI/BOLD</code>. </p>
-<p>I downloaded <code>taxref_reformat_coidb.sh</code> from the ampliseq <a href="https://github.com/nf-core/ampliseq/blob/2.8.0/bin/taxref_reformat_coidb.sh">github page</a>. I then changed the first line to be only .gz files (<code>for f in *.gz; do</code> instead of <code>for f in $(ls); do</code>)</p>
-<div class="highlight"><pre><span></span><code># Start on a computing node 
-srun --pty bash 
+<h2 id="step-4-set-up-mothur-program">Step 4: Set-up Mothur program</h2>
+<h4 id="create-primer-file">Create primer file</h4>
+<p>Project set-up create primer seq file, <strong>only needed once, if file is already there do not create a new one</strong>:<br />
+1. Navigate to COI databases folder: <code>cd /work/gmgi/databases/COI</code><br />
+2. Create new file for Leray Gellar primer set: <code>nano mothur_oligos_LG</code><br />
+3. Copy and paste the below content:</p>
+<div class="highlight"><pre><span></span><code>## Leray Geller 2013 primers 
+## format = primer F R
+
+primer GGWACWGGWTGAACWGTWTAYCCYCC TAIACYTCIGGRTGICCRAARAAYCA
+</code></pre></div>
+<h4 id="mothur-program-set-up-project">Mothur program set-up project</h4>
+<p>Create directory: <code>mkdir Mothur_data</code></p>
+<p><code>make.file()</code>: tells mothur to look for fastq files in the data directory (<code>rawdata_dir</code>) and identify forward and reverse reads. Put type=gz to look for gz files. If there are .fasta or .fastq files you can use type=fasta or type=fastq. The prefix gives the output file a name - this can be a project name. This creates a file called proj_name.files with sample name, R1, R2 listed in columns.<br />
+- Output: <code>proj.paired.files</code> within the <code>rawdata_dir</code>  </p>
+<p><code>make.contigs()</code>: makes contigs of forward and reverse reads for each sample. This will assemble contigs for each pair of files and use R1 and R2 quality information to correct any sequencing errors in locations where there is overlap and the quality of the complementary sequence is sufficient. Because we added an oligos file, make.contigs will remove the primers on these sequences. <br />
+- <code>pdiffs=5</code>: primer differences=5. Try various parameters from 2-10 (based on other pipeline I've used or seen in the past).<br />
+- <code>checkorient=t</code>: Degenerate primers can be used in our oligos file. We are also using check orient to allow Mothur to "flip" the reverse primer if it is not found.<br />
+- <code>trimoverlap=F</code>: TRUE is needed if sequencing length was longer than amplicon length. The COI region is 313 bp which is longer than 2x250 bp sequencing.  </p>
+<p><code>summary.seqs()</code>: generates summary information about the sequences from the files we made above.</p>
+<p>Run time: ~30-45 min for 30-40 files (from previous project; update values with GMGI COI info)</p>
+<p><code>01-Mothur-setup.sh</code></p>
+<div class="highlight"><pre><span></span><code>#!/bin/bash
+#SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
+#SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=10:00:00
+#SBATCH --job-name=mothur_setup
+#SBATCH --mem=10GB
+#SBATCH --ntasks=3
+#SBATCH --cpus-per-task=3
 
 # Activate conda environment
-source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
+source /work/gmgi/miniconda3/bin/activate eDNA_COI
 
-cd /work/gmgi/databases/COI/BOLD 
-## upload new .gz files via OOD 
+# Set Paths 
+oligo_file=&quot;/work/gmgi/databases/COI/mothur_oligos_LG&quot;
 
-# Edit names to reflect the version #
-mv bold_clustered.addspecies.fasta.gz bold_v4_clustered.addspecies.fasta.gz                                                                                           
-mv bold_clustered.assigntaxonomy.fasta.gz bold_v4_clustered.assigntaxonomy.fasta.gz 
+## User specific paths
+#rawdata_dir=&quot;/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/raw_data&quot;
+#proj_name=&quot;OSW_2023_invert&quot; 
+#output_dir=&quot;/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data&quot;
 
-bash taxref_reformat_coidb.sh
+rawdata_dir=$1
+output_dir=$2
+proj_name=$3
+
+## Make symlinks from raw data with new name (_ instead of -)
+for file in ${rawdata_dir}/*.gz; do
+    filename=$(basename &quot;$file&quot;)
+    newname=${filename//-/_}
+    ln -s &quot;$file&quot; &quot;${output_dir}/${newname}&quot;
+done
+
+cd ${output_dir} 
+
+## Make file with raw fastq files
+mothur &quot;#make.file(inputdir=., type=gz, prefix=${proj_name})&quot;   
+
+## Make contig file 
+mothur &quot;#make.contigs(inputdir=., outputdir=., file=${proj_name}.paired.files, trimoverlap=F, oligos=${oligo_file}, pdiffs=5, checkorient=T)&quot;
+
+## Create a summary file with trimmed contigs 
+mothur &quot;#summary.seqs(fasta=${proj_name}.paired.trim.contigs.fasta)&quot;
 </code></pre></div>
-<p>These resulting files <code>addSpecies.fna</code> and <code>assignTaxonomy.fna</code> will be fed into the ampliseq script below.</p>
-<h4 id="download-andor-update-nbci-blast-nt-database">Download and/or update NBCI blast nt database</h4>
-<p>NCBI is updated daily and therefore needs to be updated each time a project is analyzed. This is the not the most ideal method but we were struggling to get the <code>-remote</code> flag to work within slurm because I don't think NU slurm is connected to the internet? NU help desk was helping for awhile but we didn't get anywhere.</p>
-<p>Within <code>/work/gmgi/databases/ncbi</code>, there is a <code>update_nt.sh</code> script with the following code. To run <code>sbatch update_nt.sh</code>. This won't take long as it will check for updates rather than re-downloading every time. </p>
+<p>To run: <code>sbatch /work/gmgi/scripts/eDNA/COI/Mothur/01-Mothur-setup.sh /path/to/raw/data /path/to/output/directory project_prefix</code>  </p>
+<p>Example: </p>
+<div class="highlight"><pre><span></span><code>sbatch /work/gmgi/scripts/eDNA/COI/Mothur/01-Mothur-setup.sh \
+    /work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/raw_data \
+    /work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data \
+    OSW_2023_invert
+</code></pre></div>
+<h4 id="assess-output-data-from-osw-example">Assess output (data from OSW example):</h4>
+<p>Count the number of sequences that were removed and the number that were kept by counting sequences in each fasta file</p>
+<div class="highlight"><pre><span></span><code>proj_name=&quot;OSW_2023_invert&quot;
+grep -c &quot;^&gt;&quot; ${proj_name}.paired.trim.contigs.fasta
+## output = 10,272,910
+
+grep -c &quot;^&gt;&quot; ${proj_name}.paired.scrap.contigs.fasta 
+## output = 3,033,941
+</code></pre></div>
+<p>The logfiles will be named with the run ID so I used <code>mv</code> to change these to names that reflect the step:<br />
+- <code>mothur.01setup.makecontigs.logfile</code><br />
+- <code>mothur.01setup.summary.contigs.logfile</code>  </p>
+<p>Summary of OSW data from <code>mothur.01setup.summary.contigs.logfile</code>: </p>
+<div class="highlight"><pre><span></span><code>                Start   End     NBases  Ambigs  Polymer NumSeqs
+Minimum:        1       124     124     0       3       1
+2.5%-tile:      1       251     251     0       4       256823
+25%-tile:       1       365     365     0       5       2568228
+Median:         1       365     365     0       6       5136456
+75%-tile:       1       365     365     1       6       7704683
+97.5%-tile:     1       404     404     8       8       10016088
+Maximum:        1       502     502     191     233     10272910
+Mean:   1       363     363     1       5
+# of Seqs:      10272910
+It took 193 secs to summarize 10272910 sequences.
+</code></pre></div>
+<p>This table shows quantile values about the distribution of sequences for a few things: <br />
+- Start position: All at 1 now, will start at different point after some QC.<br />
+- End position: We see that there are some sequences that are very short and we may need to remove those later.<br />
+- Number of bases: length. we see most are in expected range here, but one is super long! This might tell us there is no overlap so they are butted up against each other. We will remove things like this.<br />
+- Ambigs: Number of ambiguous calls in sequences. Here there are a few that have ambiguous base calls. We will remove any sequence with an ambiguous call or any longer than we would expect for COI region.<br />
+- Polymer: Length of polymer repeats.<br />
+- NumSeqs: Number of sequences.  </p>
+<p>Output:  <br />
+- proj_name.contigs.groups               <br />
+- proj_name.contigs.report                                      <br />
+- proj_name.scrap.contigs.fasta          <br />
+- proj_name.trim.contigs.fasta <br />
+- proj_name.trim.contigs.summary  </p>
+<p>Descriptions of contig files: <br />
+- Trim file = sequences that were "good".<br />
+- Scrap file = sequences that were "bad".<br />
+- Groups file = what group each sequence belongs to map sequence to each sample from the trimmed sequence file.<br />
+- Contigs report file = information on sequences that were aligned and paired together.  </p>
+<h2 id="step-5-qcing-seqs-via-mothur">Step 5: QC'ing seqs via Mothur</h2>
+<p>Additional QC steps besides removing primers. </p>
+<p>Check the 25%-tile, median, and 75%-tile values from the table above. That will determine the max cut-offs below along with the expected length of the COI region (~313 bp but in OSW data, the majority are &gt;350 bp). </p>
+<p><code>screen.seqs()</code>: specify the fasta file of the contigs generated in the previous step and remove any sequence with an ambiguous call ("N"). We will also remove sequences &gt;350 nt. We will also set a minimum size amount (200). These parameters could be adjusted based on specific experiment and variable region.</p>
+<p><code>02-Mothur-QC.sh</code></p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
+#SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
+#SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=10:00:00
+#SBATCH --job-name=mothur_QC
+#SBATCH --mem=10GB
+#SBATCH --ntasks=6
+#SBATCH --cpus-per-task=2
+
+# Activate conda environment
+source /work/gmgi/miniconda3/bin/activate eDNA_COI
+
+dir=$1
+proj_name=$2
+
+cd ${dir}
+
+mothur &quot;#screen.seqs(inputdir=., outputdir=., fasta=${proj_name}.paired.trim.contigs.fasta, group=${proj_name}.paired.contigs.groups, maxambig=0, maxlength=400, minlength=200)&quot;
+
+mothur &quot;#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.fasta)&quot;
+</code></pre></div>
+<p>To run: <code>sbatch /work/gmgi/scripts/eDNA/COI/Mothur/02-Mothur-QC.sh /path/to/output/directory project_prefix</code>  </p>
+<p>Example: </p>
+<p>Running OSW from invertebrate/scripts folder </p>
+<div class="highlight"><pre><span></span><code>sbatch 02-Mothur-QC.sh \
+    /work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data \
+    OSW_2023_invert
+</code></pre></div>
+<p>Output files:  <br />
+- proj_name.trim.contigs.good.fasta <br />
+- proj_name.trim.contigs.bad.accnos  <br />
+- proj_name.contigs.good.groups  </p>
+<p>OSW example: Removed 3,596,140 sequences that fall outside of 200-400 bp length bin with no ambiguous calls so 6,676,770 remaining sequences. </p>
+<div class="highlight"><pre><span></span><code>                Start   End     NBases  Ambigs  Polymer NumSeqs
+Minimum:        1       213     213     0       3       1
+2.5%-tile:      1       251     251     0       4       166920
+25%-tile:       1       365     365     0       5       1669193
+Median:         1       365     365     0       6       3338386
+75%-tile:       1       365     365     0       6       5007578
+97.5%-tile:     1       368     368     0       7       6509851
+Maximum:        1       400     400     0       105     6676770
+Mean:   1       360     360     0       5
+# of Seqs:      6676770
+</code></pre></div>
+<p>Changed the name of the log files to:  <br />
+- mothur.02contigQC.screenseqs.logfile    <br />
+- mothur.02contigQC.summary.logfile   </p>
+<h2 id="step-6-determining-and-counting-unique-sequences-with-mothur">Step 6: Determining and counting unique sequences with Mothur</h2>
+<p>Identifying unique sequences and counting those. </p>
+<p><code>03-Mothur-unique.sh</code></p>
+<div class="highlight"><pre><span></span><code>#!/bin/bash
+#SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
+#SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=10:00:00
+#SBATCH --job-name=mothur_uniq
+#SBATCH --mem=5GB
+#SBATCH --ntasks=6
+#SBATCH --cpus-per-task=2
+
+# Activate conda environment
+source /work/gmgi/miniconda3/bin/activate eDNA_COI
+
+dir=&quot;/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data&quot;
+proj_name=&quot;OSW_2023_invert&quot; 
+
+cd ${dir}
+
+mothur &quot;#unique.seqs(fasta=${proj_name}.paired.trim.contigs.good.fasta)&quot;
+
+mothur &quot;#count.seqs(name=${proj_name}.paired.trim.contigs.good.names, group=${proj_name}.paired.contigs.good.groups)&quot;
+
+mothur &quot;#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.fasta, count=${proj_name}.paired.trim.contigs.good.count_table)&quot;
+</code></pre></div>
+<p>OSW example output: </p>
+<div class="highlight"><pre><span></span><code>                Start   End     NBases  Ambigs  Polymer NumSeqs
+Minimum:        1       213     213     0       3       1
+2.5%-tile:      1       251     251     0       4       166920
+25%-tile:       1       365     365     0       5       1669193
+Median:         1       365     365     0       6       3338386
+75%-tile:       1       365     365     0       6       5007578
+97.5%-tile:     1       368     368     0       7       6509851
+Maximum:        1       400     400     0       105     6676770
+Mean:   1       360     360     0       5
+# of unique seqs:       3138754
+total # of seqs:        6676770
+</code></pre></div>
+<p>There are 3,138,754 unique sequences in this OSW example dataset. </p>
+<p>Changing the log file names to:<br />
+- mothur.03unique.uniqueseqs.logfile<br />
+- mothur.03unique.countseqs.logfile  <br />
+- mothur.03unique.summary.logfile  </p>
+<h2 id="step-7-taxonomic-assignment-with-mothur">Step 7: Taxonomic Assignment with Mothur</h2>
+<p>Using MetaZooGene Global database as reference. This database has sequences from both BOLD and NCBI GenBank. </p>
+<p>https://metazoogene.org/mzgdb/. Navigate to the <a href="https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/index-o00.html">Worlds oceans</a> page and click MZGdb Data Access page. We have downloaded both the Global and North Atlantic versions.   </p>
+<p>Download and update database:</p>
+<div class="highlight"><pre><span></span><code>cd /work/gmgi/databases/COI/MetaZooGene
+
+## Global 
+wget https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGfasta-coi__T4000000__o00__A.fasta.gz
+wget https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGmothur-coi__T4000000__o00__A.txt.gz
+
+## North Atlantic 
+wget https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGfasta-coi__T4000000__o02__A.fasta.gz
+wget https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGmothur-coi__T4000000__o02__A.txt.gz
+
+## unzip into new name file 
+## replace with version number 
+gunzip -c MZGfasta-coi__T4000000__o00__A.fasta.gz &gt; MZG_v2023-m07-15_Global_modeA.fasta
+gunzip -c MZGfasta-coi__T4000000__o02__A.fasta.gz &gt; MZG_v2023-m07-15_NorthAtlantic_modeA.fasta
+gunzip -c MZGmothur-coi__T4000000__o02__A.txt.gz &gt; MZG_v2023-m07-15-NorthAtlantic_modeA.txt
+gunzip -c MZGmothur-coi__T4000000__o00__A.txt.gz &gt; MZG_v2023-m07-15-Global_modeA.txt
+</code></pre></div>
+<p>Align the database prior to using as input in Mothur:</p>
+<p><code>MZG_align.sh</code></p>
+<div class="highlight"><pre><span></span><code>#!/bin/bash
+#SBATCH --error=&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
+#SBATCH --output=&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=10:00:00
+#SBATCH --job-name=MZG_MAFFT
+#SBATCH --mem=50GB
+#SBATCH --ntasks=24
+#SBATCH --cpus-per-task=2
+
+# Activate conda environment
+source /work/gmgi/miniconda3/bin/activate eDNA_COI
+
+### changing name format to MAFFT_xxx_aligned.fasta 
+
+# Assign input and output file names from command-line arguments
+INPUT_FILE=$1
+OUTPUT_FILE=$2
+
+# Run MAFFT with the provided input and output files
+mafft --auto &quot;$INPUT_FILE&quot; &gt; &quot;$OUTPUT_FILE&quot;
+</code></pre></div>
+<p>Use format: <code>sbatch MZG_align.sh input output</code>  <br />
+Example: <code>sbatch MZG_align.sh MZG_v2023-m07-15_NorthAtlantic_modeA.fasta MAFFT_MZG_v2023-m07-15_NorthAtlantic_modeA_aligned.fasta</code>   <br />
+<code>sbatch MZG_align.sh MZG_v2023-m07-15_Global_modeA.fasta MAFFT_MZG_v2023-m07-15_Global_modeA_aligned.fasta</code> </p>
+<p>Running taxonomic assignment via Mothur: </p>
+<p><code>04-Mothur-tax.sh</code></p>
+<div class="highlight"><pre><span></span><code>#!/bin/bash
+#SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
+#SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
 #SBATCH --partition=short
 #SBATCH --nodes=1
 #SBATCH --time=24:00:00
-#SBATCH --job-name=update_ncbi_nt
-#SBATCH --mem=50G
-#SBATCH --output=%x_%j.out
-#SBATCH --error=%x_%j.err
+#SBATCH --job-name=mothur_tax
+#SBATCH --mem=20GB
+#SBATCH --ntasks=12
+#SBATCH --cpus-per-task=2
 
 # Activate conda environment
-source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
+source /work/gmgi/miniconda3/bin/activate eDNA_COI
 
-# Create output directory if it doesn&#39;t exist
-cd /work/gmgi/databases/ncbi/nt
+dir=&quot;/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data&quot;
+proj_name=&quot;OSW_2023_invert&quot; 
+#ref=&quot;/work/gmgi/databases/COI/MetaZooGene/MAFFT_MZG_v2023-m07-15_NorthAtlantic_modeA_aligned.fasta&quot;
+ref=&quot;/work/gmgi/databases/COI/MetaZooGene/MAFFT_MZG_v2023-m07-15_Global_modeA_aligned.fasta&quot;
 
-# Update BLAST nt database
-update_blastdb.pl --decompress nt
+cd ${dir}
 
-# Print completion message
-echo &quot;BLAST nt database update completed&quot;
+mothur &quot;#align.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.fasta, reference=${ref}, flip=T, processors=48)&quot;
+mothur &quot;#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align)&quot;
 </code></pre></div>
-<p>View the <code>update_ncbi_nt.out</code> file to confirm the echo printed at the end.</p>
-<p><em>Emma is still troubleshooting the -remote flag to also avoid storing the nt db within our /work/gmgi folder.</em> </p>
-<h3 id="other-options">Other options</h3>
-<ul>
-<li><a href="https://github.com/meglecz/mkCOInr">COInr</a>: downloads NCBI and BOLD (Barcode of Life Database) databases to create one database for comparison. COInr is already downloaded in the conda environment and pulls NCBI And BOLD directly.  </li>
-<li><a href="https://www.nature.com/articles/s41597-020-0549-9">MARES (MARine Eukaryote Species)</a> and <a href="https://github.com/wpearman1996/MARES_database_pipeline">github</a>: This database combines sequences from both GenBank and BOLD to increase taxonomic coverage and confidence for marine eukaryotes. MARES Github <a href="https://github.com/wpearman1996/MARES_database_pipeline">repo</a>. Paper <a href="https://doi.org/10.1038/s41597-020-0549-9">link</a>.     </li>
-<li><a href="https://www.reference-midori.info/#:~:text=MIDORI2%20is%20a%20reference%20database%20of%20DNA%20and">MIDORI</a>: A database specifically for COI sequences. MIDORI Reference pulls from GenBank.    </li>
-</ul>
-<p><strong>COInr</strong></p>
-<p><img alt="" src="https://mkcoinr.readthedocs.io/en/latest/_images/COInr_flowchart_readme.png" /></p>
-<p>COInr database <a href="https://mkcoinr.readthedocs.io/en/latest/content/tutorial.html">instructions</a>. There are <a href="https://mkcoinr.readthedocs.io/en/latest/content/tutorial.html#add-custom-sequences-to-a-database">options</a> to include custom sequences if needed.</p>
-<p>The latest version of BOLD is 2015 so this 2022 set is the most updated. Use our own NCBI as well to catch recent entries. </p>
-<div class="highlight"><pre><span></span><code>cd /work/gmgi/packages 
-git clone https://github.com/meglecz/mkCOInr.git
-
-cd /work/gmgi/databases/COI
-wget https://zenodo.org/record/6555985/files/COInr_2022_05_06.tar.gz
-tar -zxvf COInr_2022_05_06.tar.gz
-rm COInr_2022_05_06.tar.gz
-mv COInr_2022_05_06 COInr
-
-## converting database information for blast 
-perl /work/gmgi/packages/mkCOInr/scripts/format_db.pl -tsv COInr/COInr.tsv -outfmt blast -outdir /work/gmgi/databases/COI/COInr -out COInr_blast
-
-## creating list of sseqID and taxIDs for R df step 
-awk &#39;{print $1 &quot;\t&quot; $2}&#39; COInr.tsv &gt; COInr_taxIDlist.tsv
+<p>Atlantic comparison:</p>
+<div class="highlight"><pre><span></span><code>                Start   End     NBases  Ambigs  Polymer NumSeqs
+Minimum:        0       0       0       0       1       1
+2.5%-tile:      1836    7145    5       0       1       78469
+25%-tile:       6781    7145    365     0       5       784689
+Median:         22391   24785   365     0       6       1569378
+75%-tile:       22508   25827   365     0       6       2354066
+97.5%-tile:     93935   93943   368     0       7       3060286
+Maximum:        121316  121316  400     0       26      3138754
+Mean:   20928   28519   337     0       5
+# of Seqs:      3138754
 </code></pre></div>
-<p><strong>MIDORI</strong></p>
-<p>Visit the <a href="https://www.reference-midori.info/download.php">MIDORI website</a> to check for the most updated db. This folder is already formatted for blast searching so we don't need to create a blast formatted db. </p>
-<div class="highlight"><pre><span></span><code>cd /work/gmgi/databases/COI/MIDORI
-
-## download zip file from MIDORI website for CO1 sequences in BLAST format from nucleotide reference
-wget https://www.reference-midori.info/download/Databases/GenBank261_2024-06-15/BLAST/uniq/fasta/MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta.zip
-unzip MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta.zip 
-
-## change notation if version is different 
-makeblastdb -in MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta -dbtype nucl -out MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta
+<p>World comparison</p>
+<div class="highlight"><pre><span></span><code>
 </code></pre></div>
-<h2 id="step-4-nf-coreampliseq">Step 4: nf-core/ampliseq</h2>
-<p><a href="https://nf-co.re/">Nf-core</a>: A community effort to collect a curated set of analysis pipelines built using <a href="https://www.nextflow.io/">Nextflow</a>.<br />
-Nextflow: scalable and reproducible scientific workflows using software containers, used to build wrapper programs like the one we use here.  </p>
-<p>[https://nf-co.re/ampliseq/2.11.0]: nfcore/ampliseq is a bioinformatics analysis pipeline used for amplicon sequencing, supporting denoising of any amplicon and supports a variety of taxonomic databases for taxonomic assignment including 16S, ITS, CO1 and 18S. </p>
-<p><img alt="" src="https://raw.githubusercontent.com/nf-core/ampliseq/2.11.0//docs/images/ampliseq_workflow.png" /></p>
-<p>We use ampliseq for the following programs:  </p>
-<ul>
-<li><a href="https://journal.embnet.org/index.php/embnetjournal/article/view/200">Cutadapt</a> is trimming primer sequences from sequencing reads. Primer sequences are non-biological sequences that often introduce point mutations that do not reflect sample sequences. This is especially true for degenerated PCR primer. If primer trimming would be omitted, artifactual amplicon sequence variants might be computed by the denoising tool or sequences might be lost due to become labelled as PCR chimera.  </li>
-<li><a href="https://www.nature.com/articles/nmeth.3869">DADA2</a> performs fast and accurate sample inference from amplicon data with single-nucleotide resolution. It infers exact amplicon sequence variants (ASVs) from amplicon data with fewer false positives than many other methods while maintaining high sensitivity.   </li>
-</ul>
-<p>We skip the taxonomic assignment because we use 3-db approach described in the next section. </p>
-<p>Should we try BOLD through ampliseq?</p>
-<h3 id="coi-primer-sequences-required">COI primer sequences (required)</h3>
-<p>Below is what we used for COI amplicon sequencing. This results in ~313 bp expected ASV. </p>
-<p>LG COI amplicon F: GGWACWGGWTGAACWGTWTAYCCYCC    <br />
-LG COI amplicon R: TAIACYTCIGGRTGICCRAARAAYCA       </p>
-<p>Ampliseq will automatically calculate the reverse compliment and include this for us.</p>
-<h3 id="metadata-sheet-optional">Metadata sheet (optional)</h3>
-<p>The metadata file has to follow the <a href="https://docs.qiime2.org/2021.2/tutorials/metadata/">QIIME2 specifications</a>. Below is a preview of the sample sheet used for this test. Keep the column headers the same for future use. The first column needs to be "ID" and can only contain numbers, letters, or "-". This is different than the sample sheet. NAs should be empty cells rather than "NA". </p>
-<h3 id="create-samplesheet-sheet-for-ampliseq">Create samplesheet sheet for ampliseq</h3>
-<p>This file indicates the sample ID and the path to R1 and R2 files. Below is a preview of the sample sheet used in this test. File created on RStudio Interactive on Discovery Cluster using (<code>create_metadatasheets.R</code>).  </p>
-<ul>
-<li>sampleID (required): Unique sample IDs, must start with a letter, and can only contain letters, numbers or underscores (no hyphons!).  </li>
-<li>forwardReads (required): Paths to (forward) reads zipped FastQ files  </li>
-<li>reverseReads (optional): Paths to reverse reads zipped FastQ files, required if the data is paired-end  </li>
-<li>run (optional): If the data was produced by multiple sequencing runs, any string  </li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>sampleID</th>
-<th>forwardReads</th>
-<th>reverseReads</th>
-<th>run</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>sample1</td>
-<td>./data/S1_R1_001.fastq.gz</td>
-<td>./data/S1_R2_001.fastq.gz</td>
-<td>A</td>
-</tr>
-<tr>
-<td>sample2</td>
-<td>./data/S2_fw.fastq.gz</td>
-<td>./data/S2_rv.fastq.gz</td>
-<td>A</td>
-</tr>
-<tr>
-<td>sample3</td>
-<td>./S4x.fastq.gz</td>
-<td>./S4y.fastq.gz</td>
-<td>B</td>
-</tr>
-<tr>
-<td>sample4</td>
-<td>./a.fastq.gz</td>
-<td>./b.fastq.gz</td>
-<td>B</td>
-</tr>
-</tbody>
-</table>
-<p><em>This is an R script, not slurm script. Open RStudio interactive on Discovery Cluster to run this script.</em></p>
-<p>Prior to running R script, use the <code>rawdata</code> file created for the fastqc slurm array from within the raw data folder to create a list of files. Below is an example from our Offshore Wind project but the specifics of the sampleID will be project dependent. This project had four sequencing runs with different file names. </p>
-<p><code>01a-metadata.R</code></p>
-<div class="highlight"><pre><span></span><code>## Load libraries 
-
-library(dplyr)
-library(stringr)
-library(strex) 
-
-### Read in sample sheet 
-
-sample_list &lt;- read.delim2(&quot;/work/gmgi/Fisheries/eDNA/offshore_wind2023/raw_data/rawdata&quot;, header=F) %&gt;% 
-  dplyr::rename(forwardReads = V1) %&gt;%
-  mutate(sampleID = str_after_nth(forwardReads, &quot;data/&quot;, 1),
-         sampleID = str_before_nth(sampleID, &quot;_R&quot;, 1))
-
-# creating sample ID 
-sample_list$sampleID &lt;- gsub(&quot;-&quot;, &quot;_&quot;, sample_list$sampleID)
-
-# keeping only rows with R1
-sample_list &lt;- filter(sample_list, grepl(&quot;R1&quot;, forwardReads, ignore.case = TRUE))
-
-# duplicating column 
-sample_list$reverseReads &lt;- sample_list$forwardReads
-
-# replacing R1 with R2 in only one column 
-sample_list$reverseReads &lt;- gsub(&quot;R1&quot;, &quot;R2&quot;, sample_list$reverseReads)
-
-# rearranging columns 
-sample_list &lt;- sample_list[,c(2,1,3)]
-
-sample_list %&gt;% write.csv(&quot;/work/gmgi/Fisheries/eDNA/offshore_wind2023/metadata/samplesheet.csv&quot;, 
-                          row.names=FALSE, quote = FALSE)
-</code></pre></div>
-<h3 id="run-nf-coreampliseq-cutadapt-dada2">Run nf-core/ampliseq (Cutadapt &amp; DADA2)</h3>
-<p>Update ampliseq workflow if needed: <code>nextflow pull nf-core/ampliseq</code>. </p>
-<p>Testing this on OSW work first. </p>
-<p><code>01b-ampliseq.sh</code>:</p>
+<h2 id="step-8-qc-taxonomic-alignment">Step 8: QC Taxonomic Alignment</h2>
+<p><code>05-Mothur-taxQC.sh</code></p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
 #SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
 #SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
 #SBATCH --partition=short
 #SBATCH --nodes=1
-#SBATCH --time=20:00:00
-#SBATCH --job-name=ampliseq
-#SBATCH --mem=70GB
-#SBATCH --ntasks=24
+#SBATCH --time=10:00:00
+#SBATCH --job-name=mothur_taxQC
+#SBATCH --mem=50GB
+#SBATCH --ntasks=6
 #SBATCH --cpus-per-task=2
 
-### USER TO-DO ### 
-## 1. Set paths for project 
-## 2. Adjust SBATCH options above (time, mem, ntasks, etc.) as desired  
-## 3. Fill in F primer information based on primer type (no reverse compliment needed)
-## 4. Adjust parameters as needed (below is Fisheries team default for COI)
+# Activate conda environment
+source /work/gmgi/miniconda3/bin/activate eDNA_COI
 
-# LOAD MODULES
-module load singularity/3.10.3
-module load nextflow/23.10.1
+dir=&quot;/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data&quot;
+proj_name=&quot;OSW_2023_invert&quot; 
 
-# SET PATHS 
-metadata=&quot;/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/metadata&quot; 
-output_dir=&quot;/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/ampliseq_COIdb_results&quot;
-addSpecies=&quot;/work/gmgi/databases/COI/BOLD/addSpecies.fna&quot;
-assignTaxonomy=&quot;/work/gmgi/databases/COI/BOLD/assignTaxonomy.fna&quot;
+cd ${dir}
 
-nextflow run nf-core/ampliseq -resume \
-   -profile singularity \
-   --input ${metadata}/samplesheet.csv \
-   --FW_primer &quot;GGWACWGGWTGAACWGTWTAYCCYCC&quot; \
-   --RV_primer &quot;TAIACYTCIGGRTGICCRAARAAYCA&quot; \
-   --outdir ${output_dir} \
-   --trunclenf 220 \
-   --trunclenr 220 \
-   --trunc_qmin 25 \
-   --max_ee 2 \
-   --min_len_asv 300 \
-   --max_len_asv 330 \
-   --dada_ref_tax_custom ${assignTaxonomy} \
-   --dada_ref_tax_custom_sp ${addSpecies} \
-   --dada2_addspecies_allowmultiple TRUE \
-   --sample_inference pseudo \
-   --ignore_failed_trimming
+## Identifying those that don&#39;t meet the criteria 
+mothur &quot;#screen.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, count=${proj_name}.paired.trim.contigs.good.count_table, optimize=start, criteria=90, maxhomop=8)&quot;
+mothur &quot;#summary.seqs(fasta=current, count=current)&quot;
+mothur &quot;#count.groups(count=${proj_name}.paired.trim.contigs.good.count_table)&quot;
+
+## Filtering those out
+mothur &quot;#filter.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.align, vertical=T, trump=.)&quot;
+mothur &quot;#summary.seqs(fasta=current, count=current)&quot;
+
+## ID unique sequences again
+mothur &quot;#unique.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.fasta, count=${proj_name}.paired.trim.contigs.good.good.count_table)&quot;
 </code></pre></div>
-<p>Could add back in? 
-   --max_len 200 \
-   --skip_taxonomy </p>
-<p>From zach paper: removing the co-amplified putative nuclear mitochondrial 
-pseudogenes (NUMTs) is highly recommended (Creedy et al., 2022; 
-Porter &amp; Hajibabaei, 2021; Song et al., 2008). - MetaWorks 
-and VTAM implement a step of removing putative NUMTs OR multisample features matrix may be processed with metaMATE 
-(Andújar et al., 2021) to remove putative NUMTs and other erroneous sequences (based on, e.g., length and relative read abundance)</p>
-<p>DnoisE program - https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-021-04115-6</p>
-<p>python package called BOLDigger has been developed to help automate batch query submissions to the BOLD identification engine and can be used to identify COI, ITS, rbcL, and matK sequences (Buchner and Leese, 2020)</p>
-<p>In addition to the potential of amino acid translation, the protein coding nature of COI leads to relatively stricter expectations of amplicon length</p>
-<p>Use QIIME2 and trained classifier?</p>
-<p>To run: <br />
-- <code>sbatch 01b-ampliseq.sh</code> </p>
-<h4 id="files-generated-by-ampliseq">Files generated by ampliseq</h4>
-<p>Pipeline summary reports:  </p>
-<ul>
-<li><code>summary_report/</code></li>
-<li><code>summary_report.html</code>: pipeline summary report as standalone HTML file that can be viewed in your web browser.</li>
-<li><code>*.svg*</code>: plots that were produced for (and are included in) the report.</li>
-<li><code>versions.yml</code>: software versions used to produce this report.</li>
-</ul>
-<p>Preprocessing:  </p>
-<ul>
-<li>FastQC: <code>fastqc/</code> and <code>*_fastqc.html</code>: FastQC report containing quality metrics for your untrimmed raw fastq files.  </li>
-<li>Cutadapt: <code>cutadapt/</code> and <code>cutadapt_summary.tsv</code>: summary of read numbers that pass cutadapt  </li>
-<li>MultiQC: <code>multiqc</code>, <code>multiqc_data/</code>, <code>multiqc_plots/</code> with <code>multiqc_report.html</code>: a standalone HTML file that can be viewed in your web browser; </li>
-</ul>
-<p>ASV inferrence with DADA2:  </p>
-<ul>
-<li><code>dada2/</code>, <code>dada2/args/</code>, <code>data2/log/</code> </li>
-<li><code>ASV_seqs.fasta</code>: Fasta file with ASV sequences.</li>
-<li><code>ASV_table.tsv</code>: Counts for each ASV sequence.</li>
-<li><code>DADA2_stats.tsv</code>: Tracking read numbers through DADA2 processing steps, for each sample.</li>
-<li><code>DADA2_table.rds</code>: DADA2 ASV table as R object.</li>
-<li><code>DADA2_table.tsv</code>: DADA2 ASV table.  </li>
-<li><code>dada2/QC/</code></li>
-<li><code>*.err.convergence.txt</code>: Convergence values for DADA2's dada command, should reduce over several magnitudes and approaching 0.  </li>
-<li><code>*.err.pdf</code>: Estimated error rates for each possible transition. The black line shows the estimated error rates after convergence of the machine-learning algorithm. The red line shows the error rates expected under the nominal definition of the Q-score. The estimated error rates (black line) should be a good fit to the observed rates (points), and the error rates should drop with increased quality.  </li>
-<li><code>*_qual_stats.pdf</code>: Overall read quality profiles: heat map of the frequency of each quality score at each base position. The mean quality score at each position is shown by the green line, and the quartiles of the quality score distribution by the orange lines. The red line shows the scaled proportion of reads that extend to at least that position.  </li>
-<li><code>*_preprocessed_qual_stats.pdf</code>: Same as above, but after preprocessing.  </li>
-</ul>
-<p>We add an ASV length filter that will output <code>asv_length_filter/</code> with:  </p>
-<ul>
-<li><code>ASV_seqs.len.fasta</code>: Fasta file with filtered ASV sequences.  </li>
-<li><code>ASV_table.len.tsv</code>: Counts for each filtered ASV sequence.  </li>
-<li><code>ASV_len_orig.tsv</code>: ASV length distribution before filtering.  </li>
-<li><code>ASV_len_filt.tsv</code>: ASV length distribution after filtering.  </li>
-<li><code>stats.len.tsv</code>: Tracking read numbers through filtering, for each sample.  </li>
-</ul>
-<h2 id="step-5-running-additional-taxonomic-assignment-id-script">Step 5: Running additional taxonomic assignment ID script</h2>
-<p><code>02-taxonomicID.sh</code>: </p>
+<h2 id="step-9-denoise-and-remove-chimeras">Step 9: Denoise and remove chimeras</h2>
+<h4 id="denoising">Denoising</h4>
+<p>Now we need to further polish and cluster the data with pre.cluster. The purpose of this step is to remove noise due to sequencing error. The rational behind this step assumes that the most abundant sequences are the most trustworthy and likely do not have sequencing errors. Pre-clustering then looks at the relationship between abundant and rare sequences - rare sequences that are "close" (e.g., 1 nt difference) to highly abundant sequences are likely due to sequencing error. This step will pool sequences and look at the maximum differences between sequences within this group to form ASV groupings.</p>
+<p>In this step, the number of sequences is not reduced, but they are grouped into amplicon sequence variants ASV's which reduces the error rate. </p>
+<p>Other programs that conduct this "denoising" are DADA2, UNOISE, and DEBLUR. However, these programs remove the rare sequences, which can distort the relative abundance of remaining sequences. DADA2 also removes all sigletons (sequences with single representation) which disproportionately affects the sequence relative abundance. Mothur avoids the removal of rare sequences for this reason.</p>
+<h4 id="removing-chimeras">Removing chimeras</h4>
+<p>At this point we have removed as much sequencing error as we can and it is time to turn our attention to removing chimeras. We'll do this using the VSEARCH algorithm that is called within mothur using the chimera.vsearch command. </p>
+<p><code>06-Mothur-denoise.sh</code></p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
 #SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
 #SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
 #SBATCH --partition=short
 #SBATCH --nodes=1
-#SBATCH --time=20:00:00
-#SBATCH --job-name=tax_ID
-#SBATCH --mem=30GB
-#SBATCH --ntasks=24
+#SBATCH --time=10:00:00
+#SBATCH --job-name=mothur_denoise
+#SBATCH --mem=20GB
+#SBATCH --ntasks=6
 #SBATCH --cpus-per-task=2
 
-### USER TO-DO ### 
-## 1. Set paths for project; change db path if not 12S
-
 # Activate conda environment
-source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
+source /work/gmgi/miniconda3/bin/activate eDNA_COI
 
-# SET PATHS 
-ASV_fasta=&quot;&quot;
-out=&quot;&quot;
+dir=&quot;/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data&quot;
+proj_name=&quot;OSW_2023_invert&quot; 
 
-COInr=&quot;/work/gmgi/databases/COI/COInr&quot;
-midori=&quot;/work/gmgi/databases/COI/MIDORI&quot;
-ncbi=&quot;/work/gmgi/databases/ncbi/nt&quot;
-taxonkit=&quot;/work/gmgi/databases/taxonkit&quot;
+cd ${dir}
 
-#### DATABASE QUERY ####
-### NCBI database 
-blastn -db ${ncbi}/&quot;nt&quot; \
-   -query ${ASV_fasta}/ASV_seqs.len.fasta \
-   -out ${out}/BLASTResults_NCBI.txt \
-   -max_target_seqs 20 -perc_identity 99 -qcov_hsp_perc 95 \
-   -outfmt &#39;6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore&#39;
+## Denoise 
+mothur &quot;#pre.cluster(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.unique.fasta, count=${proj_name}.paired.trim.contigs.good.unique.good.filter.count_table, diffs=1, method=unoise)&quot;
 
-## MIDORI database 
-blastn -db ${midori}/*.fasta&quot; \
-   -query ${ASV_fasta}/ASV_seqs.len.fasta \
-   -out ${out}/BLASTResults_midori.txt \
-   -max_target_seqs 10 -perc_identity 98 -qcov_hsp_perc 95 \
-   -outfmt &#39;6  qseqid   sseqid  pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore&#39;
+## Remove chimeras 
+mothur &quot;#chimera.vsearch(fasta=current, count=current, dereplicate=t)&quot;
+mothur &quot;#remove.seqs(fasta=current, accnos=current)&quot;
 
-############################
-
-#### TAXONOMIC CLASSIFICATION #### 
-## creating list of staxids from all three files 
-awk -F $&#39;\t&#39; &#39;{ print $4}&#39; ${out}/BLASTResults_NCBI.txt | sort -u &gt; ${out}/NCBI_sp.txt
-
-## annotating taxid with full taxonomic classification
-cat ${out}/NCBI_sp.txt | ${taxonkit}/taxonkit reformat -I 1 -r &quot;Unassigned&quot; &gt; ${out}/NCBI_taxassigned.txt
+## Produce summary file 
+mothur &quot;#summary.seqs(fasta=current, count=current, log=%x.${proj_name}.summarypostfilter.log)&quot;
 </code></pre></div>
-<p>To run:<br />
-- <code>sbatch 02-taxonomicID.sh</code> </p>
+<p>Stuck here b/c steps are removing almost all reads from samples.. why </p>
+<h2 id="step-10-classify-sequences">Step 10: Classify sequences</h2>
+<p>Fasta reference file:<br />
+Taxonomy file:  </p>
+<p><code>.sh</code></p>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
 
 
 

@@ -565,6 +565,17 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    00-Create-conda-env
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -574,6 +585,43 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#edna-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      eDNA general
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#edna-coi" class="md-nav__link">
+    <span class="md-ellipsis">
+      eDNA COI
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -745,6 +793,17 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    00-Create-conda-env
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -754,6 +813,43 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#edna-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      eDNA general
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#edna-coi" class="md-nav__link">
+    <span class="md-ellipsis">
+      eDNA COI
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1060,6 +1156,32 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#edna-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      eDNA general
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#edna-coi" class="md-nav__link">
+    <span class="md-ellipsis">
+      eDNA COI
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1082,11 +1204,12 @@
 
 
 <h1 id="creating-a-conda-environment-for-edna-projects">Creating a conda environment for eDNA projects</h1>
+<h3 id="edna-general">eDNA general</h3>
 <p>Background information on <a href="https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html">Conda</a>. </p>
 <p>GMGI Fisheries has a conda environment set-up with all the packages needed for this workflow. Code below was used to create this conda environment.</p>
 <p><strong>DO NOT REPEAT</strong> every time user is running this workflow.</p>
 <div class="highlight"><pre><span></span><code># Activate conda
-source ~/../../work/gmgi/miniconda3/bin/activate
+source /work/gmgi/miniconda3/bin/activate
 
 # Creating conda 
 conda create --name fisheries_eDNA
@@ -1104,10 +1227,11 @@ conda install -c bioconda vsearch -y
 pip install nsdpy
 conda install wget
 conda install -c bioconda coidb
+conda install bioconda::mothur
 </code></pre></div>
 <p>The conda environment is started within each slurm script, but to activate conda environment outside of the slurm script to update packages or check what is installed:</p>
 <div class="highlight"><pre><span></span><code># Activate conda
-source ~/../../work/gmgi/miniconda3/bin/activate
+source /work/gmgi/miniconda3/bin/activate
 
 # Activate fisheries eDNA conda environment 
 conda activate fisheries_eDNA
@@ -1116,7 +1240,7 @@ conda activate fisheries_eDNA
 conda env list 
 
 # List all packages installed in fisheries_eDNA
-conda list 
+conda list
 
 # Update a package
 conda update [package name]
@@ -1124,6 +1248,21 @@ conda update [package name]
 # Update nextflow ampliseq workflow 
 nextflow pull nf-core/ampliseq
 </code></pre></div>
+<h3 id="edna-coi">eDNA COI</h3>
+<p>I had issues when installing mothur on the eDNA general conda environment. I got the following error: <code>mothur: error while loading shared libraries: libgsl.so.25: cannot open shared object file: No such file or directory</code>. I then installed gsl with <code>conda install -c conda-forge gsl</code>. This was already installed and is version 2.7 but I think I need 2.5.. Tried <code>conda install -c conda-forge gsl=2.5</code>. This downgraded mothur from 1.48.0-h9f4bb92_2 --&gt; 1.36.1-0. gsl 2.7 will be superseded by higher priority channgel as 2.5. This resulted in a similar error so I updated gsl. Mothur wouldn't update.</p>
+<p>Tried to start a different conda environment for mothur </p>
+<p><strong>DO NOT REPEAT</strong> every time user is running this workflow.</p>
+<div class="highlight"><pre><span></span><code># Activate conda
+source /work/gmgi/miniconda3/bin/activate
+
+# Creating conda 
+conda create --name eDNA_COI mothur
+
+# Installing different versions of packages
+conda install -c conda-forge gsl=2.5
+conda install -c bioconda mafft
+</code></pre></div>
+<p>The gsl version downgraded mothur (1.48 -&gt; 1.44) and vsearch (2.15 -&gt; 2.13) as well.</p>
 
 
 

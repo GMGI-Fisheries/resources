@@ -865,6 +865,57 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#evaluating-standard-curve" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluating standard curve
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evaluating standard curve">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reading-in-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reading in data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calculating-lod-and-loq" class="md-nav__link">
+    <span class="md-ellipsis">
+      Calculating LOD and LOQ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plotting-standard-curve" class="md-nav__link">
+    <span class="md-ellipsis">
+      Plotting standard curve
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calculating-slope-and-y-intercept" class="md-nav__link">
+    <span class="md-ellipsis">
+      Calculating slope and y-intercept
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#reading-in-datafiles-and-merging-into-one-large-dataframe" class="md-nav__link">
     <span class="md-ellipsis">
       Reading in datafiles and merging into one large dataframe
@@ -1213,6 +1264,57 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#evaluating-standard-curve" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluating standard curve
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evaluating standard curve">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reading-in-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reading in data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calculating-lod-and-loq" class="md-nav__link">
+    <span class="md-ellipsis">
+      Calculating LOD and LOQ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plotting-standard-curve" class="md-nav__link">
+    <span class="md-ellipsis">
+      Plotting standard curve
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calculating-slope-and-y-intercept" class="md-nav__link">
+    <span class="md-ellipsis">
+      Calculating slope and y-intercept
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#reading-in-datafiles-and-merging-into-one-large-dataframe" class="md-nav__link">
     <span class="md-ellipsis">
       Reading in datafiles and merging into one large dataframe
@@ -1378,7 +1480,191 @@
 ## ✖ dplyr::lag()    masks stats::lag()
 ## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">ggrepel</span><span class="p">)</span><span class="w">  </span><span class="c1"># For geom_text_repel</span>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">ggrepel</span><span class="p">)</span><span class="w">  </span><span class="c1">## For geom_text_repel</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">drc</span><span class="p">)</span><span class="w"> </span><span class="c1">## for LOD calculations</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## Loading required package: MASS
+## 
+## Attaching package: &#39;MASS&#39;
+## 
+## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     select
+## 
+## 
+## &#39;drc&#39; has been loaded.
+## 
+## Please cite R and &#39;drc&#39; if used for a publication,
+## for references type &#39;citation()&#39; and &#39;citation(&#39;drc&#39;)&#39;.
+## 
+## 
+## Attaching package: &#39;drc&#39;
+## 
+## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     gaussian, getInitial
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">ggpubr</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="evaluating-standard-curve">Evaluating standard curve</h2>
+<h3 id="reading-in-data">Reading in data</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">### USER EDITS:</span>
+<span class="c1">## 1. Replace path of file with your own standard curve</span>
+<span class="n">std_curve</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&quot;example standard curve.xlsx&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">skip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">19</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">group_by</span><span class="p">(</span><span class="n">Sample</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+
+<span class="w">  </span><span class="c1">## calculate detection rates (number of Cqs present / number of replicates)</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">detection_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="o">!</span><span class="nf">is.na</span><span class="p">(</span><span class="n">Cq</span><span class="p">))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nf">n</span><span class="p">(),</span>
+
+<span class="w">  </span><span class="c1">## calculate Cq stats - mean, SD, and CV </span>
+<span class="w">         </span><span class="n">Cq_mean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">mean</span><span class="p">(</span><span class="n">Cq</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">),</span>
+<span class="w">         </span><span class="n">Cq_sd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sd</span><span class="p">(</span><span class="n">Cq</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">),</span>
+<span class="w">         </span><span class="n">Cq_cv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">Cq_sd</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">Cq_mean</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">100</span><span class="w"> </span>
+<span class="w">         </span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">ungroup</span><span class="p">()</span>
+
+<span class="c1">## confirming negatives were clean and filter them out</span>
+<span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="n">Sample</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;neg&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## # A tibble: 3 × 11
+##   Well  Fluor Target  Content Sample    Cq Starting Quantity (S…¹ detection_rate
+##   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;dbl&gt;                  &lt;dbl&gt;          &lt;dbl&gt;
+## 1 F12   SYBR  Library NTC     neg       NA                     NA              0
+## 2 G12   SYBR  Library NTC     neg       NA                     NA              0
+## 3 H12   SYBR  Library NTC     neg       NA                     NA              0
+## # ℹ abbreviated name: ¹​`Starting Quantity (SQ)`
+## # ℹ 3 more variables: Cq_mean &lt;dbl&gt;, Cq_sd &lt;dbl&gt;, Cq_cv &lt;dbl&gt;
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">std_curve</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="o">!</span><span class="n">Sample</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;neg&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="calculating-lod-and-loq">Calculating LOD and LOQ</h3>
+<div class="highlight"><pre><span></span><code><span class="n">LOD</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="n">detection_rate</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">0.95</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">      </span><span class="c1"># Change the threshold as needed</span>
+<span class="w">  </span><span class="nf">slice</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">                        </span><span class="c1"># Get the first occurrence</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">Sample</span><span class="p">,</span><span class="w"> </span><span class="n">detection_rate</span><span class="p">)</span><span class="w">      </span><span class="c1"># Select relevant columns</span>
+
+<span class="n">LOD_threshold</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">LOD</span><span class="o">$</span><span class="n">Sample</span><span class="p">[</span><span class="m">1</span><span class="p">])</span>
+
+<span class="n">LOQ</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="n">Cq_cv</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">35.00</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">      </span><span class="c1"># Change the threshold as needed</span>
+<span class="w">  </span><span class="nf">slice</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">                        </span><span class="c1"># Get the first occurrence</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">Sample</span><span class="p">,</span><span class="w"> </span><span class="n">Cq_cv</span><span class="p">)</span><span class="w"> </span>
+
+<span class="n">LOQ_threshold</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">LOQ</span><span class="o">$</span><span class="n">Sample</span><span class="p">[</span><span class="m">1</span><span class="p">])</span>
+</code></pre></div>
+<h3 id="plotting-standard-curve">Plotting standard curve</h3>
+<div class="highlight"><pre><span></span><code><span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+<span class="w">  </span><span class="c1">## Taking only those detections with &gt;50% to make curve </span>
+<span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="n">detection_rate</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.50</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+
+<span class="w">  </span><span class="c1">## Plotting that std. curve </span>
+<span class="w">  </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="n">`Starting Quantity (SQ)`</span><span class="p">),</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Cq</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="nf">geom_smooth</span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;lm&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">se</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;darkred&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="nf">stat_regline_equation</span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;darkred&#39;</span><span class="p">,</span>
+<span class="w">                        </span><span class="nf">aes</span><span class="p">(</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">after_stat</span><span class="p">(</span><span class="n">rr.label</span><span class="p">)),</span><span class="w"> </span><span class="n">hjust</span><span class="o">=</span><span class="m">1</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">label.x.npc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;right&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">label.y.npc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;top&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="nf">geom_point</span><span class="p">(</span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;black&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;white&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">shape</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">21</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3.5</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="o">=</span><span class="m">0.8</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="c1">## ADDING LOD LINE -- if no line shows up, all st. curve is qualitative </span>
+<span class="w">  </span><span class="nf">geom_vline</span><span class="p">(</span><span class="n">xintercept</span><span class="o">=</span><span class="nf">log10</span><span class="p">(</span><span class="n">LOD_threshold</span><span class="p">),</span><span class="w"> </span><span class="n">linetype</span><span class="o">=</span><span class="s">&quot;dashed&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey40&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">geom_text</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="n">LOD_threshold</span><span class="p">),</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">std_curve</span><span class="o">$</span><span class="n">Cq</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">0.3</span><span class="p">,</span>
+<span class="w">                </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">paste</span><span class="p">(</span><span class="s">&quot;LOD =&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">LOD_threshold</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;copies&quot;</span><span class="p">)),</span><span class="w"> </span>
+<span class="w">            </span><span class="n">angle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">90</span><span class="p">,</span><span class="w"> </span><span class="n">vjust</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">-0.5</span><span class="p">,</span><span class="w"> </span><span class="n">hjust</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">-0.1</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey40&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="c1">## ADDING LOQ LINE -- if no line shows up, all st. curve is quantitative </span>
+<span class="w">  </span><span class="nf">geom_vline</span><span class="p">(</span><span class="n">xintercept</span><span class="o">=</span><span class="nf">log10</span><span class="p">(</span><span class="n">LOQ_threshold</span><span class="p">),</span><span class="w"> </span><span class="n">linetype</span><span class="o">=</span><span class="s">&quot;dashed&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey40&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">geom_text</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="n">LOQ_threshold</span><span class="p">),</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">std_curve</span><span class="o">$</span><span class="n">Cq</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">0.3</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">paste</span><span class="p">(</span><span class="s">&quot;LOQ =&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">LOQ_threshold</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;copies&quot;</span><span class="p">)),</span><span class="w"> </span>
+<span class="w">            </span><span class="n">angle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">90</span><span class="p">,</span><span class="w"> </span><span class="n">vjust</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">-0.5</span><span class="p">,</span><span class="w"> </span><span class="n">hjust</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">-0.1</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey40&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="nf">theme_bw</span><span class="p">()</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="nf">labs</span><span class="p">(</span>
+<span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Normalized standard concentrations&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Cq&quot;</span>
+<span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="nf">theme</span><span class="p">(</span><span class="n">axis.text.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="o">=</span><span class="s">&quot;grey20&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="n">axis.text.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="o">=</span><span class="s">&quot;grey20&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="n">axis.title.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">12</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="n">axis.title.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">12</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## Warning: Use of `std_curve$Cq` is discouraged.
+## ℹ Use `Cq` instead.
+
+## Warning in geom_text(aes(x = log10(LOD_threshold), y = max(std_curve$Cq, : All aesthetics have length 1, but the data has 93 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing
+##   a single row.
+
+## Warning: Use of `std_curve$Cq` is discouraged.
+## ℹ Use `Cq` instead.
+
+## Warning in geom_text(aes(x = log10(LOQ_threshold), y = max(std_curve$Cq, : All aesthetics have length 1, but the data has 93 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing
+##   a single row.
+
+## `geom_smooth()` using formula = &#39;y ~ x&#39;
+
+## Warning: Removed 2 rows containing non-finite outside the scale range
+## (`stat_smooth()`).
+
+## Warning: Removed 2 rows containing non-finite outside the scale range
+## (`stat_regline_equation()`).
+
+## Warning: Removed 2 rows containing missing values or values outside the scale range
+## (`geom_point()`).
+
+## Warning: Removed 1 row containing missing values or values outside the scale range
+## (`geom_vline()`).
+
+## Warning: Removed 93 rows containing missing values or values outside the scale range
+## (`geom_text()`).
+</code></pre></div>
+<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-4-1.png" /><!-- --></p>
+<div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Standard_curve.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## Warning: Use of `std_curve$Cq` is discouraged.
+## ℹ Use `Cq` instead.
+
+## Warning in geom_text(aes(x = log10(LOD_threshold), y = max(std_curve$Cq, : All aesthetics have length 1, but the data has 93 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing
+##   a single row.
+
+## Warning: Use of `std_curve$Cq` is discouraged.
+## ℹ Use `Cq` instead.
+
+## Warning in geom_text(aes(x = log10(LOQ_threshold), y = max(std_curve$Cq, : All aesthetics have length 1, but the data has 93 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing
+##   a single row.
+
+## `geom_smooth()` using formula = &#39;y ~ x&#39;
+
+## Warning: Removed 2 rows containing non-finite outside the scale range
+## (`stat_smooth()`).
+
+## Warning: Removed 2 rows containing non-finite outside the scale range
+## (`stat_regline_equation()`).
+
+## Warning: Removed 2 rows containing missing values or values outside the scale range
+## (`geom_point()`).
+
+## Warning: Removed 1 row containing missing values or values outside the scale range
+## (`geom_vline()`).
+
+## Warning: Removed 93 rows containing missing values or values outside the scale range
+## (`geom_text()`).
+</code></pre></div>
+<h3 id="calculating-slope-and-y-intercept">Calculating slope and y-intercept</h3>
+<p>These values get fed in later in data calculations.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Fit a linear model to calculate slope and intercept</span>
+<span class="n">linear_model</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">lm</span><span class="p">(</span><span class="n">Cq_mean</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="n">`Starting Quantity (SQ)`</span><span class="p">),</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std_curve</span><span class="p">)</span>
+
+<span class="c1"># Extract slope and y-intercept</span>
+<span class="n">slope</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">coef</span><span class="p">(</span><span class="n">linear_model</span><span class="p">)[</span><span class="m">2</span><span class="p">]</span><span class="w">      </span><span class="c1"># Slope (m)</span>
+<span class="n">y_intercept</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">coef</span><span class="p">(</span><span class="n">linear_model</span><span class="p">)[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="c1"># Y-intercept (b)</span>
 </code></pre></div>
 <h2 id="reading-in-datafiles-and-merging-into-one-large-dataframe">Reading in datafiles and merging into one large dataframe</h2>
 <div class="highlight"><pre><span></span><code><span class="c1">### USER EDITS:</span>
@@ -1507,7 +1793,7 @@ value.</p>
 <span class="n">spike_samples</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">Target</span><span class="p">,</span><span class="w"> </span><span class="n">Sample_ID</span><span class="p">,</span><span class="w"> </span><span class="n">Cq_diff</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">distinct</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span>
 
 <span class="w">  </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">Target</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Cq_diff</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>
-<span class="w">  </span><span class="nf">geom_hline</span><span class="p">(</span><span class="n">yintercept</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">-2</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">),</span><span class="w"> </span><span class="n">linetype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;dotted&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey50&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">geom_hline</span><span class="p">(</span><span class="n">yintercept</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">-2</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">),</span><span class="w"> </span><span class="n">linetype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;dotted&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey50&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">1.5</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 
 <span class="w">  </span><span class="nf">geom_jitter</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">abs</span><span class="p">(</span><span class="n">Cq_diff</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">2</span><span class="p">),</span><span class="w"> </span>
 <span class="w">              </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.5</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;black&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">shape</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">21</span><span class="p">,</span><span class="w"> </span><span class="c1">#width = 0.45,</span>
@@ -1541,15 +1827,17 @@ value.</p>
 <span class="w">        </span><span class="n">axis.title.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">12</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
 <span class="w">        </span><span class="n">axis.title.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">12</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">))</span>
 </code></pre></div>
-<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-6-1.png" /><!-- --></p>
-<div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Inhibition.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+</code></pre></div>
+<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-10-1.png" /><!-- --></p>
+<div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Inhibition.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="filter-data-cq-number-of-replicates-and-copy-num-calculations">Filter data Cq, Number of Replicates, and Copy Num calculations</h2>
-<div class="highlight"><pre><span></span><code><span class="c1">## USER EDITS: Replace values below with species-specific assay values for copy number calculation</span>
-<span class="n">yint</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">38.183</span>
-<span class="n">slope</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">-3.386</span>
-
-<span class="c1">## Complete calculations</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Complete calculations</span>
 <span class="n">filters_df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
 <span class="w">  </span><span class="c1">## subset out the spiked samples </span>
 <span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="o">!</span><span class="nf">grepl</span><span class="p">(</span><span class="s">&quot;spike|pos|neg&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Sample_ID</span><span class="p">,</span><span class="w"> </span><span class="n">ignore.case</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
@@ -1564,7 +1852,7 @@ value.</p>
 <span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Filter_Num_Replicates</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="o">!</span><span class="nf">is.na</span><span class="p">(</span><span class="n">Cq</span><span class="p">)))</span><span class="w"> </span><span class="o">%&gt;%</span>
 
 <span class="w">  </span><span class="c1">## calculate copy number </span>
-<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Filter_Copy_Num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="o">^</span><span class="p">((</span><span class="n">Filter_Cq</span><span class="o">-</span><span class="n">yint</span><span class="p">)</span><span class="o">/</span><span class="n">slope</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Filter_Copy_Num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="o">^</span><span class="p">((</span><span class="n">Filter_Cq</span><span class="o">-</span><span class="n">y_intercept</span><span class="p">)</span><span class="o">/</span><span class="n">slope</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
 
 <span class="w">  </span><span class="c1">## summarize df with specific columns </span>
 <span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">plate.ID</span><span class="p">,</span><span class="w"> </span><span class="n">Sample_ID</span><span class="p">,</span><span class="w"> </span><span class="n">Filter_Cq</span><span class="p">,</span><span class="w"> </span><span class="n">Filter_Num_Replicates</span><span class="p">,</span><span class="w"> </span><span class="n">Filter_Copy_Num</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
@@ -1697,9 +1985,9 @@ Fisheries team to make sure code reflect user’s needs.</em></p>
 <span class="w">  </span><span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;none&quot;</span><span class="p">,</span>
 <span class="w">        </span><span class="c1">#plot.title = element_text(hjust = 0.5, size = 16, face = &quot;bold&quot;)</span>
 <span class="w">        </span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
-<span class="w">  </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;#D2D4D4&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;#426999&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;#e9ecef&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;#a9d6e5&quot;</span><span class="p">))</span>
 </code></pre></div>
-<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-12-1.png" /><!-- --></p>
+<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-16-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Blanks_piechart.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="sample-preliminary-data">Sample preliminary data</h2>
@@ -1722,19 +2010,19 @@ Fisheries team to make sure code reflect user’s needs.</em></p>
 <span class="w">  </span><span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;none&quot;</span><span class="p">,</span>
 <span class="w">        </span><span class="c1">#plot.title = element_text(hjust = 0.5, size = 16, face = &quot;bold&quot;)</span>
 <span class="w">        </span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
-<span class="w">  </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;#D2D4D4&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;#426999&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;#e9ecef&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;#a9d6e5&quot;</span><span class="p">))</span>
 </code></pre></div>
-<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-13-1.png" /><!-- --></p>
+<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-17-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Fields_piechart.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
 </code></pre></div>
 <p>Bar chart</p>
 <div class="highlight"><pre><span></span><code><span class="n">fieldsamples_df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
 <span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="o">!</span><span class="nf">is.na</span><span class="p">(</span><span class="n">`Mean Copy Number Normalized`</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
-<span class="w">  </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">Sample_ID</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">`Mean Copy Number Normalized`</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">`Mean Copy Number Normalized`</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">cutoff</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>
-<span class="w">  </span><span class="nf">geom_bar</span><span class="p">(</span><span class="n">stat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;identity&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.7</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="o">=</span><span class="m">0.75</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
-<span class="w">  </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;#426999&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;#c1121f&quot;</span><span class="p">),</span>
-<span class="w">                    </span><span class="n">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Normal&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Outlier&quot;</span><span class="p">),</span>
-<span class="w">                    </span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">Sample_ID</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">`Mean Copy Number Normalized`</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>
+<span class="w">  </span><span class="nf">geom_bar</span><span class="p">(</span><span class="n">stat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;identity&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.7</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#a9d6e5&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="c1"># scale_fill_manual(values = c(&quot;#a9d6e5&quot;, &quot;#780000&quot;),</span>
+<span class="w">  </span><span class="c1">#                   labels = c(&quot;Normal&quot;, &quot;Outlier&quot;),</span>
+<span class="w">  </span><span class="c1">#                   ) +</span>
 <span class="w">  </span><span class="nf">labs</span><span class="p">(</span>
 <span class="w">    </span><span class="n">y</span><span class="o">=</span><span class="s">&quot;Log-Normalized Copy Number&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Sample ID&quot;</span><span class="p">,</span>
@@ -1744,7 +2032,8 @@ Fisheries team to make sure code reflect user’s needs.</em></p>
 <span class="w">  </span><span class="nf">theme_bw</span><span class="p">()</span><span class="w"> </span><span class="o">+</span>
 <span class="w">    </span><span class="c1">## theme variables</span>
 <span class="w">    </span><span class="nf">theme</span><span class="p">(</span><span class="n">panel.background</span><span class="o">=</span><span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="s">&#39;white&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">colour</span><span class="o">=</span><span class="s">&#39;black&#39;</span><span class="p">),</span>
-<span class="w">        </span><span class="n">legend.position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;right&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">legend.position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">0.98</span><span class="p">,</span><span class="w"> </span><span class="m">0.98</span><span class="p">),</span><span class="w">  </span><span class="c1"># This puts the legend in the top right corner</span>
+<span class="w">        </span><span class="n">legend.justification</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">),</span><span class="w">  </span><span class="c1"># This aligns the legend to the top right</span>
 <span class="w">        </span><span class="n">axis.text.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="o">=</span><span class="s">&quot;grey20&quot;</span><span class="p">),</span>
 <span class="w">        </span><span class="n">axis.text.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="o">=</span><span class="s">&quot;grey20&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">angle</span><span class="o">=</span><span class="m">90</span><span class="p">,</span><span class="w"> </span><span class="n">hjust</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">vjust</span><span class="o">=</span><span class="m">0.5</span><span class="p">),</span>
 <span class="w">        </span><span class="n">axis.title.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
@@ -1753,10 +2042,47 @@ Fisheries team to make sure code reflect user’s needs.</em></p>
 <span class="w">        </span><span class="n">strip.background</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;white&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;black&quot;</span><span class="p">),</span>
 <span class="w">        </span><span class="n">strip.text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">face</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;bold&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">9</span><span class="p">)</span>
 <span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
-<span class="w">  </span><span class="nf">guides</span><span class="p">(</span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">guide_legend</span><span class="p">(</span><span class="n">override.aes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">)))</span>
+<span class="w">  </span><span class="nf">guides</span><span class="p">(</span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">guide_legend</span><span class="p">(</span><span class="n">override.aes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">)))</span><span class="w"> </span>
 </code></pre></div>
-<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-14-1.png" /><!-- --></p>
+<div class="highlight"><pre><span></span><code>## Warning: A numeric `legend.position` argument in `theme()` was deprecated in ggplot2
+## 3.5.0.
+## ℹ Please use the `legend.position.inside` argument of `theme()` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+</code></pre></div>
+<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-18-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Fieldsamples_barchart.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">9.5</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">5</span><span class="p">)</span>
+</code></pre></div>
+<p>Show distance of outliers</p>
+<div class="highlight"><pre><span></span><code><span class="n">fieldsamples_df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">Sample_Type</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">`Mean Copy Number`</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                                  </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ifelse</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">`Mean Copy Number Normalized`</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">is.na</span><span class="p">(</span><span class="n">cutoff</span><span class="p">),</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                                          </span><span class="n">`Mean Copy Number Normalized`</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">cutoff</span><span class="p">)))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>
+<span class="w">  </span><span class="nf">geom_jitter</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="m">0.2</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">3.5</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="o">=</span><span class="s">&#39;black&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">shape</span><span class="o">=</span><span class="m">21</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="o">=</span><span class="m">0.5</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;#545E56&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;#c1121f&quot;</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Normal&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Outlier&quot;</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">theme_bw</span><span class="p">()</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="c1">#geom_hline(yintercept = cutoff, linetype = &quot;dotted&quot;, color = &quot;grey50&quot;) +</span>
+<span class="w">  </span><span class="nf">labs</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Sample&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Outlier Detection&quot;</span>
+<span class="w">       </span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">      </span><span class="nf">theme</span><span class="p">(</span><span class="n">panel.background</span><span class="o">=</span><span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="s">&#39;white&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">colour</span><span class="o">=</span><span class="s">&#39;black&#39;</span><span class="p">),</span>
+<span class="w">        </span><span class="n">legend.position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;right&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">axis.text.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="o">=</span><span class="s">&quot;grey20&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="n">axis.text.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_blank</span><span class="p">(),</span>
+<span class="w">        </span><span class="n">axis.title.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="n">axis.title.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">    </span><span class="nf">guides</span><span class="p">(</span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">guide_legend</span><span class="p">(</span><span class="n">override.aes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">)))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## Warning: Removed 82 rows containing missing values or values outside the scale range
+## (`geom_point()`).
+</code></pre></div>
+<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-19-1.png" /><!-- --></p>
+<div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Outliers.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4.5</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## Warning: Removed 82 rows containing missing values or values outside the scale range
+## (`geom_point()`).
 </code></pre></div>
 <h2 id="exporting-data">Exporting data</h2>
 <div class="highlight"><pre><span></span><code><span class="n">blank_df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as.Date</span><span class="p">(</span><span class="n">Date</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
