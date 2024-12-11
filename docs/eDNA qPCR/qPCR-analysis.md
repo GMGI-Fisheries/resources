@@ -42,7 +42,212 @@ library(tidyverse) ## for data table manipulation
     ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 
 ``` r
-library(ggrepel)  # For geom_text_repel
+library(ggrepel)  ## For geom_text_repel
+library(drc) ## for LOD calculations
+```
+
+    ## Loading required package: MASS
+    ## 
+    ## Attaching package: 'MASS'
+    ## 
+    ## The following object is masked from 'package:dplyr':
+    ## 
+    ##     select
+    ## 
+    ## 
+    ## 'drc' has been loaded.
+    ## 
+    ## Please cite R and 'drc' if used for a publication,
+    ## for references type 'citation()' and 'citation('drc')'.
+    ## 
+    ## 
+    ## Attaching package: 'drc'
+    ## 
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     gaussian, getInitial
+
+``` r
+library(ggpubr)
+```
+
+## Evaluating standard curve
+
+### Reading in data
+
+``` r
+### USER EDITS:
+## 1. Replace path of file with your own standard curve
+std_curve <- read_xlsx("example standard curve.xlsx", skip = 19) %>%
+  group_by(Sample) %>%
+  
+  ## calculate detection rates (number of Cqs present / number of replicates)
+  mutate(detection_rate = sum(!is.na(Cq)) / n(),
+         
+  ## calculate Cq stats - mean, SD, and CV 
+         Cq_mean = mean(Cq, na.rm=TRUE),
+         Cq_sd = sd(Cq, na.rm=TRUE),
+         Cq_cv = (Cq_sd / Cq_mean) * 100 
+         ) %>%
+  ungroup()
+
+## confirming negatives were clean and filter them out
+std_curve %>% filter(Sample == "neg")
+```
+
+    ## # A tibble: 3 × 11
+    ##   Well  Fluor Target  Content Sample    Cq Starting Quantity (S…¹ detection_rate
+    ##   <chr> <chr> <chr>   <chr>   <chr>  <dbl>                  <dbl>          <dbl>
+    ## 1 F12   SYBR  Library NTC     neg       NA                     NA              0
+    ## 2 G12   SYBR  Library NTC     neg       NA                     NA              0
+    ## 3 H12   SYBR  Library NTC     neg       NA                     NA              0
+    ## # ℹ abbreviated name: ¹​`Starting Quantity (SQ)`
+    ## # ℹ 3 more variables: Cq_mean <dbl>, Cq_sd <dbl>, Cq_cv <dbl>
+
+``` r
+std_curve <- std_curve %>% filter(!Sample == "neg")
+```
+
+### Calculating LOD and LOQ
+
+``` r
+LOD <- std_curve %>%
+  filter(detection_rate < 0.95) %>%      # Change the threshold as needed
+  slice(1) %>%                        # Get the first occurrence
+  dplyr::select(Sample, detection_rate)      # Select relevant columns
+
+LOD_threshold <- as.numeric(LOD$Sample[1])
+
+LOQ <- std_curve %>%
+  filter(Cq_cv > 35.00) %>%      # Change the threshold as needed
+  slice(1) %>%                        # Get the first occurrence
+  dplyr::select(Sample, Cq_cv) 
+
+LOQ_threshold <- as.numeric(LOQ$Sample[1])
+```
+
+### Plotting standard curve
+
+``` r
+std_curve %>% 
+  ## Taking only those detections with >50% to make curve 
+  filter(detection_rate > 0.50) %>%
+  
+  ## Plotting that std. curve 
+  ggplot(., aes(x = log10(`Starting Quantity (SQ)`), y = Cq)) +
+  
+  geom_smooth(method = 'lm', se = FALSE, color = "darkred") +
+
+  stat_regline_equation(size = 4, color = 'darkred',
+                        aes(label = after_stat(rr.label)), hjust=1,
+                        label.x.npc = "right", label.y.npc = "top") +
+  
+  geom_point(color = 'black', fill = 'white', shape = 21, size = 3.5, alpha=0.8) +
+  
+  ## ADDING LOD LINE -- if no line shows up, all st. curve is qualitative 
+  geom_vline(xintercept=log10(LOD_threshold), linetype="dashed", color = "grey40") +
+  geom_text(aes(x = log10(LOD_threshold), y = max(std_curve$Cq, na.rm=TRUE) * 0.3,
+                label = paste("LOD =", LOD_threshold, "copies")), 
+            angle = 90, vjust = -0.5, hjust = -0.1, color = "grey40", size = 4) +
+  
+  ## ADDING LOQ LINE -- if no line shows up, all st. curve is quantitative 
+  geom_vline(xintercept=log10(LOQ_threshold), linetype="dashed", color = "grey40") +
+  geom_text(aes(x = log10(LOQ_threshold), y = max(std_curve$Cq, na.rm=TRUE) * 0.3, 
+                label = paste("LOQ =", LOQ_threshold, "copies")), 
+            angle = 90, vjust = -0.5, hjust = -0.1, color = "grey40", size = 4) +
+
+  theme_bw() +
+  
+  labs(
+    x = "Normalized standard concentrations",
+    y = "Cq"
+  ) +
+  
+  theme(axis.text.y = element_text(size=10, color="grey20"),
+        axis.text.x = element_text(size=10, color="grey20"),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=12, face="bold"),
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=12, face="bold"))
+```
+
+    ## Warning: Use of `std_curve$Cq` is discouraged.
+    ## ℹ Use `Cq` instead.
+
+    ## Warning in geom_text(aes(x = log10(LOD_threshold), y = max(std_curve$Cq, : All aesthetics have length 1, but the data has 93 rows.
+    ## ℹ Please consider using `annotate()` or provide this layer with data containing
+    ##   a single row.
+
+    ## Warning: Use of `std_curve$Cq` is discouraged.
+    ## ℹ Use `Cq` instead.
+
+    ## Warning in geom_text(aes(x = log10(LOQ_threshold), y = max(std_curve$Cq, : All aesthetics have length 1, but the data has 93 rows.
+    ## ℹ Please consider using `annotate()` or provide this layer with data containing
+    ##   a single row.
+
+    ## `geom_smooth()` using formula = 'y ~ x'
+
+    ## Warning: Removed 2 rows containing non-finite outside the scale range
+    ## (`stat_smooth()`).
+
+    ## Warning: Removed 2 rows containing non-finite outside the scale range
+    ## (`stat_regline_equation()`).
+
+    ## Warning: Removed 2 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+    ## Warning: Removed 1 row containing missing values or values outside the scale range
+    ## (`geom_vline()`).
+
+    ## Warning: Removed 93 rows containing missing values or values outside the scale range
+    ## (`geom_text()`).
+
+![](qPCR-analysis_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+``` r
+ggsave("example output/Standard_curve.png", width=6, height=4)
+```
+
+    ## Warning: Use of `std_curve$Cq` is discouraged.
+    ## ℹ Use `Cq` instead.
+
+    ## Warning in geom_text(aes(x = log10(LOD_threshold), y = max(std_curve$Cq, : All aesthetics have length 1, but the data has 93 rows.
+    ## ℹ Please consider using `annotate()` or provide this layer with data containing
+    ##   a single row.
+
+    ## Warning: Use of `std_curve$Cq` is discouraged.
+    ## ℹ Use `Cq` instead.
+
+    ## Warning in geom_text(aes(x = log10(LOQ_threshold), y = max(std_curve$Cq, : All aesthetics have length 1, but the data has 93 rows.
+    ## ℹ Please consider using `annotate()` or provide this layer with data containing
+    ##   a single row.
+
+    ## `geom_smooth()` using formula = 'y ~ x'
+
+    ## Warning: Removed 2 rows containing non-finite outside the scale range
+    ## (`stat_smooth()`).
+
+    ## Warning: Removed 2 rows containing non-finite outside the scale range
+    ## (`stat_regline_equation()`).
+
+    ## Warning: Removed 2 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+    ## Warning: Removed 1 row containing missing values or values outside the scale range
+    ## (`geom_vline()`).
+
+    ## Warning: Removed 93 rows containing missing values or values outside the scale range
+    ## (`geom_text()`).
+
+### Calculating slope and y-intercept
+
+These values get fed in later in data calculations.
+
+``` r
+# Fit a linear model to calculate slope and intercept
+linear_model <- lm(Cq_mean ~ log10(`Starting Quantity (SQ)`), data = std_curve)
+
+# Extract slope and y-intercept
+slope <- coef(linear_model)[2]      # Slope (m)
+y_intercept <- coef(linear_model)[1] # Y-intercept (b)
 ```
 
 ## Reading in datafiles and merging into one large dataframe
@@ -194,7 +399,7 @@ jitter_pos <- position_jitter(width = 0.45, seed = 123)
 spike_samples %>% dplyr::select(Target, Sample_ID, Cq_diff) %>% distinct() %>%
   
   ggplot(., aes(x=Target, y = Cq_diff)) + 
-  geom_hline(yintercept = c(-2, 2), linetype = "dotted", color = "grey50") +
+  geom_hline(yintercept = c(-2, 2), linetype = "dotted", color = "grey50", size=1.5) +
   
   geom_jitter(aes(fill = abs(Cq_diff) > 2), 
               size = 2, alpha = 0.5, color = 'black', shape = 21, #width = 0.45,
@@ -229,19 +434,21 @@ spike_samples %>% dplyr::select(Target, Sample_ID, Cq_diff) %>% distinct() %>%
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=12, face="bold"))
 ```
 
-![](qPCR-analysis_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+    ## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+    ## ℹ Please use `linewidth` instead.
+    ## This warning is displayed once every 8 hours.
+    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+    ## generated.
+
+![](qPCR-analysis_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 ``` r
-ggsave("example output/Inhibition.png", width=5, height=4)
+ggsave("example output/Inhibition.png", width=4, height=4)
 ```
 
 ## Filter data Cq, Number of Replicates, and Copy Num calculations
 
 ``` r
-## USER EDITS: Replace values below with species-specific assay values for copy number calculation
-yint <- 38.183
-slope <- -3.386
-
 ## Complete calculations
 filters_df <- df %>% 
   ## subset out the spiked samples 
@@ -257,7 +464,7 @@ filters_df <- df %>%
   mutate(Filter_Num_Replicates = sum(!is.na(Cq))) %>%
   
   ## calculate copy number 
-  mutate(Filter_Copy_Num = 10^((Filter_Cq-yint)/slope)) %>%
+  mutate(Filter_Copy_Num = 10^((Filter_Cq-y_intercept)/slope)) %>%
   
   ## summarize df with specific columns 
   dplyr::select(plate.ID, Sample_ID, Filter_Cq, Filter_Num_Replicates, Filter_Copy_Num) %>% 
@@ -412,10 +619,10 @@ ggplot(detection_counts, aes(x = "", y = n, fill = Detection)) +
   theme(legend.position = "none",
         #plot.title = element_text(hjust = 0.5, size = 16, face = "bold")
         ) +
-  scale_fill_manual(values = c("#D2D4D4", "#426999"))
+  scale_fill_manual(values = c("#e9ecef", "#a9d6e5"))
 ```
 
-![](qPCR-analysis_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](qPCR-analysis_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 ``` r
 ggsave("example output/Blanks_piechart.png", width=4, height=4)
@@ -444,10 +651,10 @@ ggplot(field_detection_counts, aes(x = "", y = n, fill = Detection)) +
   theme(legend.position = "none",
         #plot.title = element_text(hjust = 0.5, size = 16, face = "bold")
         ) +
-  scale_fill_manual(values = c("#D2D4D4", "#426999"))
+  scale_fill_manual(values = c("#e9ecef", "#a9d6e5"))
 ```
 
-![](qPCR-analysis_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](qPCR-analysis_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 ``` r
 ggsave("example output/Fields_piechart.png", width=4, height=4)
@@ -458,11 +665,11 @@ Bar chart
 ``` r
 fieldsamples_df %>% 
   filter(!is.na(`Mean Copy Number Normalized`)) %>%
-  ggplot(., aes(x=Sample_ID, y=`Mean Copy Number Normalized`, fill = `Mean Copy Number Normalized` > cutoff)) + 
-  geom_bar(stat = "identity", width = 0.7, alpha=0.75) +
-  scale_fill_manual(values = c("#426999", "#c1121f"),
-                    labels = c("Normal", "Outlier"),
-                    ) +
+  ggplot(., aes(x=Sample_ID, y=`Mean Copy Number Normalized`)) + 
+  geom_bar(stat = "identity", width = 0.7, fill = "#a9d6e5") +
+  # scale_fill_manual(values = c("#a9d6e5", "#780000"),
+  #                   labels = c("Normal", "Outlier"),
+  #                   ) +
   labs(
     y="Log-Normalized Copy Number",
     x = "Sample ID",
@@ -472,7 +679,8 @@ fieldsamples_df %>%
   theme_bw() +
     ## theme variables
     theme(panel.background=element_rect(fill='white', colour='black'),
-        legend.position = "right",
+        legend.position = c(0.98, 0.98),  # This puts the legend in the top right corner
+        legend.justification = c(1, 1),  # This aligns the legend to the top right
         axis.text.y = element_text(size=8, color="grey20"),
         axis.text.x = element_text(size=6, color="grey20", angle=90, hjust=1, vjust=0.5),
         axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=10, face="bold"),
@@ -481,14 +689,57 @@ fieldsamples_df %>%
         strip.background = element_rect(fill = "white", color = "black"),
         strip.text = element_text(face = "bold", size = 9)
     ) +
-  guides(fill = guide_legend(override.aes = list(alpha = 1)))
+  guides(fill = guide_legend(override.aes = list(alpha = 1))) 
 ```
 
-![](qPCR-analysis_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+    ## Warning: A numeric `legend.position` argument in `theme()` was deprecated in ggplot2
+    ## 3.5.0.
+    ## ℹ Please use the `legend.position.inside` argument of `theme()` instead.
+    ## This warning is displayed once every 8 hours.
+    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+    ## generated.
+
+![](qPCR-analysis_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 ``` r
 ggsave("example output/Fieldsamples_barchart.png", width = 9.5, height=5)
 ```
+
+Show distance of outliers
+
+``` r
+fieldsamples_df %>% ggplot(., aes(x=Sample_Type, y=`Mean Copy Number`, 
+                                  fill = ifelse(is.na(`Mean Copy Number Normalized`) | is.na(cutoff), FALSE, 
+                                          `Mean Copy Number Normalized` > cutoff))) + 
+  geom_jitter(width=0.2, size=3.5, color='black', shape=21, alpha=0.5) +
+  scale_fill_manual(values = c("#545E56", "#c1121f"),
+                    labels = c("Normal", "Outlier")) +
+  theme_bw() +
+  #geom_hline(yintercept = cutoff, linetype = "dotted", color = "grey50") +
+  labs(x = "Sample",
+       fill = "Outlier Detection"
+       ) +
+      theme(panel.background=element_rect(fill='white', colour='black'),
+        legend.position = "right",
+        axis.text.y = element_text(size=8, color="grey20"),
+        axis.text.x = element_blank(),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=10, face="bold"),
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=10, face="bold"),
+    ) +
+    guides(fill = guide_legend(override.aes = list(alpha = 1)))
+```
+
+    ## Warning: Removed 82 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+![](qPCR-analysis_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+
+``` r
+ggsave("example output/Outliers.png", width = 5, height=4.5)
+```
+
+    ## Warning: Removed 82 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
 
 ## Exporting data
 

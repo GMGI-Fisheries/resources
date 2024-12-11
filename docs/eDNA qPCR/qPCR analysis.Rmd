@@ -63,14 +63,14 @@ std_curve <- std_curve %>% filter(!Sample == "neg")
 LOD <- std_curve %>%
   filter(detection_rate < 0.95) %>%      # Change the threshold as needed
   slice(1) %>%                        # Get the first occurrence
-  select(Sample, detection_rate)      # Select relevant columns
+  dplyr::select(Sample, detection_rate)      # Select relevant columns
 
 LOD_threshold <- as.numeric(LOD$Sample[1])
 
 LOQ <- std_curve %>%
   filter(Cq_cv > 35.00) %>%      # Change the threshold as needed
   slice(1) %>%                        # Get the first occurrence
-  select(Sample, Cq_cv) 
+  dplyr::select(Sample, Cq_cv) 
 
 LOQ_threshold <- as.numeric(LOQ$Sample[1])
 ```
@@ -95,20 +95,29 @@ std_curve %>%
   
   ## ADDING LOD LINE -- if no line shows up, all st. curve is qualitative 
   geom_vline(xintercept=log10(LOD_threshold), linetype="dashed", color = "grey40") +
-  geom_text(aes(x = log10(LOD_threshold), y = max(std_curve$Cq, na.rm=TRUE) * 0.3, label = "LOD"), 
+  geom_text(aes(x = log10(LOD_threshold), y = max(std_curve$Cq, na.rm=TRUE) * 0.3,
+                label = paste("LOD =", LOD_threshold, "copies")), 
             angle = 90, vjust = -0.5, hjust = -0.1, color = "grey40", size = 4) +
   
   ## ADDING LOQ LINE -- if no line shows up, all st. curve is quantitative 
   geom_vline(xintercept=log10(LOQ_threshold), linetype="dashed", color = "grey40") +
-  geom_text(aes(x = log10(LOQ_threshold), y = max(std_curve$Cq, na.rm=TRUE) * 0.3, label = "LOQ"), 
+  geom_text(aes(x = log10(LOQ_threshold), y = max(std_curve$Cq, na.rm=TRUE) * 0.3, 
+                label = paste("LOQ =", LOQ_threshold, "copies")), 
             angle = 90, vjust = -0.5, hjust = -0.1, color = "grey40", size = 4) +
 
   theme_bw() +
   
   labs(
-    x = "log10 of starting quantity",
+    x = "Normalized standard concentrations",
     y = "Cq"
-  )
+  ) +
+  
+  theme(axis.text.y = element_text(size=10, color="grey20"),
+        axis.text.x = element_text(size=10, color="grey20"),
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=12, face="bold"),
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=12, face="bold"))
+
+ggsave("example output/Standard_curve.png", width=6, height=4)
 ```
 
 ### Calculating slope and y-intercept
@@ -269,17 +278,6 @@ spike_samples %>% dplyr::select(Target, Sample_ID, Cq_diff) %>% distinct() %>%
 
 ggsave("example output/Inhibition.png", width=4, height=4)
 ```
-
-## LOD and LOQ calculations 
-
-```{r}
-## Define LOQ threshold 
-LOQ_threshold <- 0.35
-
-
-
-```
-
 
 ## Filter data Cq, Number of Replicates, and Copy Num calculations 
 
