@@ -1449,38 +1449,25 @@
 <p><strong>.Rmd script</strong></p>
 <h2 id="load-libraries">Load libraries</h2>
 <div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span><span class="w"> </span><span class="c1">## for plotting</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span><span class="w"> </span><span class="c1">## for data table manipulation</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>## 
-## Attaching package: &#39;dplyr&#39;
-
-## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     filter, lag
-
-## The following objects are masked from &#39;package:base&#39;:
-## 
-##     intersect, setdiff, setequal, union
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">tidyr</span><span class="p">)</span><span class="w"> </span><span class="c1">## for data table manipulation</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">readr</span><span class="p">)</span><span class="w"> </span><span class="c1">## for reading in tsv files</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">readxl</span><span class="p">)</span><span class="w"> </span><span class="c1">## for reading in excel files</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">stringr</span><span class="p">)</span><span class="w"> </span><span class="c1">## for data transformation</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">strex</span><span class="p">)</span><span class="w"> </span><span class="c1">## for data transformation</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">writexl</span><span class="p">)</span><span class="w"> </span><span class="c1">## for excel output</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">purrr</span><span class="p">)</span><span class="w"> </span><span class="c1">## for data transformation</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span><span class="w"> </span><span class="c1">## for data table manipulation</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-## ✔ forcats   1.0.0     ✔ tibble    3.2.1
-## ✔ lubridate 1.9.3
-
+## ✔ dplyr     1.1.4     ✔ readr     2.1.5
+## ✔ forcats   1.0.0     ✔ stringr   1.5.1
+## ✔ lubridate 1.9.3     ✔ tibble    3.2.1
+## ✔ purrr     1.0.2     ✔ tidyr     1.3.1
 ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">ggrepel</span><span class="p">)</span><span class="w">  </span><span class="c1">## For geom_text_repel</span>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">readr</span><span class="p">)</span><span class="w"> </span><span class="c1">## for reading in tsv files</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">readxl</span><span class="p">)</span><span class="w"> </span><span class="c1">## for reading in excel files</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">stringr</span><span class="p">)</span><span class="w"> </span><span class="c1">## for data transformation</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">strex</span><span class="p">)</span><span class="w"> </span><span class="c1">## for data transformation</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">writexl</span><span class="p">)</span><span class="w"> </span><span class="c1">## for excel output</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">purrr</span><span class="p">)</span><span class="w"> </span><span class="c1">## for data transformation</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">ggrepel</span><span class="p">)</span><span class="w">  </span><span class="c1">## For geom_text_repel</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">drc</span><span class="p">)</span><span class="w"> </span><span class="c1">## for LOD calculations</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>## Loading required package: MASS
@@ -1510,47 +1497,81 @@
 <h3 id="reading-in-data">Reading in data</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">### USER EDITS:</span>
 <span class="c1">## 1. Replace path of file with your own standard curve</span>
-<span class="n">std_curve</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&quot;example standard curve.xlsx&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">skip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">19</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
-<span class="w">  </span><span class="nf">group_by</span><span class="p">(</span><span class="n">Sample</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="n">std_curve</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read.csv</span><span class="p">(</span><span class="s">&quot;example standard curve.csv&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">skip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">19</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">rename</span><span class="p">(</span><span class="n">St_Quant</span><span class="o">=</span><span class="m">7</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+
+<span class="w">  </span><span class="c1">## Calculate mean Cq</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">group_by</span><span class="p">(</span><span class="n">Sample</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Cq_mean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">mean</span><span class="p">(</span><span class="n">Cq</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">))</span>
+</code></pre></div>
+<p>Calculating standard curve metrics</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Fit a linear model to calculate slope and intercept</span>
+<span class="n">linear_model</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">lm</span><span class="p">(</span><span class="n">Cq_mean</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="n">St_Quant</span><span class="p">),</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std_curve</span><span class="p">)</span>
+
+<span class="c1"># Extract slope and y-intercept</span>
+<span class="n">slope</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">coef</span><span class="p">(</span><span class="n">linear_model</span><span class="p">)[</span><span class="m">2</span><span class="p">]</span><span class="w">       </span><span class="c1"># Slope (m)</span>
+<span class="n">y_intercept</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">coef</span><span class="p">(</span><span class="n">linear_model</span><span class="p">)[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="c1"># Y-intercept (b)</span>
+<span class="n">efficiency</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="m">-1</span><span class="o">+</span><span class="p">(</span><span class="m">10</span><span class="o">^</span><span class="p">(</span><span class="m">-1</span><span class="o">/</span><span class="n">slope</span><span class="p">)))</span>
+
+<span class="c1">## Standard curve calculations (assuming std_curve is already grouped by Sample)</span>
+<span class="n">std_curve</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span>
 
 <span class="w">  </span><span class="c1">## calculate detection rates (number of Cqs present / number of replicates)</span>
 <span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">detection_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="o">!</span><span class="nf">is.na</span><span class="p">(</span><span class="n">Cq</span><span class="p">))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nf">n</span><span class="p">(),</span>
 
-<span class="w">  </span><span class="c1">## calculate Cq stats - mean, SD, and CV </span>
-<span class="w">         </span><span class="n">Cq_mean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">mean</span><span class="p">(</span><span class="n">Cq</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">),</span>
+<span class="w">  </span><span class="c1">## calculate Cq stats - SD, and CV</span>
 <span class="w">         </span><span class="n">Cq_sd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sd</span><span class="p">(</span><span class="n">Cq</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">),</span>
-<span class="w">         </span><span class="n">Cq_cv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">Cq_sd</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">Cq_mean</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">100</span><span class="w"> </span>
-<span class="w">         </span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">         </span><span class="c1">#Cq_cv = (Cq_sd / Cq_mean) * 100 ## old method </span>
+<span class="w">         </span><span class="n">Cq_cv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sqrt</span><span class="p">(((</span><span class="m">1</span><span class="o">+</span><span class="n">efficiency</span><span class="p">)</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="p">((</span><span class="n">Cq_sd</span><span class="o">^</span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nf">log</span><span class="p">(</span><span class="m">1</span><span class="o">+</span><span class="n">efficiency</span><span class="p">)))</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">ungroup</span><span class="p">()</span>
-
-<span class="c1">## confirming negatives were clean and filter them out</span>
+</code></pre></div>
+<p>Confirming negatives were clean and filter them out</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## all output should have NAs in Cq column</span>
+<span class="c1">## if any negatives have values, then pause and re-run those samples if needed</span>
 <span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="n">Sample</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;neg&quot;</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>## # A tibble: 3 × 11
-##   Well  Fluor Target  Content Sample    Cq Starting Quantity (S…¹ detection_rate
-##   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;dbl&gt;                  &lt;dbl&gt;          &lt;dbl&gt;
-## 1 F12   SYBR  Library NTC     neg       NA                     NA              0
-## 2 G12   SYBR  Library NTC     neg       NA                     NA              0
-## 3 H12   SYBR  Library NTC     neg       NA                     NA              0
-## # ℹ abbreviated name: ¹​`Starting Quantity (SQ)`
-## # ℹ 3 more variables: Cq_mean &lt;dbl&gt;, Cq_sd &lt;dbl&gt;, Cq_cv &lt;dbl&gt;
+##   Well  Fluor Target  Content Sample    Cq St_Quant Cq_mean detection_rate Cq_sd
+##   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;          &lt;dbl&gt; &lt;dbl&gt;
+## 1 F12   SYBR  Library NTC     neg       NA       NA     NaN              0    NA
+## 2 G12   SYBR  Library NTC     neg       NA       NA     NaN              0    NA
+## 3 H12   SYBR  Library NTC     neg       NA       NA     NaN              0    NA
+## # ℹ 1 more variable: Cq_cv &lt;dbl&gt;
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="n">std_curve</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="o">!</span><span class="n">Sample</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;neg&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="calculating-lod-and-loq">Calculating LOD and LOQ</h3>
-<div class="highlight"><pre><span></span><code><span class="n">LOD</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span>
-<span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="n">detection_rate</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">0.95</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">      </span><span class="c1"># Change the threshold as needed</span>
-<span class="w">  </span><span class="nf">slice</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">                        </span><span class="c1"># Get the first occurrence</span>
-<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">Sample</span><span class="p">,</span><span class="w"> </span><span class="n">detection_rate</span><span class="p">)</span><span class="w">      </span><span class="c1"># Select relevant columns</span>
+<p>Making list of standard curve quantities</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Assuming std_curve is your data frame</span>
+<span class="n">quants</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">St_Quant</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">distinct</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">arrange</span><span class="p">(</span><span class="nf">desc</span><span class="p">(</span><span class="n">St_Quant</span><span class="p">))</span>
 
-<span class="n">LOD_threshold</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">LOD</span><span class="o">$</span><span class="n">Sample</span><span class="p">[</span><span class="m">1</span><span class="p">])</span>
+<span class="c1"># Creating a factored list of these standard curve values</span>
+<span class="n">quant_list</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.factor</span><span class="p">(</span><span class="n">quants</span><span class="o">$</span><span class="n">St_Quant</span><span class="p">)</span>
+</code></pre></div>
+<p>Find the Limit of Detection (LOD)</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Find the first value below the 0.95 detection rate</span>
+<span class="n">first_below_LOD_threshold</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="n">detection_rate</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">0.95</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+<span class="w">  </span><span class="nf">slice</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">St_Quant</span><span class="p">)</span>
 
-<span class="n">LOQ</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span>
-<span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="n">Cq_cv</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">35.00</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">      </span><span class="c1"># Change the threshold as needed</span>
-<span class="w">  </span><span class="nf">slice</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">                        </span><span class="c1"># Get the first occurrence</span>
-<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">Sample</span><span class="p">,</span><span class="w"> </span><span class="n">Cq_cv</span><span class="p">)</span><span class="w"> </span>
+<span class="c1"># Get the standard quantity of the first value below the threshold</span>
+<span class="n">below_threshold_LOD_quant</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">first_below_LOD_threshold</span><span class="o">$</span><span class="n">St_Quant</span><span class="p">[</span><span class="m">1</span><span class="p">]</span>
 
-<span class="n">LOQ_threshold</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">LOQ</span><span class="o">$</span><span class="n">Sample</span><span class="p">[</span><span class="m">1</span><span class="p">])</span>
+<span class="c1"># Find the index of this quantity in the ordered list</span>
+<span class="n">LOD_index</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">which</span><span class="p">(</span><span class="n">quants</span><span class="o">$</span><span class="n">St_Quant</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">below_threshold_LOD_quant</span><span class="p">)</span>
+
+<span class="n">LOD</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">quants</span><span class="o">$</span><span class="n">St_Quant</span><span class="p">[</span><span class="n">LOD_index</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="p">]</span>
+</code></pre></div>
+<p>Find the Limit of Quantification (LOQ)</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Find the first value below the 0.35 CV</span>
+<span class="n">first_above_LOQ_threshold</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="n">Cq_cv</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.350</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+<span class="w">  </span><span class="nf">slice</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">St_Quant</span><span class="p">)</span>
+
+<span class="c1"># Get the standard quantity of the first value below the threshold</span>
+<span class="n">above_threshold_LOQ_quant</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">first_above_LOQ_threshold</span><span class="o">$</span><span class="n">St_Quant</span><span class="p">[</span><span class="m">1</span><span class="p">]</span>
+
+<span class="c1"># Find the index of this quantity in the ordered list</span>
+<span class="n">LOQ_index</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">which</span><span class="p">(</span><span class="n">quants</span><span class="o">$</span><span class="n">St_Quant</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">above_threshold_LOQ_quant</span><span class="p">)</span>
+
+<span class="n">LOQ</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">quants</span><span class="o">$</span><span class="n">St_Quant</span><span class="p">[</span><span class="n">LOQ_index</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="p">]</span>
 </code></pre></div>
 <h3 id="plotting-standard-curve">Plotting standard curve</h3>
 <div class="highlight"><pre><span></span><code><span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
@@ -1558,7 +1579,7 @@
 <span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="n">detection_rate</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.50</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 
 <span class="w">  </span><span class="c1">## Plotting that std. curve </span>
-<span class="w">  </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="n">`Starting Quantity (SQ)`</span><span class="p">),</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Cq</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="n">St_Quant</span><span class="p">),</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Cq</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
 
 <span class="w">  </span><span class="nf">geom_smooth</span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;lm&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">se</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;darkred&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 
@@ -1569,15 +1590,15 @@
 <span class="w">  </span><span class="nf">geom_point</span><span class="p">(</span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;black&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;white&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">shape</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">21</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3.5</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="o">=</span><span class="m">0.8</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 
 <span class="w">  </span><span class="c1">## ADDING LOD LINE -- if no line shows up, all st. curve is qualitative </span>
-<span class="w">  </span><span class="nf">geom_vline</span><span class="p">(</span><span class="n">xintercept</span><span class="o">=</span><span class="nf">log10</span><span class="p">(</span><span class="n">LOD_threshold</span><span class="p">),</span><span class="w"> </span><span class="n">linetype</span><span class="o">=</span><span class="s">&quot;dashed&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey40&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
-<span class="w">  </span><span class="nf">geom_text</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="n">LOD_threshold</span><span class="p">),</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">std_curve</span><span class="o">$</span><span class="n">Cq</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">0.3</span><span class="p">,</span>
-<span class="w">                </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">paste</span><span class="p">(</span><span class="s">&quot;LOD =&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">LOD_threshold</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;copies&quot;</span><span class="p">)),</span><span class="w"> </span>
+<span class="w">  </span><span class="nf">geom_vline</span><span class="p">(</span><span class="n">xintercept</span><span class="o">=</span><span class="nf">log10</span><span class="p">(</span><span class="n">LOD</span><span class="p">),</span><span class="w"> </span><span class="n">linetype</span><span class="o">=</span><span class="s">&quot;dashed&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey40&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">geom_text</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="n">LOD</span><span class="p">),</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">std_curve</span><span class="o">$</span><span class="n">Cq</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">0.3</span><span class="p">,</span>
+<span class="w">                </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">paste</span><span class="p">(</span><span class="s">&quot;LOD =&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">LOD</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;copies&quot;</span><span class="p">)),</span><span class="w"> </span>
 <span class="w">            </span><span class="n">angle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">90</span><span class="p">,</span><span class="w"> </span><span class="n">vjust</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">-0.5</span><span class="p">,</span><span class="w"> </span><span class="n">hjust</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">-0.1</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey40&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 
 <span class="w">  </span><span class="c1">## ADDING LOQ LINE -- if no line shows up, all st. curve is quantitative </span>
-<span class="w">  </span><span class="nf">geom_vline</span><span class="p">(</span><span class="n">xintercept</span><span class="o">=</span><span class="nf">log10</span><span class="p">(</span><span class="n">LOQ_threshold</span><span class="p">),</span><span class="w"> </span><span class="n">linetype</span><span class="o">=</span><span class="s">&quot;dashed&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey40&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
-<span class="w">  </span><span class="nf">geom_text</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="n">LOQ_threshold</span><span class="p">),</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">std_curve</span><span class="o">$</span><span class="n">Cq</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">0.3</span><span class="p">,</span><span class="w"> </span>
-<span class="w">                </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">paste</span><span class="p">(</span><span class="s">&quot;LOQ =&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">LOQ_threshold</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;copies&quot;</span><span class="p">)),</span><span class="w"> </span>
+<span class="w">  </span><span class="nf">geom_vline</span><span class="p">(</span><span class="n">xintercept</span><span class="o">=</span><span class="nf">log10</span><span class="p">(</span><span class="n">LOQ</span><span class="p">),</span><span class="w"> </span><span class="n">linetype</span><span class="o">=</span><span class="s">&quot;dashed&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey40&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">geom_text</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="n">LOQ</span><span class="p">),</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">std_curve</span><span class="o">$</span><span class="n">Cq</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">0.3</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">paste</span><span class="p">(</span><span class="s">&quot;LOQ =&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">LOQ</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;copies&quot;</span><span class="p">)),</span><span class="w"> </span>
 <span class="w">            </span><span class="n">angle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">90</span><span class="p">,</span><span class="w"> </span><span class="n">vjust</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">-0.5</span><span class="p">,</span><span class="w"> </span><span class="n">hjust</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">-0.1</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey40&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 
 <span class="w">  </span><span class="nf">theme_bw</span><span class="p">()</span><span class="w"> </span><span class="o">+</span>
@@ -1595,14 +1616,14 @@
 <div class="highlight"><pre><span></span><code>## Warning: Use of `std_curve$Cq` is discouraged.
 ## ℹ Use `Cq` instead.
 
-## Warning in geom_text(aes(x = log10(LOD_threshold), y = max(std_curve$Cq, : All aesthetics have length 1, but the data has 93 rows.
+## Warning in geom_text(aes(x = log10(LOD), y = max(std_curve$Cq, na.rm = TRUE) * : All aesthetics have length 1, but the data has 93 rows.
 ## ℹ Please consider using `annotate()` or provide this layer with data containing
 ##   a single row.
 
 ## Warning: Use of `std_curve$Cq` is discouraged.
 ## ℹ Use `Cq` instead.
 
-## Warning in geom_text(aes(x = log10(LOQ_threshold), y = max(std_curve$Cq, : All aesthetics have length 1, but the data has 93 rows.
+## Warning in geom_text(aes(x = log10(LOQ), y = max(std_curve$Cq, na.rm = TRUE) * : All aesthetics have length 1, but the data has 93 rows.
 ## ℹ Please consider using `annotate()` or provide this layer with data containing
 ##   a single row.
 
@@ -1616,27 +1637,21 @@
 
 ## Warning: Removed 2 rows containing missing values or values outside the scale range
 ## (`geom_point()`).
-
-## Warning: Removed 1 row containing missing values or values outside the scale range
-## (`geom_vline()`).
-
-## Warning: Removed 93 rows containing missing values or values outside the scale range
-## (`geom_text()`).
 </code></pre></div>
-<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-4-1.png" /><!-- --></p>
+<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-8-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Standard_curve.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>## Warning: Use of `std_curve$Cq` is discouraged.
 ## ℹ Use `Cq` instead.
 
-## Warning in geom_text(aes(x = log10(LOD_threshold), y = max(std_curve$Cq, : All aesthetics have length 1, but the data has 93 rows.
+## Warning in geom_text(aes(x = log10(LOD), y = max(std_curve$Cq, na.rm = TRUE) * : All aesthetics have length 1, but the data has 93 rows.
 ## ℹ Please consider using `annotate()` or provide this layer with data containing
 ##   a single row.
 
 ## Warning: Use of `std_curve$Cq` is discouraged.
 ## ℹ Use `Cq` instead.
 
-## Warning in geom_text(aes(x = log10(LOQ_threshold), y = max(std_curve$Cq, : All aesthetics have length 1, but the data has 93 rows.
+## Warning in geom_text(aes(x = log10(LOQ), y = max(std_curve$Cq, na.rm = TRUE) * : All aesthetics have length 1, but the data has 93 rows.
 ## ℹ Please consider using `annotate()` or provide this layer with data containing
 ##   a single row.
 
@@ -1650,17 +1665,11 @@
 
 ## Warning: Removed 2 rows containing missing values or values outside the scale range
 ## (`geom_point()`).
-
-## Warning: Removed 1 row containing missing values or values outside the scale range
-## (`geom_vline()`).
-
-## Warning: Removed 93 rows containing missing values or values outside the scale range
-## (`geom_text()`).
 </code></pre></div>
 <h3 id="calculating-slope-and-y-intercept">Calculating slope and y-intercept</h3>
 <p>These values get fed in later in data calculations.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Fit a linear model to calculate slope and intercept</span>
-<span class="n">linear_model</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">lm</span><span class="p">(</span><span class="n">Cq_mean</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="n">`Starting Quantity (SQ)`</span><span class="p">),</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std_curve</span><span class="p">)</span>
+<span class="n">linear_model</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">lm</span><span class="p">(</span><span class="n">Cq_mean</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="n">St_Quant</span><span class="p">),</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std_curve</span><span class="p">)</span>
 
 <span class="c1"># Extract slope and y-intercept</span>
 <span class="n">slope</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">coef</span><span class="p">(</span><span class="n">linear_model</span><span class="p">)[</span><span class="m">2</span><span class="p">]</span><span class="w">      </span><span class="c1"># Slope (m)</span>
@@ -1673,17 +1682,17 @@
 
 <span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span>
 <span class="w">  </span><span class="c1"># list files in directory following a particular pattern</span>
-<span class="w">  </span><span class="nf">list.files</span><span class="p">(</span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;example input/qPCR_results/&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;.xlsx&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">full.names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">list.files</span><span class="p">(</span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;example input/qPCR_results/&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;.csv&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">full.names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 
 <span class="w">  </span><span class="c1"># get the column names</span>
 <span class="w">  </span><span class="nf">set_names</span><span class="p">(</span><span class="n">.</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
 
 <span class="w">  </span><span class="c1"># join all files together in one data frame by file ID, skipping first 19 rows</span>
-<span class="w">  </span><span class="nf">map_dfr</span><span class="p">(</span><span class="o">~</span><span class="nf">read_xlsx</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">skip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">19</span><span class="p">),</span><span class="w"> </span><span class="n">.id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;file.ID&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+<span class="w">  </span><span class="nf">map_dfr</span><span class="p">(</span><span class="o">~</span><span class="nf">read.csv</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">skip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">19</span><span class="p">),</span><span class="w"> </span><span class="n">.id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;file.ID&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
 
 <span class="w">  </span><span class="c1"># turn file.ID into just plate information (plate.ID)</span>
 <span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">file.ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">str_after_nth</span><span class="p">(</span><span class="n">file.ID</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;results/&quot;</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">),</span>
-<span class="w">         </span><span class="n">file.ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">str_before_nth</span><span class="p">(</span><span class="n">file.ID</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;.xlsx&quot;</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">         </span><span class="n">file.ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">str_before_nth</span><span class="p">(</span><span class="n">file.ID</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;.csv&quot;</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">rename</span><span class="p">(</span><span class="n">plate.ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">file.ID</span><span class="p">,</span><span class="w"> </span><span class="n">Sample_ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sample</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 
 <span class="w">  </span><span class="c1">## RI STRIPED BASS SPECIFIC CODE FOR SAMPLE ID MISMATCHES</span>
@@ -1698,16 +1707,20 @@
 
 <span class="nf">head</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>## # A tibble: 6 × 8
-##   plate.ID     Well  Fluor Target Content Sample_ID    Cq Starting Quantity (S…¹
-##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;lgl&gt;                 
-## 1 26 AUG 2024… A01   SYBR  Libra… Unkn    1/17/24_…  NA   NA                    
-## 2 26 AUG 2024… A02   SYBR  Libra… Unkn    1/17/24_…  NA   NA                    
-## 3 26 AUG 2024… A03   SYBR  Libra… Unkn    1/17/24_…  NA   NA                    
-## 4 26 AUG 2024… A04   SYBR  Libra… Unkn    1/17/24_…  34.8 NA                    
-## 5 26 AUG 2024… A05   SYBR  Libra… Unkn    1/17/24_…  NA   NA                    
-## 6 26 AUG 2024… A06   SYBR  Libra… Unkn    1/17/24_…  NA   NA                    
-## # ℹ abbreviated name: ¹​`Starting Quantity (SQ)`
+<div class="highlight"><pre><span></span><code>##              plate.ID Well Fluor  Target Content       Sample_ID    Cq
+## 1 26 AUG 2024 PLATE 1  A01  SYBR Library    Unkn 1/17/24_IPC_GCO    NA
+## 2 26 AUG 2024 PLATE 1  A02  SYBR Library    Unkn 1/17/24_IPC_BBC    NA
+## 3 26 AUG 2024 PLATE 1  A03  SYBR Library    Unkn 1/17/24_NAN_EDI    NA
+## 4 26 AUG 2024 PLATE 1  A04  SYBR Library    Unkn 1/17/24_EPS_DMF 34.79
+## 5 26 AUG 2024 PLATE 1  A05  SYBR Library    Unkn 1/17/24_WBJ_MHB    NA
+## 6 26 AUG 2024 PLATE 1  A06  SYBR Library    Unkn 1/17/24_NBT_SAK    NA
+##   Starting.Quantity..SQ.
+## 1                     NA
+## 2                     NA
+## 3                     NA
+## 4                     NA
+## 5                     NA
+## 6                     NA
 </code></pre></div>
 <h2 id="reading-in-meta-df">Reading in meta df</h2>
 <p>Sample ID from meta needs to match the Sample ID from the qPCR output</p>
@@ -1763,7 +1776,7 @@ value.</p>
 <span class="w">  </span><span class="nf">ungroup</span><span class="p">();</span><span class="w"> </span><span class="n">spike_samples</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>## # A tibble: 480 × 10
-##    plate.ID    Well  Fluor Target Content Sample_ID    Cq Starting Quantity (S…¹
+##    plate.ID    Well  Fluor Target Content Sample_ID    Cq Starting.Quantity..SQ.
 ##    &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;lgl&gt;                 
 ##  1 26 AUG 202… G01   SYBR  Libra… Unkn    1/17/24_…  10.5 NA                    
 ##  2 26 AUG 202… G02   SYBR  Libra… Unkn    1/17/24_…  10.6 NA                    
@@ -1772,11 +1785,10 @@ value.</p>
 ##  5 26 AUG 202… G05   SYBR  Libra… Unkn    1/17/24_…  10.5 NA                    
 ##  6 26 AUG 202… G06   SYBR  Libra… Unkn    1/17/24_…  11.0 NA                    
 ##  7 26 AUG 202… G07   SYBR  Libra… Unkn    1/17/24_…  10.8 NA                    
-##  8 26 AUG 202… G08   SYBR  Libra… Unkn    1/17/24_…  11.0 NA                    
+##  8 26 AUG 202… G08   SYBR  Libra… Unkn    1/17/24_…  11   NA                    
 ##  9 26 AUG 202… G09   SYBR  Libra… Unkn    1/17/24_…  10.7 NA                    
 ## 10 26 AUG 202… G10   SYBR  Libra… Unkn    1/18/24_…  10.9 NA                    
 ## # ℹ 470 more rows
-## # ℹ abbreviated name: ¹​`Starting Quantity (SQ)`
 ## # ℹ 2 more variables: Filter_Cq &lt;dbl&gt;, Cq_diff &lt;dbl&gt;
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1">## Remove any lab error samples </span>
@@ -1833,7 +1845,7 @@ value.</p>
 ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 ## generated.
 </code></pre></div>
-<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-10-1.png" /><!-- --></p>
+<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-14-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Inhibition.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="filter-data-cq-number-of-replicates-and-copy-num-calculations">Filter data Cq, Number of Replicates, and Copy Num calculations</h2>
@@ -1918,7 +1930,7 @@ Fisheries team to make sure code reflect user’s needs.</em></p>
 ## # ℹ 3 more variables: `Mean Ct` &lt;dbl&gt;, `Number of Replicates` &lt;int&gt;,
 ## #   `Mean Copy Number` &lt;dbl&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1">## Confirm that the number of samples output from qPCR matches the number of samples in the metadata  </span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Confirm that the number of samples output from qPCR matches the number of samples in the metadata (output = TRUE)</span>
 <span class="nf">nrow</span><span class="p">(</span><span class="n">samples_df</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nf">nrow</span><span class="p">(</span><span class="n">meta</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">Sample_ID</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">distinct</span><span class="p">())</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>## [1] TRUE
@@ -1985,9 +1997,9 @@ Fisheries team to make sure code reflect user’s needs.</em></p>
 <span class="w">  </span><span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;none&quot;</span><span class="p">,</span>
 <span class="w">        </span><span class="c1">#plot.title = element_text(hjust = 0.5, size = 16, face = &quot;bold&quot;)</span>
 <span class="w">        </span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
-<span class="w">  </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;#e9ecef&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;#a9d6e5&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;#e9ecef&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;#669bbc&quot;</span><span class="p">))</span>
 </code></pre></div>
-<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-16-1.png" /><!-- --></p>
+<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-20-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Blanks_piechart.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="sample-preliminary-data">Sample preliminary data</h2>
@@ -2010,49 +2022,74 @@ Fisheries team to make sure code reflect user’s needs.</em></p>
 <span class="w">  </span><span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;none&quot;</span><span class="p">,</span>
 <span class="w">        </span><span class="c1">#plot.title = element_text(hjust = 0.5, size = 16, face = &quot;bold&quot;)</span>
 <span class="w">        </span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
-<span class="w">  </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;#e9ecef&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;#a9d6e5&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;#e9ecef&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;#669bbc&quot;</span><span class="p">))</span>
 </code></pre></div>
-<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-17-1.png" /><!-- --></p>
+<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-21-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Fields_piechart.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
 </code></pre></div>
 <p>Bar chart</p>
-<div class="highlight"><pre><span></span><code><span class="n">fieldsamples_df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
-<span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="o">!</span><span class="nf">is.na</span><span class="p">(</span><span class="n">`Mean Copy Number Normalized`</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<div class="highlight"><pre><span></span><code><span class="n">fieldsamples_df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">subset</span><span class="p">(</span><span class="n">Detection</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Present&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+
 <span class="w">  </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">Sample_ID</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">`Mean Copy Number Normalized`</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>
-<span class="w">  </span><span class="nf">geom_bar</span><span class="p">(</span><span class="n">stat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;identity&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.7</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#a9d6e5&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
-<span class="w">  </span><span class="c1"># scale_fill_manual(values = c(&quot;#a9d6e5&quot;, &quot;#780000&quot;),</span>
-<span class="w">  </span><span class="c1">#                   labels = c(&quot;Normal&quot;, &quot;Outlier&quot;),</span>
-<span class="w">  </span><span class="c1">#                   ) +</span>
+<span class="w">  </span><span class="nf">geom_bar</span><span class="p">(</span><span class="n">stat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;identity&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.7</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#669bbc&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 <span class="w">  </span><span class="nf">labs</span><span class="p">(</span>
-<span class="w">    </span><span class="n">y</span><span class="o">=</span><span class="s">&quot;Log-Normalized Copy Number&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">y</span><span class="o">=</span><span class="s">&quot;Log10-Normalized Copy Number&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Sample ID&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Outlier detection&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="c1">#title = &quot;Just plotting log normalized value&quot;</span>
 <span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="c1">## Outlier line</span>
+<span class="w">  </span><span class="nf">geom_hline</span><span class="p">(</span><span class="n">yintercept</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cutoff</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;darkred&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">linetype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;dashed&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.5</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">geom_text</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cutoff</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Outlier&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">hjust</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.4</span><span class="p">,</span><span class="w"> </span><span class="n">vjust</span><span class="o">=</span><span class="m">-0.5</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey40&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="c1">## LOD line</span>
+<span class="w">  </span><span class="nf">geom_hline</span><span class="p">(</span><span class="n">yintercept</span><span class="o">=</span><span class="nf">log10</span><span class="p">(</span><span class="n">LOD</span><span class="p">),</span><span class="w"> </span><span class="n">linetype</span><span class="o">=</span><span class="s">&quot;dashed&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey40&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">geom_text</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="n">LOD</span><span class="p">),</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;LOD&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">hjust</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.5</span><span class="p">,</span><span class="w"> </span><span class="n">vjust</span><span class="o">=</span><span class="m">-0.5</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey40&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
+<span class="w">  </span><span class="c1">## LOQ line</span>
+<span class="w">  </span><span class="nf">geom_hline</span><span class="p">(</span><span class="n">yintercept</span><span class="o">=</span><span class="nf">log10</span><span class="p">(</span><span class="n">LOQ</span><span class="p">),</span><span class="w"> </span><span class="n">linetype</span><span class="o">=</span><span class="s">&quot;dashed&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey40&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">geom_text</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="n">LOQ</span><span class="p">),</span><span class="w"> </span><span class="n">x</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;LOQ&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">hjust</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.5</span><span class="p">,</span><span class="w"> </span><span class="n">vjust</span><span class="o">=</span><span class="m">-0.5</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey40&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+
 <span class="w">  </span><span class="nf">theme_bw</span><span class="p">()</span><span class="w"> </span><span class="o">+</span>
 <span class="w">    </span><span class="c1">## theme variables</span>
 <span class="w">    </span><span class="nf">theme</span><span class="p">(</span><span class="n">panel.background</span><span class="o">=</span><span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="s">&#39;white&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">colour</span><span class="o">=</span><span class="s">&#39;black&#39;</span><span class="p">),</span>
-<span class="w">        </span><span class="n">legend.position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">0.98</span><span class="p">,</span><span class="w"> </span><span class="m">0.98</span><span class="p">),</span><span class="w">  </span><span class="c1"># This puts the legend in the top right corner</span>
+<span class="w">        </span><span class="c1">#legend.position = c(0.98, 0.98),  # This puts the legend in the top right corner</span>
+<span class="w">        </span><span class="n">legend.position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;right&quot;</span><span class="p">,</span>
 <span class="w">        </span><span class="n">legend.justification</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">),</span><span class="w">  </span><span class="c1"># This aligns the legend to the top right</span>
 <span class="w">        </span><span class="n">axis.text.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="o">=</span><span class="s">&quot;grey20&quot;</span><span class="p">),</span>
-<span class="w">        </span><span class="n">axis.text.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="o">=</span><span class="s">&quot;grey20&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">angle</span><span class="o">=</span><span class="m">90</span><span class="p">,</span><span class="w"> </span><span class="n">hjust</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">vjust</span><span class="o">=</span><span class="m">0.5</span><span class="p">),</span>
+<span class="w">        </span><span class="n">axis.text.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="o">=</span><span class="s">&quot;grey20&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">angle</span><span class="o">=</span><span class="m">90</span><span class="p">,</span><span class="w"> </span><span class="n">vjust</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span><span class="w"> </span><span class="n">hjust</span><span class="o">=</span><span class="m">1</span><span class="p">),</span>
 <span class="w">        </span><span class="n">axis.title.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
 <span class="w">        </span><span class="n">axis.title.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
 <span class="w">        </span><span class="c1"># New theme elements for strip appearance</span>
 <span class="w">        </span><span class="n">strip.background</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;white&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;black&quot;</span><span class="p">),</span>
 <span class="w">        </span><span class="n">strip.text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">face</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;bold&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">9</span><span class="p">)</span>
-<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
-<span class="w">  </span><span class="nf">guides</span><span class="p">(</span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">guide_legend</span><span class="p">(</span><span class="n">override.aes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">)))</span><span class="w"> </span>
+<span class="w">    </span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>## Warning: A numeric `legend.position` argument in `theme()` was deprecated in ggplot2
-## 3.5.0.
-## ℹ Please use the `legend.position.inside` argument of `theme()` instead.
-## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-## generated.
+<div class="highlight"><pre><span></span><code>## Warning in geom_text(aes(y = cutoff, x = 2, label = &quot;Outlier&quot;), hjust = 0.4, : All aesthetics have length 1, but the data has 58 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing
+##   a single row.
+
+## Warning in geom_text(aes(y = log10(LOD), x = 2, label = &quot;LOD&quot;), hjust = 0.5, : All aesthetics have length 1, but the data has 58 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing
+##   a single row.
+
+## Warning in geom_text(aes(y = log10(LOQ), x = 2, label = &quot;LOQ&quot;), hjust = 0.5, : All aesthetics have length 1, but the data has 58 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing
+##   a single row.
 </code></pre></div>
-<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-18-1.png" /><!-- --></p>
+<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-22-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Fieldsamples_barchart.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">9.5</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">5</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## Warning in geom_text(aes(y = cutoff, x = 2, label = &quot;Outlier&quot;), hjust = 0.4, : All aesthetics have length 1, but the data has 58 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing
+##   a single row.
+
+## Warning in geom_text(aes(y = log10(LOD), x = 2, label = &quot;LOD&quot;), hjust = 0.5, : All aesthetics have length 1, but the data has 58 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing
+##   a single row.
+
+## Warning in geom_text(aes(y = log10(LOQ), x = 2, label = &quot;LOQ&quot;), hjust = 0.5, : All aesthetics have length 1, but the data has 58 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing
+##   a single row.
 </code></pre></div>
 <p>Show distance of outliers</p>
 <div class="highlight"><pre><span></span><code><span class="n">fieldsamples_df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">Sample_Type</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">`Mean Copy Number`</span><span class="p">,</span><span class="w"> </span>
@@ -2078,7 +2115,7 @@ Fisheries team to make sure code reflect user’s needs.</em></p>
 <div class="highlight"><pre><span></span><code>## Warning: Removed 82 rows containing missing values or values outside the scale range
 ## (`geom_point()`).
 </code></pre></div>
-<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-19-1.png" /><!-- --></p>
+<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-23-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Outliers.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4.5</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>## Warning: Removed 82 rows containing missing values or values outside the scale range
@@ -2102,20 +2139,9 @@ Fisheries team to make sure code reflect user’s needs.</em></p>
 <span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Sample_Time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">format</span><span class="p">(</span><span class="n">Sample_Time</span><span class="p">,</span><span class="w"> </span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;%H:%M:%S&quot;</span><span class="p">))</span>
 
 
-<span class="n">normalized_df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">full_join</span><span class="p">(</span><span class="n">rich_meta</span><span class="p">,</span><span class="w"> </span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Date&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Sample_Location&quot;</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="n">normalized_df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="c1">#full_join(rich_meta, ., by = c(&quot;Date&quot;, &quot;Sample_Location&quot;)) %&gt;%</span>
 <span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as.Date</span><span class="p">(</span><span class="n">Date</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">Number_of_Filters</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="s">&quot;example output/Results.xlsx&quot;</span><span class="p">)</span>
-
-
-<span class="w">  </span><span class="c1"># dplyr::select(Date, Sample_Location, `Mean Ct`, `Number of Replicates`, </span>
-<span class="w">  </span><span class="c1">#               `Mean Copy Number`, `Mean Copy Number Normalized`, Detection) %&gt;%</span>
-<span class="w">  </span><span class="c1"># </span>
-<span class="w">  </span><span class="c1"># unite(Sample, Date, Sample_Location, sep = &quot; &quot;, remove = FALSE) %&gt;%</span>
-<span class="w">  </span><span class="c1"># </span>
-<span class="w">  </span><span class="c1"># # cut decimals down to 2</span>
-<span class="w">  </span><span class="c1"># mutate(across(where(is.numeric), ~round(., 2))) %&gt;%</span>
-<span class="w">  </span><span class="c1"># </span>
-<span class="w">  </span><span class="c1"># write_xlsx(&quot;example output/Results.xlsx&quot;)</span>
 </code></pre></div>
 
 
