@@ -78,7 +78,7 @@ std_curve %>% filter(Sample == "neg")
 std_curve <- std_curve %>% filter(!Sample == "neg")
 ```
 
-### Calculating LOD and LOQ 
+### Calculating LOD and LOQ based on discrete thresholds 
 
 Making list of standard curve quantities
 
@@ -121,6 +121,36 @@ LOQ_index <- which(quants$St_Quant == above_threshold_LOQ_quant)
 
 LOQ <- quants$St_Quant[LOQ_index - 1]
 ```
+
+### Using modeling to calculate LOD and LOQ 
+
+```{r}
+## Different models 
+
+LOQ1 <- nls(Cq.CV~SSasymp(log10(Standards),Asym,R0,lrc),
+                  data=DAT2[DAT2$Target==Targets[i],])
+
+
+LOQ2 <- lm(Cq.CV~log10(Standards),data=DAT2[DAT2$Target==Targets[i],])
+
+
+LOQ3 <- lm(Cq.CV~poly(log10(Standards),2),data=DAT2[DAT2$Target==Targets[i],])
+
+LOQ4 <- lm(Cq.CV~poly(log10(Standards),3),data=DAT2[DAT2$Target==Targets[i],])
+
+LOQ5 <- lm(Cq.CV~poly(log10(Standards),4),data=DAT2[DAT2$Target==Targets[i],])
+
+LOQ6 <- lm(Cq.CV~poly(log10(Standards),5),data=DAT2[DAT2$Target==Targets[i],])
+
+LOQ7 <- lm(Cq.CV~poly(log10(Standards),6),data=DAT2[DAT2$Target==Targets[i],])
+
+## find residual standard error
+## pick best fitting model 
+
+
+```
+
+
 
 ### Plotting standard curve 
 
