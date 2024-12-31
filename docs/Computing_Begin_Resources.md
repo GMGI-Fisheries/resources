@@ -11,6 +11,7 @@ Linux/Unix: both operating systems that are used through a command line but Linu
 - [The Bash Guide](https://guide.bash.academy/)   
 - [Introducing the Shell](http://swcarpentry.github.io/shell-novice/01-intro/)  
 - [Introduction to the Command Line for Genomics](https://datacarpentry.org/shell-genomics/)  
+- [Unix Cheat Sheet](https://avantonder.github.io/Ghana_course/unix_cheat_sheet.html)
 
 ## RStudio 
 
