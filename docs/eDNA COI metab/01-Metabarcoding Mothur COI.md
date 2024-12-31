@@ -171,7 +171,7 @@ Create directory: `mkdir Mothur_data`
 
 `summary.seqs()`: generates summary information about the sequences from the files we made above.
 
-Run time: ~30-45 min for 30-40 files (from previous project; update values with GMGI COI info)
+Run time: ~30 min for one MiSeq run worth (96 samples). 
 
 `01-Mothur-setup.sh`
 
@@ -226,7 +226,7 @@ To run: `sbatch /work/gmgi/scripts/eDNA/COI/Mothur/01-Mothur-setup.sh /path/to/r
 Example: 
 
 ```
-sbatch /work/gmgi/scripts/eDNA/COI/Mothur/01-Mothur-setup.sh \
+sbatch 01-Mothur-setup.sh \
     /work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/raw_data \
     /work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data \
     OSW_2023_invert
@@ -254,15 +254,14 @@ Summary of OSW data from `mothur.01setup.summary.contigs.logfile`:
 ```
                 Start   End     NBases  Ambigs  Polymer NumSeqs
 Minimum:        1       124     124     0       3       1
-2.5%-tile:      1       251     251     0       4       256823
-25%-tile:       1       365     365     0       5       2568228
-Median:         1       365     365     0       6       5136456
-75%-tile:       1       365     365     1       6       7704683
-97.5%-tile:     1       404     404     8       8       10016088
-Maximum:        1       502     502     191     233     10272910
+2.5%-tile:      1       251     251     0       4       265093
+25%-tile:       1       365     365     0       5       2650929
+Median:         1       365     365     0       6       5301857
+75%-tile:       1       365     365     1       6       7952785
+97.5%-tile:     1       404     404     8       8       10338621
+Maximum:        1       502     502     196     233     10603713
 Mean:   1       363     363     1       5
-# of Seqs:      10272910
-It took 193 secs to summarize 10272910 sequences.
+# of Seqs:      10603713
 ```
 
 This table shows quantile values about the distribution of sequences for a few things:   
@@ -286,14 +285,17 @@ Descriptions of contig files:
 - Groups file = what group each sequence belongs to map sequence to each sample from the trimmed sequence file.  
 - Contigs report file = information on sequences that were aligned and paired together.  
 
-
 ## Step 5: QC'ing seqs via Mothur 
 
-Additional QC steps besides removing primers. 
+Additional QC steps besides removing primers. Check the 25%-tile, median, and 75%-tile values from the table above. That will determine the max cut-offs below along with the expected length of the COI region (~313 bp but in OSW data, the majority are >350 bp). 
 
-Check the 25%-tile, median, and 75%-tile values from the table above. That will determine the max cut-offs below along with the expected length of the COI region (~313 bp but in OSW data, the majority are >350 bp). 
+`screen.seqs()`: specify the fasta file of the contigs generated in the previous step and remove any sequence with an ambiguous call ("N"). We will also remove sequences >450 nt. We will also set a minimum size amount (200). These parameters could be adjusted based on specific experiment and variable region.
 
-`screen.seqs()`: specify the fasta file of the contigs generated in the previous step and remove any sequence with an ambiguous call ("N"). We will also remove sequences >350 nt. We will also set a minimum size amount (200). These parameters could be adjusted based on specific experiment and variable region.
+`summary.seqs()`: summarizes the quantity and characteristics of sequences in a FASTA file. Often used directly after a screen.seqs(), align.seqs(), or unique.seqs() to summarize the results of the previous step. 
+
+`unique.seqs()`: extracts unique sequences from a FASTA-formatted sequence file. 
+
+`count.seqs()`: counts the total number of sequences represented by each representative sequence in a name or count file. This can also count based on groups given (e.g., samples). 
 
 `02-Mothur-QC.sh`
 
@@ -317,16 +319,20 @@ proj_name=$2
 
 cd ${dir}
 
-mothur "#screen.seqs(inputdir=., outputdir=., fasta=${proj_name}.paired.trim.contigs.fasta, group=${proj_name}.paired.contigs.groups, maxambig=0, maxlength=400, minlength=200)"
-
+## Screen seqs and summarize
+mothur "#screen.seqs(inputdir=., outputdir=., fasta=${proj_name}.paired.trim.contigs.fasta, group=${proj_name}.paired.contigs.groups, maxambig=0, maxlength=450, minlength=200)"
 mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.fasta)"
+
+## Count the number of unique sequences
+mothur "#unique.seqs(fasta=${proj_name}.paired.trim.contigs.good.fasta)"
+
+## Counts seqs per sample
+mothur "#count.seqs(name=${proj_name}.paired.trim.contigs.good.names, group=${proj_name}.paired.contigs.good.groups)"
+mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.fasta, count=${proj_name}.paired.trim.contigs.good.count_table)"
 ```
 
-To run: `sbatch /work/gmgi/scripts/eDNA/COI/Mothur/02-Mothur-QC.sh /path/to/output/directory project_prefix`  
-
-Example: 
-
-Running OSW from invertebrate/scripts folder 
+To run: `sbatch /work/gmgi/scripts/eDNA/COI/Mothur/02-Mothur-QC.sh /path/to/output/directory project_prefix` 
+Example: Running OSW from invertebrate/scripts folder 
 
 ```
 sbatch 02-Mothur-QC.sh \
@@ -334,87 +340,30 @@ sbatch 02-Mothur-QC.sh \
     OSW_2023_invert
 ```   
 
-Output files:    
-- proj_name.trim.contigs.good.fasta   
-- proj_name.trim.contigs.bad.accnos    
-- proj_name.contigs.good.groups  
+The logfiles will be named with the run ID so I used `mv` to change these to names that reflect the step:  
+- `mothur.02QC.screenseqs.logfile`  
+- `mothur.02QC.screenseqs.summary.logfile`   
+- `mothur.02QC.uniqueseqs.logfile`  
+- `mothur.02QC.countseqs.logfile`  
+- `mothur.02QC.countseqs.summary.logfile`  
 
-OSW example: Removed 3,596,140 sequences that fall outside of 200-400 bp length bin with no ambiguous calls so 6,676,770 remaining sequences. 
-
-```
-                Start   End     NBases  Ambigs  Polymer NumSeqs
-Minimum:        1       213     213     0       3       1
-2.5%-tile:      1       251     251     0       4       166920
-25%-tile:       1       365     365     0       5       1669193
-Median:         1       365     365     0       6       3338386
-75%-tile:       1       365     365     0       6       5007578
-97.5%-tile:     1       368     368     0       7       6509851
-Maximum:        1       400     400     0       105     6676770
-Mean:   1       360     360     0       5
-# of Seqs:      6676770
-```
-
-Changed the name of the log files to:    
-- mothur.02contigQC.screenseqs.logfile      
-- mothur.02contigQC.summary.logfile   
-
-## Step 6: Determining and counting unique sequences with Mothur
-
-Identifying unique sequences and counting those. 
-
-`03-Mothur-unique.sh`
-
-```
-#!/bin/bash
-#SBATCH --error=output/"%x_error.%j" #if your job fails, the error report will be put in this file
-#SBATCH --output=output/"%x_output.%j" #once your job is completed, any final job report comments will be put in this file
-#SBATCH --partition=short
-#SBATCH --nodes=1
-#SBATCH --time=10:00:00
-#SBATCH --job-name=mothur_uniq
-#SBATCH --mem=5GB
-#SBATCH --ntasks=6
-#SBATCH --cpus-per-task=2
-
-# Activate conda environment
-source /work/gmgi/miniconda3/bin/activate eDNA_COI
-
-dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data"
-proj_name="OSW_2023_invert" 
-
-cd ${dir}
-
-mothur "#unique.seqs(fasta=${proj_name}.paired.trim.contigs.good.fasta)"
-
-mothur "#count.seqs(name=${proj_name}.paired.trim.contigs.good.names, group=${proj_name}.paired.contigs.good.groups)"
-
-mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.fasta, count=${proj_name}.paired.trim.contigs.good.count_table)"
-```
-
-OSW example output: 
+OSW example from the output files: 
 
 ```
                 Start   End     NBases  Ambigs  Polymer NumSeqs
 Minimum:        1       213     213     0       3       1
-2.5%-tile:      1       251     251     0       4       166920
-25%-tile:       1       365     365     0       5       1669193
-Median:         1       365     365     0       6       3338386
-75%-tile:       1       365     365     0       6       5007578
-97.5%-tile:     1       368     368     0       7       6509851
-Maximum:        1       400     400     0       105     6676770
-Mean:   1       360     360     0       5
-# of unique seqs:       3138754
-total # of seqs:        6676770
+2.5%-tile:      1       251     251     0       4       183163
+25%-tile:       1       365     365     0       5       1831628
+Median:         1       365     365     0       6       3663256
+75%-tile:       1       365     365     0       6       5494883
+97.5%-tile:     1       404     404     0       7       7143348
+Maximum:        1       450     450     0       171     7326510
+Mean:   1       363     363     0       5
+# of Seqs:      7326510
+# of unique: 3521350
 ```
 
-There are 3,138,754 unique sequences in this OSW example dataset. 
-
-Changing the log file names to:  
-- mothur.03unique.uniqueseqs.logfile  
-- mothur.03unique.countseqs.logfile    
-- mothur.03unique.summary.logfile  
-
-## Step 7: Taxonomic Assignment with Mothur 
+## Step 6: Taxonomic Assignment with Mothur 
 
 Using MetaZooGene Global database as reference. This database has sequences from both BOLD and NCBI GenBank. 
 
@@ -476,7 +425,7 @@ Example: `sbatch MZG_align.sh MZG_v2023-m07-15_NorthAtlantic_modeA.fasta MAFFT_M
 
 Running taxonomic assignment via Mothur: 
 
-`04-Mothur-tax.sh`
+`03-Mothur-tax.sh`
 
 ```
 #!/bin/bash
@@ -495,13 +444,31 @@ source /work/gmgi/miniconda3/bin/activate eDNA_COI
 
 dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data"
 proj_name="OSW_2023_invert" 
-#ref="/work/gmgi/databases/COI/MetaZooGene/MAFFT_MZG_v2023-m07-15_NorthAtlantic_modeA_aligned.fasta"
-ref="/work/gmgi/databases/COI/MetaZooGene/MAFFT_MZG_v2023-m07-15_Global_modeA_aligned.fasta"
+ref=$1
 
 cd ${dir}
 
+## Aligning to taxonomy file
 mothur "#align.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.fasta, reference=${ref}, flip=T, processors=48)"
 mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align)"
+
+## Identifying those that don't meet the criteria 
+mothur "#screen.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, count=${proj_name}.paired.trim.contigs.good.count_table, optimize=start, criteria=99, maxhomop=8)"
+mothur "#summary.seqs(fasta=current, count=current)"
+mothur "#count.groups(count=${proj_name}.paired.trim.contigs.good.count_table)"
+
+## Filtering those out
+mothur "#filter.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.align, vertical=T, trump=.)"
+mothur "#summary.seqs(fasta=current, count=current)"
+
+## ID unique sequences again
+mothur "#unique.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.fasta, count=${proj_name}.paired.trim.contigs.good.good.count_table)"
+```
+
+How to run: 
+
+```
+sbatch 03-Mothur-tax.sh /work/gmgi/databases/COI/MetaZooGene/MAFFT_MZG_v2023-m07-15_NorthAtlantic_modeA_aligned.fasta 
 ```
 
 Atlantic comparison:
@@ -509,22 +476,24 @@ Atlantic comparison:
 ```
                 Start   End     NBases  Ambigs  Polymer NumSeqs
 Minimum:        0       0       0       0       1       1
-2.5%-tile:      1836    7145    5       0       1       78469
-25%-tile:       6781    7145    365     0       5       784689
-Median:         22391   24785   365     0       6       1569378
-75%-tile:       22508   25827   365     0       6       2354066
-97.5%-tile:     93935   93943   368     0       7       3060286
-Maximum:        121316  121316  400     0       26      3138754
-Mean:   20928   28519   337     0       5
-# of Seqs:      3138754
+2.5%-tile:      1833    7145    3       0       1       86005
+25%-tile:       6781    7145    364     0       5       860046
+Median:         22391   24785   365     0       6       1720092
+75%-tile:       22508   25827   365     0       6       2580137
+97.5%-tile:     119396  119405  368     0       7       3354178
+Maximum:        121316  121316  450     0       171     3440182
+Mean:   26581   33626   308     0       5
+# of Seqs:      3440182
 ```
 
-World comparison
+World comparison:
 
 ```
 
 
 ```
+
+If we are using MetaZooGene and it's all COI sequences, why would we want to filter any out? Skip screen seqs for now.
 
 ## Step 8: QC Taxonomic Alignment 
 
@@ -551,7 +520,7 @@ proj_name="OSW_2023_invert"
 cd ${dir}
 
 ## Identifying those that don't meet the criteria 
-mothur "#screen.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, count=${proj_name}.paired.trim.contigs.good.count_table, optimize=start, criteria=90, maxhomop=8)"
+mothur "#screen.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, count=${proj_name}.paired.trim.contigs.good.count_table, optimize=start, criteria=99, maxhomop=8)"
 mothur "#summary.seqs(fasta=current, count=current)"
 mothur "#count.groups(count=${proj_name}.paired.trim.contigs.good.count_table)"
 
@@ -577,7 +546,7 @@ Other programs that conduct this "denoising" are DADA2, UNOISE, and DEBLUR. Howe
 
 At this point we have removed as much sequencing error as we can and it is time to turn our attention to removing chimeras. We'll do this using the VSEARCH algorithm that is called within mothur using the chimera.vsearch command. 
 
-`06-Mothur-denoise.sh`
+`04-Mothur-denoise.sh`
 
 ```
 #!/bin/bash
@@ -600,17 +569,19 @@ proj_name="OSW_2023_invert"
 cd ${dir}
 
 ## Denoise 
-mothur "#pre.cluster(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.unique.fasta, count=${proj_name}.paired.trim.contigs.good.unique.good.filter.count_table, diffs=1, method=unoise)"
+mothur "#pre.cluster(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.unique.fasta, count=${proj_name}.paired.trim.contigs.good.unique.good.filter.count_table, diffs=2, method=unoise)"
 
-## Remove chimeras 
-mothur "#chimera.vsearch(fasta=current, count=current, dereplicate=t)"
-mothur "#remove.seqs(fasta=current, accnos=current)"
+## Identify chimeras 
+mothur "#chimera.vsearch(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.unique.precluster.fasta, count=${proj_name}.paired.trim.contigs.good.unique.good.filter.unique.precluster.count_table, dereplicate=T)"
+
+## Remove chimeras
+mothur "#remove.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.unique.precluster.fasta, accnos=${proj_name}.paired.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.accnos)"
 
 ## Produce summary file 
-mothur "#summary.seqs(fasta=current, count=current, log=%x.${proj_name}.summarypostfilter.log)"
+summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.unique.precluster.pick.fasta, count=${proj_name}.paired.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.count_table)
 ```
 
-Stuck here b/c steps are removing almost all reads from samples.. why 
+
 
 ## Step 10: Classify sequences 
 
@@ -618,7 +589,7 @@ Fasta reference file:
 Taxonomy file:  
 
 
-`.sh`
+`05-Mothur-ASV.sh`
 
 ```
 
