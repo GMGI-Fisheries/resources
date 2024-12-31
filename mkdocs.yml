@@ -42,8 +42,10 @@ nav:
     - Basics: 'Computing_Begin_Resources.md'
     - R Resources: 'Data Visualization in R.md'
     - Intro to Github: 'tbd.md'
-    - Intro to HPC: 'tbd.md'
+    - Intro to HPC: 'Introduction to HPC.md'
+    - Intro to Conda: '.md'
     - Intro to Containers: 'Introduction to Containers.md'
+    - Intro to Workflow Managers: 'Introduction to Workflow Managers.md'
   - 'eDNA: 12S metabarcoding':
     - 00-Create-conda-env: '00-creating_eDNA_conda_env.md'
     - 01-ampliseq-12S: 'eDNA 12S metab/01-Metabarcoding ampliseq 12S Riaz.md'
