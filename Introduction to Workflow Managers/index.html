@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../Introduction%20to%20HPC/">
+        <link rel="prev" href="../Introduction%20to%20Containers/">
       
       
-        <link rel="next" href="../Introduction%20to%20Workflow%20Managers/">
+        <link rel="next" href="../00-creating_eDNA_conda_env/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>Intro to Containers - GMGI Fisheries Handbook</title>
+        <title>Intro to Workflow Managers - GMGI Fisheries Handbook</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#introduction-to-containers" class="md-skip">
+        <a href="#introduction-to-workflow-managers" class="md-skip">
           Skip to content
         </a>
       
@@ -108,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Intro to Containers
+              Intro to Workflow Managers
             
           </span>
         </div>
@@ -534,6 +534,27 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../Introduction%20to%20Containers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Intro to Containers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -546,29 +567,18 @@
         
       
       
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
   
   <span class="md-ellipsis">
-    Intro to Containers
+    Intro to Workflow Managers
   </span>
   
 
-      </a>
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Introduction%20to%20Workflow%20Managers/" class="md-nav__link">
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -577,6 +587,44 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#nextflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nextflow
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snakemake" class="md-nav__link">
+    <span class="md-ellipsis">
+      Snakemake
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1113,6 +1161,32 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#nextflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nextflow
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snakemake" class="md-nav__link">
+    <span class="md-ellipsis">
+      Snakemake
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1126,7 +1200,7 @@
                   
 
   
-    <a href="https://github.com/GMGI-Fisheries/resources/blob/master/docs/Introduction to Containers.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/GMGI-Fisheries/resources/blob/master/docs/Introduction to Workflow Managers.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -1134,9 +1208,29 @@
   
 
 
-<h1 id="introduction-to-containers">Introduction to Containers</h1>
-<p><img alt="" src="https://github.com/GMGI-Fisheries/resources/blob/master/img/Intro_to_Containers_doc.png?raw=true" /></p>
-<p>Two popular container engines: <a href="https://www.docker.com">Docker</a>, <a href="https://docs.sylabs.io/guides/3.5/user-guide/introduction.html">Singularity</a>  </p>
+<h1 id="introduction-to-workflow-managers">Introduction to Workflow Managers</h1>
+<p>Workflow Management Systems (WfMS), such as Snakemake, Galaxy, and Nextflow have been developed specifically to manage computational data-analysis workflows.</p>
+<p>Benefits:</p>
+<ul>
+<li><strong>Run time management</strong>: Management of program execution on the operating system and splitting tasks and data to run at the same time in a process called parallelisation.  </li>
+<li><strong>Software management</strong>: Use of technology like containers, such as Docker or Singularity, that packages up code and all its dependencies so the application runs reliably from one computing environment to another.  </li>
+<li><strong>Portability &amp; Interoperability</strong>: Workflows written on one system can be run on another computing infrastructure e.g., local computer, compute cluster, or cloud infrastructure.  </li>
+<li><strong>Reproducibility</strong>: The use of software management systems and a pipeline specification means that the workflow will produce the same results when re-run, including on different computing platforms.  </li>
+<li><strong>Reentrancy</strong>: Continuous checkpoints allow workflows to resume from the last successfully executed steps.</li>
+</ul>
+<h3 id="nextflow">Nextflow</h3>
+<p>Basic concepts of Nextflow: <a href="https://avantonder.github.io/Ghana_course/materials/08-workflow_managers/8.1-workflow_managers.html#nextflow-basic-concepts">8.1 Nextflow Basic Concepts</a>.</p>
+<p>Nextflow workflows have three main parts:<br />
+1. Processes - describe independent tasks to be run with defined input and output. A process script can be written in any scripting language that can be executed by the Linux platform (Bash, Perl, Ruby, Python, etc.).  <br />
+2. Channels - used to manipulate the flow of data from one process to the next. 
+3. Workflows - set of instructions for programs involved in the pipeline. A single pipeline can contain many subworkflows. </p>
+<p><img alt="" src="https://avantonder.github.io/Ghana_course/materials/fig/channel-process_fqc.png" /></p>
+<h3 id="snakemake">Snakemake</h3>
+<p>Similar to Nextflow, the Snakemake workflow management system is a tool for creating reproducible and scalable data analyses. The main difference is that workflows are described via a human readable, Python based language. They can be seamlessly scaled to server, cluster, grid and cloud environments, without the need to modify the workflow definition. Finally, Snakemake workflows can entail a description of required software, which will be automatically deployed to any execution environment.</p>
+<p>Resources:  </p>
+<ul>
+<li>University of Ghana <a href="https://avantonder.github.io/Ghana_course/materials/08-workflow_managers/8.1-workflow_managers.html">documentation</a></li>
+</ul>
 
 
 
