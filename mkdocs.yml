@@ -38,7 +38,7 @@ nav:
     - Northeastern University: 'Computing_NU.md'
   - Data Management: 'Data_Management.md'
   - Data Transfer: 'Data_To_Server.md'
-  - 'Computing Beginner Resources': 
+  - 'Computing Resources': 
     - Basics: 'Computing_Begin_Resources.md'
     - R Resources: 'Data Visualization in R.md'
     - Intro to Github: 'tbd.md'
