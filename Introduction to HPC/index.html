@@ -550,9 +550,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#-httpsavantondergithubioghana_coursematerials12-intro_hpc121-intro_hpchtml" class="md-nav__link">
+  <a href="#resources-types" class="md-nav__link">
     <span class="md-ellipsis">
-      - https://avantonder.github.io/Ghana_course/materials/12-intro_hpc/12.1-intro_hpc.html
+      Resources types
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#helpful-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helpful links
     </span>
   </a>
   
@@ -1177,9 +1186,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#-httpsavantondergithubioghana_coursematerials12-intro_hpc121-intro_hpchtml" class="md-nav__link">
+  <a href="#resources-types" class="md-nav__link">
     <span class="md-ellipsis">
-      - https://avantonder.github.io/Ghana_course/materials/12-intro_hpc/12.1-intro_hpc.html
+      Resources types
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#helpful-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helpful links
     </span>
   </a>
   
@@ -1209,7 +1227,7 @@
 
 
 <h1 id="introduction-to-high-performance-computing-clusters">Introduction to High Performance Computing Clusters</h1>
-<p>High Performance Computing (HPC):  </p>
+<p>High Performance Computing (HPC) cluster/server:  </p>
 <ul>
 <li>The ability to carry out large scale computations to solve complex problems, that either need to process a lot of data, or to have a lot of computing power at their disposal. Basically, any computing system that doesn't fit on a desk can be described as HPC.  </li>
 <li>HPC systems are actually networks of processors. The key principle of HPC lies in the possibility to run massively parallel code to benefit from a large acceleration in runtime.   </li>
@@ -1220,10 +1238,30 @@
 <p>Or smaller, lab-size: </p>
 <p><img alt="" src="https://telecoms.adaptit.tech/wp-content/uploads/2020/10/hpc-illustration_V2-02-scaled-1-2048x1449.jpg" /></p>
 <h3 id="system-organization">System organization</h3>
+<p>A HPC consists of several computers connected in a network. These are called <strong>nodes</strong>:  </p>
+<ul>
+<li>The login nodes are the machines that we connect to and from where we interact with the HPC. These should not be used to run resource-intensive tasks   </li>
+<li>The compute nodes are the high-performance machines on which the actual heavy computations run. Jobs are submitted to the compute nodes through a job scheduler.   </li>
+</ul>
+<p>The <strong>job scheduler</strong> is used to submit scripts to be run on the compute nodes:  </p>
+<ul>
+<li>The role of this software is to manage large numbers of jobs being submitted and prioritise them according to their resource needs    </li>
+<li>E.g., slurm  </li>
+</ul>
+<p>The filesystem on a HPC is often split between a small (backed) <strong>home directory</strong>, and a large and high-performance (non-backed) <strong>scratch space</strong>:    </p>
+<ul>
+<li><code>/home</code>: The user's home is used for things like configuration files and local software instalation     </li>
+<li><code>/scratch</code>: The scratch space is used for the data and analysis scripts. Usually scrubbed after ~30 days depending on system. Once deleted, cannot be recovered!      </li>
+<li><code>/work</code>: Large, backed working and/or storage space for data    </li>
+</ul>
 <p>Regardless of size, HPC clusters will have the following organization. A user upon login, will be on a 'login' node. To run tasks, users can either enter a computing node and run processes themselves or submit a script to a HPC scheduler (e.g., slurm). The job scheduler balances workload distribution and ensures nodes are not overloaded or underutilized. </p>
-<p><img alt="" src="https://hbctraining.github.io/Intro-to-shell-flipped/img/compute_cluster.png" /></p>
-<p>Resources:  </p>
-<h2 id="-httpsavantondergithubioghana_coursematerials12-intro_hpc121-intro_hpchtml">- <a href="https://avantonder.github.io/Ghana_course/materials/12-intro_hpc/12.1-intro_hpc.html">https://avantonder.github.io/Ghana_course/materials/12-intro_hpc/12.1-intro_hpc.html</a></h2>
+<p><img alt="" src="https://hpc.gwu.edu/files/2021/01/ClusterExample-965x1024.png" /></p>
+<h3 id="resources-types">Resources types</h3>
+<p><strong>CPU (central processing units)</strong> is the "brain" of the computer, performing a wide range of operations and calculations. CPUs can have several "cores", which means they can run tasks in parallel, increasing the throughput of calculations per second. A typical personal computer may have a CPU with 4-8 cores. A single compute node on the HPC may have 32-48 cores (and often these are faster than the CPU on our computers).</p>
+<p><strong>RAM (random access memory)</strong> is a quick access storage where data is temporarily held while being processed by the CPU. A typical personal computer may have 8-32Gb of RAM. A single compute nodes on a HPC may often have &gt;100Gb RAM. </p>
+<p><strong>GPUs (graphical processing units)</strong> are similar to CPUs, but are more specialised in the type of operations they can do. While less flexible than CPUs, each GPU can do thousands of calculations in parallel. This makes them extremely well suited for graphical tasks, but also more generally for matrix computations and so are often used in machine learning applications. </p>
+<h3 id="helpful-links">Helpful links</h3>
+<p><a href="https://avantonder.github.io/Ghana_course/materials/12-intro_hpc/12.1-intro_hpc.html">https://avantonder.github.io/Ghana_course/materials/12-intro_hpc/12.1-intro_hpc.html</a>  </p>
 
 
 
