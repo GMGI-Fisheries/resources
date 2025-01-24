@@ -4,7 +4,7 @@
 
 The COI region is commonly used for metabarcoding practices and consequently there are many primer options to choose from. The Fisheries team at GMGI has optimized the Leray Geller set (outlined in red box below). Citation: [Leray et al 2013](https://link.springer.com/article/10.1186/1742-9994-10-34).
 
-We primarily use this set for invertebrate targets and 12S for vertebrate communities. 
+We primarily use this set for invertebrate targets and 12S for vertebrate communities.
 
 ![](https://github.com/GMGI-Fisheries/resources/blob/master/img/eDNA_meta_COI_primerset.png?raw=true)
 
@@ -232,6 +232,25 @@ sbatch 01-Mothur-setup.sh \
     OSW_2023_invert
 ```            
 
+Trying to figure out how to set current file 
+
+```
+output_dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data"
+oligo_file="/work/gmgi/databases/COI/mothur_oligos_LG"
+proj_name="OSW_2023_invert"
+cd ${output_dir} 
+
+mothur "#set.dir(input=/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data)"
+mothur "#make.file(inputdir=., type=gz, prefix=${proj_name})"
+mothur "#set.current(file=${proj_name}.paired.files)"
+mothur "#get.current()"
+mothur "#make.contigs(file=current, trimoverlap=F, oligos=${oligo_file}, pdiffs=5, checkorient=T)"
+```
+
+Set.current() creates `current_files.summary`  
+
+
+
 #### Assess output (data from OSW example): 
 
 Count the number of sequences that were removed and the number that were kept by counting sequences in each fasta file
@@ -390,6 +409,62 @@ gunzip -c MZGmothur-coi__T4000000__o02__A.txt.gz > MZG_v2023-m07-15-NorthAtlanti
 gunzip -c MZGmothur-coi__T4000000__o00__A.txt.gz > MZG_v2023-m07-15-Global_modeA.txt
 ```
 
+Create DADA2 version: 
+
+`MZG_to_DADA2.R`: 
+
+```
+#!/bin/R
+
+MZGdb_to_DADA2 <- function(input_file, output_file) {
+
+  library(magrittr)
+  
+  # Download
+  readr::read_csv(input_file, col_names = FALSE, trim_ws = FALSE) %>%
+    # Select ID, Sequence and taxa columns
+    dplyr::select(X34, X31, X33, X2) %>%
+    # Separate taxa column into separate columns
+    tidyr::separate(X34, into = as.character(1:21), sep = ";") %>% 
+    # Merge wanted taxa columns and add ">"
+    tidyr::unite(col = "Taxa", 1,4,5,7,8,9,10,11,12,16,18,X2, sep = ";" ) %>%
+    dplyr::mutate(Taxa = paste(">", Taxa, sep = "")) %>%
+    # Restructure into one single column vector
+    dplyr::select(X33, Taxa, X31) %>% 
+    tidyr::pivot_longer(cols = c("Taxa", "X31")) %>%
+    dplyr::pull(value) %>%
+    # Write vector to fasta
+    base::write(output_file)
+}
+
+MZGdb_to_DADA2(input_file = "https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGdata-coi__T4000000__o00__A.csv.gz",
+               output_file = "DADA2_MZG_v2023-m07-15_Global_modeA.fasta")
+
+MZGdb_to_DADA2(input_file = "https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGdata-coi__T4000000__o02__A.csv.gz",
+               output_file = "DADA2_MZG_v2023-m07-15_NorthAtlantic_modeA.fasta")
+```
+
+`MZG_to_DADA2.sh`: 
+
+```
+#!/bin/bash
+#SBATCH --error="%x_error.%j" #if your job fails, the error report will be put in this file
+#SBATCH --output="%x_output.%j" #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=long
+#SBATCH --nodes=1
+#SBATCH --time=120:00:00
+#SBATCH --job-name=MZG_to_DADA2
+#SBATCH --mem=150GB
+#SBATCH --ntasks=24
+#SBATCH --cpus-per-task=2
+
+module load anaconda3/2022.05
+source activate /home/e.strand/.conda/envs/Env_R_v2
+
+Rscript /work/gmgi/databases/COI/MetaZooGene/MZG_to_DADA2.R
+```
+
+
 Align the database prior to using as input in Mothur:
 
 `MZG_align.sh`
@@ -454,15 +529,16 @@ mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align)"
 
 ## Identifying those that don't meet the criteria 
 mothur "#screen.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, count=${proj_name}.paired.trim.contigs.good.count_table, optimize=start, criteria=99, maxhomop=8)"
-mothur "#summary.seqs(fasta=current, count=current)"
-mothur "#count.groups(count=${proj_name}.paired.trim.contigs.good.count_table)"
+mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.align, count=${proj_name}.paired.trim.contigs.good.good.count_table)"
 
 ## Filtering those out
-mothur "#filter.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.align, vertical=T, trump=.)"
-mothur "#summary.seqs(fasta=current, count=current)"
+mothur "#filter.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.align, count=${proj_name}.paired.trim.contigs.good.good.count_table, vertical=T, trump=.)"
+mothur "#summary.seqs(fasta=your_project_name.paired.trim.contigs.good.unique.good.filter.fasta, count=your_project_name.paired.trim.contigs.good.good.filter.count_table)"
 
 ## ID unique sequences again
-mothur "#unique.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.fasta, count=${proj_name}.paired.trim.contigs.good.good.count_table)"
+mothur "#unique.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.fasta, count=${proj_name}.paired.trim.contigs.good.good.filter.count_table)"
+mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.unique.fasta, count=${proj_name}.paired.trim.contigs.good.unique.good.filter.count_table)"
+
 ```
 
 How to run: 
@@ -476,14 +552,14 @@ Atlantic comparison:
 ```
                 Start   End     NBases  Ambigs  Polymer NumSeqs
 Minimum:        0       0       0       0       1       1
-2.5%-tile:      1833    7145    3       0       1       86005
-25%-tile:       6781    7145    364     0       5       860046
-Median:         22391   24785   365     0       6       1720092
-75%-tile:       22508   25827   365     0       6       2580137
-97.5%-tile:     119396  119405  368     0       7       3354178
-Maximum:        121316  121316  450     0       171     3440182
-Mean:   26581   33626   308     0       5
-# of Seqs:      3440182
+2.5%-tile:      1833    7145    4       0       1       88034
+25%-tile:       6781    7145    365     0       5       880338
+Median:         22391   24785   365     0       6       1760676
+75%-tile:       22508   25827   365     0       6       2641013
+97.5%-tile:     119396  119405  368     0       7       3433317
+Maximum:        121316  121316  450     0       171     3521350
+Mean:   26363   33470   310     0       5
+# of Seqs:      3521350
 ```
 
 World comparison:
@@ -495,44 +571,15 @@ World comparison:
 
 If we are using MetaZooGene and it's all COI sequences, why would we want to filter any out? Skip screen seqs for now.
 
-## Step 8: QC Taxonomic Alignment 
+Renamed output files to:    
+- mothur.03align.alignseqs.logfile  
+- mothur.03align.alignseqs.summary.logfile  
+- mothur.03align.countgroups.logfile  
+- mothur.03align.filterseqs.logfile  
+- mothur.03align.screenseqs.logfile  
+- mothur.03align.uniqueseqs.logfile
 
-`05-Mothur-taxQC.sh`
-
-```
-#!/bin/bash
-#SBATCH --error=output/"%x_error.%j" #if your job fails, the error report will be put in this file
-#SBATCH --output=output/"%x_output.%j" #once your job is completed, any final job report comments will be put in this file
-#SBATCH --partition=short
-#SBATCH --nodes=1
-#SBATCH --time=10:00:00
-#SBATCH --job-name=mothur_taxQC
-#SBATCH --mem=50GB
-#SBATCH --ntasks=6
-#SBATCH --cpus-per-task=2
-
-# Activate conda environment
-source /work/gmgi/miniconda3/bin/activate eDNA_COI
-
-dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data"
-proj_name="OSW_2023_invert" 
-
-cd ${dir}
-
-## Identifying those that don't meet the criteria 
-mothur "#screen.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, count=${proj_name}.paired.trim.contigs.good.count_table, optimize=start, criteria=99, maxhomop=8)"
-mothur "#summary.seqs(fasta=current, count=current)"
-mothur "#count.groups(count=${proj_name}.paired.trim.contigs.good.count_table)"
-
-## Filtering those out
-mothur "#filter.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.align, vertical=T, trump=.)"
-mothur "#summary.seqs(fasta=current, count=current)"
-
-## ID unique sequences again
-mothur "#unique.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.fasta, count=${proj_name}.paired.trim.contigs.good.good.count_table)"
-```
-
-## Step 9: Denoise and remove chimeras 
+## Step 8: Denoise and remove chimeras 
 
 #### Denoising 
 

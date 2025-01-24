@@ -238,6 +238,75 @@ unzip MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta.zip
 makeblastdb -in MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta -dbtype nucl -out MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta
 ```
 
+#### Download MetaZooGene
+
+This needs to be done before each run to download most recent version
+
+```
+## GLOBAL DB FIRST
+
+library(magrittr)
+
+input_file = "https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGdata-coi__T4000000__o00__A.csv.gz"
+
+Global_MZG <- 
+  # Download
+  readr::read_csv(input_file, 
+                              col_names = FALSE, 
+                              trim_ws = TRUE, 
+                              na = c("", "NA", "N/A"),
+                              col_types = cols(.default = "c"),
+                              show_col_types = FALSE) %>%
+  # Select ID, Sequence and taxa columns
+  dplyr::select(X34, X31, X33, X2) 
+
+Edited_Global_MZG <- Global_MZG %>% 
+  # Separate taxa column into separate columns
+  tidyr::separate(X34, into = as.character(1:21), sep = ";") %>%
+  
+  # Merge wanted taxa columns and add ">"
+  tidyr::unite(col = "Taxa", 1,4,5,7,8,9,10,11,12,16,18,X2, sep = ";" ) %>%
+  dplyr::mutate(Taxa = paste(">", Taxa, sep = "")) %>%
+  
+  # Restructure into one single column vector
+  dplyr::select(X33, Taxa, X31) %>% 
+  tidyr::pivot_longer(cols = c("Taxa", "X31")) %>%
+  dplyr::pull(value)
+
+# Write vector to fasta
+Edited_Global_MZG %>% base::write("/work/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_Global_modeA.fasta")
+  
+## ATLANTIC DB
+input_file_ATL = "https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGdata-coi__T4000000__o02__A.csv.gz"
+
+ATL_MZG <- 
+  # Download
+  readr::read_csv(input_file_ATL, 
+                  col_names = FALSE, 
+                  trim_ws = TRUE, 
+                  na = c("", "NA", "N/A"),
+                  col_types = cols(.default = "c"),
+                  show_col_types = FALSE) %>%
+  # Select ID, Sequence and taxa columns
+  dplyr::select(X34, X31, X33, X2) 
+
+Edited_ATL_MZG <- ATL_MZG %>% 
+  # Separate taxa column into separate columns
+  tidyr::separate(X34, into = as.character(1:21), sep = ";") %>%
+  
+  # Merge wanted taxa columns and add ">"
+  tidyr::unite(col = "Taxa", 1,4,5,7,8,9,10,11,12,16,18,X2, sep = ";" ) %>%
+  dplyr::mutate(Taxa = paste(">", Taxa, sep = "")) %>%
+  
+  # Restructure into one single column vector
+  dplyr::select(X33, Taxa, X31) %>% 
+  tidyr::pivot_longer(cols = c("Taxa", "X31")) %>%
+  dplyr::pull(value)
+
+# Write vector to fasta
+Edited_ATL_MZG %>% base::write("/work/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_NorthAtlantic_modeA.fasta")
+```
+
 ## Step 4: nf-core/ampliseq 
 
 [Nf-core](https://nf-co.re/): A community effort to collect a curated set of analysis pipelines built using [Nextflow](https://www.nextflow.io/).  
@@ -395,10 +464,70 @@ python package called BOLDigger has been developed to help automate batch query 
 
 In addition to the potential of amino acid translation, the protein coding nature of COI leads to relatively stricter expectations of amplicon length
 
-Use QIIME2 and trained classifier?
-
 To run:   
 - `sbatch 01b-ampliseq.sh` 
+
+#### Testing MetaZooGene as database
+
+Created folder `ampliseq_MZG_results`
+cd to this folder and start script from there `sbatch ../scripts/01-ampliseq_MZG.sh` 
+
+`01-ampliseq_MZG.sh`
+
+```
+#!/bin/bash
+#SBATCH --error=output/"%x_error.%j" #if your job fails, the error report will be put in this file
+#SBATCH --output=output/"%x_output.%j" #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=20:00:00
+#SBATCH --job-name=ampliseq_MZG
+#SBATCH --mem=70GB
+#SBATCH --ntasks=24
+#SBATCH --cpus-per-task=2
+
+### USER TO-DO ### 
+## 1. Set paths for project 
+## 2. Adjust SBATCH options above (time, mem, ntasks, etc.) as desired  
+## 3. Fill in F primer information based on primer type (no reverse compliment needed)
+## 4. Adjust parameters as needed (below is Fisheries team default for COI)
+
+# LOAD MODULES
+module load singularity/3.10.3
+module load nextflow/23.10.1
+
+# SET PATHS 
+metadata="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/metadata" 
+output_dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/ampliseq_MZG_results"
+assignTaxonomy="/work/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_Global_modeA.fasta"
+taxlevels="Kingdom, Phlyum, Subphylum, Superclass, Class, Subclass, Infraclass, Superorder, Order, Family, Genus, Species"
+
+nextflow run nf-core/ampliseq -resume \
+   -profile singularity \
+   --input ${metadata}/samplesheet.csv \
+   --FW_primer "GGWACWGGWTGAACWGTWTAYCCYCC" \
+   --RV_primer "TAIACYTCIGGRTGICCRAARAAYCA" \
+   --outdir ${output_dir} \
+   --trunclenf 220 \
+   --trunclenr 220 \
+   --trunc_qmin 25 \
+   --max_ee 2 \
+   --min_len_asv 300 \
+   --max_len_asv 330 \
+   --dada_ref_tax_custom ${assignTaxonomy} \
+   --dada_assign_taxlevels ${taxlevels} \
+   --skip_dada_addspecies \
+   --sample_inference pseudo \
+   --ignore_failed_trimming
+```
+
+Took out: `--dada_ref_tax_custom_sp ${addSpecies} \` and `--dada2_addspecies_allowmultiple TRUE \` that correspond with `addSpecies="/work/gmgi/databases/COI/BOLD/addSpecies.fna"`
+
+1-22: I tried this with DADA Global MZG fasta first that is DADA assign Taxonomy formatted. I could make Add Species compatible formatting in RStudio on server but we'll see what this output is first.     
+1-23: Adding `dada_assign_taxlevels` with 12 entries to match MZG. 
+
+Next try to change bootstrap to 0.8 from 0.5
+
 
 #### Files generated by ampliseq 
 

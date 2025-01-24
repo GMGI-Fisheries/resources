@@ -1,0 +1,136 @@
+﻿File Name,29 Sept 2023 Sensitivity Test.pcrd,,,,,
+Created By User,CARLY,,,,,
+Notes,,,,,,
+ID,,,,,,
+Run Started,09/29/2023 19:32:19 UTC,,,,,
+Run Ended,09/29/2023 21:10:54 UTC,,,,,
+Sample Vol,20,,,,,
+Lid Temp,105,,,,,
+Protocol File Name,Unknown.prcl,,,,,
+Plate Setup File Name,29 Sept 2023 plate.pltd,,,,,
+Base Serial Number,795BR03699,,,,,
+Optical Head Serial Number,795BR03699,,,,,
+CFX Maestro Version,5.3.022.1030. ,,,,,
+,,,,,,
+Well group,All Wells,,,,,
+Amplification step,4,,,,,
+Melt step,,,,,,
+,,,,,,
+,,,,,,
+Well,Fluor,Target,Content,Sample,Cq,Starting Quantity (SQ)
+A02,FAM,A.americanus,Std,10^6,16.96,1000000.00000
+A03,FAM,A.americanus,Std,500,28.22,500.00000
+A04,FAM,A.americanus,Std,50,31.35,50.00000
+A05,FAM,A.americanus,Std,25,33.00,25.00000
+A07,FAM,A.americanus,Std,2.5,,2.50000
+A08,FAM,A.americanus,Std,1,,1.00000
+B01,FAM,A.americanus,Std,10^10,3.28,10000000000.00000
+B02,FAM,A.americanus,Std,10^6,16.78,1000000.00000
+B03,FAM,A.americanus,Std,500,28.04,500.00000
+B04,FAM,A.americanus,Std,50,31.49,50.00000
+B05,FAM,A.americanus,Std,25,33.10,25.00000
+B06,FAM,A.americanus,Std,5,34.60,5.00000
+B07,FAM,A.americanus,Std,2.5,37.12,2.50000
+B08,FAM,A.americanus,Std,1,,1.00000
+C01,FAM,A.americanus,Std,10^9,6.28,1000000000.00000
+C02,FAM,A.americanus,Std,10^5,20.25,100000.00000
+C03,FAM,A.americanus,Std,250,29.07,250.00000
+C04,FAM,A.americanus,Std,50,31.56,50.00000
+C05,FAM,A.americanus,Std,10,33.60,10.00000
+C06,FAM,A.americanus,Std,5,33.69,5.00000
+C07,FAM,A.americanus,Std,2.5,37.64,2.50000
+C08,FAM,A.americanus,NTC,Neg,,
+D01,FAM,A.americanus,Std,10^9,5.67,1000000000.00000
+D02,FAM,A.americanus,Std,10^5,20.06,100000.00000
+D03,FAM,A.americanus,Std,250,29.06,250.00000
+D04,FAM,A.americanus,Std,50,31.58,50.00000
+D05,FAM,A.americanus,Std,10,33.48,10.00000
+D06,FAM,A.americanus,Std,5,34.15,5.00000
+D07,FAM,A.americanus,Std,2.5,35.36,2.50000
+D08,FAM,A.americanus,NTC,Neg,,
+E01,FAM,A.americanus,Std,10^8,9.29,100000000.00000
+E02,FAM,A.americanus,Std,10^4,23.75,10000.00000
+E03,FAM,A.americanus,Std,100,30.58,100.00000
+E04,FAM,A.americanus,Std,25,32.69,25.00000
+E05,FAM,A.americanus,Std,10,35.37,10.00000
+E06,FAM,A.americanus,Std,5,35.88,5.00000
+E07,FAM,A.americanus,Std,1,37.24,1.00000
+F01,FAM,A.americanus,Std,10^8,9.58,100000000.00000
+F02,FAM,A.americanus,Std,10^4,24.01,10000.00000
+F03,FAM,A.americanus,Std,100,30.37,100.00000
+F04,FAM,A.americanus,Std,25,32.74,25.00000
+F05,FAM,A.americanus,Std,10,33.23,10.00000
+F06,FAM,A.americanus,Std,5,33.86,5.00000
+F07,FAM,A.americanus,Std,1,37.25,1.00000
+G01,FAM,A.americanus,Std,10^7,13.51,10000000.00000
+G02,FAM,A.americanus,Std,10^3,27.29,1000.00000
+G03,FAM,A.americanus,Std,50,31.20,50.00000
+G04,FAM,A.americanus,Std,25,32.71,25.00000
+G05,FAM,A.americanus,Std,10,34.11,10.00000
+G06,FAM,A.americanus,Std,2.5,35.94,2.50000
+G07,FAM,A.americanus,Std,1,,1.00000
+H01,FAM,A.americanus,Std,10^7,14.22,10000000.00000
+H02,FAM,A.americanus,Std,10^3,27.02,1000.00000
+H03,FAM,A.americanus,Std,50,32.09,50.00000
+H04,FAM,A.americanus,Std,25,32.76,25.00000
+H05,FAM,A.americanus,Std,10,34.70,10.00000
+H06,FAM,A.americanus,Std,2.5,35.10,2.50000
+H07,FAM,A.americanus,Std,1,36.61,1.00000
+A02,VIC,A.dubius,Std,10^6,16.21,1000000.00000
+A03,VIC,A.dubius,Std,500,28.11,500.00000
+A04,VIC,A.dubius,Std,50,31.70,50.00000
+A05,VIC,A.dubius,Std,25,33.04,25.00000
+A07,VIC,A.dubius,Std,2.5,35.56,2.50000
+A08,VIC,A.dubius,Std,1,,1.00000
+B01,VIC,A.dubius,Std,10^10,2.40,10000000000.00000
+B02,VIC,A.dubius,Std,10^6,16.05,1000000.00000
+B03,VIC,A.dubius,Std,500,27.83,500.00000
+B04,VIC,A.dubius,Std,50,31.82,50.00000
+B05,VIC,A.dubius,Std,25,32.19,25.00000
+B06,VIC,A.dubius,Std,5,36.84,5.00000
+B07,VIC,A.dubius,Std,2.5,,2.50000
+B08,VIC,A.dubius,Std,1,,1.00000
+C01,VIC,A.dubius,Std,10^9,4.68,1000000000.00000
+C02,VIC,A.dubius,Std,10^5,19.53,100000.00000
+C03,VIC,A.dubius,Std,250,28.63,250.00000
+C04,VIC,A.dubius,Std,50,31.89,50.00000
+C05,VIC,A.dubius,Std,10,34.15,10.00000
+C06,VIC,A.dubius,Std,5,36.49,5.00000
+C07,VIC,A.dubius,Std,2.5,34.17,2.50000
+C08,VIC,A.dubius,NTC,Neg,,
+D01,VIC,A.dubius,Std,10^9,4.93,1000000000.00000
+D02,VIC,A.dubius,Std,10^5,20.02,100000.00000
+D03,VIC,A.dubius,Std,250,29.03,250.00000
+D04,VIC,A.dubius,Std,50,31.25,50.00000
+D05,VIC,A.dubius,Std,10,33.01,10.00000
+D06,VIC,A.dubius,Std,5,34.35,5.00000
+D07,VIC,A.dubius,Std,2.5,,2.50000
+D08,VIC,A.dubius,NTC,Neg,,
+E01,VIC,A.dubius,Std,10^8,8.15,100000000.00000
+E02,VIC,A.dubius,Std,10^4,24.02,10000.00000
+E03,VIC,A.dubius,Std,100,30.91,100.00000
+E04,VIC,A.dubius,Std,25,32.93,25.00000
+E05,VIC,A.dubius,Std,10,35.11,10.00000
+E06,VIC,A.dubius,Std,5,33.12,5.00000
+E07,VIC,A.dubius,Std,1,35.91,1.00000
+F01,VIC,A.dubius,Std,10^8,9.02,100000000.00000
+F02,VIC,A.dubius,Std,10^4,23.81,10000.00000
+F03,VIC,A.dubius,Std,100,30.71,100.00000
+F04,VIC,A.dubius,Std,25,32.22,25.00000
+F05,VIC,A.dubius,Std,10,32.78,10.00000
+F06,VIC,A.dubius,Std,5,33.21,5.00000
+F07,VIC,A.dubius,Std,1,,1.00000
+G01,VIC,A.dubius,Std,10^7,12.65,10000000.00000
+G02,VIC,A.dubius,Std,10^3,27.08,1000.00000
+G03,VIC,A.dubius,Std,50,31.44,50.00000
+G04,VIC,A.dubius,Std,25,32.95,25.00000
+G05,VIC,A.dubius,Std,10,33.44,10.00000
+G06,VIC,A.dubius,Std,2.5,35.32,2.50000
+G07,VIC,A.dubius,Std,1,,1.00000
+H01,VIC,A.dubius,Std,10^7,13.45,10000000.00000
+H02,VIC,A.dubius,Std,10^3,27.17,1000.00000
+H03,VIC,A.dubius,Std,50,31.95,50.00000
+H04,VIC,A.dubius,Std,25,32.97,25.00000
+H05,VIC,A.dubius,Std,10,35.09,10.00000
+H06,VIC,A.dubius,Std,2.5,35.13,2.50000
+H07,VIC,A.dubius,Std,1,36.35,1.00000

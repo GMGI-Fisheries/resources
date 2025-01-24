@@ -1,0 +1,78 @@
+﻿File Name,29 Sept 2023 Sensitivity Test.pcrd,,,,,
+Created By User,CARLY,,,,,
+Notes,,,,,,
+ID,,,,,,
+Run Started,09/29/2023 19:32:19 UTC,,,,,
+Run Ended,09/29/2023 21:10:54 UTC,,,,,
+Sample Vol,20,,,,,
+Lid Temp,105,,,,,
+Protocol File Name,Unknown.prcl,,,,,
+Plate Setup File Name,29 Sept 2023 plate.pltd,,,,,
+Base Serial Number,795BR03699,,,,,
+Optical Head Serial Number,795BR03699,,,,,
+CFX Maestro Version,5.3.022.1030. ,,,,,
+,,,,,,
+Well group,All Wells,,,,,
+Amplification step,4,,,,,
+Melt step,,,,,,
+,,,,,,
+,,,,,,
+Well,Fluor,Target,Content,Sample,Cq,Starting Quantity (SQ)
+A02,VIC,A.dubius,Std,10^6,16.21,1000000
+A03,VIC,A.dubius,Std,500,28.11,500
+A04,VIC,A.dubius,Std,50,31.7,50
+A05,VIC,A.dubius,Std,25,33.04,25
+A07,VIC,A.dubius,Std,2.5,35.56,2.5
+A08,VIC,A.dubius,Std,1,,1
+B01,VIC,A.dubius,Std,10^10,2.4,10000000000.00000
+B02,VIC,A.dubius,Std,10^6,16.05,1000000
+B03,VIC,A.dubius,Std,500,27.83,500
+B04,VIC,A.dubius,Std,50,31.82,50
+B05,VIC,A.dubius,Std,25,32.19,25
+B06,VIC,A.dubius,Std,5,36.84,5
+B07,VIC,A.dubius,Std,2.5,,2.5
+B08,VIC,A.dubius,Std,1,,1
+C01,VIC,A.dubius,Std,10^9,4.68,1000000000
+C02,VIC,A.dubius,Std,10^5,19.53,100000
+C03,VIC,A.dubius,Std,250,28.63,250
+C04,VIC,A.dubius,Std,50,31.89,50
+C05,VIC,A.dubius,Std,10,34.15,10
+C06,VIC,A.dubius,Std,5,36.49,5
+C07,VIC,A.dubius,Std,2.5,34.17,2.5
+C08,VIC,A.dubius,NTC,Neg,,
+D01,VIC,A.dubius,Std,10^9,4.93,1000000000
+D02,VIC,A.dubius,Std,10^5,20.02,100000
+D03,VIC,A.dubius,Std,250,29.03,250
+D04,VIC,A.dubius,Std,50,31.25,50
+D05,VIC,A.dubius,Std,10,33.01,10
+D06,VIC,A.dubius,Std,5,34.35,5
+D07,VIC,A.dubius,Std,2.5,,2.5
+D08,VIC,A.dubius,NTC,Neg,,
+E01,VIC,A.dubius,Std,10^8,8.15,100000000
+E02,VIC,A.dubius,Std,10^4,24.02,10000
+E03,VIC,A.dubius,Std,100,30.91,100
+E04,VIC,A.dubius,Std,25,32.93,25
+E05,VIC,A.dubius,Std,10,35.11,10
+E06,VIC,A.dubius,Std,5,33.12,5
+E07,VIC,A.dubius,Std,1,35.91,1
+F01,VIC,A.dubius,Std,10^8,9.02,100000000
+F02,VIC,A.dubius,Std,10^4,23.81,10000
+F03,VIC,A.dubius,Std,100,30.71,100
+F04,VIC,A.dubius,Std,25,32.22,25
+F05,VIC,A.dubius,Std,10,32.78,10
+F06,VIC,A.dubius,Std,5,33.21,5
+F07,VIC,A.dubius,Std,1,,1
+G01,VIC,A.dubius,Std,10^7,12.65,10000000
+G02,VIC,A.dubius,Std,10^3,27.08,1000
+G03,VIC,A.dubius,Std,50,31.44,50
+G04,VIC,A.dubius,Std,25,32.95,25
+G05,VIC,A.dubius,Std,10,33.44,10
+G06,VIC,A.dubius,Std,2.5,35.32,2.5
+G07,VIC,A.dubius,Std,1,,1
+H01,VIC,A.dubius,Std,10^7,13.45,10000000
+H02,VIC,A.dubius,Std,10^3,27.17,1000
+H03,VIC,A.dubius,Std,50,31.95,50
+H04,VIC,A.dubius,Std,25,32.97,25
+H05,VIC,A.dubius,Std,10,35.09,10
+H06,VIC,A.dubius,Std,2.5,35.13,2.5
+H07,VIC,A.dubius,Std,1,36.35,1

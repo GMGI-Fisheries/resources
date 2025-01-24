@@ -18,13 +18,15 @@ editor_options:
 
 ```{r}
 library(ggplot2) ## for plotting
-library(tidyverse) ## for data table manipulation
+library(dplyr) ## for data table manipulation
+library(tidyr) ## for data table manipulation
 library(readr) ## for reading in tsv files
 library(readxl) ## for reading in excel files
 library(stringr) ## for data transformation
 library(strex) ## for data transformation
 library(writexl) ## for excel output
 library(purrr) ## for data transformation
+library(tidyverse) ## for data table manipulation
 library(ggrepel)  ## For geom_text_repel
 library(drc) ## for LOD calculations
 library(ggpubr)
@@ -37,120 +39,44 @@ library(ggpubr)
 ```{r}
 ### USER EDITS:
 ## 1. Replace path of file with your own standard curve
-std_curve <- read.csv("example standard curve.csv", skip = 19) %>% dplyr::rename(St_Quant=7) %>%
-  
-  ## Calculate mean Cq
-  dplyr::group_by(Sample) %>%
-  mutate(Cq_mean = mean(Cq, na.rm=TRUE))
-```
-
-Calculating standard curve metrics 
-
-```{r}
-# Fit a linear model to calculate slope and intercept
-linear_model <- lm(Cq_mean ~ log10(St_Quant), data = std_curve)
-
-# Extract slope and y-intercept
-slope <- coef(linear_model)[2]       # Slope (m)
-y_intercept <- coef(linear_model)[1] # Y-intercept (b)
-efficiency <- (-1+(10^(-1/slope)))
-
-## Standard curve calculations (assuming std_curve is already grouped by Sample)
-std_curve <- std_curve %>%
+std_curve <- read.csv("example standard curve.csv", skip = 19) %>%
+  group_by(Sample) %>%
   
   ## calculate detection rates (number of Cqs present / number of replicates)
   mutate(detection_rate = sum(!is.na(Cq)) / n(),
-  
-  ## calculate Cq stats - SD, and CV
+         
+  ## calculate Cq stats - mean, SD, and CV 
+         Cq_mean = mean(Cq, na.rm=TRUE),
          Cq_sd = sd(Cq, na.rm=TRUE),
-         #Cq_cv = (Cq_sd / Cq_mean) * 100 ## old method 
-         Cq_cv = sqrt(((1+efficiency) ^ ((Cq_sd^2) * log(1+efficiency))) - 1)) %>%
+         Cq_cv = (Cq_sd / Cq_mean) * 100 ### take eq from paper instead 
+         ) %>%
   ungroup()
-```
 
-Confirming negatives were clean and filter them out
-
-```{r}
-## all output should have NAs in Cq column
-## if any negatives have values, then pause and re-run those samples if needed
+## confirming negatives were clean and filter them out
 std_curve %>% filter(Sample == "neg")
-
 std_curve <- std_curve %>% filter(!Sample == "neg")
+
+## calculate efficiency metric 
 ```
 
-### Calculating LOD and LOQ based on discrete thresholds 
-
-Making list of standard curve quantities
+### Calculating LOD and LOQ 
 
 ```{r}
-# Assuming std_curve is your data frame
-quants <- std_curve %>% dplyr::select(St_Quant) %>% distinct() %>% arrange(desc(St_Quant))
+LOD <- std_curve %>%
+  filter(detection_rate < 0.95) %>%      # Change the threshold as needed
+  slice(1) %>%                        # Get the first occurrence
+  dplyr::select(Sample, detection_rate)      # Select relevant columns
 
-# Creating a factored list of these standard curve values
-quant_list <- as.factor(quants$St_Quant)
+LOD_threshold <- as.numeric(LOD$Sample[1])
+### this should be 10 not 5 -- 
+
+LOQ <- std_curve %>%
+  filter(Cq_cv > 35.00) %>%      # Change the threshold as needed
+  slice(1) %>%                        # Get the first occurrence
+  dplyr::select(Sample, Cq_cv) 
+
+LOQ_threshold <- as.numeric(LOQ$Sample[1])
 ```
-
-Find the Limit of Detection (LOD)
-
-```{r}
-# Find the first value below the 0.95 detection rate
-first_below_LOD_threshold <- std_curve %>% filter(detection_rate < 0.95) %>% 
-  slice(1) %>% dplyr::select(St_Quant)
-
-# Get the standard quantity of the first value below the threshold
-below_threshold_LOD_quant <- first_below_LOD_threshold$St_Quant[1]
-
-# Find the index of this quantity in the ordered list
-LOD_index <- which(quants$St_Quant == below_threshold_LOD_quant)
-
-LOD <- quants$St_Quant[LOD_index - 1]
-```
-
-Find the Limit of Quantification (LOQ)
-
-```{r}
-# Find the first value below the 0.35 CV
-first_above_LOQ_threshold <- std_curve %>% filter(Cq_cv > 0.350) %>% 
-  slice(1) %>% dplyr::select(St_Quant)
-
-# Get the standard quantity of the first value below the threshold
-above_threshold_LOQ_quant <- first_above_LOQ_threshold$St_Quant[1]
-
-# Find the index of this quantity in the ordered list
-LOQ_index <- which(quants$St_Quant == above_threshold_LOQ_quant)
-
-LOQ <- quants$St_Quant[LOQ_index - 1]
-```
-
-### Using modeling to calculate LOD and LOQ 
-
-```{r}
-## Different models 
-
-LOQ1 <- nls(Cq.CV~SSasymp(log10(Standards),Asym,R0,lrc),
-                  data=DAT2[DAT2$Target==Targets[i],])
-
-
-LOQ2 <- lm(Cq.CV~log10(Standards),data=DAT2[DAT2$Target==Targets[i],])
-
-
-LOQ3 <- lm(Cq.CV~poly(log10(Standards),2),data=DAT2[DAT2$Target==Targets[i],])
-
-LOQ4 <- lm(Cq.CV~poly(log10(Standards),3),data=DAT2[DAT2$Target==Targets[i],])
-
-LOQ5 <- lm(Cq.CV~poly(log10(Standards),4),data=DAT2[DAT2$Target==Targets[i],])
-
-LOQ6 <- lm(Cq.CV~poly(log10(Standards),5),data=DAT2[DAT2$Target==Targets[i],])
-
-LOQ7 <- lm(Cq.CV~poly(log10(Standards),6),data=DAT2[DAT2$Target==Targets[i],])
-
-## find residual standard error
-## pick best fitting model 
-
-
-```
-
-
 
 ### Plotting standard curve 
 
@@ -160,7 +86,7 @@ std_curve %>%
   filter(detection_rate > 0.50) %>%
   
   ## Plotting that std. curve 
-  ggplot(., aes(x = log10(St_Quant), y = Cq)) +
+  ggplot(., aes(x = log10(`Starting Quantity (SQ)`), y = Cq)) +
   
   geom_smooth(method = 'lm', se = FALSE, color = "darkred") +
 
@@ -171,15 +97,15 @@ std_curve %>%
   geom_point(color = 'black', fill = 'white', shape = 21, size = 3.5, alpha=0.8) +
   
   ## ADDING LOD LINE -- if no line shows up, all st. curve is qualitative 
-  geom_vline(xintercept=log10(LOD), linetype="dashed", color = "grey40") +
-  geom_text(aes(x = log10(LOD), y = max(std_curve$Cq, na.rm=TRUE) * 0.3,
-                label = paste("LOD =", LOD, "copies")), 
+  geom_vline(xintercept=log10(LOD_threshold), linetype="dashed", color = "grey40") +
+  geom_text(aes(x = log10(LOD_threshold), y = max(std_curve$Cq, na.rm=TRUE) * 0.3,
+                label = paste("LOD =", LOD_threshold, "copies")), 
             angle = 90, vjust = -0.5, hjust = -0.1, color = "grey40", size = 4) +
   
   ## ADDING LOQ LINE -- if no line shows up, all st. curve is quantitative 
-  geom_vline(xintercept=log10(LOQ), linetype="dashed", color = "grey40") +
-  geom_text(aes(x = log10(LOQ), y = max(std_curve$Cq, na.rm=TRUE) * 0.3, 
-                label = paste("LOQ =", LOQ, "copies")), 
+  geom_vline(xintercept=log10(LOQ_threshold), linetype="dashed", color = "grey40") +
+  geom_text(aes(x = log10(LOQ_threshold), y = max(std_curve$Cq, na.rm=TRUE) * 0.3, 
+                label = paste("LOQ =", LOQ_threshold, "copies")), 
             angle = 90, vjust = -0.5, hjust = -0.1, color = "grey40", size = 4) +
 
   theme_bw() +
@@ -203,7 +129,7 @@ These values get fed in later in data calculations.
 
 ```{r}
 # Fit a linear model to calculate slope and intercept
-linear_model <- lm(Cq_mean ~ log10(St_Quant), data = std_curve)
+linear_model <- lm(Cq_mean ~ log10(`Starting Quantity (SQ)`), data = std_curve)
 
 # Extract slope and y-intercept
 slope <- coef(linear_model)[2]      # Slope (m)
@@ -230,7 +156,7 @@ df <-
   
   # turn file.ID into just plate information (plate.ID)
   mutate(file.ID = str_after_nth(file.ID, "results/", 1),
-         file.ID = str_before_nth(file.ID, ".csv", 1)) %>%
+         file.ID = str_before_nth(file.ID, ".xlsx", 1)) %>%
   dplyr::rename(plate.ID = file.ID, Sample_ID = Sample) %>%
   
   ## RI STRIPED BASS SPECIFIC CODE FOR SAMPLE ID MISMATCHES
@@ -431,7 +357,7 @@ samples_df <- filters_df %>% right_join(meta, ., by = "Sample_ID") %>%
 
 head(samples_df)
 
-## Confirm that the number of samples output from qPCR matches the number of samples in the metadata (output = TRUE)
+## Confirm that the number of samples output from qPCR matches the number of samples in the metadata  
 nrow(samples_df) == nrow(meta %>% dplyr::select(-Sample_ID) %>% distinct())
 ```
 
@@ -489,7 +415,7 @@ ggplot(detection_counts, aes(x = "", y = n, fill = Detection)) +
   theme(legend.position = "none",
         #plot.title = element_text(hjust = 0.5, size = 16, face = "bold")
         ) +
-  scale_fill_manual(values = c("#e9ecef", "#669bbc"))
+  scale_fill_manual(values = c("#e9ecef", "#a9d6e5"))
 
 ggsave("example output/Blanks_piechart.png", width=4, height=4)
 ```
@@ -517,7 +443,7 @@ ggplot(field_detection_counts, aes(x = "", y = n, fill = Detection)) +
   theme(legend.position = "none",
         #plot.title = element_text(hjust = 0.5, size = 16, face = "bold")
         ) +
-  scale_fill_manual(values = c("#e9ecef", "#669bbc"))
+  scale_fill_manual(values = c("#e9ecef", "#a9d6e5"))
 
 ggsave("example output/Fields_piechart.png", width=4, height=4)
 ```
@@ -525,41 +451,33 @@ ggsave("example output/Fields_piechart.png", width=4, height=4)
 Bar chart 
 
 ```{r}
-fieldsamples_df %>% subset(Detection == "Present") %>%
-  
+fieldsamples_df %>% 
+  filter(!is.na(`Mean Copy Number Normalized`)) %>%
   ggplot(., aes(x=Sample_ID, y=`Mean Copy Number Normalized`)) + 
-  geom_bar(stat = "identity", width = 0.7, alpha=0.5, fill = "#669bbc") +
+  geom_bar(stat = "identity", width = 0.7, fill = "#a9d6e5") +
+  # scale_fill_manual(values = c("#a9d6e5", "#780000"),
+  #                   labels = c("Normal", "Outlier"),
+  #                   ) +
   labs(
-    y="Log10-Normalized Copy Number",
+    y="Log-Normalized Copy Number",
     x = "Sample ID",
+    fill = "Outlier detection",
+    #title = "Just plotting log normalized value"
   ) +
-  
-  ## Outlier line
-  geom_hline(yintercept = cutoff, color = "darkred", linetype = "dashed", size = 0.5) +
-  geom_text(aes(y = cutoff, x = 2, label = "Outlier"), hjust = 0.4, vjust=-0.5, color = "grey40", size = 3) +
-  
-  ## LOD line
-  geom_hline(yintercept=log10(LOD), linetype="dashed", color = "grey40") +
-  geom_text(aes(y = log10(LOD), x = 2, label = "LOD"), hjust = 0.5, vjust=-0.5, color = "grey40", size = 3) +
-  
-  ## LOQ line
-  geom_hline(yintercept=log10(LOQ), linetype="dashed", color = "grey40") +
-  geom_text(aes(y = log10(LOQ), x=2, label = "LOQ"), hjust = 0.5, vjust=-0.5, color = "grey40", size = 3) +
-  
   theme_bw() +
     ## theme variables
     theme(panel.background=element_rect(fill='white', colour='black'),
-        #legend.position = c(0.98, 0.98),  # This puts the legend in the top right corner
-        legend.position = "right",
+        legend.position = c(0.98, 0.98),  # This puts the legend in the top right corner
         legend.justification = c(1, 1),  # This aligns the legend to the top right
         axis.text.y = element_text(size=8, color="grey20"),
-        axis.text.x = element_text(size=6, color="grey20", angle=90, vjust=0.5, hjust=1),
+        axis.text.x = element_text(size=6, color="grey20", angle=90, hjust=1, vjust=0.5),
         axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=10, face="bold"),
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=10, face="bold"),
         # New theme elements for strip appearance
         strip.background = element_rect(fill = "white", color = "black"),
         strip.text = element_text(face = "bold", size = 9)
-    )
+    ) +
+  guides(fill = guide_legend(override.aes = list(alpha = 1))) 
 
 ggsave("example output/Fieldsamples_barchart.png", width = 9.5, height=5)
 ```
@@ -610,9 +528,20 @@ rich_meta <- read_xlsx("C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/RI Strip
   mutate(Sample_Time = format(Sample_Time, format = "%H:%M:%S"))
 
 
-normalized_df %>% #full_join(rich_meta, ., by = c("Date", "Sample_Location")) %>%
+normalized_df %>% full_join(rich_meta, ., by = c("Date", "Sample_Location")) %>%
   mutate(Date = as.Date(Date)) %>%
   dplyr::select(-Number_of_Filters) %>% write_xlsx("example output/Results.xlsx")
+
+
+  # dplyr::select(Date, Sample_Location, `Mean Ct`, `Number of Replicates`, 
+  #               `Mean Copy Number`, `Mean Copy Number Normalized`, Detection) %>%
+  # 
+  # unite(Sample, Date, Sample_Location, sep = " ", remove = FALSE) %>%
+  # 
+  # # cut decimals down to 2
+  # mutate(across(where(is.numeric), ~round(., 2))) %>%
+  # 
+  # write_xlsx("example output/Results.xlsx")
 ```
 
 
