@@ -378,22 +378,33 @@ View the `update_ncbi_nt.out` file to confirm the echo printed at the end.
 Check [Mitofish webpage](https://mitofish.aori.u-tokyo.ac.jp/download/) for the most recent database version number. Compare to the `work/gmgi/databases/12S` folder. If needed, update Mitofish database:
 
 ```
+## navigate to databases folder 
+cd /work/gmgi/databases/12S/Mitofish
+
+## move old versions to archive folder
+mv Mitofish_v* archive/
+
 ## download db 
 wget https://mitofish.aori.u-tokyo.ac.jp/species/detail/download/?filename=download%2F/complete_partial_mitogenomes.zip  
 
-## unzip 
+## unzip db
 unzip 'index.html?filename=download%2F%2Fcomplete_partial_mitogenomes.zip'
 
-## clean headers 
-awk '/^>/ {print $1} !/^>/ {print}' mito-all > Mitofish_v4.05.fasta
+## clean headers; change version number in the file name 
+awk '/^>/ {print $1} !/^>/ {print}' mito-all > Mitofish_v4.08.fasta
+
+## confirm headers are in format as epxected 
+head Mitofish_v4.05.fasta
 
 ## remove excess files 
 rm mito-all* 
 rm index*
 
+## Activate conda environment
+source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
+
 ## make NCBI db 
-## make sure fisheries_eDNA conda environment is activated or module load ncbi-blast+/2.13.0
-makeblastdb -in Mitofish_v4.02.fasta -dbtype nucl -out Mitofish_v4.02.fasta -parse_seqids
+makeblastdb -in Mitofish_v4.08.fasta -dbtype nucl -out Mitofish_v4.08.fasta -parse_seqids
 ```
 
 #### Download GMGI 12S 
@@ -414,6 +425,23 @@ makeblastdb -in GMGI_Vert_Ref_2024v1.fasta -dbtype nucl -out GMGI_Vert_Ref_2024v
 ```
 
 ### Running taxonomic ID script 
+
+Download taxonkit to your home directory. You only need to do this once, otherwise the program is set-up and you can skip this step. Taxonkit program is in `/work/gmgi/databases/taxonkit` but the program needs required files to be in your home directory. 
+
+```
+# Move to home directory and download taxonomy information
+cd ~
+wget -c ftp://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz
+
+# Extract the downloaded file
+tar -zxvf taxdump.tar.gz
+
+# Create the TaxonKit data directory 
+mkdir -p $HOME/.taxonkit
+
+# Copy the required files to the TaxonKit data directory
+cp names.dmp nodes.dmp delnodes.dmp merged.dmp $HOME/.taxonkit
+```
 
 `02-taxonomicID.sh`: 
 
@@ -450,8 +478,7 @@ blastn -db ${ncbi}/"nt" \
    -query ${ASV_fasta}/ASV_seqs.len.fasta \
    -out ${out}/BLASTResults_NCBI.txt \
    -max_target_seqs 10 -perc_identity 100 -qcov_hsp_perc 95 \
-   -outfmt '6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore' \
-   -verbose
+   -outfmt '6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore'
 
 ## Mitofish database 
 blastn -db ${mito}/*.fasta \

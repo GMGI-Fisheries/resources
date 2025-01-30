@@ -232,25 +232,6 @@ sbatch 01-Mothur-setup.sh \
     OSW_2023_invert
 ```            
 
-Trying to figure out how to set current file 
-
-```
-output_dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data"
-oligo_file="/work/gmgi/databases/COI/mothur_oligos_LG"
-proj_name="OSW_2023_invert"
-cd ${output_dir} 
-
-mothur "#set.dir(input=/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/Mothur_data)"
-mothur "#make.file(inputdir=., type=gz, prefix=${proj_name})"
-mothur "#set.current(file=${proj_name}.paired.files)"
-mothur "#get.current()"
-mothur "#make.contigs(file=current, trimoverlap=F, oligos=${oligo_file}, pdiffs=5, checkorient=T)"
-```
-
-Set.current() creates `current_files.summary`  
-
-
-
 #### Assess output (data from OSW example): 
 
 Count the number of sequences that were removed and the number that were kept by counting sequences in each fasta file
