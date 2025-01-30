@@ -1072,7 +1072,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../eDNA%20qPCR/qPCR-analysis/" class="md-nav__link">
+      <a href="../../eDNA%20qPCR/qPCR_analysis/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1834,22 +1834,33 @@ echo &quot;BLAST nt database update completed&quot;
 <p>View the <code>update_ncbi_nt.out</code> file to confirm the echo printed at the end.</p>
 <h4 id="download-andor-update-mitofish-database">Download and/or update Mitofish database</h4>
 <p>Check <a href="https://mitofish.aori.u-tokyo.ac.jp/download/">Mitofish webpage</a> for the most recent database version number. Compare to the <code>work/gmgi/databases/12S</code> folder. If needed, update Mitofish database:</p>
-<div class="highlight"><pre><span></span><code>## download db 
+<div class="highlight"><pre><span></span><code>## navigate to databases folder 
+cd /work/gmgi/databases/12S/Mitofish
+
+## move old versions to archive folder
+mv Mitofish_v* archive/
+
+## download db 
 wget https://mitofish.aori.u-tokyo.ac.jp/species/detail/download/?filename=download%2F/complete_partial_mitogenomes.zip  
 
-## unzip 
+## unzip db
 unzip &#39;index.html?filename=download%2F%2Fcomplete_partial_mitogenomes.zip&#39;
 
-## clean headers 
-awk &#39;/^&gt;/ {print $1} !/^&gt;/ {print}&#39; mito-all &gt; Mitofish_v4.05.fasta
+## clean headers; change version number in the file name 
+awk &#39;/^&gt;/ {print $1} !/^&gt;/ {print}&#39; mito-all &gt; Mitofish_v4.08.fasta
+
+## confirm headers are in format as epxected 
+head Mitofish_v4.05.fasta
 
 ## remove excess files 
 rm mito-all* 
 rm index*
 
+## Activate conda environment
+source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
+
 ## make NCBI db 
-## make sure fisheries_eDNA conda environment is activated or module load ncbi-blast+/2.13.0
-makeblastdb -in Mitofish_v4.02.fasta -dbtype nucl -out Mitofish_v4.02.fasta -parse_seqids
+makeblastdb -in Mitofish_v4.08.fasta -dbtype nucl -out Mitofish_v4.08.fasta -parse_seqids
 </code></pre></div>
 <h4 id="download-gmgi-12s">Download GMGI 12S</h4>
 <p>This is our in-house GMGI database that will include version numbers. Check <code>/work/gmgi/databases/12S/GMGI/</code> for current uploaded version number and check our Box folder for the most recent version number. </p>
@@ -1863,6 +1874,20 @@ makeblastdb -in Mitofish_v4.02.fasta -dbtype nucl -out Mitofish_v4.02.fasta -par
 makeblastdb -in GMGI_Vert_Ref_2024v1.fasta -dbtype nucl -out GMGI_Vert_Ref_2024v1.fasta
 </code></pre></div>
 <h3 id="running-taxonomic-id-script">Running taxonomic ID script</h3>
+<p>Download taxonkit to your home directory. You only need to do this once, otherwise the program is set-up and you can skip this step. Taxonkit program is in <code>/work/gmgi/databases/taxonkit</code> but the program needs required files to be in your home directory. </p>
+<div class="highlight"><pre><span></span><code># Move to home directory and download taxonomy information
+cd ~
+wget -c ftp://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz
+
+# Extract the downloaded file
+tar -zxvf taxdump.tar.gz
+
+# Create the TaxonKit data directory 
+mkdir -p $HOME/.taxonkit
+
+# Copy the required files to the TaxonKit data directory
+cp names.dmp nodes.dmp delnodes.dmp merged.dmp $HOME/.taxonkit
+</code></pre></div>
 <p><code>02-taxonomicID.sh</code>: </p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
 #SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
@@ -1896,8 +1921,7 @@ blastn -db ${ncbi}/&quot;nt&quot; \
    -query ${ASV_fasta}/ASV_seqs.len.fasta \
    -out ${out}/BLASTResults_NCBI.txt \
    -max_target_seqs 10 -perc_identity 100 -qcov_hsp_perc 95 \
-   -outfmt &#39;6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore&#39; \
-   -verbose
+   -outfmt &#39;6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore&#39;
 
 ## Mitofish database 
 blastn -db ${mito}/*.fasta \

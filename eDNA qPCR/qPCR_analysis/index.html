@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#qpcr-data-sheets" class="md-skip">
+        <a href="#qpcr-analysis" class="md-skip">
           Skip to content
         </a>
       
@@ -947,9 +947,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#calculating-lod-and-loq" class="md-nav__link">
+  <a href="#calculating-lod-and-loq-based-on-discrete-thresholds" class="md-nav__link">
     <span class="md-ellipsis">
-      Calculating LOD and LOQ
+      Calculating LOD and LOQ based on discrete thresholds
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-modeling-to-calculate-lod-and-loq" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using modeling to calculate LOD and LOQ
     </span>
   </a>
   
@@ -1346,9 +1355,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#calculating-lod-and-loq" class="md-nav__link">
+  <a href="#calculating-lod-and-loq-based-on-discrete-thresholds" class="md-nav__link">
     <span class="md-ellipsis">
-      Calculating LOD and LOQ
+      Calculating LOD and LOQ based on discrete thresholds
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-modeling-to-calculate-lod-and-loq" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using modeling to calculate LOD and LOQ
     </span>
   </a>
   
@@ -1500,7 +1518,7 @@
                   
 
   
-    <a href="https://github.com/GMGI-Fisheries/resources/blob/master/docs/eDNA qPCR/qPCR-analysis.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/GMGI-Fisheries/resources/blob/master/docs/eDNA qPCR/qPCR_analysis.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -1508,7 +1526,7 @@
   
 
 
-<h1 id="qpcr-data-sheets">qPCR data sheets</h1>
+<h1 id="qpcr-analysis">qPCR analysis</h1>
 <p><strong>.Rmd script</strong></p>
 <h2 id="load-libraries">Load libraries</h2>
 <div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span><span class="w"> </span><span class="c1">## for plotting</span>
@@ -1602,7 +1620,7 @@
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="n">std_curve</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="o">!</span><span class="n">Sample</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;neg&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="calculating-lod-and-loq">Calculating LOD and LOQ</h3>
+<h3 id="calculating-lod-and-loq-based-on-discrete-thresholds">Calculating LOD and LOQ based on discrete thresholds</h3>
 <p>Making list of standard curve quantities</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Assuming std_curve is your data frame</span>
 <span class="n">quants</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">St_Quant</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">distinct</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">arrange</span><span class="p">(</span><span class="nf">desc</span><span class="p">(</span><span class="n">St_Quant</span><span class="p">))</span>
@@ -1612,7 +1630,7 @@
 </code></pre></div>
 <p>Find the Limit of Detection (LOD)</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Find the first value below the 0.95 detection rate</span>
-<span class="n">first_below_LOD_threshold</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="n">detection_rate</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">0.95</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+<span class="n">first_below_LOD_threshold</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="n">detection_rate</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">0.95</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">arrange</span><span class="p">(</span><span class="nf">desc</span><span class="p">(</span><span class="n">St_Quant</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">slice</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">St_Quant</span><span class="p">)</span>
 
 <span class="c1"># Get the standard quantity of the first value below the threshold</span>
@@ -1625,7 +1643,7 @@
 </code></pre></div>
 <p>Find the Limit of Quantification (LOQ)</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Find the first value below the 0.35 CV</span>
-<span class="n">first_above_LOQ_threshold</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="n">Cq_cv</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.350</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+<span class="n">first_above_LOQ_threshold</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="n">Cq_cv</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.350</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">arrange</span><span class="p">(</span><span class="nf">desc</span><span class="p">(</span><span class="n">St_Quant</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">slice</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">St_Quant</span><span class="p">)</span>
 
 <span class="c1"># Get the standard quantity of the first value below the threshold</span>
@@ -1635,6 +1653,29 @@
 <span class="n">LOQ_index</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">which</span><span class="p">(</span><span class="n">quants</span><span class="o">$</span><span class="n">St_Quant</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">above_threshold_LOQ_quant</span><span class="p">)</span>
 
 <span class="n">LOQ</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">quants</span><span class="o">$</span><span class="n">St_Quant</span><span class="p">[</span><span class="n">LOQ_index</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="p">]</span>
+</code></pre></div>
+<h3 id="using-modeling-to-calculate-lod-and-loq">Using modeling to calculate LOD and LOQ</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">## Different models </span>
+<span class="c1"># </span>
+<span class="c1"># LOQ1 &lt;- nls(Cq.CV~SSasymp(log10(Standards),Asym,R0,lrc),</span>
+<span class="c1">#                   data=DAT2[DAT2$Target==Targets[i],])</span>
+<span class="c1"># </span>
+<span class="c1"># </span>
+<span class="c1"># LOQ2 &lt;- lm(Cq.CV~log10(Standards),data=DAT2[DAT2$Target==Targets[i],])</span>
+<span class="c1"># </span>
+<span class="c1"># </span>
+<span class="c1"># LOQ3 &lt;- lm(Cq.CV~poly(log10(Standards),2),data=DAT2[DAT2$Target==Targets[i],])</span>
+<span class="c1"># </span>
+<span class="c1"># LOQ4 &lt;- lm(Cq.CV~poly(log10(Standards),3),data=DAT2[DAT2$Target==Targets[i],])</span>
+<span class="c1"># </span>
+<span class="c1"># LOQ5 &lt;- lm(Cq.CV~poly(log10(Standards),4),data=DAT2[DAT2$Target==Targets[i],])</span>
+<span class="c1"># </span>
+<span class="c1"># LOQ6 &lt;- lm(Cq.CV~poly(log10(Standards),5),data=DAT2[DAT2$Target==Targets[i],])</span>
+<span class="c1"># </span>
+<span class="c1"># LOQ7 &lt;- lm(Cq.CV~poly(log10(Standards),6),data=DAT2[DAT2$Target==Targets[i],])</span>
+
+<span class="c1">## find residual standard error</span>
+<span class="c1">## pick best fitting model </span>
 </code></pre></div>
 <h3 id="plotting-standard-curve">Plotting standard curve</h3>
 <div class="highlight"><pre><span></span><code><span class="n">std_curve</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
@@ -1701,7 +1742,7 @@
 ## Warning: Removed 2 rows containing missing values or values outside the scale range
 ## (`geom_point()`).
 </code></pre></div>
-<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-8-1.png" /><!-- --></p>
+<p><img alt="" src="../qPCR_analysis_files/figure-gfm/unnamed-chunk-9-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Standard_curve.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>## Warning: Use of `std_curve$Cq` is discouraged.
@@ -1908,7 +1949,7 @@ value.</p>
 ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 ## generated.
 </code></pre></div>
-<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-14-1.png" /><!-- --></p>
+<p><img alt="" src="../qPCR_analysis_files/figure-gfm/unnamed-chunk-15-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Inhibition.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="filter-data-cq-number-of-replicates-and-copy-num-calculations">Filter data Cq, Number of Replicates, and Copy Num calculations</h2>
@@ -2062,7 +2103,7 @@ Fisheries team to make sure code reflect user’s needs.</em></p>
 <span class="w">        </span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 <span class="w">  </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;#e9ecef&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;#669bbc&quot;</span><span class="p">))</span>
 </code></pre></div>
-<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-20-1.png" /><!-- --></p>
+<p><img alt="" src="../qPCR_analysis_files/figure-gfm/unnamed-chunk-21-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Blanks_piechart.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="sample-preliminary-data">Sample preliminary data</h2>
@@ -2087,7 +2128,7 @@ Fisheries team to make sure code reflect user’s needs.</em></p>
 <span class="w">        </span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 <span class="w">  </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;#e9ecef&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;#669bbc&quot;</span><span class="p">))</span>
 </code></pre></div>
-<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-21-1.png" /><!-- --></p>
+<p><img alt="" src="../qPCR_analysis_files/figure-gfm/unnamed-chunk-22-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Fields_piechart.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
 </code></pre></div>
 <p>Bar chart</p>
@@ -2139,7 +2180,7 @@ Fisheries team to make sure code reflect user’s needs.</em></p>
 ## ℹ Please consider using `annotate()` or provide this layer with data containing
 ##   a single row.
 </code></pre></div>
-<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-22-1.png" /><!-- --></p>
+<p><img alt="" src="../qPCR_analysis_files/figure-gfm/unnamed-chunk-23-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Fieldsamples_barchart.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">9.5</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">5</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>## Warning in geom_text(aes(y = cutoff, x = 2, label = &quot;Outlier&quot;), hjust = 0.4, : All aesthetics have length 1, but the data has 58 rows.
@@ -2178,7 +2219,7 @@ Fisheries team to make sure code reflect user’s needs.</em></p>
 <div class="highlight"><pre><span></span><code>## Warning: Removed 82 rows containing missing values or values outside the scale range
 ## (`geom_point()`).
 </code></pre></div>
-<p><img alt="" src="../qPCR-analysis_files/figure-gfm/unnamed-chunk-23-1.png" /><!-- --></p>
+<p><img alt="" src="../qPCR_analysis_files/figure-gfm/unnamed-chunk-24-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example output/Outliers.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4.5</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>## Warning: Removed 82 rows containing missing values or values outside the scale range

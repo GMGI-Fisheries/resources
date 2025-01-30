@@ -12,7 +12,7 @@
         <link rel="prev" href="../../00-creating_eDNA_conda_env/">
       
       
-        <link rel="next" href="../../eDNA%20qPCR/qPCR-analysis/">
+        <link rel="next" href="../../eDNA%20qPCR/qPCR_analysis/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -923,6 +923,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Other options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download-metazoogene" class="md-nav__link">
+    <span class="md-ellipsis">
+      Download MetaZooGene
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -976,6 +991,15 @@
   
     <nav class="md-nav" aria-label="Run nf-core/ampliseq (Cutadapt & DADA2)">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#testing-metazoogene-as-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing MetaZooGene as database
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#files-generated-by-ampliseq" class="md-nav__link">
@@ -1063,7 +1087,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../eDNA%20qPCR/qPCR-analysis/" class="md-nav__link">
+      <a href="../../eDNA%20qPCR/qPCR_analysis/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1367,6 +1391,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Other options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download-metazoogene" class="md-nav__link">
+    <span class="md-ellipsis">
+      Download MetaZooGene
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -1420,6 +1459,15 @@
   
     <nav class="md-nav" aria-label="Run nf-core/ampliseq (Cutadapt & DADA2)">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#testing-metazoogene-as-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing MetaZooGene as database
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#files-generated-by-ampliseq" class="md-nav__link">
@@ -1667,6 +1715,71 @@ unzip MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta.zip
 ## change notation if version is different 
 makeblastdb -in MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta -dbtype nucl -out MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta
 </code></pre></div>
+<h4 id="download-metazoogene">Download MetaZooGene</h4>
+<p>This needs to be done before each run to download most recent version</p>
+<div class="highlight"><pre><span></span><code>## GLOBAL DB FIRST
+
+library(magrittr)
+
+input_file = &quot;https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGdata-coi__T4000000__o00__A.csv.gz&quot;
+
+Global_MZG &lt;- 
+  # Download
+  readr::read_csv(input_file, 
+                              col_names = FALSE, 
+                              trim_ws = TRUE, 
+                              na = c(&quot;&quot;, &quot;NA&quot;, &quot;N/A&quot;),
+                              col_types = cols(.default = &quot;c&quot;),
+                              show_col_types = FALSE) %&gt;%
+  # Select ID, Sequence and taxa columns
+  dplyr::select(X34, X31, X33, X2) 
+
+Edited_Global_MZG &lt;- Global_MZG %&gt;% 
+  # Separate taxa column into separate columns
+  tidyr::separate(X34, into = as.character(1:21), sep = &quot;;&quot;) %&gt;%
+
+  # Merge wanted taxa columns and add &quot;&gt;&quot;
+  tidyr::unite(col = &quot;Taxa&quot;, 1,4,5,7,8,9,10,11,12,16,18,X2, sep = &quot;;&quot; ) %&gt;%
+  dplyr::mutate(Taxa = paste(&quot;&gt;&quot;, Taxa, sep = &quot;&quot;)) %&gt;%
+
+  # Restructure into one single column vector
+  dplyr::select(X33, Taxa, X31) %&gt;% 
+  tidyr::pivot_longer(cols = c(&quot;Taxa&quot;, &quot;X31&quot;)) %&gt;%
+  dplyr::pull(value)
+
+# Write vector to fasta
+Edited_Global_MZG %&gt;% base::write(&quot;/work/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_Global_modeA.fasta&quot;)
+
+## ATLANTIC DB
+input_file_ATL = &quot;https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGdata-coi__T4000000__o02__A.csv.gz&quot;
+
+ATL_MZG &lt;- 
+  # Download
+  readr::read_csv(input_file_ATL, 
+                  col_names = FALSE, 
+                  trim_ws = TRUE, 
+                  na = c(&quot;&quot;, &quot;NA&quot;, &quot;N/A&quot;),
+                  col_types = cols(.default = &quot;c&quot;),
+                  show_col_types = FALSE) %&gt;%
+  # Select ID, Sequence and taxa columns
+  dplyr::select(X34, X31, X33, X2) 
+
+Edited_ATL_MZG &lt;- ATL_MZG %&gt;% 
+  # Separate taxa column into separate columns
+  tidyr::separate(X34, into = as.character(1:21), sep = &quot;;&quot;) %&gt;%
+
+  # Merge wanted taxa columns and add &quot;&gt;&quot;
+  tidyr::unite(col = &quot;Taxa&quot;, 1,4,5,7,8,9,10,11,12,16,18,X2, sep = &quot;;&quot; ) %&gt;%
+  dplyr::mutate(Taxa = paste(&quot;&gt;&quot;, Taxa, sep = &quot;&quot;)) %&gt;%
+
+  # Restructure into one single column vector
+  dplyr::select(X33, Taxa, X31) %&gt;% 
+  tidyr::pivot_longer(cols = c(&quot;Taxa&quot;, &quot;X31&quot;)) %&gt;%
+  dplyr::pull(value)
+
+# Write vector to fasta
+Edited_ATL_MZG %&gt;% base::write(&quot;/work/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_NorthAtlantic_modeA.fasta&quot;)
+</code></pre></div>
 <h2 id="step-4-nf-coreampliseq">Step 4: nf-core/ampliseq</h2>
 <p><a href="https://nf-co.re/">Nf-core</a>: A community effort to collect a curated set of analysis pipelines built using <a href="https://www.nextflow.io/">Nextflow</a>.<br />
 Nextflow: scalable and reproducible scientific workflows using software containers, used to build wrapper programs like the one we use here.  </p>
@@ -1824,9 +1937,61 @@ and VTAM implement a step of removing putative NUMTs OR multisample features mat
 <p>DnoisE program - https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-021-04115-6</p>
 <p>python package called BOLDigger has been developed to help automate batch query submissions to the BOLD identification engine and can be used to identify COI, ITS, rbcL, and matK sequences (Buchner and Leese, 2020)</p>
 <p>In addition to the potential of amino acid translation, the protein coding nature of COI leads to relatively stricter expectations of amplicon length</p>
-<p>Use QIIME2 and trained classifier?</p>
 <p>To run: <br />
 - <code>sbatch 01b-ampliseq.sh</code> </p>
+<h4 id="testing-metazoogene-as-database">Testing MetaZooGene as database</h4>
+<p>Created folder <code>ampliseq_MZG_results</code>
+cd to this folder and start script from there <code>sbatch ../scripts/01-ampliseq_MZG.sh</code> </p>
+<p><code>01-ampliseq_MZG.sh</code></p>
+<div class="highlight"><pre><span></span><code>#!/bin/bash
+#SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
+#SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=20:00:00
+#SBATCH --job-name=ampliseq_MZG
+#SBATCH --mem=70GB
+#SBATCH --ntasks=24
+#SBATCH --cpus-per-task=2
+
+### USER TO-DO ### 
+## 1. Set paths for project 
+## 2. Adjust SBATCH options above (time, mem, ntasks, etc.) as desired  
+## 3. Fill in F primer information based on primer type (no reverse compliment needed)
+## 4. Adjust parameters as needed (below is Fisheries team default for COI)
+
+# LOAD MODULES
+module load singularity/3.10.3
+module load nextflow/23.10.1
+
+# SET PATHS 
+metadata=&quot;/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/metadata&quot; 
+output_dir=&quot;/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/ampliseq_MZG_results&quot;
+assignTaxonomy=&quot;/work/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_Global_modeA.fasta&quot;
+taxlevels=&quot;Kingdom, Phlyum, Subphylum, Superclass, Class, Subclass, Infraclass, Superorder, Order, Family, Genus, Species&quot;
+
+nextflow run nf-core/ampliseq -resume \
+   -profile singularity \
+   --input ${metadata}/samplesheet.csv \
+   --FW_primer &quot;GGWACWGGWTGAACWGTWTAYCCYCC&quot; \
+   --RV_primer &quot;TAIACYTCIGGRTGICCRAARAAYCA&quot; \
+   --outdir ${output_dir} \
+   --trunclenf 220 \
+   --trunclenr 220 \
+   --trunc_qmin 25 \
+   --max_ee 2 \
+   --min_len_asv 300 \
+   --max_len_asv 330 \
+   --dada_ref_tax_custom ${assignTaxonomy} \
+   --dada_assign_taxlevels ${taxlevels} \
+   --skip_dada_addspecies \
+   --sample_inference pseudo \
+   --ignore_failed_trimming
+</code></pre></div>
+<p>Took out: <code>--dada_ref_tax_custom_sp ${addSpecies} \</code> and <code>--dada2_addspecies_allowmultiple TRUE \</code> that correspond with <code>addSpecies="/work/gmgi/databases/COI/BOLD/addSpecies.fna"</code></p>
+<p>1-22: I tried this with DADA Global MZG fasta first that is DADA assign Taxonomy formatted. I could make Add Species compatible formatting in RStudio on server but we'll see what this output is first.   <br />
+1-23: Adding <code>dada_assign_taxlevels</code> with 12 entries to match MZG. </p>
+<p>Next try to change bootstrap to 0.8 from 0.5</p>
 <h4 id="files-generated-by-ampliseq">Files generated by ampliseq</h4>
 <p>Pipeline summary reports:  </p>
 <ul>
