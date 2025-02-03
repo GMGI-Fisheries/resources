@@ -31,7 +31,17 @@ Download data from each run to desired output path:
 
 ![](https://github.com/GMGI-Fisheries/resources/blob/master/img/Data_To_Server_basespace_runsPage.png?raw=true)
 
-7. Navigate to `cd $HOME/bin` and download dataset: `bs download run -n run_name --extension=fastq.gz -o /local/output/path`. Replace `run_name` with the exact name of the run on BaseSpace.  
+7. Navigate to `cd $HOME/bin` and view the list of projects `bs list projects`. This will give you the proper project ID.  
+8. Download dataset: 
+
+```
+## template
+bs download project -i run_ID --extension=fastq.gz -o /local/output/path
+
+## example - Usually I make a new folder so that I can move just the .gz files to my true raw_data analysis folder
+bs download project -i 12345678 --extension=fastq.gz -o /work/gmgi/Fisheries/eDNA/offshore_wind/vertebrate/UConn_20250130_12S_July23_May24
+```
+
 8. Navigate to the output path `cd /local/output/path` and move all files out of subdirectories: `mv */* .` 
 
 ## Globus to NU Discovery Cluster or GMGI in-house HPC

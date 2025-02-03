@@ -246,22 +246,33 @@ grep -c "^>" ${proj_name}.paired.scrap.contigs.fasta
 ```
 
 The logfiles will be named with the run ID so I used `mv` to change these to names that reflect the step:  
-- `mothur.01setup.makecontigs.logfile`  
-- `mothur.01setup.summary.contigs.logfile`  
+- `mothur.01setup.makecontigs.logfile`   
+- `mothur.01setup.summaryseqs.logfile`    
 
-Summary of OSW data from `mothur.01setup.summary.contigs.logfile`: 
+Output files from `make.file()`:    
+- `OSW_2023_invert.paired.files`   
+- `OSW_2023_invert.single.files`  
+
+Output files from `make.contigs()`:    
+- `OSW_2023_invert.paired.contigs.groups`: what group each sequence belongs to map sequence to each sample from the trimmed sequence file      
+- `OSW_2023_invert.paired.contigs.report`: information on sequences that were aligned and paired together     
+- `OSW_2023_invert.paired.scrap.contigs.fasta`: sequences that were "bad"     
+- `OSW_2023_invert.paired.trim.contigs.fasta`: sequences that were "good"     
+- `OSW_2023_invert.paired.trim.contigs.summary`: summary information for each contig  
+
+Summary of OSW data from `mothur.01setup.summaryseqs.logfile`: 
 
 ```
                 Start   End     NBases  Ambigs  Polymer NumSeqs
 Minimum:        1       124     124     0       3       1
-2.5%-tile:      1       251     251     0       4       265093
-25%-tile:       1       365     365     0       5       2650929
-Median:         1       365     365     0       6       5301857
-75%-tile:       1       365     365     1       6       7952785
-97.5%-tile:     1       404     404     8       8       10338621
-Maximum:        1       502     502     196     233     10603713
+2.5%-tile:      1       251     251     0       4       258217
+25%-tile:       1       365     365     0       5       2582161
+Median:         1       365     365     0       6       5164321
+75%-tile:       1       365     365     1       6       7746481
+97.5%-tile:     1       404     404     8       8       10070425
+Maximum:        1       502     502     188     225     10328641
 Mean:   1       363     363     1       5
-# of Seqs:      10603713
+# of Seqs:      10328641
 ```
 
 This table shows quantile values about the distribution of sequences for a few things:   
@@ -272,20 +283,9 @@ This table shows quantile values about the distribution of sequences for a few t
 - Polymer: Length of polymer repeats.  
 - NumSeqs: Number of sequences.  
 
-Output:    
-- proj_name.contigs.groups                 
-- proj_name.contigs.report                                        
-- proj_name.scrap.contigs.fasta            
-- proj_name.trim.contigs.fasta   
-- proj_name.trim.contigs.summary  
-
-Descriptions of contig files:   
-- Trim file = sequences that were "good".  
-- Scrap file = sequences that were "bad".  
-- Groups file = what group each sequence belongs to map sequence to each sample from the trimmed sequence file.  
-- Contigs report file = information on sequences that were aligned and paired together.  
-
 ## Step 5: QC'ing seqs via Mothur 
+
+### Commands used 
 
 Additional QC steps besides removing primers. Check the 25%-tile, median, and 75%-tile values from the table above. That will determine the max cut-offs below along with the expected length of the COI region (~313 bp but in OSW data, the majority are >350 bp). 
 
@@ -296,6 +296,8 @@ Additional QC steps besides removing primers. Check the 25%-tile, median, and 75
 `unique.seqs()`: extracts unique sequences from a FASTA-formatted sequence file. 
 
 `count.seqs()`: counts the total number of sequences represented by each representative sequence in a name or count file. This can also count based on groups given (e.g., samples). 
+
+### Slurm script 
 
 `02-Mothur-QC.sh`
 
@@ -340,6 +342,8 @@ sbatch 02-Mothur-QC.sh \
     OSW_2023_invert
 ```   
 
+### Output files 
+
 The logfiles will be named with the run ID so I used `mv` to change these to names that reflect the step:  
 - `mothur.02QC.screenseqs.logfile`  
 - `mothur.02QC.screenseqs.summary.logfile`   
@@ -347,21 +351,36 @@ The logfiles will be named with the run ID so I used `mv` to change these to nam
 - `mothur.02QC.countseqs.logfile`  
 - `mothur.02QC.countseqs.summary.logfile`  
 
-OSW example from the output files: 
+The output files from `screen.seqs()`:  
+- `.paired.contigs.good.groups`: This file contains group information for the sequences that passed the filtering criteria  
+- `.paired.trim.contigs.bad.accnos`: This file lists the accession numbers of sequences that did not meet the filtering criteria    
+- `.paired.trim.contigs.good.fasta`: This file contains the actual sequences that passed the filtering criteria    
+
+The `summary.seqs()` file uses the `.paired.trim.contigs.good.fasta` to produce `.paired.trim.contigs.good.summary`. 
+
+`head mothur.02QC.screenseqs.summary.logfile`:
 
 ```
                 Start   End     NBases  Ambigs  Polymer NumSeqs
 Minimum:        1       213     213     0       3       1
-2.5%-tile:      1       251     251     0       4       183163
-25%-tile:       1       365     365     0       5       1831628
-Median:         1       365     365     0       6       3663256
-75%-tile:       1       365     365     0       6       5494883
-97.5%-tile:     1       404     404     0       7       7143348
-Maximum:        1       450     450     0       171     7326510
+2.5%-tile:      1       251     251     0       4       177727
+25%-tile:       1       365     365     0       5       1777268
+Median:         1       365     365     0       6       3554535
+75%-tile:       1       365     365     0       6       5331802
+97.5%-tile:     1       404     404     0       7       6931342
+Maximum:        1       450     450     0       171     7109068
 Mean:   1       363     363     0       5
-# of Seqs:      7326510
-# of unique: 3521350
+# of Seqs:      7109068
 ```
+
+The output files from `unique.seqs()`:   
+- `.paired.trim.contigs.good.names`: contains the names of the unique sequences found in the input FASTA file    
+- `.paired.trim.contigs.good.unique.fasta`:  contains only the unique sequences from the input FASTA file  
+
+The output file from `count.seqs()` is `OSW_2023_invert.paired.trim.contigs.good.count_table`.
+
+The output file from `summary.seqs()` is `OSW_2023_invert.paired.trim.contigs.good.unique.summary`.
+
 
 ## Step 6: Taxonomic Assignment with Mothur 
 
@@ -369,7 +388,9 @@ Using MetaZooGene Global database as reference. This database has sequences from
 
 https://metazoogene.org/mzgdb/. Navigate to the [Worlds oceans](https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/index-o00.html) page and click MZGdb Data Access page. We have downloaded both the Global and North Atlantic versions.   
 
-Download and update database:
+### Download and update MetaZooGene database 
+
+Download database:
 
 ```
 cd /work/gmgi/databases/COI/MetaZooGene
@@ -395,56 +416,69 @@ Create DADA2 version:
 `MZG_to_DADA2.R`: 
 
 ```
-#!/bin/R
+## GLOBAL DB FIRST
 
-MZGdb_to_DADA2 <- function(input_file, output_file) {
+library(magrittr)
 
-  library(magrittr)
-  
+input_file = "https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGdata-coi__T4000000__o00__A.csv.gz"
+
+Global_MZG <- 
   # Download
-  readr::read_csv(input_file, col_names = FALSE, trim_ws = FALSE) %>%
-    # Select ID, Sequence and taxa columns
-    dplyr::select(X34, X31, X33, X2) %>%
-    # Separate taxa column into separate columns
-    tidyr::separate(X34, into = as.character(1:21), sep = ";") %>% 
-    # Merge wanted taxa columns and add ">"
-    tidyr::unite(col = "Taxa", 1,4,5,7,8,9,10,11,12,16,18,X2, sep = ";" ) %>%
-    dplyr::mutate(Taxa = paste(">", Taxa, sep = "")) %>%
-    # Restructure into one single column vector
-    dplyr::select(X33, Taxa, X31) %>% 
-    tidyr::pivot_longer(cols = c("Taxa", "X31")) %>%
-    dplyr::pull(value) %>%
-    # Write vector to fasta
-    base::write(output_file)
-}
+  readr::read_csv(input_file, 
+                              col_names = FALSE, 
+                              trim_ws = TRUE, 
+                              na = c("", "NA", "N/A"),
+                              col_types = cols(.default = "c"),
+                              show_col_types = FALSE) %>%
+  # Select ID, Sequence and taxa columns
+  dplyr::select(X34, X31, X33, X2) 
 
-MZGdb_to_DADA2(input_file = "https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGdata-coi__T4000000__o00__A.csv.gz",
-               output_file = "DADA2_MZG_v2023-m07-15_Global_modeA.fasta")
+Edited_Global_MZG <- Global_MZG %>% 
+  # Separate taxa column into separate columns
+  tidyr::separate(X34, into = as.character(1:21), sep = ";") %>%
+  
+  # Merge wanted taxa columns and add ">"
+  tidyr::unite(col = "Taxa", 1,4,5,7,8,9,10,11,12,16,18,X2, sep = ";" ) %>%
+  dplyr::mutate(Taxa = paste(">", Taxa, sep = "")) %>%
+  
+  # Restructure into one single column vector
+  dplyr::select(X33, Taxa, X31) %>% 
+  tidyr::pivot_longer(cols = c("Taxa", "X31")) %>%
+  dplyr::pull(value)
 
-MZGdb_to_DADA2(input_file = "https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGdata-coi__T4000000__o02__A.csv.gz",
-               output_file = "DADA2_MZG_v2023-m07-15_NorthAtlantic_modeA.fasta")
+# Write vector to fasta
+Edited_Global_MZG %>% base::write("/work/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_Global_modeA.fasta")
+  
+## ATLANTIC DB
+input_file_ATL = "https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGdata-coi__T4000000__o02__A.csv.gz"
+
+ATL_MZG <- 
+  # Download
+  readr::read_csv(input_file_ATL, 
+                  col_names = FALSE, 
+                  trim_ws = TRUE, 
+                  na = c("", "NA", "N/A"),
+                  col_types = cols(.default = "c"),
+                  show_col_types = FALSE) %>%
+  # Select ID, Sequence and taxa columns
+  dplyr::select(X34, X31, X33, X2) 
+
+Edited_ATL_MZG <- ATL_MZG %>% 
+  # Separate taxa column into separate columns
+  tidyr::separate(X34, into = as.character(1:21), sep = ";") %>%
+  
+  # Merge wanted taxa columns and add ">"
+  tidyr::unite(col = "Taxa", 1,4,5,7,8,9,10,11,12,16,18,X2, sep = ";" ) %>%
+  dplyr::mutate(Taxa = paste(">", Taxa, sep = "")) %>%
+  
+  # Restructure into one single column vector
+  dplyr::select(X33, Taxa, X31) %>% 
+  tidyr::pivot_longer(cols = c("Taxa", "X31")) %>%
+  dplyr::pull(value)
+
+# Write vector to fasta
+Edited_ATL_MZG %>% base::write("/work/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_NorthAtlantic_modeA.fasta")
 ```
-
-`MZG_to_DADA2.sh`: 
-
-```
-#!/bin/bash
-#SBATCH --error="%x_error.%j" #if your job fails, the error report will be put in this file
-#SBATCH --output="%x_output.%j" #once your job is completed, any final job report comments will be put in this file
-#SBATCH --partition=long
-#SBATCH --nodes=1
-#SBATCH --time=120:00:00
-#SBATCH --job-name=MZG_to_DADA2
-#SBATCH --mem=150GB
-#SBATCH --ntasks=24
-#SBATCH --cpus-per-task=2
-
-module load anaconda3/2022.05
-source activate /home/e.strand/.conda/envs/Env_R_v2
-
-Rscript /work/gmgi/databases/COI/MetaZooGene/MZG_to_DADA2.R
-```
-
 
 Align the database prior to using as input in Mothur:
 
@@ -475,11 +509,17 @@ OUTPUT_FILE=$2
 mafft --auto "$INPUT_FILE" > "$OUTPUT_FILE"
 ```
 
-Use format: `sbatch MZG_align.sh input output`    
-Example: `sbatch MZG_align.sh MZG_v2023-m07-15_NorthAtlantic_modeA.fasta MAFFT_MZG_v2023-m07-15_NorthAtlantic_modeA_aligned.fasta`     
-`sbatch MZG_align.sh MZG_v2023-m07-15_Global_modeA.fasta MAFFT_MZG_v2023-m07-15_Global_modeA_aligned.fasta` 
+Use format: `sbatch MZG_align.sh input output`   
 
-Running taxonomic assignment via Mothur: 
+Example: 
+
+```
+sbatch MZG_align.sh MZG_v2023-m07-15_NorthAtlantic_modeA.fasta MAFFT_MZG_v2023-m07-15_NorthAtlantic_modeA_aligned.fasta  
+
+sbatch MZG_align.sh MZG_v2023-m07-15_Global_modeA.fasta MAFFT_MZG_v2023-m07-15_Global_modeA_aligned.fasta
+``` 
+
+### Run taxonomic assignment via Mothur 
 
 `03-Mothur-tax.sh`
 
@@ -505,16 +545,21 @@ ref=$1
 cd ${dir}
 
 ## Aligning to taxonomy file
-mothur "#align.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.fasta, reference=${ref}, flip=T, processors=48)"
+# mothur "#align.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.fasta, reference=${ref}, flip=T, processors=48)"
 mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align)"
 
 ## Identifying those that don't meet the criteria 
 mothur "#screen.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, count=${proj_name}.paired.trim.contigs.good.count_table, optimize=start, criteria=99, maxhomop=8)"
-mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.align, count=${proj_name}.paired.trim.contigs.good.good.count_table)"
+```
+
+Running individually to understand output and why summary isn't working  
+Only run align once -- This takes 3+ hours 
+
+
+```
 
 ## Filtering those out
 mothur "#filter.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.align, count=${proj_name}.paired.trim.contigs.good.good.count_table, vertical=T, trump=.)"
-mothur "#summary.seqs(fasta=your_project_name.paired.trim.contigs.good.unique.good.filter.fasta, count=your_project_name.paired.trim.contigs.good.good.filter.count_table)"
 
 ## ID unique sequences again
 mothur "#unique.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.fasta, count=${proj_name}.paired.trim.contigs.good.good.filter.count_table)"
@@ -527,6 +572,24 @@ How to run:
 ```
 sbatch 03-Mothur-tax.sh /work/gmgi/databases/COI/MetaZooGene/MAFFT_MZG_v2023-m07-15_NorthAtlantic_modeA_aligned.fasta 
 ```
+
+Output from `align.seqs()`:  
+- `OSW_2023_invert.paired.trim.contigs.good.unique.align`: contains the aligned sequences from your input FASTA file      
+- `OSW_2023_invert.paired.trim.contigs.good.unique.align.report`: provides detailed statistics about the alignment process. It includes metrics such as the length of the sequences, similarity between the query and template sequences, the longest insertions found, and the alignment scores  
+- `OSW_2023_invert.paired.trim.contigs.good.unique.flip.accnos`: lists the names of sequences that generated alignments that eliminated too many bases  
+
+Output from `summary.seqs()` = 
+
+Output from `screen.seqs()`:  
+- 
+
+Output from `filter.seqs()`:  
+- 
+
+Output from `unique.seqs()`:  
+- 
+
+Output from `summary.seqs()` = 
 
 Atlantic comparison:
 

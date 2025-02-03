@@ -216,7 +216,7 @@ library(strex)
 sample_list <- read.delim2("/work/gmgi/Fisheries/eDNA/offshore_wind2023/raw_data/rawdata", header=F) %>% 
   dplyr::rename(forwardReads = V1) %>%
   mutate(sampleID = str_after_nth(forwardReads, "data/", 1),
-         sampleID = str_before_nth(sampleID, "_R", 1))
+         sampleID = str_before_nth(sampleID, "_S", 1))
 
 # creating sample ID 
 sample_list$sampleID <- gsub("-", "_", sample_list$sampleID)
@@ -265,7 +265,7 @@ Below script is set for Riaz primers:
 
 # LOAD MODULES
 module load singularity/3.10.3
-module load nextflow/23.10.1
+module load nextflow/24.04.4
 
 # SET PATHS 
 metadata="" 
