@@ -1695,7 +1695,7 @@ library(strex)
 sample_list &lt;- read.delim2(&quot;/work/gmgi/Fisheries/eDNA/offshore_wind2023/raw_data/rawdata&quot;, header=F) %&gt;% 
   dplyr::rename(forwardReads = V1) %&gt;%
   mutate(sampleID = str_after_nth(forwardReads, &quot;data/&quot;, 1),
-         sampleID = str_before_nth(sampleID, &quot;_R&quot;, 1))
+         sampleID = str_before_nth(sampleID, &quot;_S&quot;, 1))
 
 # creating sample ID 
 sample_list$sampleID &lt;- gsub(&quot;-&quot;, &quot;_&quot;, sample_list$sampleID)
@@ -1738,7 +1738,7 @@ sample_list %&gt;% write.csv(&quot;/work/gmgi/Fisheries/eDNA/offshore_wind2023/m
 
 # LOAD MODULES
 module load singularity/3.10.3
-module load nextflow/23.10.1
+module load nextflow/24.04.4
 
 # SET PATHS 
 metadata=&quot;&quot; 

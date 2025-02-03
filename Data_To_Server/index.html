@@ -1269,7 +1269,16 @@
 </ol>
 <p><img alt="" src="https://github.com/GMGI-Fisheries/resources/blob/master/img/Data_To_Server_basespace_runsPage.png?raw=true" /></p>
 <ol>
-<li>Navigate to <code>cd $HOME/bin</code> and download dataset: <code>bs download run -n run_name --extension=fastq.gz -o /local/output/path</code>. Replace <code>run_name</code> with the exact name of the run on BaseSpace.  </li>
+<li>Navigate to <code>cd $HOME/bin</code> and view the list of projects <code>bs list projects</code>. This will give you the proper project ID.  </li>
+<li>Download dataset: </li>
+</ol>
+<div class="highlight"><pre><span></span><code>## template
+bs download project -i run_ID --extension=fastq.gz -o /local/output/path
+
+## example - Usually I make a new folder so that I can move just the .gz files to my true raw_data analysis folder
+bs download project -i 12345678 --extension=fastq.gz -o /work/gmgi/Fisheries/eDNA/offshore_wind/vertebrate/UConn_20250130_12S_July23_May24
+</code></pre></div>
+<ol>
 <li>Navigate to the output path <code>cd /local/output/path</code> and move all files out of subdirectories: <code>mv */* .</code> </li>
 </ol>
 <h2 id="globus-to-nu-discovery-cluster-or-gmgi-in-house-hpc">Globus to NU Discovery Cluster or GMGI in-house HPC</h2>
