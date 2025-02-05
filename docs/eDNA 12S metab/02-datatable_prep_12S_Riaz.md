@@ -179,7 +179,10 @@ Blast_Mito <- read.table(path_blast_mito, header=F, col.names = blast_col_header
   dplyr::rename(Species_name = sseqid) %>%
   
   # replacing _ with spaces
-  mutate(Species_name = gsub("_", " ", Species_name))
+  mutate(Species_name = gsub("_", " ", Species_name),
+         
+         ## removing gb || sequence from species name 
+         Species_name = str_after_nth(Species_name, "\\|", 2))
 ```
 
 ### NCBI database
@@ -327,55 +330,46 @@ the next section.
 No user edits.
 
 ``` r
-Disagree <- Blast_GMGI_edited %>% group_by(ASV_ID) %>% 
-  dplyr::rename(., GMGI_db_ID = db_percent_ID, GMGI_pident = pident) %>%
-  ## Creating new columns with species name based on pident information
-  mutate(
-    GMGI_100 = if_else(GMGI_pident == 100, Species_name, NA_character_),
-    GMGI_lessthan100 = if_else(GMGI_pident < 100, Species_name, NA_character_)) %>%
-  
-  ## taking only the top hit per ASV ID
-  slice_max(GMGI_pident, n = 1, with_ties = FALSE) %>% ungroup() %>%
+## Create GMGI species input
+disagree_input_GMGI <- Blast_GMGI_edited %>% 
+  dplyr::select(ASV_ID, GMGI_pident = pident, GMGI_db_ID = db_percent_ID, GMGI_Species = Species_name) %>%
+  group_by(ASV_ID) %>% slice_max(GMGI_pident, n = 1, with_ties = FALSE) %>% ungroup()
 
-  ## filtering to distinct rows with selected columns
-  distinct(ASV_ID, GMGI_db_ID, GMGI_pident, GMGI_100, GMGI_lessthan100) %>%
-  
-  ## adding Mitofish and editing the Blast_Mito df in the process
-  full_join(Blast_Mito %>% dplyr::select(ASV_ID, Species_name) %>%
-              dplyr::rename(Mitofish = Species_name) %>%
-              distinct() %>% group_by(ASV_ID) %>%
-              mutate(Mitofish = paste0(Mitofish, collapse = ";")),
-            by = "ASV_ID") %>%
-  
-  ## adding NCBI and editing the Blast_NCBI df in the process
-  full_join(Blast_NCBI %>% dplyr::select(ASV_ID, Species_name) %>%
-              dplyr::rename(NCBI = Species_name) %>%
-              distinct() %>% group_by(ASV_ID) %>%
-              mutate(NCBI = paste0(NCBI, collapse = ";")),
-            by = "ASV_ID") %>%
-  
-  ## adding ASV rank and sum information
-  left_join(., ASV_rank_list, by = "ASV_ID") %>%
+## Create Mitofish input
+disagree_input_Mito <- Blast_Mito %>%
+  dplyr::select(ASV_ID, Mito_Species = Species_name) %>% distinct() %>%
+  group_by(ASV_ID) %>% mutate(Mito_Species = paste0(Mito_Species, collapse = ";")) %>% distinct() %>% ungroup()
 
-  ## filtering out duplicate rows
-  distinct() %>%
-  
-  ## filtering to those entries that mismatch between GMGI, Mitofish, and NCBI
-  filter((GMGI_100 != GMGI_lessthan100 | GMGI_100 != Mitofish | GMGI_100 != NCBI | is.na(GMGI_100))) %>%
-  
-  ## adding choice column for next steps 
+## Create NCBI input
+disagree_input_NCBI <- Blast_NCBI %>% 
+  dplyr::select(ASV_ID, NCBI_Species = Species_name) %>% distinct() %>% 
+  group_by(ASV_ID) %>% mutate(NCBI_Species = paste0(NCBI_Species, collapse = ";")) %>% distinct() %>% ungroup()
+
+## Combine all three dfs into disagree_df with ASV rank information
+disagree_df <- disagree_input_GMGI %>%
+  full_join(disagree_input_Mito, by = "ASV_ID") %>%
+  full_join(disagree_input_NCBI, by = "ASV_ID") %>%
+  full_join(., ASV_rank_list, by = "ASV_ID") %>%
   mutate(Choice = NA)
-```
 
-    ## Warning in full_join(., Blast_NCBI %>% dplyr::select(ASV_ID, Species_name) %>% : Detected an unexpected many-to-many relationship between `x` and `y`.
-    ## ℹ Row 36 of `x` matches multiple rows in `y`.
-    ## ℹ Row 201 of `y` matches multiple rows in `x`.
-    ## ℹ If a many-to-many relationship is expected, set `relationship =
-    ##   "many-to-many"` to silence this warning.
-
-``` r
+## Filtering the disagree_df to only output the entries that disagree with multiple entries
+filtered_disagree_df <- disagree_df %>%
+  
+  ## grouping by ASV (row)
+  rowwise() %>%
+  
+  ## Filtering out rows that are unassigned across all 3 db 
+  filter(! (is.na(GMGI_Species) && is.na(Mito_Species) && is.na(NCBI_Species) )) %>%
+  
+  ## Filter out rows that are GMGI assigned and empty from Mito and NCBI
+  filter(! (!is.na(GMGI_Species) && is.na(Mito_Species) && is.na(NCBI_Species) )) %>%
+  
+  ## Filtering out rows that have the same information across databases (ONLY in rows with a GMGI entry)
+  filter(ifelse(!is.na(GMGI_Species), 
+          n_distinct(c_across(GMGI_Species:NCBI_Species), na.rm = TRUE) > 1, TRUE))
+          
 ## export this data frame as excel sheet 
-Disagree %>% write_xlsx(path_disagree_list)
+filtered_disagree_df %>% write_xlsx(path_disagree_list)
 ```
 
 ### Assign taxonomy based on hierarchical approach
@@ -396,7 +390,7 @@ ASV_table_taxID <- ASV_table %>%
   
   ## 2. Mitofish database
   ### join df, select ASV_ID and Species_name columns, rename Species_name to Mito, call only distinct rows
-  left_join(., Blast_Mito %>% dplyr::select(ASV_ID, Species_name) %>% dplyr::rename(Mito = Species_name) %>% distinct() %>%
+  left_join(., Blast_Mito %>% dplyr::select(ASV_ID, Mito = Species_name) %>% distinct() %>%
               
               ### group by ASV_ID, and collapse all species names separated by ;, then take only distinct rows
               group_by(ASV_ID) %>% mutate(Mito = paste0(Mito, collapse = ";")) %>% distinct(), by = "ASV_ID") %>%
@@ -405,7 +399,7 @@ ASV_table_taxID <- ASV_table %>%
   mutate(., Species_name = ifelse(is.na(Species_name), Mito, Species_name)) %>%
 
   ## 3. NCBI database; same functions as above
-  left_join(., Blast_NCBI %>% dplyr::select(ASV_ID, Species_name) %>% dplyr::rename(NCBI = Species_name) %>% distinct() %>%
+  left_join(., Blast_NCBI %>% dplyr::select(ASV_ID, NCBI = Species_name) %>% distinct() %>%
               group_by(ASV_ID) %>% mutate(NCBI = paste0(NCBI, collapse = ";")) %>% distinct(), by = "ASV_ID") %>%
   mutate(., Species_name = ifelse(is.na(Species_name), NCBI, Species_name)) %>%
   
@@ -535,10 +529,21 @@ ASV_table_taxID_edited %>% rowwise() %>%
   mutate(across(.cols = (7:ncol(.)),            
                 .fns = ~ ifelse((.x/ASV_sum)>0.001, NA, .x))) %>% ungroup() %>% write_xlsx(reads_filtered_out)
 
-## Export ASV break-down for 03-data_quality.Rmd
+## Export ASV break-down for 03-data_quality.Rmds
 ASV_table_taxID_filtered %>% dplyr::select(ASV_ID, Species_name, Common_name, Category, ASV_sum, ASV_rank) %>%
   write_xlsx(ASV_breakdown_sheet)
+
+## Confirm number of samples is as expected (outputs should be the same)
+ncol(ASV_table_taxID_annotated %>% dplyr::select(-ASV_ID, -Species_name, -Common_name, -Category, -ASV_sum, -ASV_rank))
 ```
+
+    ## [1] 339
+
+``` r
+ncol(ASV_table_taxID_filtered %>% dplyr::select(-ASV_ID, -Species_name, -Common_name, -Category, -ASV_sum, -ASV_rank))
+```
+
+    ## [1] 339
 
 ## Collapsing read counts by species name
 
@@ -547,17 +552,21 @@ No user edits.
 ``` r
 ASV_table_taxID_collapsed <- ASV_table_taxID_filtered %>% 
   # removing original ASV_ID to collapse
-  dplyr::select(-ASV_ID) %>%  
+  dplyr::select(-ASV_ID, -ASV_sum, -ASV_rank) %>%  
   
   ## group by Species_name and sample
   dplyr::group_by(Species_name, Common_name, Category) %>%
   
   ## sum down column by species name and sample to collapse
-  summarise(across(6:last_col(), ~ sum(., na.rm = TRUE))) %>% ungroup()
+  dplyr::summarise(across(.cols = (1:last_col()),            
+                          .fns = ~ sum(., na.rm = TRUE)), 
+                     .groups = 'drop')
+
+# Print number of samples
+ncol(ASV_table_taxID_collapsed %>% dplyr::select(-Species_name, -Common_name, -Category))
 ```
 
-    ## `summarise()` has grouped output by 'Species_name', 'Common_name'. You can
-    ## override using the `.groups` argument.
+    ## [1] 339
 
 ## Creating results output
 

@@ -73,10 +73,15 @@ library(scales)
     ## 
     ##     discard
 
+``` r
+#remotes::install_github("davidsjoberg/ggsankey")
+library(ggsankey)
+```
+
 ## Load data
 
 ``` r
-df <- read_xlsx("example_output/Results_relab_long.xlsx") %>%
+df <- read_xlsx("example_output/Results_relative_abundance_long_format.xlsx") %>%
   mutate(across(c(relab), ~ round(.x, 5)))
 
 taxlevels <- read_excel(
@@ -127,7 +132,7 @@ If targeted species heatmap is desired, replace df_annotated with
 df_filtered in the heatmap code below. If so, remember to change the
 file name exported.
 
-## Plot
+## Heatmap plot
 
 reverse label order: scale y discrete limits reverse limits=rev
 
@@ -280,8 +285,10 @@ ggsave("example_output/Figures/Relative_abundance_sampletype.png", width = 7, he
 
 ## Top Species List visual
 
+Used for contract report.
+
 ``` r
-top_list <- read_xlsx("example_output/Results_rawreads_long.xlsx") %>%
+top_list <- read_xlsx("example_output/Results_rawreads_long_format.xlsx") %>%
   filter(!Category == "Other" & !Category == "Livestock" & !Category == "unassigned" & !Category == "Human") %>%
   group_by(Species_name, Common_name) %>%
   summarise(total = sum(reads),
@@ -322,8 +329,10 @@ ggsave("example_output/Figures/Top_species_log.png", width=3.5, height=6)
 
 ## Bubble plot
 
+Used for contract report.
+
 ``` r
-raw_df <- read_xlsx("example_output/Results_rawreads_long.xlsx") %>%
+raw_df <- read_xlsx("example_output/Results_rawreads_long_format.xlsx") %>%
   group_by(Species_name, Common_name, Category) %>%
   reframe(sum = sum(reads)/1000000,
           xaxis = "x") %>%
@@ -390,86 +399,4 @@ raw_df %>%
 
 ``` r
 ggsave("example_output/Figures/Species_bubbleplot.png", width=4.5, height=16)
-```
-
-Setting up plot for loop
-
-``` r
-# # Get unique categories
-# categories <- unique(raw_df$Category)
-#   
-# # Set the fixed size range
-# size_range <- c(0, max(raw_df$sum))
-# 
-# # Create color palette
-# color_palette <- scales::seq_gradient_pal("#0C4D66", "lightskyblue2")(seq(0, 1, length.out = 6))
-# 
-# # Create a list to store the plots
-# plot_list <- list()
-# 
-# # Define custom widths and heights for each category
-# dimensions <- data.frame(
-#   Category = categories,
-#   Width = c(4, 4, 4, 4, 4),  # Example widths for each category
-#   Height = c(7, 7, 7, 7, 7)   # Example heights for each category
-# )
-# 
-# aspect_ratio <- 2
-```
-
-For loop to create each plot
-
-``` r
-# # Loop through each category
-# for (cat in categories) {
-#   
-#   raw_df_filtered <- raw_df %>% 
-#     filter(Category == cat) %>% #!Target_group == "Nontarget", 
-#     # Create a factor for Common_name ordered by Order within each Category
-#     mutate(Common_name = factor(Common_name, levels = unique(Common_name[order(Order, desc(Common_name))])))
-# 
-#   plot <- raw_df_filtered %>%
-#     ggplot(aes(x=xaxis, y=Common_name)) + 
-#     geom_point(aes(size=sum, fill=sum), color = 'black', shape=21) +
-#     scale_size_continuous(range = c(1, 10), limits = size_range) +
-#     scale_fill_gradient(na.value = "white", low = "lightskyblue2", high = "#0C4D66", limits = size_range) +
-#     theme_bw() +
-#     labs(
-#       title = cat,
-#       x="",
-#       y="",
-#       fill = "Reads (M)",
-#       size = "Reads (M)"
-#     ) +
-#     theme(
-#       axis.text.y = element_text(size = 8, color = 'black'),
-#       axis.text.x = element_blank(),
-#       axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=12, face="bold"),
-#       axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=12, face="bold"),
-#       plot.title = element_text(hjust = 0.5, face = "bold", size = 14),
-#       # Combine legends
-#       legend.position = "right",
-#       legend.box = "vertical"
-#     ) +
-#     guides(
-#       fill = "none",
-#       size = guide_legend(order = 2, reverse = TRUE,
-#                           override.aes = list(fill = color_palette))
-#     ) #+ coord_fixed(ratio=aspect_ratio)
-#   
-#   # Store the plot in the list
-#   plot_list[[cat]] <- plot
-#   
-# # Get the corresponding width and height
-#     width <- dimensions$Width[dimensions$Category == cat]
-#     height <- dimensions$Height[dimensions$Category == cat]
-# 
-#   # Save the plot with specified dimensions
-#   ggsave(filename = paste0("example_output/Figures/Bubbleplot/Bubbleplot_", cat, ".png"), 
-#          plot = plot, 
-#          width = width, 
-#          height = height,
-#          units = "in", 
-#          dpi = 300)
-# }
 ```

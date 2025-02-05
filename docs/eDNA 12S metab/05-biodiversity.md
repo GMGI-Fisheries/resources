@@ -130,7 +130,7 @@ the following code uses that dataset.
 options(scipen = 999)
 
 ## Relative abundance matrix 
-df <- read_xlsx("example_output/Results_relab_matrix.xlsx") %>%
+df <- read_xlsx("example_output/Results_2_relative_abundance_matrix.xlsx") %>%
   ## removing common_name and category for now 
   dplyr::select(-Common_name, -Category) %>%
   
@@ -169,8 +169,8 @@ print(phylo_obj)
 ```
 
     ## phyloseq-class experiment-level object
-    ## otu_table()   OTU Table:         [ 107 taxa and 325 samples ]
-    ## sample_data() Sample Data:       [ 325 samples by 10 sample variables ]
+    ## otu_table()   OTU Table:         [ 107 taxa and 328 samples ]
+    ## sample_data() Sample Data:       [ 328 samples by 10 sample variables ]
 
 ``` r
 # Ensure that your OTU table doesn't contain any NA or negative values (output should be FALSE)
@@ -251,7 +251,7 @@ alpha_div %>%
 ggsave("example_output/Figures/alpha_diversity.png", width = 6, height = 4)
 ```
 
-Richness vs. Shannon per sample
+Richness vs. Shannon per sample used in contract report
 
 ``` r
 ## Species Richness
@@ -340,9 +340,9 @@ Anova(aov, type = "III")
     ## 
     ## Response: Shannon
     ##              Sum Sq  Df F value       Pr(>F)    
-    ## (Intercept)  10.880   1 28.7312 0.0000001589 ***
-    ## SampleType    2.308   2  3.0478      0.04884 *  
-    ## Residuals   121.935 322                         
+    ## (Intercept)  10.880   1 28.9137 0.0000001449 ***
+    ## SampleType    2.302   2  3.0595      0.04827 *  
+    ## Residuals   122.294 325                         
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -358,10 +358,10 @@ TukeyHSD(aov)
     ## Fit: aov(formula = Shannon ~ SampleType, data = alpha_div)
     ## 
     ## $SampleType
-    ##                          diff         lwr       upr     p adj
-    ## Control-Blank       0.4623737  0.01228584 0.9124616 0.0425023
-    ## Inside WEA-Blank    0.3613299 -0.06740447 0.7900642 0.1176828
-    ## Inside WEA-Control -0.1010438 -0.29204877 0.0899611 0.4272387
+    ##                           diff         lwr        upr     p adj
+    ## Control-Blank       0.46237370  0.01372728 0.91102012 0.0416634
+    ## Inside WEA-Blank    0.36259559 -0.06463695 0.78982812 0.1142372
+    ## Inside WEA-Control -0.09977811 -0.28988218 0.09032596 0.4329459
 
 # Beta Diversity
 
@@ -459,33 +459,32 @@ phylo_obj_filtered <- prune_samples(sample_data(phylo_obj)$SampleType != "Blank"
 NMDS <- ordinate(physeq = phylo_obj_filtered, method = "NMDS", distance = "bray")
 ```
 
-    ## Run 0 stress 0.2313732 
-    ## Run 1 stress 0.2495084 
-    ## Run 2 stress 0.2346765 
-    ## Run 3 stress 0.2457704 
-    ## Run 4 stress 0.2481374 
-    ## Run 5 stress 0.2360292 
-    ## Run 6 stress 0.2377895 
-    ## Run 7 stress 0.237543 
-    ## Run 8 stress 0.2442771 
-    ## Run 9 stress 0.2434889 
-    ## Run 10 stress 0.2538366 
-    ## Run 11 stress 0.2454598 
-    ## Run 12 stress 0.236795 
-    ## Run 13 stress 0.2361073 
-    ## Run 14 stress 0.2456342 
-    ## Run 15 stress 0.2375375 
-    ## Run 16 stress 0.2483309 
-    ## Run 17 stress 0.2331353 
-    ## Run 18 stress 0.2391534 
-    ## Run 19 stress 0.2405843 
-    ## Run 20 stress 0.2308905 
+    ## Run 0 stress 0.2324997 
+    ## Run 1 stress 0.2399498 
+    ## Run 2 stress 0.2363517 
+    ## Run 3 stress 0.2410485 
+    ## Run 4 stress 0.2466303 
+    ## Run 5 stress 0.2422236 
+    ## Run 6 stress 0.2435588 
+    ## Run 7 stress 0.2445893 
+    ## Run 8 stress 0.2359513 
+    ## Run 9 stress 0.2366502 
+    ## Run 10 stress 0.2433675 
+    ## Run 11 stress 0.2533385 
+    ## Run 12 stress 0.2439828 
+    ## Run 13 stress 0.2438916 
+    ## Run 14 stress 0.2402618 
+    ## Run 15 stress 0.246462 
+    ## Run 16 stress 0.2315938 
     ## ... New best solution
-    ## ... Procrustes: rmse 0.02822854  max resid 0.1826603 
+    ## ... Procrustes: rmse 0.02792967  max resid 0.1792405 
+    ## Run 17 stress 0.2359704 
+    ## Run 18 stress 0.2448772 
+    ## Run 19 stress 0.2472408 
+    ## Run 20 stress 0.2375073 
     ## *** Best solution was not repeated -- monoMDS stopping criteria:
     ##      1: no. of iterations >= maxit
-    ##     18: stress ratio > sratmax
-    ##      1: scale factor of the gradient < sfgrmin
+    ##     19: stress ratio > sratmax
 
 ``` r
 ## Plotting
@@ -542,10 +541,10 @@ adonis2(bray_df ~ SampleType, data = sample_df, permutations = 99)
     ## Number of permutations: 99
     ## 
     ## adonis2(formula = bray_df ~ SampleType, data = sample_df, permutations = 99)
-    ##           Df SumOfSqs      R2      F Pr(>F)   
-    ## Model      2    2.024 0.01842 3.0217   0.01 **
-    ## Residual 322  107.839 0.98158                 
-    ## Total    324  109.863 1.00000                 
+    ##           Df SumOfSqs      R2     F Pr(>F)   
+    ## Model      2    1.973 0.01778 2.941   0.01 **
+    ## Residual 325  109.017 0.98222                
+    ## Total    327  110.990 1.00000                
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -563,17 +562,17 @@ pairwise.adonis2(bray_df ~ SampleType, data = sample_df)
     ## 
     ## $`Inside WEA_vs_Blank`
     ##           Df SumOfSqs      R2      F Pr(>F)    
-    ## Model      1    1.434 0.01691 4.2478  0.001 ***
-    ## Residual 247   83.362 0.98309                  
-    ## Total    248   84.796 1.00000                  
+    ## Model      1    1.408 0.01639 4.1647  0.001 ***
+    ## Residual 250   84.541 0.98361                  
+    ## Total    251   85.949 1.00000                  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
     ## $`Inside WEA_vs_Control`
     ##           Df SumOfSqs      R2      F Pr(>F)  
-    ## Model      1    0.639 0.00606 1.8952  0.049 *
-    ## Residual 311  104.859 0.99394                
-    ## Total    312  105.498 1.00000                
+    ## Model      1    0.606 0.00568 1.7942  0.069 .
+    ## Residual 314  106.037 0.99432                
+    ## Total    315  106.643 1.00000                
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 

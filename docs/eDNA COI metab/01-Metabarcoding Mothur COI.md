@@ -550,6 +550,9 @@ mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align)"
 
 ## Identifying those that don't meet the criteria 
 mothur "#screen.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, count=${proj_name}.paired.trim.contigs.good.count_table, optimize=start, criteria=99, maxhomop=8)"
+
+## Filtering those out
+mothur "#filter.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.align, count=${proj_name}.paired.trim.contigs.good.good.count_table, vertical=T, trump=.)"
 ```
 
 Running individually to understand output and why summary isn't working  
@@ -557,10 +560,6 @@ Only run align once -- This takes 3+ hours
 
 
 ```
-
-## Filtering those out
-mothur "#filter.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.align, count=${proj_name}.paired.trim.contigs.good.good.count_table, vertical=T, trump=.)"
-
 ## ID unique sequences again
 mothur "#unique.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.fasta, count=${proj_name}.paired.trim.contigs.good.good.filter.count_table)"
 mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.filter.unique.fasta, count=${proj_name}.paired.trim.contigs.good.unique.good.filter.count_table)"
@@ -578,10 +577,28 @@ Output from `align.seqs()`:
 - `OSW_2023_invert.paired.trim.contigs.good.unique.align.report`: provides detailed statistics about the alignment process. It includes metrics such as the length of the sequences, similarity between the query and template sequences, the longest insertions found, and the alignment scores  
 - `OSW_2023_invert.paired.trim.contigs.good.unique.flip.accnos`: lists the names of sequences that generated alignments that eliminated too many bases  
 
-Output from `summary.seqs()` = 
+Output from `summary.seqs()` = `OSW_2023_invert.paired.trim.contigs.good.unique.summary`
+
+Atlantic comparison:
+
+```
+                Start   End     NBases  Ambigs  Polymer NumSeqs
+Minimum:        0       0       0       0       1       1
+2.5%-tile:      1833    7144    3       0       1       86394
+25%-tile:       6781    7145    364     0       5       863940
+Median:         22391   24785   365     0       6       1727879
+75%-tile:       22508   25827   365     0       6       2591818
+97.5%-tile:     119396  119405  368     0       7       3369364
+Maximum:        121316  121316  447     0       171     3455757
+Mean:   26853   33810   307     0       5
+# of Seqs:      3455757
+```
 
 Output from `screen.seqs()`:  
-- 
+- `OSW_2023_invert.paired.trim.contigs.good.pick.count_table`: This file is not directly produced by screen.seqs() but is a count table updated after removing sequences that did not meet the criteria set in screen.seqs(). It contains the abundance information of the sequences that passed the filtering process  
+- `OSW_2023_invert.paired.trim.contigs.good.unique.good.align`: This file contains the aligned sequences that passed the filtering criteria set by screen.seqs(), such as minimum length, maximum length, start and end positions, and other quality metrics. It includes only the "good" sequences       
+- `OSW_2023_invert.paired.trim.contigs.good.unique.bad.accnos`: This file contains the accession numbers of the sequences that did not meet the filtering criteria    
+- `OSW_2023_invert.paired.trim.contigs.good.good.count_table`: Similar to the first file, this is an updated count table reflecting the abundance of sequences that passed the filtering process  
 
 Output from `filter.seqs()`:  
 - 
@@ -589,39 +606,16 @@ Output from `filter.seqs()`:
 Output from `unique.seqs()`:  
 - 
 
-Output from `summary.seqs()` = 
+Output from `summary.seqs()`:  
+- 
 
-Atlantic comparison:
-
-```
-                Start   End     NBases  Ambigs  Polymer NumSeqs
-Minimum:        0       0       0       0       1       1
-2.5%-tile:      1833    7145    4       0       1       88034
-25%-tile:       6781    7145    365     0       5       880338
-Median:         22391   24785   365     0       6       1760676
-75%-tile:       22508   25827   365     0       6       2641013
-97.5%-tile:     119396  119405  368     0       7       3433317
-Maximum:        121316  121316  450     0       171     3521350
-Mean:   26363   33470   310     0       5
-# of Seqs:      3521350
-```
-
-World comparison:
-
-```
-
-
-```
-
-If we are using MetaZooGene and it's all COI sequences, why would we want to filter any out? Skip screen seqs for now.
-
-Renamed output files to:    
-- mothur.03align.alignseqs.logfile  
-- mothur.03align.alignseqs.summary.logfile  
-- mothur.03align.countgroups.logfile  
-- mothur.03align.filterseqs.logfile  
-- mothur.03align.screenseqs.logfile  
-- mothur.03align.uniqueseqs.logfile
+Renamed output files to (in order produced):    
+- `mothur.03align.alignseqs.logfile`    
+- `mothur.03align.alignseqs.summary.logfile`    
+- `mothur.03align.screenseqs.logfile`  
+- `mothur.03align.filterseqs.logfile`  
+- `mothur.03align.uniqueseqs.logfile`  
+- `mothur.03align.countgroups.logfile`    
 
 ## Step 8: Denoise and remove chimeras 
 

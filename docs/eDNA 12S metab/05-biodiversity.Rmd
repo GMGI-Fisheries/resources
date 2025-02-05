@@ -51,7 +51,7 @@ On the Fisheries team, we have traditionally used relative abundance and the fol
 options(scipen = 999)
 
 ## Relative abundance matrix 
-df <- read_xlsx("example_output/Results_relab_matrix.xlsx") %>%
+df <- read_xlsx("example_output/Results_2_relative_abundance_matrix.xlsx") %>%
   ## removing common_name and category for now 
   dplyr::select(-Common_name, -Category) %>%
   
