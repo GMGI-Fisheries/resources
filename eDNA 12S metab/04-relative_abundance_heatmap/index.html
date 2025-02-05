@@ -778,9 +778,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#plot" class="md-nav__link">
+  <a href="#heatmap-plot" class="md-nav__link">
     <span class="md-ellipsis">
-      Plot
+      Heatmap plot
     </span>
   </a>
   
@@ -1231,9 +1231,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#plot" class="md-nav__link">
+  <a href="#heatmap-plot" class="md-nav__link">
     <span class="md-ellipsis">
-      Plot
+      Heatmap plot
     </span>
   </a>
   
@@ -1342,8 +1342,11 @@ manuscript/report.</p>
 ## 
 ##     discard
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">#remotes::install_github(&quot;davidsjoberg/ggsankey&quot;)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">ggsankey</span><span class="p">)</span>
+</code></pre></div>
 <h2 id="load-data">Load data</h2>
-<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&quot;example_output/Results_relab_long.xlsx&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&quot;example_output/Results_relative_abundance_long_format.xlsx&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="nf">across</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="n">relab</span><span class="p">),</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span><span class="n">.x</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">)))</span>
 
 <span class="n">taxlevels</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_excel</span><span class="p">(</span>
@@ -1388,7 +1391,7 @@ reads for that sample.</p>
 <p>If targeted species heatmap is desired, replace df_annotated with
 df_filtered in the heatmap code below. If so, remember to change the
 file name exported.</p>
-<h2 id="plot">Plot</h2>
+<h2 id="heatmap-plot">Heatmap plot</h2>
 <p>reverse label order: scale y discrete limits reverse limits=rev</p>
 <p><a href="https://coolors.co/">https://coolors.co/</a> (hit tools on the top right hand side)</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## if subset of categories is desired, replace df below with df_filtered</span>
@@ -1526,7 +1529,8 @@ file name exported.</p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example_output/Figures/Relative_abundance_sampletype.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">7</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">14</span><span class="p">)</span><span class="w"> </span>
 </code></pre></div>
 <h2 id="top-species-list-visual">Top Species List visual</h2>
-<div class="highlight"><pre><span></span><code><span class="n">top_list</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&quot;example_output/Results_rawreads_long.xlsx&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<p>Used for contract report.</p>
+<div class="highlight"><pre><span></span><code><span class="n">top_list</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&quot;example_output/Results_rawreads_long_format.xlsx&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Other&quot;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Livestock&quot;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;unassigned&quot;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Human&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">group_by</span><span class="p">(</span><span class="n">Species_name</span><span class="p">,</span><span class="w"> </span><span class="n">Common_name</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">summarise</span><span class="p">(</span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">reads</span><span class="p">),</span>
@@ -1560,7 +1564,8 @@ file name exported.</p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example_output/Figures/Top_species_log.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">3.5</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">6</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="bubble-plot">Bubble plot</h2>
-<div class="highlight"><pre><span></span><code><span class="n">raw_df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&quot;example_output/Results_rawreads_long.xlsx&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<p>Used for contract report.</p>
+<div class="highlight"><pre><span></span><code><span class="n">raw_df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&quot;example_output/Results_rawreads_long_format.xlsx&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">group_by</span><span class="p">(</span><span class="n">Species_name</span><span class="p">,</span><span class="w"> </span><span class="n">Common_name</span><span class="p">,</span><span class="w"> </span><span class="n">Category</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">reframe</span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">reads</span><span class="p">)</span><span class="o">/</span><span class="m">1000000</span><span class="p">,</span>
 <span class="w">          </span><span class="n">xaxis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;x&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
@@ -1624,82 +1629,6 @@ file name exported.</p>
 </code></pre></div>
 <p><img alt="" src="../04-relative_abundance_heatmap_files/figure-gfm/unnamed-chunk-7-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example_output/Figures/Species_bubbleplot.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">4.5</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">16</span><span class="p">)</span>
-</code></pre></div>
-<p>Setting up plot for loop</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># # Get unique categories</span>
-<span class="c1"># categories &lt;- unique(raw_df$Category)</span>
-<span class="c1">#   </span>
-<span class="c1"># # Set the fixed size range</span>
-<span class="c1"># size_range &lt;- c(0, max(raw_df$sum))</span>
-<span class="c1"># </span>
-<span class="c1"># # Create color palette</span>
-<span class="c1"># color_palette &lt;- scales::seq_gradient_pal(&quot;#0C4D66&quot;, &quot;lightskyblue2&quot;)(seq(0, 1, length.out = 6))</span>
-<span class="c1"># </span>
-<span class="c1"># # Create a list to store the plots</span>
-<span class="c1"># plot_list &lt;- list()</span>
-<span class="c1"># </span>
-<span class="c1"># # Define custom widths and heights for each category</span>
-<span class="c1"># dimensions &lt;- data.frame(</span>
-<span class="c1">#   Category = categories,</span>
-<span class="c1">#   Width = c(4, 4, 4, 4, 4),  # Example widths for each category</span>
-<span class="c1">#   Height = c(7, 7, 7, 7, 7)   # Example heights for each category</span>
-<span class="c1"># )</span>
-<span class="c1"># </span>
-<span class="c1"># aspect_ratio &lt;- 2</span>
-</code></pre></div>
-<p>For loop to create each plot</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># # Loop through each category</span>
-<span class="c1"># for (cat in categories) {</span>
-<span class="c1">#   </span>
-<span class="c1">#   raw_df_filtered &lt;- raw_df %&gt;% </span>
-<span class="c1">#     filter(Category == cat) %&gt;% #!Target_group == &quot;Nontarget&quot;, </span>
-<span class="c1">#     # Create a factor for Common_name ordered by Order within each Category</span>
-<span class="c1">#     mutate(Common_name = factor(Common_name, levels = unique(Common_name[order(Order, desc(Common_name))])))</span>
-<span class="c1"># </span>
-<span class="c1">#   plot &lt;- raw_df_filtered %&gt;%</span>
-<span class="c1">#     ggplot(aes(x=xaxis, y=Common_name)) + </span>
-<span class="c1">#     geom_point(aes(size=sum, fill=sum), color = &#39;black&#39;, shape=21) +</span>
-<span class="c1">#     scale_size_continuous(range = c(1, 10), limits = size_range) +</span>
-<span class="c1">#     scale_fill_gradient(na.value = &quot;white&quot;, low = &quot;lightskyblue2&quot;, high = &quot;#0C4D66&quot;, limits = size_range) +</span>
-<span class="c1">#     theme_bw() +</span>
-<span class="c1">#     labs(</span>
-<span class="c1">#       title = cat,</span>
-<span class="c1">#       x=&quot;&quot;,</span>
-<span class="c1">#       y=&quot;&quot;,</span>
-<span class="c1">#       fill = &quot;Reads (M)&quot;,</span>
-<span class="c1">#       size = &quot;Reads (M)&quot;</span>
-<span class="c1">#     ) +</span>
-<span class="c1">#     theme(</span>
-<span class="c1">#       axis.text.y = element_text(size = 8, color = &#39;black&#39;),</span>
-<span class="c1">#       axis.text.x = element_blank(),</span>
-<span class="c1">#       axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=12, face=&quot;bold&quot;),</span>
-<span class="c1">#       axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=12, face=&quot;bold&quot;),</span>
-<span class="c1">#       plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;, size = 14),</span>
-<span class="c1">#       # Combine legends</span>
-<span class="c1">#       legend.position = &quot;right&quot;,</span>
-<span class="c1">#       legend.box = &quot;vertical&quot;</span>
-<span class="c1">#     ) +</span>
-<span class="c1">#     guides(</span>
-<span class="c1">#       fill = &quot;none&quot;,</span>
-<span class="c1">#       size = guide_legend(order = 2, reverse = TRUE,</span>
-<span class="c1">#                           override.aes = list(fill = color_palette))</span>
-<span class="c1">#     ) #+ coord_fixed(ratio=aspect_ratio)</span>
-<span class="c1">#   </span>
-<span class="c1">#   # Store the plot in the list</span>
-<span class="c1">#   plot_list[[cat]] &lt;- plot</span>
-<span class="c1">#   </span>
-<span class="c1"># # Get the corresponding width and height</span>
-<span class="c1">#     width &lt;- dimensions$Width[dimensions$Category == cat]</span>
-<span class="c1">#     height &lt;- dimensions$Height[dimensions$Category == cat]</span>
-<span class="c1"># </span>
-<span class="c1">#   # Save the plot with specified dimensions</span>
-<span class="c1">#   ggsave(filename = paste0(&quot;example_output/Figures/Bubbleplot/Bubbleplot_&quot;, cat, &quot;.png&quot;), </span>
-<span class="c1">#          plot = plot, </span>
-<span class="c1">#          width = width, </span>
-<span class="c1">#          height = height,</span>
-<span class="c1">#          units = &quot;in&quot;, </span>
-<span class="c1">#          dpi = 300)</span>
-<span class="c1"># }</span>
 </code></pre></div>
 
 

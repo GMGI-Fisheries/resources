@@ -479,9 +479,13 @@ ASV_table_taxID_edited %>% rowwise() %>%
   mutate(across(.cols = (7:ncol(.)),            
                 .fns = ~ ifelse((.x/ASV_sum)>0.001, NA, .x))) %>% ungroup() %>% write_xlsx(reads_filtered_out)
 
-## Export ASV break-down for 03-data_quality.Rmd
+## Export ASV break-down for 03-data_quality.Rmds
 ASV_table_taxID_filtered %>% dplyr::select(ASV_ID, Species_name, Common_name, Category, ASV_sum, ASV_rank) %>%
   write_xlsx(ASV_breakdown_sheet)
+
+## Confirm number of samples is as expected (outputs should be the same)
+ncol(ASV_table_taxID_annotated %>% dplyr::select(-ASV_ID, -Species_name, -Common_name, -Category, -ASV_sum, -ASV_rank))
+ncol(ASV_table_taxID_filtered %>% dplyr::select(-ASV_ID, -Species_name, -Common_name, -Category, -ASV_sum, -ASV_rank))
 ```
 
 
@@ -492,13 +496,18 @@ No user edits.
 ```{r}
 ASV_table_taxID_collapsed <- ASV_table_taxID_filtered %>% 
   # removing original ASV_ID to collapse
-  dplyr::select(-ASV_ID) %>%  
+  dplyr::select(-ASV_ID, -ASV_sum, -ASV_rank) %>%  
   
   ## group by Species_name and sample
   dplyr::group_by(Species_name, Common_name, Category) %>%
   
   ## sum down column by species name and sample to collapse
-  summarise(across(6:last_col(), ~ sum(., na.rm = TRUE))) %>% ungroup()
+  dplyr::summarise(across(.cols = (1:last_col()),            
+                          .fns = ~ sum(., na.rm = TRUE)), 
+                     .groups = 'drop')
+
+# Print number of samples
+ncol(ASV_table_taxID_collapsed %>% dplyr::select(-Species_name, -Common_name, -Category))
 ```
 
 

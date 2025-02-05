@@ -40,7 +40,7 @@ library(ggsankey)
 ## Load data 
 
 ```{r}
-df <- read_xlsx("example_output/Results_relab_long.xlsx") %>%
+df <- read_xlsx("example_output/Results_relative_abundance_long_format.xlsx") %>%
   mutate(across(c(relab), ~ round(.x, 5)))
 
 taxlevels <- read_excel(
@@ -220,7 +220,7 @@ ggsave("example_output/Figures/Relative_abundance_sampletype.png", width = 7, he
 Used for contract report.
 
 ```{r}
-top_list <- read_xlsx("example_output/Results_rawreads_long.xlsx") %>%
+top_list <- read_xlsx("example_output/Results_rawreads_long_format.xlsx") %>%
   filter(!Category == "Other" & !Category == "Livestock" & !Category == "unassigned" & !Category == "Human") %>%
   group_by(Species_name, Common_name) %>%
   summarise(total = sum(reads),
@@ -255,7 +255,7 @@ ggsave("example_output/Figures/Top_species_log.png", width=3.5, height=6)
 Used for contract report.
 
 ```{r}
-raw_df <- read_xlsx("example_output/Results_rawreads_long.xlsx") %>%
+raw_df <- read_xlsx("example_output/Results_rawreads_long_format.xlsx") %>%
   group_by(Species_name, Common_name, Category) %>%
   reframe(sum = sum(reads)/1000000,
           xaxis = "x") %>%
@@ -318,82 +318,6 @@ raw_df %>%
   )
 
 ggsave("example_output/Figures/Species_bubbleplot.png", width=4.5, height=16)
-```
-
-## Sankey plot at taxonomic levels 
-
-```{r}
-library(igraph)
-library(ggraph)
-
-sankey_df <- raw_df %>% 
-   mutate(sum = sum*1000000) %>% group_by(Class, Order) %>% reframe(reads = sum(sum)) #%>%
-  # mutate(Order = factor(Order, levels = unique(Order[order(Class, desc(Order))]))) %>%
-  # make_long(Class, Order, value = reads)
-
-edges2 <- sankey_df %>% dplyr::select(from = Class, to=Order)
-number_of_classes <- length(unique(edges2$from))
-number_within_classes <- edges2 %>% group_by(from) %>% reframe(count = n_distinct(to)) %>% dplyr::select(count)
-
-name2 <- unique(c(as.character(edges2$from), as.character(edges2$to)))
-
-vertices2 <- data.frame(
-  name=c("origin", name2),
-  group=c( rep(NA,(number_of_classes+1)), ## origin + NA for each class 
-           rep( paste("group", seq(1,number_of_classes), sep=""), ## group1-number of classes (e.g., 1-6)
-                each=number_within_classes)) ## the number within each class 
- # cluster=sample(letters[1:4], length(name2), replace=T),
-#  value=sample(seq(10,30), length(name2), replace=T)
-)
-
-mygraph <- graph_from_data_frame(edges, vertices=sankey_df)
-
- 
-# data: edge list
-d1 <- data.frame(from="origin", to=paste("group", seq(1,7), sep=""))
-d2 <- data.frame(from=rep(d1$to, each=7), to=paste("subgroup", seq(1,49), sep="_"))
-edges <- rbind(d1, d2)
- 
-# We can add a second data frame with information for each node!
-name <- unique(c(as.character(edges$from), as.character(edges$to)))
-vertices <- data.frame(
-  name=name,
-  group=c( rep(NA,8) ,  rep( paste("group", seq(1,7), sep=""), each=7)),
-  cluster=sample(letters[1:4], length(name), replace=T),
-  value=sample(seq(10,30), length(name), replace=T)
-)
-
-mygraph <- graph_from_data_frame( edges, vertices=vertices)
-
-ggraph(mygraph, layout = 'dendrogram', circular = FALSE) + 
-  geom_edge_diagonal() 
-```
-
-
-
-
-
-
-
-```{r}
-
-
-
-
-ggplot(sankey_df, aes(x = x, 
-                        next_x = next_x, 
-                        node = node, 
-                        next_node = next_node,
-                        fill = factor(node),
-                        label = node)) +
-  geom_sankey(flow.alpha = 0.5, node.color = "black") +
-  geom_sankey_label(size = 3, color = "black", fill = "white") +
-  scale_fill_viridis_d() +
-  theme_sankey(base_size = 14) +
-  labs(x = NULL) +
-  theme(legend.position = "none")
-
-ggsave("example_output/Figures/Sankeyplot.png", width=8, height=10)
 ```
 
 
