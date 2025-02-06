@@ -60,7 +60,6 @@ ncbi="/work/gmgi/databases/ncbi/nt"
 #### DATABASE QUERY ####
 ### NCBI database 
 blastn -db ${ncbi}/"nt" \
-#   -num_threads 16 \
    -query ${ASV_fasta}/ASV_seqs.len.fasta \
    -num_threads 16 -taxids 2759 \
    -culling_limit 50 \
@@ -69,9 +68,11 @@ blastn -db ${ncbi}/"nt" \
    -qcov_hsp_perc 95 \
    -evalue 1e-30 \
    -out ${out}/BLASTResults_NCBI.txt \
-   -outfmt \"6 sscinames scomnames qseqid sseqid pident length mismatch gapopen qcovus qstart qend sstart send evalue bitscore staxids qlen qcovs\"
+   -outfmt '6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore'
 ```
 
-Tried above script 2-5-2025  
-- I got an error saying num_threads was already defined so I commented this out 
+Tried above script:  
+- (2/5/2025) I got an error saying num_threads was already defined so I commented this out   
+- (2/6/2025) this can't find the ASV len fasta? Took out the -num_threads line that was commented out. The path and file name are correct.  
+- (2/6/2025) ASV len path issue fixed but now error that there are too many positional arguments. This line was `-outfmt \"6 sscinames scomnames qseqid sseqid pident length mismatch gapopen qcovus qstart qend sstart send evalue bitscore staxids qlen qcovs\"` but I changed it to `-outfmt '6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore'` to reflect our other scripts.
 

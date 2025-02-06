@@ -61,6 +61,31 @@ library(cowplot)
     ##     stamp
 
 ``` r
+library(Rmisc)
+```
+
+    ## Loading required package: lattice
+    ## Loading required package: plyr
+    ## ------------------------------------------------------------------------------
+    ## You have loaded plyr after dplyr - this is likely to cause problems.
+    ## If you need functions from both plyr and dplyr, please load plyr first, then dplyr:
+    ## library(plyr); library(dplyr)
+    ## ------------------------------------------------------------------------------
+    ## 
+    ## Attaching package: 'plyr'
+    ## 
+    ## The following object is masked from 'package:purrr':
+    ## 
+    ##     compact
+    ## 
+    ## The following objects are masked from 'package:dplyr':
+    ## 
+    ##     arrange, count, desc, failwith, id, mutate, rename, summarise,
+    ##     summarize
+
+``` r
+library(writexl)
+
 # removing scientific notation
 ## remove line or comment out if not desired 
 options(scipen=999)
@@ -80,19 +105,19 @@ meta <- read_excel("example_input/metadata.xlsx")
 results <- read_xlsx("example_output/Results_rawreads_long_format.xlsx") %>%
   ## calculate sum of reads 
   group_by(sampleID) %>%
-  mutate(`Number of reads` = sum(reads)) %>%
+  dplyr::mutate(`Number of reads` = sum(reads)) %>%
   
   ## calculate relative abundance
   group_by(sampleID, Species_name) %>%
-  mutate(`Relative Abundance` = reads/`Number of reads`) %>%
+  dplyr::mutate(`Relative Abundance` = reads/`Number of reads`) %>%
   
   ## factor the Category list 
-  mutate(Category = factor(Category, levels = c("Human", "Livestock", "Other", "Unassigned", "Bird",
+  dplyr::mutate(Category = factor(Category, levels = c("Human", "Livestock", "Other", "Unassigned", "Bird",
                                                 "Sea Turtle", "Elasmobranch", "Marine Mammal", "Teleost Fish")))
                                                        
 ASV_breakdown <- read_xlsx("example_output/ASV_breakdown.xlsx") %>%
   ## factor the Category list 
-  mutate(Category = factor(Category, levels = c("Human", "Livestock", "Other", "Unassigned", "Bird",
+  dplyr::mutate(Category = factor(Category, levels = c("Human", "Livestock", "Other", "Unassigned", "Bird",
                                                 "Sea Turtle", "Elasmobranch", "Marine Mammal", "Teleost Fish")))
 ```
 
@@ -108,10 +133,10 @@ df <- full_join(filtering_stats, meta, by = "sampleID") %>%
   dplyr::select(-cutadapt_reverse_complemented) %>%
   
   # removing percentage icon from cutadapt_passing_filters_percent
-  mutate(cutadapt_passing_filters_percent = gsub("%", "", cutadapt_passing_filters_percent)) %>%
+  dplyr::mutate(cutadapt_passing_filters_percent = gsub("%", "", cutadapt_passing_filters_percent)) %>%
   
   # confirming that all columns of interest are numerical 
-  mutate_at(vars(2:10), as.numeric) %>%
+  dplyr::mutate_at(vars(2:10), as.numeric) %>%
   
   # data transformation so all columns of interest are together 
   gather("measure", "value", 2:10)  
@@ -170,6 +195,60 @@ ggsave("example_output/Figures/SampleReport_FilteringStats.png", width = 11, hei
     ## Warning: Removed 45 rows containing missing values or values outside the scale range
     ## (`geom_point()`).
 
+### Determine sequencing outliers
+
+Determine outlier
+
+``` r
+## Subset to start and final read counts
+outliers <- df %>% subset(measure == "nonchim") %>% spread(measure, value)
+
+## Calculate mean, standard deviation, and standard error
+outlier_summary <- summarySE(outliers, measurevar = c("nonchim"))
+
+## Determine cutoffs based on 2 standard deviations away from the mean
+cutoff_low <- outlier_summary$nonchim - (outlier_summary$sd*2)
+cutoff_high <- outlier_summary$nonchim + (outlier_summary$sd*2)
+
+## Print samples that will be labeled as outliers 
+outliers %>% filter(nonchim < cutoff_low) 
+```
+
+    ## # A tibble: 0 × 11
+    ## # ℹ 11 variables: sampleID <chr>, Month <chr>, Site <chr>, Depth <chr>,
+    ## #   SampleType <chr>, Lease_area <chr>, Latitude <dbl>, Longitude <dbl>,
+    ## #   Sequencing Round 1 <chr>, SampleDate <dttm>, nonchim <dbl>
+
+``` r
+outliers %>% filter(nonchim > cutoff_high) 
+```
+
+    ## # A tibble: 0 × 11
+    ## # ℹ 11 variables: sampleID <chr>, Month <chr>, Site <chr>, Depth <chr>,
+    ## #   SampleType <chr>, Lease_area <chr>, Latitude <dbl>, Longitude <dbl>,
+    ## #   Sequencing Round 1 <chr>, SampleDate <dttm>, nonchim <dbl>
+
+Export table with outlier information
+
+``` r
+### Create table of outliers and export 
+outlier_export <- outliers %>% 
+  ## Rename nonchim column 
+  dplyr::rename(`Number of Filtered Reads`= nonchim) %>%
+  
+  ## Create lower threshold, upper threshold, and sequencing outlier columns 
+  dplyr::mutate(`Lower Threshold` = cutoff_low,
+         `Upper Threshold` = cutoff_high) %>%
+  dplyr::mutate(`Sequencing Outlier` = case_when(
+    `Number of Filtered Reads` > cutoff_high ~ "Outlier",
+    `Number of Filtered Reads` < cutoff_low ~ "Outlier",
+    TRUE ~ NA
+  )) 
+
+## Export dataframe made
+outlier_export %>% write_xlsx("example_output/Results_Outliers.xlsx")
+```
+
 Condensed plot used in contract reporting.
 
 ``` r
@@ -183,6 +262,7 @@ df %>%
 
   ## USER EDITS IN LINE BELOW 
   ggplot(., aes(x=measure, y=value)) + 
+  geom_hline(yintercept = cutoff_low, color = "grey80", linetype = "dashed") +
   
   ## adding points in jitter format 
   geom_boxplot(outlier.shape = NA, fill=NA, aes(color = measure)) +
@@ -216,18 +296,25 @@ df %>%
     ## Warning: Removed 10 rows containing non-finite outside the scale range
     ## (`stat_boxplot()`).
 
+    ## Warning: Removed 1 row containing missing values or values outside the scale range
+    ## (`geom_hline()`).
+
     ## Warning: Removed 10 rows containing missing values or values outside the scale range
     ## (`geom_point()`).
 
-![](03-data_quality_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](03-data_quality_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 ``` r
-ggsave("example_output/Figures/SampleReport_FilteringStats_Condensed.png", width = 4, height=4)
+ggsave("example_output/SampleReport_FilteringStats_Condensed.png", width = 4, height=4)
 ```
 
     ## Warning: Removed 10 rows containing non-finite outside the scale range
     ## (`stat_boxplot()`).
-    ## Removed 10 rows containing missing values or values outside the scale range
+
+    ## Warning: Removed 1 row containing missing values or values outside the scale range
+    ## (`geom_hline()`).
+
+    ## Warning: Removed 10 rows containing missing values or values outside the scale range
     ## (`geom_point()`).
 
 ## Plot taxonomy
@@ -237,6 +324,9 @@ ggsave("example_output/Figures/SampleReport_FilteringStats_Condensed.png", width
 No user edits.
 
 ``` r
+order_vector <- c("Teleost Fish", "Marine Mammal", "Elasmobranch", "Sea Turtle", "Bird",
+                  "Livestock", "Other", "Human", "Unassigned") # Replace with your categories
+
 results_summary <- results %>% 
   group_by(Category) %>%
   reframe(sum_reads = sum(reads))
@@ -244,14 +334,14 @@ results_summary <- results %>%
 general_stats <- results %>% 
   group_by(Category) %>%
   reframe(sum_reads = sum(reads)) %>% 
-  mutate(total = sum(sum_reads),
+  dplyr::mutate(total = sum(sum_reads),
          percent = sum_reads/total*100) %>% dplyr::select(Category, percent) %>% distinct() %>%
   ## round to 2 decimal places 
-  mutate(across(c('percent'), round, 3))
+  dplyr::mutate(across(c('percent'), round, 4))
 ```
 
-    ## Warning: There was 1 warning in `mutate()`.
-    ## ℹ In argument: `across(c("percent"), round, 3)`.
+    ## Warning: There was 1 warning in `dplyr::mutate()`.
+    ## ℹ In argument: `across(c("percent"), round, 4)`.
     ## Caused by warning:
     ## ! The `...` argument of `across()` is deprecated as of dplyr 1.1.0.
     ## Supply arguments directly to `.fns` through an anonymous function instead.
@@ -272,20 +362,35 @@ species_summary <- results %>%
   reframe(count = n_distinct(Species_name))
 ```
 
+### Graph color and order options
+
+``` r
+# fill_colors <- c("Human" = "#e76f51", 
+#                  "Livestock" = "#FF740A", 
+#                  "Other" = "#FE9E20", 
+#                  "Unassigned" = "#FFC571",
+#                  "Bird" = "#FFECC2",
+#                  "Sea Turtle" = "#C8D2B1", 
+#                  "Elasmobranch" = "#DCF1F9",
+#                  "Marine Mammal" ="#8CD0EC",
+#                  "Teleost Fish" = "#3FB1DE"
+#                  )
+
+fill_colors <- c("Human" = "#FE9E20", 
+                 "Livestock" = "#FCCA46", 
+                 "Other" = "#FFECC2", 
+                 "Unassigned" = "grey85",
+                 "Bird" = "#C8D2B1",
+                 "Sea Turtle" = "#A1C181",
+                 "Elasmobranch" = "#97ADCB",
+                 "Marine Mammal" ="#DCF1F9",
+                 "Teleost Fish" = "#85B6CB"
+                 )
+```
+
 ### Relative abundance by category
 
 ``` r
-fill_colors <- c("Human" = "#e76f51", 
-                 "Livestock" = "#FF740A", 
-                 "Other" = "#FE9E20", 
-                 "Unassigned" = "#FFC571",
-                 "Bird" = "#FFECC2",
-                 "Sea Turtle" = "#C8D2B1", 
-                 "Elasmobranch" = "#DCF1F9",
-                 "Marine Mammal" ="#8CD0EC",
-                 "Teleost Fish" = "#3FB1DE"
-                 )
-
 results %>% group_by(sampleID, Category) %>%
   reframe(group_sum = sum(reads),
          group_relab = group_sum/`Number of reads`
@@ -297,7 +402,7 @@ ggplot(., aes(y=group_relab, x=Category)) +
     scale_color_manual(values = fill_colors) +
     scale_fill_manual(values = fill_colors) +
     labs(color = "Category") +
-    scale_x_discrete(labels = scales::label_wrap(10)) +  
+    scale_x_discrete(labels = scales::label_wrap(10), limits = order_vector) +
     theme_bw() + 
     xlab("Category") + ylab("Relative abundance") +
     theme(panel.background=element_rect(fill='white', colour='black'),
@@ -308,7 +413,7 @@ ggplot(., aes(y=group_relab, x=Category)) +
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=11, face="bold"))
 ```
 
-![](03-data_quality_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](03-data_quality_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 ``` r
 ggsave("example_output/Figures/Categories_relative_abundance.png", width = 6.5, height = 4)
@@ -342,7 +447,7 @@ results %>% group_by(sampleID, Category) %>%
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=11, face="bold"))
 ```
 
-![](03-data_quality_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](03-data_quality_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 ``` r
 ggsave("example_output/Figures/Human.png", width=4, height=3)
@@ -357,10 +462,11 @@ Reads Piechart. Used in contract report.
 ### 1. Change paths of output to desired folder (data/figures is suggested data structure)
 ### 2. Change scale brewer color if desired 
 
-piechart <- general_stats %>%  
-  mutate(csum = rev(cumsum(rev(percent))), 
+piechart <- general_stats %>%
+  dplyr::mutate(csum = rev(cumsum(rev(percent))), 
          pos = percent/2 + lead(csum, 1),
-         pos = if_else(is.na(pos), percent/2, pos))
+         pos = if_else(is.na(pos), percent/2, pos)) %>%
+  dplyr::mutate_if(is.numeric, round, digits = 4)
 
 unassigned_percent <- piechart %>% 
   filter(Category == "Unassigned") %>% 
@@ -393,7 +499,7 @@ piechart_reads <- general_stats %>%
   xlab("") + ylab("") + labs(fill = "Category"); piechart_reads
 ```
 
-![](03-data_quality_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](03-data_quality_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 ``` r
 ggsave("example_output/Figures/Category_breakdown_percent_rawreads.png", width=4, height=3)
@@ -407,11 +513,11 @@ ASV Piechart (NOT used in contract report)
 ### 2. Change scale brewer color if desired 
 
 piechart_ASV <- ASV_summary %>%  
-  mutate(csum = rev(cumsum(rev(count))), 
+  dplyr::mutate(csum = rev(cumsum(rev(count))), 
          pos = count/2 + lead(csum, 1),
          pos = if_else(is.na(pos), count/2, pos))
 
-piechart_ASV <- ASV_summary %>% 
+ASV_summary %>% 
   ggplot(., aes(x="", y = count, fill = Category)) +
   geom_col(color = "black", width=1.25) +
   geom_label_repel(data = piechart_ASV,
@@ -431,10 +537,10 @@ piechart_ASV <- ASV_summary %>%
     axis.title = element_blank()     # Remove axis titles
       ) +
   ggtitle("Number of ASVs") +
-  xlab("") + ylab("") + labs(fill = "Category"); piechart_ASV
+  xlab("") + ylab("") + labs(fill = "Category")
 ```
 
-![](03-data_quality_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](03-data_quality_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 ``` r
 ggsave("example_output/Figures/Category_breakdown_ASVs.png", width=4, height=3)
@@ -444,7 +550,7 @@ Number of species pie chart. Used in contract report.
 
 ``` r
 piechart_spp <- species_summary %>%  
-  mutate(csum = rev(cumsum(rev(count))), 
+  dplyr::mutate(csum = rev(cumsum(rev(count))), 
          pos = count/2 + lead(csum, 1),
          pos = if_else(is.na(pos), count/2, pos))
 
@@ -466,11 +572,11 @@ piechart_species_plot <- species_summary %>%
     axis.text = element_blank(),     # Remove axis text
     axis.title = element_blank()     # Remove axis titles
   ) +
-  ggtitle("Number of species") +
+  ggtitle("Number of Taxonomic Assignments") +
   xlab("") + ylab("") + labs(fill = "Category"); piechart_species_plot
 ```
 
-![](03-data_quality_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](03-data_quality_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 ``` r
 ggsave("example_output/Figures/Category_breakdown_species.png", width=4, height=3)
@@ -485,7 +591,7 @@ plot_grid(piechart_reads, piechart_species_plot,
           )
 ```
 
-![](03-data_quality_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](03-data_quality_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 ``` r
 ggsave("example_output/Figures/Category_breakdown_contract.png", width=14, height=4)

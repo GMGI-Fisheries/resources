@@ -274,13 +274,13 @@ biodiv_df %>%
   
   geom_rect(aes(xmin = quantile(biodiv_df$richness, 0.75), xmax = Inf, 
                 ymin = quantile(biodiv_df$Shannon, 0.75, na.rm = TRUE), ymax = Inf),
-            fill = "#F2F7F2", alpha = 0.15) +
+            alpha=0.2, fill="#058C42") +
 
   geom_point(fill = "#97C1DE", color='black', shape=21, alpha=0.5, size=2) + 
   
   labs(
-    x = "Species Richness",
-    y = "Species Evenness (Shannon Index)"
+    x = "Sample Richness",
+    y = "Sample Evenness (Shannon Index)"
   ) +
   theme_bw() +
   theme(

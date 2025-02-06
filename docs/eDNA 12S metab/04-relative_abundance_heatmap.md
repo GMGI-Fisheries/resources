@@ -332,6 +332,7 @@ ggsave("example_output/Figures/Top_species_log.png", width=3.5, height=6)
 Used for contract report.
 
 ``` r
+### I had different target groups trying to facet this bubble plot so it's easier to put on the report (that failed but still troubleshooting so left it)
 raw_df <- read_xlsx("example_output/Results_rawreads_long_format.xlsx") %>%
   group_by(Species_name, Common_name, Category) %>%
   reframe(sum = sum(reads)/1000000,
