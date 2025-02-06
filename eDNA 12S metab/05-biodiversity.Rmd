@@ -171,9 +171,9 @@ biodiv_df %>% dplyr::rename(Richness = richness) %>% left_join(., meta, by = "sa
 biodiv_df %>%
   ggplot(., aes(x=richness, y=Shannon)) + 
   
-  geom_rect(aes(xmin = quantile(biodiv_df$richness, 0.75), xmax = Inf, 
-                ymin = quantile(biodiv_df$Shannon, 0.75, na.rm = TRUE), ymax = Inf),
-            alpha=0.2, fill="#058C42") +
+  annotate("rect", xmin=quantile(biodiv_df$richness, 0.75), xmax=Inf,
+             ymin=quantile(biodiv_df$Shannon, 0.75, na.rm = TRUE), ymax=Inf,
+             alpha=0.2, fill="#058C42") +
 
   geom_point(fill = "#97C1DE", color='black', shape=21, alpha=0.5, size=2) + 
   

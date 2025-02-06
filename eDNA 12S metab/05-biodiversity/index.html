@@ -1357,9 +1357,9 @@ richness) and diversity_shannon (shannon index).</p>
 <span class="n">biodiv_df</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">richness</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">Shannon</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>
 
-<span class="w">  </span><span class="nf">geom_rect</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">xmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">quantile</span><span class="p">(</span><span class="n">biodiv_df</span><span class="o">$</span><span class="n">richness</span><span class="p">,</span><span class="w"> </span><span class="m">0.75</span><span class="p">),</span><span class="w"> </span><span class="n">xmax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">Inf</span><span class="p">,</span><span class="w"> </span>
-<span class="w">                </span><span class="n">ymin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">quantile</span><span class="p">(</span><span class="n">biodiv_df</span><span class="o">$</span><span class="n">Shannon</span><span class="p">,</span><span class="w"> </span><span class="m">0.75</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">),</span><span class="w"> </span><span class="n">ymax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">Inf</span><span class="p">),</span>
-<span class="w">            </span><span class="n">alpha</span><span class="o">=</span><span class="m">0.2</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;#058C42&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">annotate</span><span class="p">(</span><span class="s">&quot;rect&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">xmin</span><span class="o">=</span><span class="nf">quantile</span><span class="p">(</span><span class="n">biodiv_df</span><span class="o">$</span><span class="n">richness</span><span class="p">,</span><span class="w"> </span><span class="m">0.75</span><span class="p">),</span><span class="w"> </span><span class="n">xmax</span><span class="o">=</span><span class="kc">Inf</span><span class="p">,</span>
+<span class="w">             </span><span class="n">ymin</span><span class="o">=</span><span class="nf">quantile</span><span class="p">(</span><span class="n">biodiv_df</span><span class="o">$</span><span class="n">Shannon</span><span class="p">,</span><span class="w"> </span><span class="m">0.75</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">),</span><span class="w"> </span><span class="n">ymax</span><span class="o">=</span><span class="kc">Inf</span><span class="p">,</span>
+<span class="w">             </span><span class="n">alpha</span><span class="o">=</span><span class="m">0.2</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;#058C42&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 
 <span class="w">  </span><span class="nf">geom_point</span><span class="p">(</span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#97C1DE&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="o">=</span><span class="s">&#39;black&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">shape</span><span class="o">=</span><span class="m">21</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>
 
@@ -1375,25 +1375,13 @@ richness) and diversity_shannon (shannon index).</p>
 <span class="w">        </span><span class="n">axis.title.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>## Warning: Use of `biodiv_df$richness` is discouraged.
-## ℹ Use `richness` instead.
-
-## Warning: Use of `biodiv_df$Shannon` is discouraged.
-## ℹ Use `Shannon` instead.
-
-## Warning: Removed 5 rows containing missing values or values outside the scale range
+<div class="highlight"><pre><span></span><code>## Warning: Removed 5 rows containing missing values or values outside the scale range
 ## (`geom_point()`).
 </code></pre></div>
 <p><img alt="" src="../05-biodiversity_files/figure-gfm/unnamed-chunk-7-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example_output/Figures/biodiversity.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5.5</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>## Warning: Use of `biodiv_df$richness` is discouraged.
-## ℹ Use `richness` instead.
-
-## Warning: Use of `biodiv_df$Shannon` is discouraged.
-## ℹ Use `Shannon` instead.
-
-## Warning: Removed 5 rows containing missing values or values outside the scale range
+<div class="highlight"><pre><span></span><code>## Warning: Removed 5 rows containing missing values or values outside the scale range
 ## (`geom_point()`).
 </code></pre></div>
 <h2 id="statistics">Statistics</h2>

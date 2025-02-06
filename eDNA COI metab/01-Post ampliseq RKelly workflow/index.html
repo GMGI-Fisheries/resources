@@ -1112,6 +1112,24 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#r-script-for-decision-tree-and-taxon-ids" class="md-nav__link">
+    <span class="md-ellipsis">
+      R Script for decision tree and taxon ids
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#taxonkit-lca" class="md-nav__link">
+    <span class="md-ellipsis">
+      Taxonkit LCA
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1144,21 +1162,6 @@
 - Blast to eukaryotic DNA database<br />
 - LCA </p>
 <p>FastQC through DADA2 in ampliseq. Take this no taxon version and put through blast + LCA. This is similar to our workflow for 12S with DADA2 calling ASVs and then several database comparisons.</p>
-<p>Make a eukaryotic blast db from our downloaded nt (if this works, put in update blast script)</p>
-<div class="highlight"><pre><span></span><code># Claim a node 
-srun --pty bash 
-
-# Activate conda environment
-source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
-ncbi=&quot;/work/gmgi/databases/ncbi/nt&quot;
-nt_euk=&quot;/work/gmgi/databases/ncbi/nt_euk&quot;
-
-# Filter blast db to Eukaryotic only 
-blastn -db ${ncbi}/&quot;nt&quot; -taxids 2759 -out ${nt_euk}/eukaryotic_nt.fasta
-
-# Make custom blast db from this filtered .fasta
-makeblastdb -in eukaryotic_nt.fasta -dbtype nucl -out eukaryotic_nt_db
-</code></pre></div>
 <h3 id="blast-to-eukaryotic-dna">Blast to Eukaryotic DNA</h3>
 <p>Create a file <code>nano euk_blast.sh</code> and paste the below code in that file.</p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
@@ -1201,6 +1204,46 @@ blastn -db ${ncbi}/&quot;nt&quot; \
 - (2/5/2025) I got an error saying num_threads was already defined so I commented this out <br />
 - (2/6/2025) this can't find the ASV len fasta? Took out the -num_threads line that was commented out. The path and file name are correct.<br />
 - (2/6/2025) ASV len path issue fixed but now error that there are too many positional arguments. This line was <code>-outfmt \"6 sscinames scomnames qseqid sseqid pident length mismatch gapopen qcovus qstart qend sstart send evalue bitscore staxids qlen qcovs\"</code> but I changed it to <code>-outfmt '6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore'</code> to reflect our other scripts.</p>
+<p>This worked! </p>
+<h3 id="r-script-for-decision-tree-and-taxon-ids">R Script for decision tree and taxon ids</h3>
+<p>See NU R. Kelly folder. </p>
+<h3 id="taxonkit-lca">Taxonkit LCA</h3>
+<p>https://bioinf.shenwei.me/taxonkit/usage/#lca</p>
+<p>Use <code>nano LCA.sh</code> to create this script and <code>sbatch LCA.sh</code> to run it.</p>
+<div class="highlight"><pre><span></span><code>#!/bin/bash
+#SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
+#SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=20:00:00
+#SBATCH --job-name=LCA
+#SBATCH --mem=10GB
+#SBATCH --ntasks=24
+#SBATCH --cpus-per-task=2
+
+### USER TO-DO ### 
+## 1. Set paths for project 
+
+# SET PATHS
+taxid_list=&quot;/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/RKelly_testing/taxids.txt&quot;
+out=&quot;/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/RKelly_testing&quot;
+taxonkit=&quot;/work/gmgi/databases/taxonkit&quot;
+###################
+
+### No user edits beyond this point 
+
+# Output file for LCA results
+lca_results_file=&quot;${out}/lca_results.txt&quot;
+lca_reformat_file=&quot;${out}/lca_results_reformatted.txt&quot;
+
+##### LCA by TaxonKit #####
+## Running LCA 
+${taxonkit}/taxonkit lca ${taxid_list} -i 2 -o ${lca_results_file}
+
+## Reformatting output 
+${taxonkit}/taxonkit reformat ${lca_results_file} -I 3 -o ${lca_reformat_file}
+</code></pre></div>
+<p>This was crazy fast! </p>
 
 
 
