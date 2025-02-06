@@ -272,9 +272,9 @@ biodiv_df %>% dplyr::rename(Richness = richness) %>% left_join(., meta, by = "sa
 biodiv_df %>%
   ggplot(., aes(x=richness, y=Shannon)) + 
   
-  geom_rect(aes(xmin = quantile(biodiv_df$richness, 0.75), xmax = Inf, 
-                ymin = quantile(biodiv_df$Shannon, 0.75, na.rm = TRUE), ymax = Inf),
-            alpha=0.2, fill="#058C42") +
+  annotate("rect", xmin=quantile(biodiv_df$richness, 0.75), xmax=Inf,
+             ymin=quantile(biodiv_df$Shannon, 0.75, na.rm = TRUE), ymax=Inf,
+             alpha=0.2, fill="#058C42") +
 
   geom_point(fill = "#97C1DE", color='black', shape=21, alpha=0.5, size=2) + 
   
@@ -291,12 +291,6 @@ biodiv_df %>%
   )
 ```
 
-    ## Warning: Use of `biodiv_df$richness` is discouraged.
-    ## ℹ Use `richness` instead.
-
-    ## Warning: Use of `biodiv_df$Shannon` is discouraged.
-    ## ℹ Use `Shannon` instead.
-
     ## Warning: Removed 5 rows containing missing values or values outside the scale range
     ## (`geom_point()`).
 
@@ -305,12 +299,6 @@ biodiv_df %>%
 ``` r
 ggsave("example_output/Figures/biodiversity.png", width = 5.5, height = 5)
 ```
-
-    ## Warning: Use of `biodiv_df$richness` is discouraged.
-    ## ℹ Use `richness` instead.
-
-    ## Warning: Use of `biodiv_df$Shannon` is discouraged.
-    ## ℹ Use `Shannon` instead.
 
     ## Warning: Removed 5 rows containing missing values or values outside the scale range
     ## (`geom_point()`).
