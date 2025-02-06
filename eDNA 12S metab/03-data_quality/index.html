@@ -775,6 +775,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#determine-sequencing-outliers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Determine sequencing outliers
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -794,6 +803,15 @@
   <a href="#data-transformation_1" class="md-nav__link">
     <span class="md-ellipsis">
       Data transformation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graph-color-and-order-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Graph color and order options
     </span>
   </a>
   
@@ -1297,6 +1315,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#determine-sequencing-outliers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Determine sequencing outliers
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1316,6 +1343,15 @@
   <a href="#data-transformation_1" class="md-nav__link">
     <span class="md-ellipsis">
       Data transformation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graph-color-and-order-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Graph color and order options
     </span>
   </a>
   
@@ -1425,7 +1461,30 @@ for a manuscript.</p>
 ## 
 ##     stamp
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1"># removing scientific notation</span>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">Rmisc</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## Loading required package: lattice
+## Loading required package: plyr
+## ------------------------------------------------------------------------------
+## You have loaded plyr after dplyr - this is likely to cause problems.
+## If you need functions from both plyr and dplyr, please load plyr first, then dplyr:
+## library(plyr); library(dplyr)
+## ------------------------------------------------------------------------------
+## 
+## Attaching package: &#39;plyr&#39;
+## 
+## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     compact
+## 
+## The following objects are masked from &#39;package:dplyr&#39;:
+## 
+##     arrange, count, desc, failwith, id, mutate, rename, summarise,
+##     summarize
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">writexl</span><span class="p">)</span>
+
+<span class="c1"># removing scientific notation</span>
 <span class="c1">## remove line or comment out if not desired </span>
 <span class="nf">options</span><span class="p">(</span><span class="n">scipen</span><span class="o">=</span><span class="m">999</span><span class="p">)</span>
 </code></pre></div>
@@ -1441,19 +1500,19 @@ for a manuscript.</p>
 <span class="n">results</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&quot;example_output/Results_rawreads_long_format.xlsx&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="c1">## calculate sum of reads </span>
 <span class="w">  </span><span class="nf">group_by</span><span class="p">(</span><span class="n">sampleID</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
-<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">`Number of reads`</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">reads</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">mutate</span><span class="p">(</span><span class="n">`Number of reads`</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">reads</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
 
 <span class="w">  </span><span class="c1">## calculate relative abundance</span>
 <span class="w">  </span><span class="nf">group_by</span><span class="p">(</span><span class="n">sampleID</span><span class="p">,</span><span class="w"> </span><span class="n">Species_name</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
-<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">`Relative Abundance`</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reads</span><span class="o">/</span><span class="n">`Number of reads`</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">mutate</span><span class="p">(</span><span class="n">`Relative Abundance`</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reads</span><span class="o">/</span><span class="n">`Number of reads`</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 
 <span class="w">  </span><span class="c1">## factor the Category list </span>
-<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">factor</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Human&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Livestock&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Other&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Unassigned&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Bird&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">mutate</span><span class="p">(</span><span class="n">Category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">factor</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Human&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Livestock&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Other&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Unassigned&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Bird&quot;</span><span class="p">,</span>
 <span class="w">                                                </span><span class="s">&quot;Sea Turtle&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Elasmobranch&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Marine Mammal&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Teleost Fish&quot;</span><span class="p">)))</span>
 
 <span class="n">ASV_breakdown</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&quot;example_output/ASV_breakdown.xlsx&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="c1">## factor the Category list </span>
-<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">factor</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Human&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Livestock&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Other&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Unassigned&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Bird&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">mutate</span><span class="p">(</span><span class="n">Category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">factor</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Human&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Livestock&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Other&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Unassigned&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Bird&quot;</span><span class="p">,</span>
 <span class="w">                                                </span><span class="s">&quot;Sea Turtle&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Elasmobranch&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Marine Mammal&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Teleost Fish&quot;</span><span class="p">)))</span>
 </code></pre></div>
 <h2 id="sequence-data">Sequence data</h2>
@@ -1464,10 +1523,10 @@ for a manuscript.</p>
 <span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">cutadapt_reverse_complemented</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 
 <span class="w">  </span><span class="c1"># removing percentage icon from cutadapt_passing_filters_percent</span>
-<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">cutadapt_passing_filters_percent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">gsub</span><span class="p">(</span><span class="s">&quot;%&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cutadapt_passing_filters_percent</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">mutate</span><span class="p">(</span><span class="n">cutadapt_passing_filters_percent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">gsub</span><span class="p">(</span><span class="s">&quot;%&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cutadapt_passing_filters_percent</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
 
 <span class="w">  </span><span class="c1"># confirming that all columns of interest are numerical </span>
-<span class="w">  </span><span class="nf">mutate_at</span><span class="p">(</span><span class="nf">vars</span><span class="p">(</span><span class="m">2</span><span class="o">:</span><span class="m">10</span><span class="p">),</span><span class="w"> </span><span class="n">as.numeric</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">mutate_at</span><span class="p">(</span><span class="nf">vars</span><span class="p">(</span><span class="m">2</span><span class="o">:</span><span class="m">10</span><span class="p">),</span><span class="w"> </span><span class="n">as.numeric</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 
 <span class="w">  </span><span class="c1"># data transformation so all columns of interest are together </span>
 <span class="w">  </span><span class="nf">gather</span><span class="p">(</span><span class="s">&quot;measure&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;value&quot;</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="o">:</span><span class="m">10</span><span class="p">)</span><span class="w">  </span>
@@ -1518,6 +1577,51 @@ for a manuscript.</p>
 <div class="highlight"><pre><span></span><code>## Warning: Removed 45 rows containing missing values or values outside the scale range
 ## (`geom_point()`).
 </code></pre></div>
+<h3 id="determine-sequencing-outliers">Determine sequencing outliers</h3>
+<p>Determine outlier</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Subset to start and final read counts</span>
+<span class="n">outliers</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">subset</span><span class="p">(</span><span class="n">measure</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;nonchim&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">spread</span><span class="p">(</span><span class="n">measure</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">)</span>
+
+<span class="c1">## Calculate mean, standard deviation, and standard error</span>
+<span class="n">outlier_summary</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">summarySE</span><span class="p">(</span><span class="n">outliers</span><span class="p">,</span><span class="w"> </span><span class="n">measurevar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;nonchim&quot;</span><span class="p">))</span>
+
+<span class="c1">## Determine cutoffs based on 2 standard deviations away from the mean</span>
+<span class="n">cutoff_low</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">outlier_summary</span><span class="o">$</span><span class="n">nonchim</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="n">outlier_summary</span><span class="o">$</span><span class="n">sd</span><span class="o">*</span><span class="m">2</span><span class="p">)</span>
+<span class="n">cutoff_high</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">outlier_summary</span><span class="o">$</span><span class="n">nonchim</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">outlier_summary</span><span class="o">$</span><span class="n">sd</span><span class="o">*</span><span class="m">2</span><span class="p">)</span>
+
+<span class="c1">## Print samples that will be labeled as outliers </span>
+<span class="n">outliers</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="n">nonchim</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">cutoff_low</span><span class="p">)</span><span class="w"> </span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## # A tibble: 0 × 11
+## # ℹ 11 variables: sampleID &lt;chr&gt;, Month &lt;chr&gt;, Site &lt;chr&gt;, Depth &lt;chr&gt;,
+## #   SampleType &lt;chr&gt;, Lease_area &lt;chr&gt;, Latitude &lt;dbl&gt;, Longitude &lt;dbl&gt;,
+## #   Sequencing Round 1 &lt;chr&gt;, SampleDate &lt;dttm&gt;, nonchim &lt;dbl&gt;
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">outliers</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="n">nonchim</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">cutoff_high</span><span class="p">)</span><span class="w"> </span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## # A tibble: 0 × 11
+## # ℹ 11 variables: sampleID &lt;chr&gt;, Month &lt;chr&gt;, Site &lt;chr&gt;, Depth &lt;chr&gt;,
+## #   SampleType &lt;chr&gt;, Lease_area &lt;chr&gt;, Latitude &lt;dbl&gt;, Longitude &lt;dbl&gt;,
+## #   Sequencing Round 1 &lt;chr&gt;, SampleDate &lt;dttm&gt;, nonchim &lt;dbl&gt;
+</code></pre></div>
+<p>Export table with outlier information</p>
+<div class="highlight"><pre><span></span><code><span class="c1">### Create table of outliers and export </span>
+<span class="n">outlier_export</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">outliers</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+<span class="w">  </span><span class="c1">## Rename nonchim column </span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">rename</span><span class="p">(</span><span class="n">`Number of Filtered Reads`</span><span class="o">=</span><span class="w"> </span><span class="n">nonchim</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+
+<span class="w">  </span><span class="c1">## Create lower threshold, upper threshold, and sequencing outlier columns </span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">mutate</span><span class="p">(</span><span class="n">`Lower Threshold`</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cutoff_low</span><span class="p">,</span>
+<span class="w">         </span><span class="n">`Upper Threshold`</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cutoff_high</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">mutate</span><span class="p">(</span><span class="n">`Sequencing Outlier`</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">case_when</span><span class="p">(</span>
+<span class="w">    </span><span class="n">`Number of Filtered Reads`</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">cutoff_high</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="s">&quot;Outlier&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">`Number of Filtered Reads`</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">cutoff_low</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="s">&quot;Outlier&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="kc">TRUE</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="kc">NA</span>
+<span class="w">  </span><span class="p">))</span><span class="w"> </span>
+
+<span class="c1">## Export dataframe made</span>
+<span class="n">outlier_export</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="s">&quot;example_output/Results_Outliers.xlsx&quot;</span><span class="p">)</span>
+</code></pre></div>
 <p>Condensed plot used in contract reporting.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">### User edits:</span>
 <span class="c1">### 1. Change paths of output to desired folder (data/figures is suggested data structure)</span>
@@ -1529,6 +1633,7 @@ for a manuscript.</p>
 
 <span class="w">  </span><span class="c1">## USER EDITS IN LINE BELOW </span>
 <span class="w">  </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">measure</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">value</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>
+<span class="w">  </span><span class="nf">geom_hline</span><span class="p">(</span><span class="n">yintercept</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cutoff_low</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey80&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">linetype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;dashed&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 
 <span class="w">  </span><span class="c1">## adding points in jitter format </span>
 <span class="w">  </span><span class="nf">geom_boxplot</span><span class="p">(</span><span class="n">outlier.shape</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">measure</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
@@ -1561,34 +1666,44 @@ for a manuscript.</p>
 <div class="highlight"><pre><span></span><code>## Warning: Removed 10 rows containing non-finite outside the scale range
 ## (`stat_boxplot()`).
 
+## Warning: Removed 1 row containing missing values or values outside the scale range
+## (`geom_hline()`).
+
 ## Warning: Removed 10 rows containing missing values or values outside the scale range
 ## (`geom_point()`).
 </code></pre></div>
-<p><img alt="" src="../03-data_quality_files/figure-gfm/unnamed-chunk-5-1.png" /><!-- --></p>
-<div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example_output/Figures/SampleReport_FilteringStats_Condensed.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
+<p><img alt="" src="../03-data_quality_files/figure-gfm/unnamed-chunk-7-1.png" /><!-- --></p>
+<div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example_output/SampleReport_FilteringStats_Condensed.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>## Warning: Removed 10 rows containing non-finite outside the scale range
 ## (`stat_boxplot()`).
-## Removed 10 rows containing missing values or values outside the scale range
+
+## Warning: Removed 1 row containing missing values or values outside the scale range
+## (`geom_hline()`).
+
+## Warning: Removed 10 rows containing missing values or values outside the scale range
 ## (`geom_point()`).
 </code></pre></div>
 <h2 id="plot-taxonomy">Plot taxonomy</h2>
 <h3 id="data-transformation_1">Data transformation</h3>
 <p>No user edits.</p>
-<div class="highlight"><pre><span></span><code><span class="n">results_summary</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">results</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+<div class="highlight"><pre><span></span><code><span class="n">order_vector</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Teleost Fish&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Marine Mammal&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Elasmobranch&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Sea Turtle&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Bird&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="s">&quot;Livestock&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Other&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Human&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Unassigned&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1"># Replace with your categories</span>
+
+<span class="n">results_summary</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">results</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
 <span class="w">  </span><span class="nf">group_by</span><span class="p">(</span><span class="n">Category</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">reframe</span><span class="p">(</span><span class="n">sum_reads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">reads</span><span class="p">))</span>
 
 <span class="n">general_stats</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">results</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
 <span class="w">  </span><span class="nf">group_by</span><span class="p">(</span><span class="n">Category</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">reframe</span><span class="p">(</span><span class="n">sum_reads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">reads</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
-<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">sum_reads</span><span class="p">),</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">mutate</span><span class="p">(</span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">sum_reads</span><span class="p">),</span>
 <span class="w">         </span><span class="n">percent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sum_reads</span><span class="o">/</span><span class="n">total</span><span class="o">*</span><span class="m">100</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span><span class="w"> </span><span class="n">percent</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">distinct</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="c1">## round to 2 decimal places </span>
-<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="nf">across</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&#39;percent&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">round</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">))</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">mutate</span><span class="p">(</span><span class="nf">across</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&#39;percent&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">round</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="p">))</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>## Warning: There was 1 warning in `mutate()`.
-## ℹ In argument: `across(c(&quot;percent&quot;), round, 3)`.
+<div class="highlight"><pre><span></span><code>## Warning: There was 1 warning in `dplyr::mutate()`.
+## ℹ In argument: `across(c(&quot;percent&quot;), round, 4)`.
 ## Caused by warning:
 ## ! The `...` argument of `across()` is deprecated as of dplyr 1.1.0.
 ## Supply arguments directly to `.fns` through an anonymous function instead.
@@ -1607,19 +1722,31 @@ for a manuscript.</p>
 <span class="w">  </span><span class="nf">group_by</span><span class="p">(</span><span class="n">Category</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">reframe</span><span class="p">(</span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">n_distinct</span><span class="p">(</span><span class="n">Species_name</span><span class="p">))</span>
 </code></pre></div>
-<h3 id="relative-abundance-by-category">Relative abundance by category</h3>
-<div class="highlight"><pre><span></span><code><span class="n">fill_colors</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Human&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#e76f51&quot;</span><span class="p">,</span><span class="w"> </span>
-<span class="w">                 </span><span class="s">&quot;Livestock&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#FF740A&quot;</span><span class="p">,</span><span class="w"> </span>
-<span class="w">                 </span><span class="s">&quot;Other&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#FE9E20&quot;</span><span class="p">,</span><span class="w"> </span>
-<span class="w">                 </span><span class="s">&quot;Unassigned&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#FFC571&quot;</span><span class="p">,</span>
-<span class="w">                 </span><span class="s">&quot;Bird&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#FFECC2&quot;</span><span class="p">,</span>
-<span class="w">                 </span><span class="s">&quot;Sea Turtle&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#C8D2B1&quot;</span><span class="p">,</span><span class="w"> </span>
-<span class="w">                 </span><span class="s">&quot;Elasmobranch&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#DCF1F9&quot;</span><span class="p">,</span>
-<span class="w">                 </span><span class="s">&quot;Marine Mammal&quot;</span><span class="w"> </span><span class="o">=</span><span class="s">&quot;#8CD0EC&quot;</span><span class="p">,</span>
-<span class="w">                 </span><span class="s">&quot;Teleost Fish&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#3FB1DE&quot;</span>
-<span class="w">                 </span><span class="p">)</span>
+<h3 id="graph-color-and-order-options">Graph color and order options</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># fill_colors &lt;- c(&quot;Human&quot; = &quot;#e76f51&quot;, </span>
+<span class="c1">#                  &quot;Livestock&quot; = &quot;#FF740A&quot;, </span>
+<span class="c1">#                  &quot;Other&quot; = &quot;#FE9E20&quot;, </span>
+<span class="c1">#                  &quot;Unassigned&quot; = &quot;#FFC571&quot;,</span>
+<span class="c1">#                  &quot;Bird&quot; = &quot;#FFECC2&quot;,</span>
+<span class="c1">#                  &quot;Sea Turtle&quot; = &quot;#C8D2B1&quot;, </span>
+<span class="c1">#                  &quot;Elasmobranch&quot; = &quot;#DCF1F9&quot;,</span>
+<span class="c1">#                  &quot;Marine Mammal&quot; =&quot;#8CD0EC&quot;,</span>
+<span class="c1">#                  &quot;Teleost Fish&quot; = &quot;#3FB1DE&quot;</span>
+<span class="c1">#                  )</span>
 
-<span class="n">results</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">group_by</span><span class="p">(</span><span class="n">sampleID</span><span class="p">,</span><span class="w"> </span><span class="n">Category</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="n">fill_colors</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Human&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#FE9E20&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                 </span><span class="s">&quot;Livestock&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#FCCA46&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                 </span><span class="s">&quot;Other&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#FFECC2&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                 </span><span class="s">&quot;Unassigned&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grey85&quot;</span><span class="p">,</span>
+<span class="w">                 </span><span class="s">&quot;Bird&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#C8D2B1&quot;</span><span class="p">,</span>
+<span class="w">                 </span><span class="s">&quot;Sea Turtle&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#A1C181&quot;</span><span class="p">,</span>
+<span class="w">                 </span><span class="s">&quot;Elasmobranch&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#97ADCB&quot;</span><span class="p">,</span>
+<span class="w">                 </span><span class="s">&quot;Marine Mammal&quot;</span><span class="w"> </span><span class="o">=</span><span class="s">&quot;#DCF1F9&quot;</span><span class="p">,</span>
+<span class="w">                 </span><span class="s">&quot;Teleost Fish&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#85B6CB&quot;</span>
+<span class="w">                 </span><span class="p">)</span>
+</code></pre></div>
+<h3 id="relative-abundance-by-category">Relative abundance by category</h3>
+<div class="highlight"><pre><span></span><code><span class="n">results</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">group_by</span><span class="p">(</span><span class="n">sampleID</span><span class="p">,</span><span class="w"> </span><span class="n">Category</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">reframe</span><span class="p">(</span><span class="n">group_sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">reads</span><span class="p">),</span>
 <span class="w">         </span><span class="n">group_relab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">group_sum</span><span class="o">/</span><span class="n">`Number of reads`</span>
 <span class="w">           </span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">distinct</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span>
@@ -1630,7 +1757,7 @@ for a manuscript.</p>
 <span class="w">    </span><span class="nf">scale_color_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fill_colors</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 <span class="w">    </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fill_colors</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 <span class="w">    </span><span class="nf">labs</span><span class="p">(</span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Category&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
-<span class="w">    </span><span class="nf">scale_x_discrete</span><span class="p">(</span><span class="n">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scales</span><span class="o">::</span><span class="nf">label_wrap</span><span class="p">(</span><span class="m">10</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">  </span>
+<span class="w">    </span><span class="nf">scale_x_discrete</span><span class="p">(</span><span class="n">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scales</span><span class="o">::</span><span class="nf">label_wrap</span><span class="p">(</span><span class="m">10</span><span class="p">),</span><span class="w"> </span><span class="n">limits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">order_vector</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 <span class="w">    </span><span class="nf">theme_bw</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>
 <span class="w">    </span><span class="nf">xlab</span><span class="p">(</span><span class="s">&quot;Category&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">ylab</span><span class="p">(</span><span class="s">&quot;Relative abundance&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 <span class="w">    </span><span class="nf">theme</span><span class="p">(</span><span class="n">panel.background</span><span class="o">=</span><span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="s">&#39;white&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">colour</span><span class="o">=</span><span class="s">&#39;black&#39;</span><span class="p">),</span>
@@ -1640,7 +1767,7 @@ for a manuscript.</p>
 <span class="w">        </span><span class="n">axis.title.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">11</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
 <span class="w">        </span><span class="n">axis.title.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">11</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">))</span>
 </code></pre></div>
-<p><img alt="" src="../03-data_quality_files/figure-gfm/unnamed-chunk-7-1.png" /><!-- --></p>
+<p><img alt="" src="../03-data_quality_files/figure-gfm/unnamed-chunk-10-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example_output/Figures/Categories_relative_abundance.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6.5</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="human-specific-reads-by-sample-type">Human specific reads by Sample Type</h3>
@@ -1668,7 +1795,7 @@ for a manuscript.</p>
 <span class="w">        </span><span class="n">axis.title.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">11</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
 <span class="w">        </span><span class="n">axis.title.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">11</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">))</span>
 </code></pre></div>
-<p><img alt="" src="../03-data_quality_files/figure-gfm/unnamed-chunk-8-1.png" /><!-- --></p>
+<p><img alt="" src="../03-data_quality_files/figure-gfm/unnamed-chunk-11-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example_output/Figures/Human.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">3</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="piechart">Piechart</h3>
@@ -1677,10 +1804,11 @@ for a manuscript.</p>
 <span class="c1">### 1. Change paths of output to desired folder (data/figures is suggested data structure)</span>
 <span class="c1">### 2. Change scale brewer color if desired </span>
 
-<span class="n">piechart</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">general_stats</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">  </span>
-<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">csum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rev</span><span class="p">(</span><span class="nf">cumsum</span><span class="p">(</span><span class="nf">rev</span><span class="p">(</span><span class="n">percent</span><span class="p">))),</span><span class="w"> </span>
+<span class="n">piechart</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">general_stats</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">mutate</span><span class="p">(</span><span class="n">csum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rev</span><span class="p">(</span><span class="nf">cumsum</span><span class="p">(</span><span class="nf">rev</span><span class="p">(</span><span class="n">percent</span><span class="p">))),</span><span class="w"> </span>
 <span class="w">         </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">percent</span><span class="o">/</span><span class="m">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">lead</span><span class="p">(</span><span class="n">csum</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">),</span>
-<span class="w">         </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">if_else</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span><span class="w"> </span><span class="n">percent</span><span class="o">/</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">pos</span><span class="p">))</span>
+<span class="w">         </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">if_else</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span><span class="w"> </span><span class="n">percent</span><span class="o">/</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">pos</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">mutate_if</span><span class="p">(</span><span class="n">is.numeric</span><span class="p">,</span><span class="w"> </span><span class="n">round</span><span class="p">,</span><span class="w"> </span><span class="n">digits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">)</span>
 
 <span class="n">unassigned_percent</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">piechart</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
 <span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="n">Category</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Unassigned&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
@@ -1712,7 +1840,7 @@ for a manuscript.</p>
 <span class="w">  </span><span class="nf">ggtitle</span><span class="p">(</span><span class="s">&quot;Raw reads (%)&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 <span class="w">  </span><span class="nf">xlab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">ylab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">labs</span><span class="p">(</span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Category&quot;</span><span class="p">);</span><span class="w"> </span><span class="n">piechart_reads</span>
 </code></pre></div>
-<p><img alt="" src="../03-data_quality_files/figure-gfm/unnamed-chunk-9-1.png" /><!-- --></p>
+<p><img alt="" src="../03-data_quality_files/figure-gfm/unnamed-chunk-12-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example_output/Figures/Category_breakdown_percent_rawreads.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">3</span><span class="p">)</span>
 </code></pre></div>
 <p>ASV Piechart (NOT used in contract report)</p>
@@ -1721,11 +1849,11 @@ for a manuscript.</p>
 <span class="c1">### 2. Change scale brewer color if desired </span>
 
 <span class="n">piechart_ASV</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ASV_summary</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">  </span>
-<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">csum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rev</span><span class="p">(</span><span class="nf">cumsum</span><span class="p">(</span><span class="nf">rev</span><span class="p">(</span><span class="n">count</span><span class="p">))),</span><span class="w"> </span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">mutate</span><span class="p">(</span><span class="n">csum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rev</span><span class="p">(</span><span class="nf">cumsum</span><span class="p">(</span><span class="nf">rev</span><span class="p">(</span><span class="n">count</span><span class="p">))),</span><span class="w"> </span>
 <span class="w">         </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">count</span><span class="o">/</span><span class="m">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">lead</span><span class="p">(</span><span class="n">csum</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">),</span>
 <span class="w">         </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">if_else</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span><span class="w"> </span><span class="n">count</span><span class="o">/</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">pos</span><span class="p">))</span>
 
-<span class="n">piechart_ASV</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ASV_summary</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+<span class="n">ASV_summary</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
 <span class="w">  </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Category</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
 <span class="w">  </span><span class="nf">geom_col</span><span class="p">(</span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;black&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">1.25</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 <span class="w">  </span><span class="nf">geom_label_repel</span><span class="p">(</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">piechart_ASV</span><span class="p">,</span>
@@ -1745,14 +1873,14 @@ for a manuscript.</p>
 <span class="w">    </span><span class="n">axis.title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_blank</span><span class="p">()</span><span class="w">     </span><span class="c1"># Remove axis titles</span>
 <span class="w">      </span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 <span class="w">  </span><span class="nf">ggtitle</span><span class="p">(</span><span class="s">&quot;Number of ASVs&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
-<span class="w">  </span><span class="nf">xlab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">ylab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">labs</span><span class="p">(</span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Category&quot;</span><span class="p">);</span><span class="w"> </span><span class="n">piechart_ASV</span>
+<span class="w">  </span><span class="nf">xlab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">ylab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">labs</span><span class="p">(</span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Category&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p><img alt="" src="../03-data_quality_files/figure-gfm/unnamed-chunk-10-1.png" /><!-- --></p>
+<p><img alt="" src="../03-data_quality_files/figure-gfm/unnamed-chunk-13-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example_output/Figures/Category_breakdown_ASVs.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">3</span><span class="p">)</span>
 </code></pre></div>
 <p>Number of species pie chart. Used in contract report.</p>
 <div class="highlight"><pre><span></span><code><span class="n">piechart_spp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">species_summary</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">  </span>
-<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">csum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rev</span><span class="p">(</span><span class="nf">cumsum</span><span class="p">(</span><span class="nf">rev</span><span class="p">(</span><span class="n">count</span><span class="p">))),</span><span class="w"> </span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">mutate</span><span class="p">(</span><span class="n">csum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rev</span><span class="p">(</span><span class="nf">cumsum</span><span class="p">(</span><span class="nf">rev</span><span class="p">(</span><span class="n">count</span><span class="p">))),</span><span class="w"> </span>
 <span class="w">         </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">count</span><span class="o">/</span><span class="m">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">lead</span><span class="p">(</span><span class="n">csum</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">),</span>
 <span class="w">         </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">if_else</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span><span class="w"> </span><span class="n">count</span><span class="o">/</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">pos</span><span class="p">))</span>
 
@@ -1774,10 +1902,10 @@ for a manuscript.</p>
 <span class="w">    </span><span class="n">axis.text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_blank</span><span class="p">(),</span><span class="w">     </span><span class="c1"># Remove axis text</span>
 <span class="w">    </span><span class="n">axis.title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_blank</span><span class="p">()</span><span class="w">     </span><span class="c1"># Remove axis titles</span>
 <span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
-<span class="w">  </span><span class="nf">ggtitle</span><span class="p">(</span><span class="s">&quot;Number of species&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">ggtitle</span><span class="p">(</span><span class="s">&quot;Number of Taxonomic Assignments&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 <span class="w">  </span><span class="nf">xlab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">ylab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">labs</span><span class="p">(</span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Category&quot;</span><span class="p">);</span><span class="w"> </span><span class="n">piechart_species_plot</span>
 </code></pre></div>
-<p><img alt="" src="../03-data_quality_files/figure-gfm/unnamed-chunk-11-1.png" /><!-- --></p>
+<p><img alt="" src="../03-data_quality_files/figure-gfm/unnamed-chunk-14-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example_output/Figures/Category_breakdown_species.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">3</span><span class="p">)</span>
 </code></pre></div>
 <p>Plot together and export</p>
@@ -1786,7 +1914,7 @@ for a manuscript.</p>
 <span class="w">          </span><span class="n">align</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;vh&quot;</span>
 <span class="w">          </span><span class="p">)</span>
 </code></pre></div>
-<p><img alt="" src="../03-data_quality_files/figure-gfm/unnamed-chunk-12-1.png" /><!-- --></p>
+<p><img alt="" src="../03-data_quality_files/figure-gfm/unnamed-chunk-15-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;example_output/Figures/Category_breakdown_contract.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">14</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
 </code></pre></div>
 
