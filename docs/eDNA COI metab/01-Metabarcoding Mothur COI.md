@@ -549,15 +549,14 @@ cd ${dir}
 mothur "#summary.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align)"
 
 ## Identifying those that don't meet the criteria 
-mothur "#screen.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, count=${proj_name}.paired.trim.contigs.good.count_table, optimize=start, criteria=99, maxhomop=8)"
+mothur "#screen.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.align, count=${proj_name}.paired.trim.contigs.good.count_table, optimize=start, criteria=95, start=1,833, end=25,827, maxhomop=8)"
 
 ## Filtering those out
-mothur "#filter.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.align, count=${proj_name}.paired.trim.contigs.good.good.count_table, vertical=T, trump=.)"
+mothur "#filter.seqs(fasta=${proj_name}.paired.trim.contigs.good.unique.good.align, vertical=T, trump=.)"
 ```
 
-Running individually to understand output and why summary isn't working  
-Only run align once -- This takes 3+ hours 
 
+2-14-2025: Trying different screen.seqs bc I think my criteria=99 was filtering them all out. 
 
 ```
 ## ID unique sequences again
@@ -573,11 +572,11 @@ sbatch 03-Mothur-tax.sh /work/gmgi/databases/COI/MetaZooGene/MAFFT_MZG_v2023-m07
 ```
 
 Output from `align.seqs()`:  
-- `OSW_2023_invert.paired.trim.contigs.good.unique.align`: contains the aligned sequences from your input FASTA file      
-- `OSW_2023_invert.paired.trim.contigs.good.unique.align.report`: provides detailed statistics about the alignment process. It includes metrics such as the length of the sequences, similarity between the query and template sequences, the longest insertions found, and the alignment scores  
-- `OSW_2023_invert.paired.trim.contigs.good.unique.flip.accnos`: lists the names of sequences that generated alignments that eliminated too many bases  
+- `.paired.trim.contigs.good.unique.align`: contains the aligned sequences from your input FASTA file      
+- `.paired.trim.contigs.good.unique.align.report`: provides detailed statistics about the alignment process. It includes metrics such as the length of the sequences, similarity between the query and template sequences, the longest insertions found, and the alignment scores  
+- `.paired.trim.contigs.good.unique.flip.accnos`: lists the names of sequences that generated alignments that eliminated too many bases  
 
-Output from `summary.seqs()` = `OSW_2023_invert.paired.trim.contigs.good.unique.summary`
+Output from `summary.seqs()` = `.paired.trim.contigs.good.unique.summary`
 
 Atlantic comparison:
 
@@ -595,13 +594,19 @@ Mean:   26853   33810   307     0       5
 ```
 
 Output from `screen.seqs()`:  
-- `OSW_2023_invert.paired.trim.contigs.good.pick.count_table`: This file is not directly produced by screen.seqs() but is a count table updated after removing sequences that did not meet the criteria set in screen.seqs(). It contains the abundance information of the sequences that passed the filtering process  
-- `OSW_2023_invert.paired.trim.contigs.good.unique.good.align`: This file contains the aligned sequences that passed the filtering criteria set by screen.seqs(), such as minimum length, maximum length, start and end positions, and other quality metrics. It includes only the "good" sequences       
-- `OSW_2023_invert.paired.trim.contigs.good.unique.bad.accnos`: This file contains the accession numbers of the sequences that did not meet the filtering criteria    
-- `OSW_2023_invert.paired.trim.contigs.good.good.count_table`: Similar to the first file, this is an updated count table reflecting the abundance of sequences that passed the filtering process  
+- `.paired.trim.contigs.good.pick.count_table`: This file is not directly produced by screen.seqs() but is a count table updated after removing sequences that did not meet the criteria set in screen.seqs(). It contains the abundance information of the sequences that passed the filtering process  
+- `.paired.trim.contigs.good.unique.good.align`: This file contains the aligned sequences that passed the filtering criteria set by screen.seqs(), such as minimum length, maximum length, start and end positions, and other quality metrics. It includes only the "good" sequences       
+- `.paired.trim.contigs.good.unique.bad.accnos`: This file contains the accession numbers of the sequences that did not meet the filtering criteria    
+- `.paired.trim.contigs.good.good.count_table`: Similar to the first file, this is an updated count table reflecting the abundance of sequences that passed the filtering process  
 
 Output from `filter.seqs()`:  
-- 
+- `.filter`:    
+- `.paired.trim.contigs.good.unique.good.filter.fasta`: 
+
+```
+
+
+```
 
 Output from `unique.seqs()`:  
 - 

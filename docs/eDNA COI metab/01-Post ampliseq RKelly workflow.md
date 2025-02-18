@@ -40,16 +40,36 @@ out="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/RKelly_testing/blast"
 ncbi="/work/gmgi/databases/ncbi/nt"
 
 #### DATABASE QUERY ####
-### NCBI database 
+### NCBI database 97% 
 blastn -db ${ncbi}/"nt" \
-   -query ${ASV_fasta}/ASV_seqs.len.fasta \
-   -num_threads 16 -taxids 2759 \
-   -culling_limit 50 \
-   -max_target_seqs 50 \
+   -query ${ASV_fasta}/ASV_seqs.len.fasta -num_threads 16 \
+   -taxids 2759 -culling_limit 50 -max_target_seqs 50 -qcov_hsp_perc 95 -evalue 1e-30 \
    -perc_identity 97 \
-   -qcov_hsp_perc 95 \
-   -evalue 1e-30 \
-   -out ${out}/BLASTResults_NCBI.txt \
+   -out ${out}/BLASTResults_NCBI_97.txt \
+   -outfmt '6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore'
+
+### NCBI database 95%
+blastn -db ${ncbi}/"nt" \
+   -query ${ASV_fasta}/ASV_seqs.len.fasta -num_threads 16 \
+   -taxids 2759 -culling_limit 50 -max_target_seqs 50 -qcov_hsp_perc 95 -evalue 1e-30 \
+   -perc_identity 95 \
+   -out ${out}/BLASTResults_NCBI_95.txt \
+   -outfmt '6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore'
+
+### NCBI database 93%
+blastn -db ${ncbi}/"nt" \
+   -query ${ASV_fasta}/ASV_seqs.len.fasta -num_threads 16 \
+   -taxids 2759 -culling_limit 50 -max_target_seqs 50 -qcov_hsp_perc 95 -evalue 1e-30 \
+   -perc_identity 93 \
+   -out ${out}/BLASTResults_NCBI_93.txt \
+   -outfmt '6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore'
+
+### NCBI database 91%
+blastn -db ${ncbi}/"nt" \
+   -query ${ASV_fasta}/ASV_seqs.len.fasta -num_threads 16 \
+   -taxids 2759 -culling_limit 50 -max_target_seqs 50 -qcov_hsp_perc 95 -evalue 1e-30 \
+   -perc_identity 91 \
+   -out ${out}/BLASTResults_NCBI_91.txt \
    -outfmt '6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore'
 ```
 
@@ -59,6 +79,13 @@ Tried above script:
 - (2/6/2025) ASV len path issue fixed but now error that there are too many positional arguments. This line was `-outfmt \"6 sscinames scomnames qseqid sseqid pident length mismatch gapopen qcovus qstart qend sstart send evalue bitscore staxids qlen qcovs\"` but I changed it to `-outfmt '6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore'` to reflect our other scripts.
 
 This worked! 
+
+I then added multiple sections to try out varoius percent IDs.    
+
+97% pident: 542 ASVS (22.81% of reads) assigned    
+95% pident: 592 ASVS (22.91% of reads) assigned   
+93% pident: 662 ASVS (25.20% of reads) assigned  
+91% pident: 776 ASVS (31.69% of reads) assigned  
 
 ### R Script for decision tree and taxon ids 
 
@@ -107,3 +134,4 @@ ${taxonkit}/taxonkit reformat ${lca_results_file} -I 3 -o ${lca_reformat_file}
 
 This was crazy fast! 
 
+Exporting back to R script to look at assignments. 
