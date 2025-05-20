@@ -2147,6 +2147,11 @@ No user edits.</p>
 <h2 id="creating-results-output">Creating results output</h2>
 <p>Raw reads results output.<br />
 No user edits.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">### Number of total assignments -1 for unassigned</span>
+<span class="nf">length</span><span class="p">(</span><span class="nf">unique</span><span class="p">(</span><span class="n">ASV_table_taxID_collapsed</span><span class="o">$</span><span class="n">Species_name</span><span class="p">))</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## [1] 106
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1">## Raw reads matrix (wide format)</span>
 <span class="n">ASV_table_taxID_collapsed</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="n">results_rawreads_matrix</span><span class="p">)</span>
 
@@ -2156,6 +2161,17 @@ No user edits.</p>
 <span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="n">reads</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
 <span class="w">  </span><span class="nf">left_join</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">meta</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sampleID&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="n">results_rawreads_long</span><span class="p">)</span>
+
+<span class="c1">## exporting species summary</span>
+<span class="n">ASV_table_taxID_collapsed</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+<span class="w">  </span><span class="nf">gather</span><span class="p">(</span><span class="s">&quot;sampleID&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;reads&quot;</span><span class="p">,</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">4</span><span class="o">:</span><span class="nf">last_col</span><span class="p">()))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+<span class="w">  </span><span class="nf">group_by</span><span class="p">(</span><span class="n">Species_name</span><span class="p">,</span><span class="w"> </span><span class="n">Common_name</span><span class="p">,</span><span class="w"> </span><span class="n">Category</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">sampleID</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">summarise</span><span class="p">(</span><span class="n">sum_reads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">reads</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="s">&quot;example_output/Species_breakdown.xlsx&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## `summarise()` has grouped output by &#39;Species_name&#39;, &#39;Common_name&#39;. You can
+## override using the `.groups` argument.
 </code></pre></div>
 <p>Relative Abundance No user edits.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">### Calculating relative abundance</span>
