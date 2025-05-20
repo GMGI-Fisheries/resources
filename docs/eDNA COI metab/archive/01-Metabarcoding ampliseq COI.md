@@ -2,31 +2,17 @@
 
 The COI region is commonly used for metabarcoding practices and consequently there are many primer options to choose from. The Fisheries team at GMGI has optimized the Leray Geller set (outlined in red box below). Citation: [Leray et al 2013](https://link.springer.com/article/10.1186/1742-9994-10-34).
 
-We have primarily use this set for invertebrate targets and 12S for vertebrate communities. 
+We primarily use this set for invertebrate targets and 12S for vertebrate communities. 
 
 ![](https://github.com/GMGI-Fisheries/resources/blob/master/img/eDNA_meta_COI_primerset.png?raw=true)
 
 Workflow done on HPC. Scripts to run: 
 
-1. 01-fastqc.sh   
-2. 02-multiqc.sh  
-3. 03-metadata.R
-4. 04-ampliseq.sh
-5. 05-taxonomicID.sh  
-
-Taxonomic identification is completed using 1) NCBI at 90% percent identity + Least Common Ancestor (LCA) and 2) RDP Classifier via DADA2 with MetaZooGene. After filtering and annotation confirmation, the remaining unassigned sequences are 3) assigned to family-level at best from NCBI at 80% identity. 
-
-Typical project folder structure (once analysis is run) for Fisheries team. Create `scripts`, `results` (for ampliseq output), `fastqc`, `blast`, and `metadata`. 
-
-```
-blast  fastqc  metadata  multiqc_raw_data  multiqc_raw.html  raw_data  results  scripts
-```
-
-## Basics
-
-Create/edit a slurm script: `nano name.sh`  
-View a file without editing: `less name.sh`  
-Start an interactive node: `srun --pty bash`  
+1. 00-fastqc.sh   
+2. 00-multiqc.sh  
+3. 01a-metadata.R
+4. 01b-ampliseq.sh
+5. 02-taxonomicID.sh  
 
 ## Step 1: Confirm conda environment is available 
 
@@ -34,7 +20,7 @@ The conda environment is started within each slurm script, but to activate conda
 
 ```
 # Activate conda
-source /work/gmgi/miniconda3/bin/activate
+source ~/../../work/gmgi/miniconda3/bin/activate
 
 # Activate fisheries eDNA conda environment 
 conda activate fisheries_eDNA
@@ -54,9 +40,9 @@ nextflow pull nf-core/ampliseq
  
 ## Step 2: Assess quality of raw data  
 
-Background information on [FASTQC](https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon-flipped/lessons/05_qc_running_fastqc_interactively.html). This should take ~10 seconds per file for a typical full MiSeq run. If <2 seconds, then check output/error files.  
+Background information on [FASTQC](https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon-flipped/lessons/05_qc_running_fastqc_interactively.html). 
 
-`01-fastqc.sh`: 
+`00-fastqc.sh`: 
 
 ```
 #!/bin/bash
@@ -74,9 +60,10 @@ Background information on [FASTQC](https://hbctraining.github.io/Intro-to-rnaseq
 ## 1. Set paths for your project
 
 # Activate conda environment
-source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
+source ~/../../work/gmgi/miniconda3/bin/activate
+conda activate fisheries_eDNA
 
-## SET PATHS (USER EDITS)
+## SET PATHS 
 raw_path=""
 out_dir=""
 
@@ -95,13 +82,11 @@ fastqc ${i} --outdir ${out_dir}
 ```
 
 To run:    
-- Start slurm array (e.g., with 138 files) = `sbatch --array=0-137 01-fastqc.sh`. *Note that this starts with file 0*. 
-
-Count the number of files by navigating to raw data folder and using `ls *.gz | wc`. The first column is the number of rows in the generated list (files). 
+- Start slurm array (e.g., with 138 files) = `sbatch --array=0-137 00-fastqc.sh`.
 
 Notes:  
 
-- This is going to output *many* error and output files. After job completes, navigate to `cd scripts/output/fastqc_output` and use `cat *output.* > ../fastqc_output.txt` to create one file with all the output and `cat *error.* > ../fastqc_error.txt` to create one file with all of the error message outputs. 
+- This is going to output *many* error and output files. After job completes, use `cat *output.* > ../fastqc_output.txt` to create one file with all the output and `cat *error.* > ../fastqc_error.txt` to create one file with all of the error message outputs. 
 - Within the `out_dir` output folder, use `ls *html | wc` to count the number of html output files (1st/2nd column values). This should be equal to the --array range used and the number of raw data files. If not, the script missed some input files so address this before moving on.  
 
 
@@ -109,7 +94,7 @@ Notes:
 
 Background information on [MULTIQC](https://multiqc.info/docs/#:~:text=MultiQC%20is%20a%20reporting%20tool%20that%20parses%20results,experiments%20containing%20multiple%20samples%20and%20multiple%20analysis%20steps).
 
-`02-multiqc.sh` 
+`00-multiqc.sh` 
 
 ```
 #!/bin/bash
@@ -128,10 +113,11 @@ Background information on [MULTIQC](https://multiqc.info/docs/#:~:text=MultiQC%2
 ## 2. Optional: change file name (multiqc_raw.html) as desired
 
 # Activate conda environment
-source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
+source ~/../../work/gmgi/miniconda3/bin/activate
+conda activate fisheries_eDNA
 
 ## SET PATHS 
-## fastqc_output = output from 01-fastqc.sh; fastqc program
+## fastqc_output = output from 00-fastqc.sh; fastqc program
 fastqc_output="" 
 multiqc_dir="" 
 
@@ -139,25 +125,45 @@ multiqc_dir=""
 multiqc --interactive ${fastqc_output} -o ${multiqc_dir} --filename multiqc_raw.html
 ```
 
-For typical MiSeq runs, this multiqc step is quick. Use an interactive node instead of sbatch. You'll generate output and error files if you create a .sh script and run with `bash` within an interactive node. Otherwise you could run the code line by line. 
+To run:  
+- `sbatch 00-multiqc.sh` 
 
-```
-## Start an interactive node
-# Use srun to claim a node
-srun --pty bash 
+Notes:  
 
-bash 02-multiqc.sh
-```
+- Depending on the number of files per project, multiqc can be quick to run without a slurm script. To do this, run each line separately in the command line after activating the conda environment.  
 
 ## Step 4: Downloading and updating reference databases 
 
-### Download and/or update NBCI blast nt database
+### Download and/or update BOLD database 
+
+Visit the [Figshare cite for v4](https://figshare.scilifelab.se/articles/dataset/COI_reference_sequences_from_BOLD_DB/20514192/4) and check for any latest versions. If a new version is available, download the COI references sequences from this webpage: bold_clustered.assignTaxonomy.fasta.gz and bold_clustered.addSpecies.fasta.gz. Via NU Cluster OOD, upload these files to `/work/gmgi/databases/COI/BOLD`. 
+
+I downloaded `taxref_reformat_coidb.sh` from the ampliseq [github page](https://github.com/nf-core/ampliseq/blob/2.8.0/bin/taxref_reformat_coidb.sh). I then changed the first line to be only .gz files (`for f in *.gz; do` instead of `for f in $(ls); do`)
+
+```
+# Start on a computing node 
+srun --pty bash 
+
+# Activate conda environment
+source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
+
+cd /work/gmgi/databases/COI/BOLD 
+## upload new .gz files via OOD 
+
+# Edit names to reflect the version #
+mv bold_clustered.addspecies.fasta.gz bold_v4_clustered.addspecies.fasta.gz                                                                                           
+mv bold_clustered.assigntaxonomy.fasta.gz bold_v4_clustered.assigntaxonomy.fasta.gz 
+
+bash taxref_reformat_coidb.sh
+```
+
+These resulting files `addSpecies.fna` and `assignTaxonomy.fna` will be fed into the ampliseq script below.
+
+#### Download and/or update NBCI blast nt database
 
 NCBI is updated daily and therefore needs to be updated each time a project is analyzed. This is the not the most ideal method but we were struggling to get the `-remote` flag to work within slurm because I don't think NU slurm is connected to the internet? NU help desk was helping for awhile but we didn't get anywhere.
 
 Within `/work/gmgi/databases/ncbi`, there is a `update_nt.sh` script with the following code. To run `sbatch update_nt.sh`. This won't take long as it will check for updates rather than re-downloading every time. 
-
-`/work/gmgi/databases/ncbi/update_nt.sh`:
 
 ```
 #!/bin/bash
@@ -182,46 +188,67 @@ update_blastdb.pl --decompress nt
 echo "BLAST nt database update completed"
 ```
 
-This can take hours so plan ahead - start updating NCBI nt database when you know you are a couple days out from analyzing data. 
-
 View the `update_ncbi_nt.out` file to confirm the echo printed at the end.
 
-### Download Taxonkit 
+*Emma is still troubleshooting the -remote flag to also avoid storing the nt db within our /work/gmgi folder.* 
 
-Download taxonkit to your home directory. **You only need to do this once**, otherwise the program is set-up and you can skip this step. Taxonkit program is in `/work/gmgi/databases/taxonkit` but the program needs required files to be in your home directory.
+### Other options 
 
-```
-# Move to home directory and download taxonomy information
-cd ~
-wget -c ftp://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz
+- [COInr](https://github.com/meglecz/mkCOInr): downloads NCBI and BOLD (Barcode of Life Database) databases to create one database for comparison. COInr is already downloaded in the conda environment and pulls NCBI And BOLD directly.  
+- [MARES (MARine Eukaryote Species)](https://www.nature.com/articles/s41597-020-0549-9) and [github](https://github.com/wpearman1996/MARES_database_pipeline): This database combines sequences from both GenBank and BOLD to increase taxonomic coverage and confidence for marine eukaryotes. MARES Github [repo](https://github.com/wpearman1996/MARES_database_pipeline). Paper [link](https://doi.org/10.1038/s41597-020-0549-9).     
+- [MIDORI](https://www.reference-midori.info/#:~:text=MIDORI2%20is%20a%20reference%20database%20of%20DNA%20and): A database specifically for COI sequences. MIDORI Reference pulls from GenBank.    
 
-# Extract the downloaded file
-tar -zxvf taxdump.tar.gz
+**COInr**
 
-# Create the TaxonKit data directory 
-mkdir -p $HOME/.taxonkit
+![](https://mkcoinr.readthedocs.io/en/latest/_images/COInr_flowchart_readme.png)
 
-# Copy the required files to the TaxonKit data directory
-cp names.dmp nodes.dmp delnodes.dmp merged.dmp $HOME/.taxonkit
-```
+COInr database [instructions](https://mkcoinr.readthedocs.io/en/latest/content/tutorial.html). There are [options](https://mkcoinr.readthedocs.io/en/latest/content/tutorial.html#add-custom-sequences-to-a-database) to include custom sequences if needed.
 
-### Download MetaZooGene
-
-Check the following webpages for the most recent release's version number. If that version number is the same as the database we have on our server, then you don't need to update the database. If not, we need to download the most recent version.
-
-[MetaZooGene North Altantic](https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/html-src/data__MZGdbALL__o02.html)  
-[MetaZooGene Global](https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/html-src/data__MZGdbALL__o00.html) 
-
-Instructions to update:
-
-Open RStudio in NU Discovery Cluster OOD and run the following R script to update both the Global and Atlantic versions of MetaZooGene. User needs to update the file name in `base::write()` to reflect the correct version number. This script is very quick, plan for ~3-5 minutes total to run the script, change the version number, and confirm output. 
-
-Path to R script: `/work/gmgi/databases/COI/MetaZooGene/MZG_to_DADA2.R`.
+The latest version of BOLD is 2015 so this 2022 set is the most updated. Use our own NCBI as well to catch recent entries. 
 
 ```
-## GLOBAL DB 
+cd /work/gmgi/packages 
+git clone https://github.com/meglecz/mkCOInr.git
+
+cd /work/gmgi/databases/COI
+wget https://zenodo.org/record/6555985/files/COInr_2022_05_06.tar.gz
+tar -zxvf COInr_2022_05_06.tar.gz
+rm COInr_2022_05_06.tar.gz
+mv COInr_2022_05_06 COInr
+
+## converting database information for blast 
+perl /work/gmgi/packages/mkCOInr/scripts/format_db.pl -tsv COInr/COInr.tsv -outfmt blast -outdir /work/gmgi/databases/COI/COInr -out COInr_blast
+
+## creating list of sseqID and taxIDs for R df step 
+awk '{print $1 "\t" $2}' COInr.tsv > COInr_taxIDlist.tsv
+```
+
+**MIDORI**
+
+Visit the [MIDORI website](https://www.reference-midori.info/download.php) to check for the most updated db. This folder is already formatted for blast searching so we don't need to create a blast formatted db. 
+
+```
+cd /work/gmgi/databases/COI/MIDORI
+
+## download zip file from MIDORI website for CO1 sequences in BLAST format from nucleotide reference
+wget https://www.reference-midori.info/download/Databases/GenBank261_2024-06-15/BLAST/uniq/fasta/MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta.zip
+unzip MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta.zip 
+
+## change notation if version is different 
+makeblastdb -in MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta -dbtype nucl -out MIDORI2_UNIQ_NUC_GB261_CO1_BLAST.fasta
+```
+
+#### Download MetaZooGene
+
+This needs to be done before each run to download most recent version
+
+```
+## GLOBAL DB FIRST
 
 library(magrittr)
+
+# input_file = "https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGdata-coi__T4000000__o00__A.csv.gz"
+
 input_file = "https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGdata-coi__MZGdbALL__o00__A.csv.gz"
 
 
@@ -249,12 +276,10 @@ Edited_Global_MZG <- Global_MZG %>%
   tidyr::pivot_longer(cols = c("Taxa", "X31")) %>%
   dplyr::pull(value)
 
-# Write vector to fasta 
-### USER TO CHANGE VERSION NUMBER
+# Write vector to fasta
 Edited_Global_MZG %>% base::write("/work/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_Global_modeA.fasta")
   
 ## ATLANTIC DB
-
 input_file_ATL = "https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGdata-coi__T4000000__o02__A.csv.gz"
 
 ATL_MZG <- 
@@ -282,7 +307,6 @@ Edited_ATL_MZG <- ATL_MZG %>%
   dplyr::pull(value)
 
 # Write vector to fasta
-### USER TO CHANGE VERSION NUMBER
 Edited_ATL_MZG %>% base::write("/work/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_NorthAtlantic_modeA.fasta")
 ```
 
@@ -298,7 +322,11 @@ Nextflow: scalable and reproducible scientific workflows using software containe
 We use ampliseq for the following programs:  
 
 - [Cutadapt](https://journal.embnet.org/index.php/embnetjournal/article/view/200) is trimming primer sequences from sequencing reads. Primer sequences are non-biological sequences that often introduce point mutations that do not reflect sample sequences. This is especially true for degenerated PCR primer. If primer trimming would be omitted, artifactual amplicon sequence variants might be computed by the denoising tool or sequences might be lost due to become labelled as PCR chimera.  
-- [DADA2](https://www.nature.com/articles/nmeth.3869) performs fast and accurate sample inference from amplicon data with single-nucleotide resolution. It infers exact amplicon sequence variants (ASVs) from amplicon data with fewer false positives than many other methods while maintaining high sensitivity. This program also assigns taxonomy using a RDP classifier.    
+- [DADA2](https://www.nature.com/articles/nmeth.3869) performs fast and accurate sample inference from amplicon data with single-nucleotide resolution. It infers exact amplicon sequence variants (ASVs) from amplicon data with fewer false positives than many other methods while maintaining high sensitivity.   
+
+We skip the taxonomic assignment because we use 3-db approach described in the next section. 
+
+Should we try BOLD through ampliseq?
 
 ### COI primer sequences (required)
 
@@ -333,25 +361,21 @@ This file indicates the sample ID and the path to R1 and R2 files. Below is a pr
 
 Prior to running R script, use the `rawdata` file created for the fastqc slurm array from within the raw data folder to create a list of files. Below is an example from our Offshore Wind project but the specifics of the sampleID will be project dependent. This project had four sequencing runs with different file names. 
 
-`03-metadata.R`
+`01a-metadata.R`
 
 ```
-## Creating ampliseq metadata sheet for GOBLER
 ## Load libraries 
+
 library(dplyr)
 library(stringr)
 library(strex) 
 
 ### Read in sample sheet 
-sample_list <- read.delim2("/work/gmgi/ecosystem-diversity/Gobler/COI/raw_data/rawdata", header=F) %>% 
+
+sample_list <- read.delim2("/work/gmgi/Fisheries/eDNA/offshore_wind2023/raw_data/rawdata", header=F) %>% 
   dplyr::rename(forwardReads = V1) %>%
   mutate(sampleID = str_after_nth(forwardReads, "data/", 1),
-
-         ### Confirm that _S is correct for your file names, sometimes this is _R
-         sampleID = str_before_nth(sampleID, "_S", 1))
-
-         ## add any other mutate functions as needed for sample names
-         ## sampleID needs to match a column in your metadata file for later analyses 
+         sampleID = str_before_nth(sampleID, "_R", 1))
 
 # creating sample ID 
 sample_list$sampleID <- gsub("-", "_", sample_list$sampleID)
@@ -368,7 +392,7 @@ sample_list$reverseReads <- gsub("R1", "R2", sample_list$reverseReads)
 # rearranging columns 
 sample_list <- sample_list[,c(2,1,3)]
 
-sample_list %>% write.csv("/work/gmgi/ecosystem-diversity/Gobler/COI/metadata/samplesheet.csv", 
+sample_list %>% write.csv("/work/gmgi/Fisheries/eDNA/offshore_wind2023/metadata/samplesheet.csv", 
                           row.names=FALSE, quote = FALSE)
 ```
 
@@ -378,7 +402,7 @@ Update ampliseq workflow if needed: `nextflow pull nf-core/ampliseq`.
 
 Testing this on OSW work first. 
 
-`04-ampliseq.sh`:
+`01b-ampliseq.sh`:
 
 ```
 #!/bin/bash
@@ -402,16 +426,86 @@ Testing this on OSW work first.
 module load singularity/3.10.3
 module load nextflow/23.10.1
 
-# SET PATHS (PROJECT SPECIFIC)
-metadata="/work/gmgi/ecosystem-diversity/Gobler/COI/metadata" 
-output_dir="/work/gmgi/ecosystem-diversity/Gobler/COI/results_Global"
-
-# SET PATHS (EDIT VERSION # ON MZG IF NEEDED)
-assignTaxonomy="/work/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_Global_modeA.fasta"
-taxlevels="Kingdom,Phylum,Subphylum,Superclass,Class,Subclass,Infraclass,Superorder,Order,Family,Genus,Species"
+# SET PATHS 
+metadata="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/metadata" 
+output_dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/ampliseq_COIdb_results"
+addSpecies="/work/gmgi/databases/COI/BOLD/addSpecies.fna"
+assignTaxonomy="/work/gmgi/databases/COI/BOLD/assignTaxonomy.fna"
 
 nextflow run nf-core/ampliseq -resume \
-   -c /work/gmgi/Fisheries/scripts/COI_ampliseq.config \
+   -profile singularity \
+   --input ${metadata}/samplesheet.csv \
+   --FW_primer "GGWACWGGWTGAACWGTWTAYCCYCC" \
+   --RV_primer "TAIACYTCIGGRTGICCRAARAAYCA" \
+   --outdir ${output_dir} \
+   --trunclenf 220 \
+   --trunclenr 220 \
+   --trunc_qmin 25 \
+   --max_ee 2 \
+   --min_len_asv 300 \
+   --max_len_asv 330 \
+   --dada_ref_tax_custom ${assignTaxonomy} \
+   --dada_ref_tax_custom_sp ${addSpecies} \
+   --dada2_addspecies_allowmultiple TRUE \
+   --sample_inference pseudo \
+   --ignore_failed_trimming
+```
+
+Could add back in? 
+   --max_len 200 \
+   --skip_taxonomy 
+
+From zach paper: removing the co-amplified putative nuclear mitochondrial 
+pseudogenes (NUMTs) is highly recommended (Creedy et al., 2022; 
+Porter & Hajibabaei, 2021; Song et al., 2008). - MetaWorks 
+and VTAM implement a step of removing putative NUMTs OR multisample features matrix may be processed with metaMATE 
+(Andújar et al., 2021) to remove putative NUMTs and other erroneous sequences (based on, e.g., length and relative read abundance)
+
+DnoisE program - https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-021-04115-6
+
+python package called BOLDigger has been developed to help automate batch query submissions to the BOLD identification engine and can be used to identify COI, ITS, rbcL, and matK sequences (Buchner and Leese, 2020)
+
+In addition to the potential of amino acid translation, the protein coding nature of COI leads to relatively stricter expectations of amplicon length
+
+To run:   
+- `sbatch 01b-ampliseq.sh` 
+
+#### Testing MetaZooGene as database
+
+Created folder `ampliseq_MZG_results`
+cd to this folder and start script from there `sbatch ../scripts/01-ampliseq_MZG.sh` 
+
+`01-ampliseq_MZG.sh`
+
+```
+#!/bin/bash
+#SBATCH --error=output/"%x_error.%j" #if your job fails, the error report will be put in this file
+#SBATCH --output=output/"%x_output.%j" #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=20:00:00
+#SBATCH --job-name=ampliseq_MZG
+#SBATCH --mem=70GB
+#SBATCH --ntasks=24
+#SBATCH --cpus-per-task=2
+
+### USER TO-DO ### 
+## 1. Set paths for project 
+## 2. Adjust SBATCH options above (time, mem, ntasks, etc.) as desired  
+## 3. Fill in F primer information based on primer type (no reverse compliment needed)
+## 4. Adjust parameters as needed (below is Fisheries team default for COI)
+
+# LOAD MODULES
+module load singularity/3.10.3
+module load nextflow/23.10.1
+
+# SET PATHS 
+metadata="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/metadata" 
+output_dir="/work/gmgi/Fisheries/eDNA/offshore_wind/invertebrate/ampliseq_MZG_results"
+assignTaxonomy="/work/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_Global_modeA.fasta"
+taxlevels="Kingdom, Phlyum, Subphylum, Superclass, Class, Subclass, Infraclass, Superorder, Order, Family, Genus, Species"
+
+nextflow run nf-core/ampliseq -resume \
    -profile singularity \
    --input ${metadata}/samplesheet.csv \
    --FW_primer "GGWACWGGWTGAACWGTWTAYCCYCC" \
@@ -430,8 +524,13 @@ nextflow run nf-core/ampliseq -resume \
    --ignore_failed_trimming
 ```
 
-To run:   
-- `sbatch 04-ampliseq.sh` 
+Took out: `--dada_ref_tax_custom_sp ${addSpecies} \` and `--dada2_addspecies_allowmultiple TRUE \` that correspond with `addSpecies="/work/gmgi/databases/COI/BOLD/addSpecies.fna"`
+
+1-22: I tried this with DADA Global MZG fasta first that is DADA assign Taxonomy formatted. I could make Add Species compatible formatting in RStudio on server but we'll see what this output is first.     
+1-23: Adding `dada_assign_taxlevels` with 12 entries to match MZG. 
+
+Next try to change bootstrap to 0.8 from 0.5
+
 
 #### Files generated by ampliseq 
 
@@ -470,15 +569,10 @@ We add an ASV length filter that will output `asv_length_filter/` with:
 - `ASV_len_filt.tsv`: ASV length distribution after filtering.  
 - `stats.len.tsv`: Tracking read numbers through filtering, for each sample.  
 
-## Step 5: Running additional NCBI taxonomic assignment ID script 
 
-Ampliseq uses MetaZooGene Global to assign taxonomy but we also use NCBI Eukaryotic database sequences and blastn to find 90+% hits then use Least Common Ancestor approach. After filtering and confirming annotations, we then take NCBI hits at 80+% at family-level only.
+## Step 5: Running additional taxonomic assignment ID script 
 
-Create new folder `blast` in project folder. 
-
-### Blast NCBI at 80% identity 
-
-`05-blast_NCBI.sh`: 
+`02-taxonomicID.sh`: 
 
 ```
 #!/bin/bash
@@ -498,23 +592,29 @@ Create new folder `blast` in project folder.
 # Activate conda environment
 source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
 
-# SET PATHS (PROJECT SPECIFIC)
-## ASV fasta file path, excluding the file name (already included below)
+# SET PATHS 
 ASV_fasta=""
 out=""
 
-# SET PATHS (NO EDITS)
+COInr="/work/gmgi/databases/COI/COInr"
+midori="/work/gmgi/databases/COI/MIDORI"
 ncbi="/work/gmgi/databases/ncbi/nt"
 taxonkit="/work/gmgi/databases/taxonkit"
 
 #### DATABASE QUERY ####
 ### NCBI database 
 blastn -db ${ncbi}/"nt" \
-   -query ${ASV_fasta}/ASV_seqs.len.fasta -num_threads 16 \
-   -taxids 2759 -culling_limit 50 -max_target_seqs 50 -qcov_hsp_perc 95 -evalue 1e-30 \
-   -perc_identity 80 \
+   -query ${ASV_fasta}/ASV_seqs.len.fasta \
    -out ${out}/BLASTResults_NCBI.txt \
+   -max_target_seqs 20 -perc_identity 99 -qcov_hsp_perc 95 \
    -outfmt '6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore'
+
+## MIDORI database 
+blastn -db ${midori}/*.fasta" \
+   -query ${ASV_fasta}/ASV_seqs.len.fasta \
+   -out ${out}/BLASTResults_midori.txt \
+   -max_target_seqs 10 -perc_identity 98 -qcov_hsp_perc 95 \
+   -outfmt '6  qseqid   sseqid  pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore'
 
 ############################
 
@@ -527,101 +627,4 @@ cat ${out}/NCBI_sp.txt | ${taxonkit}/taxonkit reformat -I 1 -r "Unassigned" > ${
 ```
 
 To run:  
-- `sbatch 05-blast_NCBI.sh` 
-
-
-### Reformat taxonkit output for LCA 
-
-Create `05-blast_sort.R` and use RStudio interface on NU OOD to run this script to create a taxid list to use as input for LCA. 
-
-```
-## Sorting BLAST output for LCA 
-library(tidyverse)
-
-### Load data: user edits project path
-NCBI_input="/work/gmgi/ecosystem-diversity/Gobler/COI/blast/BLASTResults_NCBI.txt"
-TAXID_output="/work/gmgi/ecosystem-diversity/Gobler/COI/blast/taxids.txt"
-
-blast <- read.table(NCBI_input, header=F,
-                    col.names = c("ASV_ID", "sseqid", "sscinames", "staxid", "pident", "length", "mismatch",
-                                  "gapopen", "qstart", "qend", "sstart", "send", "evalue", "bitscore"),
-                    colClasses = c(rep("character", 3), "integer", rep("numeric", 9)))
-
-### Print number of ASVs that had a BLAST output
-length(unique(blast$ASV_ID))
-
-### Filter to top pident; this will include ties so any entries with the top pident
-blast_filtered <- blast %>% group_by(ASV_ID) %>% slice_max(pident, n=1) 
-
-## nrow should = the number of unique ASVs 
-staxid_list <- blast_filtered %>% 
-  dplyr::select(ASV_ID, staxid) %>%
-  group_by(ASV_ID) %>%
-  
-  ## combine tax ids into one row and separate with a space 
-  summarise(tax_list = paste(staxid, collapse = " ")) 
-
-### USER EDITS PATH
-staxid_list %>% write_tsv(TAXID_output)
-```
-
-### Run LCA on BLAST output 
-
-Running LCA on Blast output. At this point, the blast hits have been filtered down to the top hit(s). LCA is performed on those top hit(s) rather than everything above 80%. This way, we can take 90% in our first step then 80% later on. 
-
-`06-LCA.sh`:
-
-```
-#!/bin/bash
-#SBATCH --error=output/"%x_error.%j" #if your job fails, the error report will be put in this file
-#SBATCH --output=output/"%x_output.%j" #once your job is completed, any final job report comments will be put in this file
-#SBATCH --partition=short
-#SBATCH --nodes=1
-#SBATCH --time=20:00:00
-#SBATCH --job-name=LCA
-#SBATCH --mem=10GB
-#SBATCH --ntasks=24
-#SBATCH --cpus-per-task=2
-
-### USER TO-DO ### 
-## 1. Set paths for project 
-
-# SET PATHS (PROJECT SPECIFIC)
-taxid_list="/work/gmgi/ecosystem-diversity/Gobler/COI/blast/taxids.txt"
-out="/work/gmgi/ecosystem-diversity/Gobler/COI/blast"
-
-# SET PATHS (NO EDITS)
-taxonkit="/work/gmgi/databases/taxonkit"
-
-###################
-
-# Output file for LCA results
-lca_results_file="${out}/lca_results.txt"
-lca_reformat_file="${out}/lca_results_reformatted.txt"
-
-##### LCA by TaxonKit #####
-## Running LCA 
-${taxonkit}/taxonkit lca ${taxid_list} -i 2 -o ${lca_results_file}
-
-## Reformatting output 
-${taxonkit}/taxonkit reformat ${lca_results_file} -I 3 -o ${lca_reformat_file}
-
-```
-
-### Download files for R analysis
-
-In working folder (for Fisheries team, this is your folder on Box), create the following folders: `data`, `metadata`, and `scripts`. Within `data`, make a folder for `Taxonomic_assignments`. 
-
-Download and place in `data`:  
-- `results/summary_report/summary_report.html`    
-- `results/overall_summary.tsv`    
-- `results/pipeline_info/execution_report_*date*.html`    
-- `results/asv_length_filter/ASV_seqs.len.fasta`    
-- `results/ASV_table.len.tsv`  
-
-Download and place in `data/Taxonomic_assignments`:  
-- `results/phyloseq/dada2_phyloseq.rds`    
-- `blast/NCBI_taxassigned.txt`    
-- `blast/lca_results_reformatted.txt`    
-
-
+- `sbatch 02-taxonomicID.sh` 

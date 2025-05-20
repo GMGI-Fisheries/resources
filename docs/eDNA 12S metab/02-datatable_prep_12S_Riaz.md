@@ -574,6 +574,13 @@ Raw reads results output.
 No user edits.
 
 ``` r
+### Number of total assignments -1 for unassigned
+length(unique(ASV_table_taxID_collapsed$Species_name)) - 1
+```
+
+    ## [1] 106
+
+``` r
 ## Raw reads matrix (wide format)
 ASV_table_taxID_collapsed %>% write_xlsx(results_rawreads_matrix)
 
@@ -583,7 +590,18 @@ ASV_table_taxID_collapsed %>%
   filter(reads > 0) %>% 
   left_join(., meta, by = "sampleID") %>%
   write_xlsx(results_rawreads_long)
+
+## exporting species summary
+ASV_table_taxID_collapsed %>% 
+  gather("sampleID", "reads", c(4:last_col())) %>% 
+  group_by(Species_name, Common_name, Category) %>%
+  dplyr::select(-sampleID) %>%
+  summarise(sum_reads = sum(reads)) %>%
+  write_xlsx("example_output/Species_breakdown.xlsx")
 ```
+
+    ## `summarise()` has grouped output by 'Species_name', 'Common_name'. You can
+    ## override using the `.groups` argument.
 
 Relative Abundance No user edits.
 
