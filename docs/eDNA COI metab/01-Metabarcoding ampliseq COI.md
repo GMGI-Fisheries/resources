@@ -16,7 +16,9 @@ Workflow done on HPC. Scripts to run:
 
 Taxonomic identification is completed using 1) NCBI at 90% percent identity + Least Common Ancestor (LCA) and 2) RDP Classifier via DADA2 with MetaZooGene. After filtering and annotation confirmation, the remaining unassigned sequences are 3) assigned to family-level at best from NCBI at 80% identity. 
 
-Typical project folder structure (once analysis is run) for Fisheries team. Create `scripts`, `results` (for ampliseq output), `fastqc`, `blast`, and `metadata`. 
+This document does quality filtering (fastQC + multiQC), database updates, ASV generation (ampliseq DADA2), taxonomic identification with MetaZooGene (ampliseq DADA2), and lastly, taxonomic identification with NCBI (blast). The blast step is completed at 80% threshold and in future R scripts, this will be split into 90%+ and 80%+ at different steps.
+
+Typical project folder structure (once analysis is run) for Fisheries team. Create `scripts`, `results` (for ampliseq output), `fastqc`, `blast`, and `metadata`. E.g., `mkdir results`. 
 
 ```
 blast  fastqc  metadata  multiqc_raw_data  multiqc_raw.html  raw_data  results  scripts
@@ -56,7 +58,7 @@ nextflow pull nf-core/ampliseq
 
 Background information on [FASTQC](https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon-flipped/lessons/05_qc_running_fastqc_interactively.html). This should take ~10 seconds per file for a typical full MiSeq run. If <2 seconds, then check output/error files.  
 
-`01-fastqc.sh`: 
+Create slurm script: `nano 01-fastqc.sh`. Copy below script into file and save (Ctrl+X; Y; Enter).
 
 ```
 #!/bin/bash
@@ -109,7 +111,7 @@ Notes:
 
 Background information on [MULTIQC](https://multiqc.info/docs/#:~:text=MultiQC%20is%20a%20reporting%20tool%20that%20parses%20results,experiments%20containing%20multiple%20samples%20and%20multiple%20analysis%20steps).
 
-`02-multiqc.sh` 
+Create slurm script: `nano 02-multiqc.sh`. Copy below script into file and save (Ctrl+X; Y; Enter).
 
 ```
 #!/bin/bash
@@ -157,7 +159,7 @@ NCBI is updated daily and therefore needs to be updated each time a project is a
 
 Within `/work/gmgi/databases/ncbi`, there is a `update_nt.sh` script with the following code. To run `sbatch update_nt.sh`. This won't take long as it will check for updates rather than re-downloading every time. 
 
-`/work/gmgi/databases/ncbi/update_nt.sh`:
+`/work/gmgi/databases/ncbi/update_nt.sh` (this script is already in shared gmgi folder): 
 
 ```
 #!/bin/bash
@@ -216,7 +218,7 @@ Instructions to update:
 
 Open RStudio in NU Discovery Cluster OOD and run the following R script to update both the Global and Atlantic versions of MetaZooGene. User needs to update the file name in `base::write()` to reflect the correct version number. This script is very quick, plan for ~3-5 minutes total to run the script, change the version number, and confirm output. 
 
-Path to R script: `/work/gmgi/databases/COI/MetaZooGene/MZG_to_DADA2.R`.
+Path to R script: `/work/gmgi/databases/COI/MetaZooGene/MZG_to_DADA2.R` (this script is already in gmgi shared folder).
 
 ```
 ## GLOBAL DB 
@@ -333,6 +335,8 @@ This file indicates the sample ID and the path to R1 and R2 files. Below is a pr
 
 Prior to running R script, use the `rawdata` file created for the fastqc slurm array from within the raw data folder to create a list of files. Below is an example from our Offshore Wind project but the specifics of the sampleID will be project dependent. This project had four sequencing runs with different file names. 
 
+On OOD, open RStudio. Create a new R script file:
+
 `03-metadata.R`
 
 ```
@@ -376,9 +380,7 @@ sample_list %>% write.csv("/work/gmgi/ecosystem-diversity/Gobler/COI/metadata/sa
 
 Update ampliseq workflow if needed: `nextflow pull nf-core/ampliseq`. 
 
-Testing this on OSW work first. 
-
-`04-ampliseq.sh`:
+Create slurm script: `nano 04-ampliseq.sh`. Copy below script into file and save (Ctrl+X; Y; Enter).
 
 ```
 #!/bin/bash
@@ -399,6 +401,7 @@ Testing this on OSW work first.
 ## 4. Adjust parameters as needed (below is Fisheries team default for COI)
 
 # LOAD MODULES
+### This script does not use the eDNA conda environment
 module load singularity/3.10.3
 module load nextflow/23.10.1
 
@@ -478,7 +481,7 @@ Create new folder `blast` in project folder.
 
 ### Blast NCBI at 80% identity 
 
-`05-blast_NCBI.sh`: 
+Create slurm script: `nano 05-blast_NCBI.sh`. Copy below script into file and save (Ctrl+X; Y; Enter).
 
 ```
 #!/bin/bash
@@ -569,7 +572,7 @@ staxid_list %>% write_tsv(TAXID_output)
 
 Running LCA on Blast output. At this point, the blast hits have been filtered down to the top hit(s). LCA is performed on those top hit(s) rather than everything above 80%. This way, we can take 90% in our first step then 80% later on. 
 
-`06-LCA.sh`:
+Create slurm script: `nano 06-LCA.sh`. Copy below script into file and save (Ctrl+X; Y; Enter).
 
 ```
 #!/bin/bash
