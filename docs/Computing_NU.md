@@ -1,8 +1,10 @@
 # Northeastern University Computing Resources 
 
-A high-performance computing resource for the Northeastern research community, the Discovery cluster is located in the [Massachusetts Green High Performance Computing Center](https://www.mghpcc.org/) in Holyoke, Massachusetts.
+*Discovery is currently being transitioned out as of May 2025. Explorer is now the cluster we use. Data is stored separately so there was no data transfer requirement. Users should work on the Explorer Cluster.* 
 
-The Discovery cluster provides Northeastern researchers with access to more than 45,000 CPU cores and more than 400 GPUs. Connected to the university network over 10 Gbps Ethernet (GbE) for high-speed data transfer, Discovery provides 5 PB of available storage on a high-performance GPFS parallel file system. Compute nodes are connected with either 10 GbE or a high-performance HDR100 InfiniBand (IB) interconnect running at 200 Gbps, supporting all types and scales of computational workloads.
+A high-performance computing resource for the Northeastern research community, the Explorer cluster is located in the [Massachusetts Green High Performance Computing Center](https://www.mghpcc.org/) in Holyoke, Massachusetts.
+
+The Discovery/Explorer clusters provides Northeastern researchers with access to more than 45,000 CPU cores and more than 400 GPUs. Connected to the university network over 10 Gbps Ethernet (GbE) for high-speed data transfer, Discovery/Explorer provides 5 PB of available storage on a high-performance GPFS parallel file system. Compute nodes are connected with either 10 GbE or a high-performance HDR100 InfiniBand (IB) interconnect running at 200 Gbps, supporting all types and scales of computational workloads.
 
 As GMGI's researchers, we have access to Northeastern's HPC resources through an MOU established in Fall 2023. 
 
@@ -12,12 +14,12 @@ Read the HPC resource documentation prior to getting started: [Research Computin
 
 ## Logging in
 
-Before creating an account with the NU Discovery Cluster, claim your Northeastern email and sponsored account.
+Before creating an account with the NU Discovery/Explorer Cluster, claim your Northeastern email and sponsored account.
 
 1. Log into (with the northeastern email and pw previously claimed): [Home - Northeastern Tech Service Portal](https://service.northeastern.edu/tech?id=tech_index_home).  
 2. Navigate to [High Performance Computing - Northeastern Tech Service Portal](https://service.northeastern.edu/tech?id=sc_category&sys_id=43a3aef7db45cdd0ca10819b13961998).    
 3. Request an account ([Research Computing Access Request - Northeastern Tech Service Portal](https://service.northeastern.edu/tech?id=sc_cat_item&sys_id=0ae24596db535fc075892f17d496199c)). Fill out the form with your Northeastern email, and following options:  
-- Select: I do not have access to Discovery. I am requesting a new account.  
+- Select: I do not have access to Discovery/Explorer. I am requesting a new account.  
 - Affiliation with Northeastern University: Visiting Researcher (Greg says this answer doesn't really matter).   
 - University Sponsor: Geoffrey Trusell  
 - Gaussian: No (This is a specific program, if you don't know what it is, you don't need it).  
@@ -25,12 +27,15 @@ Before creating an account with the NU Discovery Cluster, claim your Northeaster
 4. This triggers an email to Geoff Trusell to approve your account. Send an email to Geoff letting him know that you are activating your account that needs his approval.  
 5. Once Geoff approves the account sponsorship, then Greg and the computing team will finish setting up your account.
 
-You can operate on the Discovery Cluster in two ways:  
+You can operate on the Discovery/Explorer Cluster in two ways:  
 1. via Linux operating system on your computer or ssh client  
-2. NU's Open On Demand ([Open OnDemand (OOD) - RC RTD (northeastern.edu)](https://ood.discovery.neu.edu/pun/sys/dashboard)) GUI. [Accessing Open OnDemand - RC RTD (northeastern.edu)](https://rc.northeastern.edu/ood/). With OOD interface, you can access plug-ins (i.e. RStudio) and launch the server from the web. Serena recommended using incognito window because OOD usually works better without the caching.
+2. NU's Open On Demand.[Accessing Open OnDemand - RC RTD (northeastern.edu)](https://rc.northeastern.edu/ood/). With OOD interface, you can access plug-ins (i.e. RStudio) and launch the server from the web. Serena recommended using incognito window because OOD usually works better without the caching:    
+- ([Discovery Open OnDemand (OOD) - RC RTD (northeastern.edu)](https://ood.discovery.neu.edu/pun/sys/dashboard)) GUI  
+- ([Explorer Open OnDemand (OOD) - RC RTD (northeastern.edu)](https://ood.explorer.neu.edu/pun/sys/dashboard)) GUI
 
 ```
 ssh username@login.discovery.neu.edu
+ssh sername@login.explorer.neu.edu
 ```
 
 ## Server structure
