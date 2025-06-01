@@ -39,7 +39,7 @@ library(ggpubr)
 ```{r}
 ### USER EDITS:
 ## 1. Replace path of file with your own standard curve
-std_curve <- read.csv("example standard curve.csv", skip = 19) %>%
+std_curve <- read.csv("Optimization/17 JULY 24 LOD BIORAD.csv", skip = 19) %>%
   group_by(Sample) %>%
   
   ## calculate detection rates (number of Cqs present / number of replicates)
@@ -86,7 +86,7 @@ std_curve %>%
   filter(detection_rate > 0.50) %>%
   
   ## Plotting that std. curve 
-  ggplot(., aes(x = log10(`Starting Quantity (SQ)`), y = Cq)) +
+  ggplot(., aes(x = log10(`Starting.Quantity..SQ.`), y = Cq)) +
   
   geom_smooth(method = 'lm', se = FALSE, color = "darkred") +
 
@@ -120,7 +120,7 @@ std_curve %>%
         axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=12, face="bold"),
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=12, face="bold"))
 
-ggsave("example output/Standard_curve.png", width=6, height=4)
+ggsave("2025/qPCR/bioinformatics/figures/Standard_curve.png", width=6, height=4)
 ```
 
 ### Calculating slope and y-intercept
@@ -129,7 +129,7 @@ These values get fed in later in data calculations.
 
 ```{r}
 # Fit a linear model to calculate slope and intercept
-linear_model <- lm(Cq_mean ~ log10(`Starting Quantity (SQ)`), data = std_curve)
+linear_model <- lm(Cq_mean ~ log10(`Starting.Quantity..SQ.`), data = std_curve)
 
 # Extract slope and y-intercept
 slope <- coef(linear_model)[2]      # Slope (m)
@@ -146,7 +146,7 @@ y_intercept <- coef(linear_model)[1] # Y-intercept (b)
 
 df <- 
   # list files in directory following a particular pattern
-  list.files(path = 'example input/qPCR_results/', pattern = ".csv", full.names = TRUE) %>%
+  list.files(path = '2025/qPCR/qPCR_results/', pattern = ".csv", full.names = TRUE) %>%
   
   # get the column names
   set_names(.) %>% 
@@ -156,18 +156,18 @@ df <-
   
   # turn file.ID into just plate information (plate.ID)
   mutate(file.ID = str_after_nth(file.ID, "results/", 1),
-         file.ID = str_before_nth(file.ID, ".xlsx", 1)) %>%
-  dplyr::rename(plate.ID = file.ID, Sample_ID = Sample) %>%
+         file.ID = str_before_nth(file.ID, ".csv", 1)) %>%
+  dplyr::rename(plate.ID = file.ID, Sample_ID = Sample)
   
   ## RI STRIPED BASS SPECIFIC CODE FOR SAMPLE ID MISMATCHES
-  mutate(Sample_ID = gsub(" #1", "_1", Sample_ID),
-         Sample_ID = gsub(" #2", "_2", Sample_ID)) %>%
+#  mutate(Sample_ID = gsub(" #1", "_1", Sample_ID),
+   #      Sample_ID = gsub(" #2", "_2", Sample_ID)) %>%
   
-  mutate(Sample_ID = case_when(
-    str_detect(Well, "4") & Sample_ID == "2/21/24_ONE_NTR" ~ paste0(Sample_ID, "_1"),
-    str_detect(Well, "5") & Sample_ID == "2/21/24_ONE_NTR" ~ paste0(Sample_ID, "_2"),
-    TRUE ~ Sample_ID
-  ))
+ # mutate(Sample_ID = case_when(
+   # str_detect(Well, "4") & Sample_ID == "2/21/24_ONE_NTR" ~ paste0(Sample_ID, "_1"),
+ #   str_detect(Well, "5") & Sample_ID == "2/21/24_ONE_NTR" ~ paste0(Sample_ID, "_2"),
+# #   TRUE ~ Sample_ID
+#  ))
 
 head(df)
 ```
@@ -177,12 +177,12 @@ head(df)
 Sample ID from meta needs to match the Sample ID from the qPCR output 
 
 ```{r}
-meta <- read_xlsx("example input/client_metadata_example.xlsx") %>%
+meta <- read_xlsx("2025/eDNA_Data_RI_STB_2025.xlsx", sheet = 2)
   
   ## RI STRIPED BASS SPECIFIC CODE FOR SAMPLE ID ISSUES
   ## For other projects, address any Sample_ID differences (Sample_ID on qPCR output needs to match meta)
-  mutate(Sample_ID = gsub(" #1", "_1", Sample_ID),
-         Sample_ID = gsub(" #2", "_2", Sample_ID))
+  #mutate(Sample_ID = gsub(" #1", "_1", Sample_ID),
+ #        Sample_ID = gsub(" #2", "_2", Sample_ID))
 ```
 
 ## Evaluating No Template Controls (NTCs; Negatives)
@@ -231,8 +231,8 @@ spike_samples <- df %>%
 ## Remove any lab error samples 
 ## RI Striped Bass only 
 ## removing 2/21/24 DI Blank 1 (pipetting issue) 
-spike_samples <- spike_samples %>%
-  filter(!Sample_ID == "2/21/24_Tap Blank_1")
+#spike_samples <- spike_samples %>%
+#  filter(!Sample_ID == "2/21/24_Tap Blank_1")
 ```
 
 Plot those distance values and save to output folder 
@@ -279,7 +279,7 @@ spike_samples %>% dplyr::select(Target, Sample_ID, Cq_diff) %>% distinct() %>%
         axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=12, face="bold"),
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=12, face="bold"))
 
-ggsave("example output/Inhibition.png", width=4, height=4)
+ggsave("2025/qPCR/bioinformatics/Inhibition.png", width=4, height=4)
 ```
 
 ## Filter data Cq, Number of Replicates, and Copy Num calculations 
@@ -331,7 +331,7 @@ nrow(filters_df) == length(unique(filters_df$Sample_ID))
 
 ```{r}
 samples_df <- filters_df %>% right_join(meta, ., by = "Sample_ID") %>%
-  group_by(Date, Sample_Location) %>%
+  group_by(Sample_ID) %>%
   
   ## mutate to mean Ct value
   mutate(`Mean Ct` = if_else(is.nan(mean(Filter_Cq, na.rm = TRUE)), 
@@ -348,17 +348,16 @@ samples_df <- filters_df %>% right_join(meta, ., by = "Sample_ID") %>%
   ungroup() %>%
   
   ## summarizing df 
-  dplyr::select(Date, Sample_Location, Sample_Type, Number_of_Filters, 
+  dplyr::select(`Station-Code`, Date, Sample_ID, Qubit_Concentration, 
                 `Mean Ct`, `Number of Replicates`, `Mean Copy Number`) %>%
-  distinct() %>%
+  distinct()
 
   ## adding new SampleID back in
-  unite(Sample_ID, Date, Sample_Location, sep = " ", remove=F)
-
-head(samples_df)
+ # unite(Sample_ID, Date, sep = " ", remove=F)
 
 ## Confirm that the number of samples output from qPCR matches the number of samples in the metadata  
 nrow(samples_df) == nrow(meta %>% dplyr::select(-Sample_ID) %>% distinct())
+
 ```
 
 ## Normalizing data 
@@ -393,11 +392,27 @@ normalized_df <- normalized_df %>%
     TRUE ~ "Present"
   ))
 ```
+## Dont need anything moving foward (only want an excel) so I am exporting here
+
+```{r}
+normalized_df %>% 
+  
+  # cut decimals down to 2
+  mutate(across(where(is.numeric), ~round(., 2))) %>%
+  
+  write_xlsx("2025/2025Results.xlsx")
+```
+
+
+
+
+
+
 
 ## Blank specific information
 
 ```{r}
-blank_df <- normalized_df %>% subset(Sample_Type == "Blank")
+blank_df <- normalized_df
 
 detection_counts <- blank_df %>%
   count(Detection) %>%
@@ -425,7 +440,7 @@ ggsave("example output/Blanks_piechart.png", width=4, height=4)
 Pie chart 
 
 ```{r}
-fieldsamples_df <- normalized_df %>% subset(Sample_Type == "Field")
+fieldsamples_df <- normalized_df 
 
 field_detection_counts <- fieldsamples_df %>%
   count(Detection) %>%
@@ -445,7 +460,7 @@ ggplot(field_detection_counts, aes(x = "", y = n, fill = Detection)) +
         ) +
   scale_fill_manual(values = c("#e9ecef", "#a9d6e5"))
 
-ggsave("example output/Fields_piechart.png", width=4, height=4)
+#ggsave("example output/Fields_piechart.png", width=4, height=4)
 ```
 
 Bar chart 
@@ -523,14 +538,14 @@ blank_df %>% mutate(Date = as.Date(Date)) %>%
   write_xlsx("example output/Results_Blanks.xlsx")
 
 ### adding some meta for Rich 
-rich_meta <- read_xlsx("C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/RI Striped Bass/metadata/eDNA_Data_RI_STB_2024.xlsx") %>%
-  dplyr::rename(Date = Sample_Date, Sample_Location = Station_Code) %>%
-  mutate(Sample_Time = format(Sample_Time, format = "%H:%M:%S"))
+#rich_meta <- read_xlsx("C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/RI Striped Bass/metadata/eDNA_Data_RI_STB_2024.xlsx") %>%
+ # dplyr::rename(Date = Sample_Date, Sample_Location = Station_Code) %>%
+ # mutate(Sample_Time = format(Sample_Time, format = "%H:%M:%S"))
 
 
-normalized_df %>% full_join(rich_meta, ., by = c("Date", "Sample_Location")) %>%
-  mutate(Date = as.Date(Date)) %>%
-  dplyr::select(-Number_of_Filters) %>% write_xlsx("example output/Results.xlsx")
+#normalized_df %>% full_join(rich_meta, ., by = c("Date", "Sample_Location")) %>%
+#  mutate(Date = as.Date(Date)) %>%
+#  dplyr::select(-Number_of_Filters) %>% write_xlsx("example output/Results.xlsx")
 
 
   # dplyr::select(Date, Sample_Location, `Mean Ct`, `Number of Replicates`, 

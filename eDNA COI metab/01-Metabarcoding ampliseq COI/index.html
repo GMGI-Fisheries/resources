@@ -1575,7 +1575,8 @@
 <li>05-taxonomicID.sh  </li>
 </ol>
 <p>Taxonomic identification is completed using 1) NCBI at 90% percent identity + Least Common Ancestor (LCA) and 2) RDP Classifier via DADA2 with MetaZooGene. After filtering and annotation confirmation, the remaining unassigned sequences are 3) assigned to family-level at best from NCBI at 80% identity. </p>
-<p>Typical project folder structure (once analysis is run) for Fisheries team. Create <code>scripts</code>, <code>results</code> (for ampliseq output), <code>fastqc</code>, <code>blast</code>, and <code>metadata</code>. </p>
+<p>This document does quality filtering (fastQC + multiQC), database updates, ASV generation (ampliseq DADA2), taxonomic identification with MetaZooGene (ampliseq DADA2), and lastly, taxonomic identification with NCBI (blast). The blast step is completed at 80% threshold and in future R scripts, this will be split into 90%+ and 80%+ at different steps.</p>
+<p>Typical project folder structure (once analysis is run) for Fisheries team. Create <code>scripts</code>, <code>results</code> (for ampliseq output), <code>fastqc</code>, <code>blast</code>, and <code>metadata</code>. E.g., <code>mkdir results</code>. </p>
 <div class="highlight"><pre><span></span><code>blast  fastqc  metadata  multiqc_raw_data  multiqc_raw.html  raw_data  results  scripts
 </code></pre></div>
 <h2 id="basics">Basics</h2>
@@ -1604,7 +1605,7 @@ nextflow pull nf-core/ampliseq
 </code></pre></div>
 <h2 id="step-2-assess-quality-of-raw-data">Step 2: Assess quality of raw data</h2>
 <p>Background information on <a href="https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon-flipped/lessons/05_qc_running_fastqc_interactively.html">FASTQC</a>. This should take ~10 seconds per file for a typical full MiSeq run. If &lt;2 seconds, then check output/error files.  </p>
-<p><code>01-fastqc.sh</code>: </p>
+<p>Create slurm script: <code>nano 01-fastqc.sh</code>. Copy below script into file and save (Ctrl+X; Y; Enter).</p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
 #SBATCH --error=output/fastqc_output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
 #SBATCH --output=output/fastqc_output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
@@ -1649,7 +1650,7 @@ fastqc ${i} --outdir ${out_dir}
 </ul>
 <h2 id="step-3-visualize-quality-of-raw-data">Step 3: Visualize quality of raw data</h2>
 <p>Background information on <a href="https://multiqc.info/docs/#:~:text=MultiQC%20is%20a%20reporting%20tool%20that%20parses%20results,experiments%20containing%20multiple%20samples%20and%20multiple%20analysis%20steps">MULTIQC</a>.</p>
-<p><code>02-multiqc.sh</code> </p>
+<p>Create slurm script: <code>nano 02-multiqc.sh</code>. Copy below script into file and save (Ctrl+X; Y; Enter).</p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
 #SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
 #SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
@@ -1687,7 +1688,7 @@ bash 02-multiqc.sh
 <h3 id="download-andor-update-nbci-blast-nt-database">Download and/or update NBCI blast nt database</h3>
 <p>NCBI is updated daily and therefore needs to be updated each time a project is analyzed. This is the not the most ideal method but we were struggling to get the <code>-remote</code> flag to work within slurm because I don't think NU slurm is connected to the internet? NU help desk was helping for awhile but we didn't get anywhere.</p>
 <p>Within <code>/work/gmgi/databases/ncbi</code>, there is a <code>update_nt.sh</code> script with the following code. To run <code>sbatch update_nt.sh</code>. This won't take long as it will check for updates rather than re-downloading every time. </p>
-<p><code>/work/gmgi/databases/ncbi/update_nt.sh</code>:</p>
+<p><code>/work/gmgi/databases/ncbi/update_nt.sh</code> (this script is already in shared gmgi folder): </p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
 #SBATCH --partition=short
 #SBATCH --nodes=1
@@ -1732,7 +1733,7 @@ cp names.dmp nodes.dmp delnodes.dmp merged.dmp $HOME/.taxonkit
 <a href="https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/html-src/data__MZGdbALL__o00.html">MetaZooGene Global</a> </p>
 <p>Instructions to update:</p>
 <p>Open RStudio in NU Discovery Cluster OOD and run the following R script to update both the Global and Atlantic versions of MetaZooGene. User needs to update the file name in <code>base::write()</code> to reflect the correct version number. This script is very quick, plan for ~3-5 minutes total to run the script, change the version number, and confirm output. </p>
-<p>Path to R script: <code>/work/gmgi/databases/COI/MetaZooGene/MZG_to_DADA2.R</code>.</p>
+<p>Path to R script: <code>/work/gmgi/databases/COI/MetaZooGene/MZG_to_DADA2.R</code> (this script is already in gmgi shared folder).</p>
 <div class="highlight"><pre><span></span><code>## GLOBAL DB 
 
 library(magrittr)
@@ -1862,6 +1863,7 @@ LG COI amplicon R: TAIACYTCIGGRTGICCRAARAAYCA       </p>
 </table>
 <p><em>This is an R script, not slurm script. Open RStudio interactive on Discovery Cluster to run this script.</em></p>
 <p>Prior to running R script, use the <code>rawdata</code> file created for the fastqc slurm array from within the raw data folder to create a list of files. Below is an example from our Offshore Wind project but the specifics of the sampleID will be project dependent. This project had four sequencing runs with different file names. </p>
+<p>On OOD, open RStudio. Create a new R script file:</p>
 <p><code>03-metadata.R</code></p>
 <div class="highlight"><pre><span></span><code>## Creating ampliseq metadata sheet for GOBLER
 ## Load libraries 
@@ -1900,8 +1902,7 @@ sample_list %&gt;% write.csv(&quot;/work/gmgi/ecosystem-diversity/Gobler/COI/met
 </code></pre></div>
 <h3 id="run-nf-coreampliseq-cutadapt-dada2">Run nf-core/ampliseq (Cutadapt &amp; DADA2)</h3>
 <p>Update ampliseq workflow if needed: <code>nextflow pull nf-core/ampliseq</code>. </p>
-<p>Testing this on OSW work first. </p>
-<p><code>04-ampliseq.sh</code>:</p>
+<p>Create slurm script: <code>nano 04-ampliseq.sh</code>. Copy below script into file and save (Ctrl+X; Y; Enter).</p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
 #SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
 #SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
@@ -1920,6 +1921,7 @@ sample_list %&gt;% write.csv(&quot;/work/gmgi/ecosystem-diversity/Gobler/COI/met
 ## 4. Adjust parameters as needed (below is Fisheries team default for COI)
 
 # LOAD MODULES
+### This script does not use the eDNA conda environment
 module load singularity/3.10.3
 module load nextflow/23.10.1
 
@@ -1992,7 +1994,7 @@ nextflow run nf-core/ampliseq -resume \
 <p>Ampliseq uses MetaZooGene Global to assign taxonomy but we also use NCBI Eukaryotic database sequences and blastn to find 90+% hits then use Least Common Ancestor approach. After filtering and confirming annotations, we then take NCBI hits at 80+% at family-level only.</p>
 <p>Create new folder <code>blast</code> in project folder. </p>
 <h3 id="blast-ncbi-at-80-identity">Blast NCBI at 80% identity</h3>
-<p><code>05-blast_NCBI.sh</code>: </p>
+<p>Create slurm script: <code>nano 05-blast_NCBI.sh</code>. Copy below script into file and save (Ctrl+X; Y; Enter).</p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
 #SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
 #SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
@@ -2072,7 +2074,7 @@ staxid_list %&gt;% write_tsv(TAXID_output)
 </code></pre></div>
 <h3 id="run-lca-on-blast-output">Run LCA on BLAST output</h3>
 <p>Running LCA on Blast output. At this point, the blast hits have been filtered down to the top hit(s). LCA is performed on those top hit(s) rather than everything above 80%. This way, we can take 90% in our first step then 80% later on. </p>
-<p><code>06-LCA.sh</code>:</p>
+<p>Create slurm script: <code>nano 06-LCA.sh</code>. Copy below script into file and save (Ctrl+X; Y; Enter).</p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
 #SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
 #SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
