@@ -791,13 +791,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#populating-workgmgidatabases-folder" class="md-nav__link">
+  <a href="#populating-projectsgmgidatabases-folder" class="md-nav__link">
     <span class="md-ellipsis">
-      Populating /work/gmgi/databases folder
+      Populating /projects/gmgi/databases folder
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Populating /work/gmgi/databases folder">
+    <nav class="md-nav" aria-label="Populating /projects/gmgi/databases folder">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1412,13 +1412,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#populating-workgmgidatabases-folder" class="md-nav__link">
+  <a href="#populating-projectsgmgidatabases-folder" class="md-nav__link">
     <span class="md-ellipsis">
-      Populating /work/gmgi/databases folder
+      Populating /projects/gmgi/databases folder
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Populating /work/gmgi/databases folder">
+    <nav class="md-nav" aria-label="Populating /projects/gmgi/databases folder">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1493,6 +1493,7 @@
 <h1 id="metabarcoding-workflow-for-12s-amplicon-sequencing-with-riaz-primers">Metabarcoding workflow for 12S amplicon sequencing with Riaz primers</h1>
 <p><em>page details in progress.</em> </p>
 <p>The 12S rRNA gene region of the mitogenome is ~950 bp. There are two popular primer sets to amplify two different regions of 12S: Riaz and MiFish. The following workflow includes script specific to the <strong>Riaz</strong> primer set, but includes some notes on the MiFish U/E primer set. </p>
+<p>The NU cluster shifted from Discovery to Explorer. This script reflects the change from <code>/work</code> to <code>/projects</code>. NMC 7/11/2025 </p>
 <p><img alt="" src="https://th.bing.com/th/id/OIP.EbXPYETYLBPEymNEIVEGLQHaCc?rs=1&amp;pid=ImgDetMain" /></p>
 <p>Riaz ecoPrimers citation: <a href="https://academic.oup.com/nar/article/39/21/e145/1105558">Riaz et al. 2011</a><br />
 MiFish citation: <a href="https://royalsocietypublishing.org/doi/full/10.1098/rsos.150088">Miya et al. 2015</a></p>
@@ -1507,7 +1508,7 @@ MiFish citation: <a href="https://royalsocietypublishing.org/doi/full/10.1098/rs
 <h2 id="step-1-confirm-conda-environment-is-available-and-activate">Step 1: Confirm conda environment is available and activate</h2>
 <p>The conda environment is started within each slurm script, but to activate conda environment outside of the slurm script to update packages or check what is installed:</p>
 <div class="highlight"><pre><span></span><code># Activate fisheries eDNA conda environment 
-source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
+source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 # List all available environments 
 conda env list 
@@ -1539,7 +1540,7 @@ nextflow pull nf-core/ampliseq
 ## 1. Set paths for your project
 
 # Activate conda environment
-source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
+source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 ## SET PATHS 
 raw_path=&quot;&quot;
@@ -1584,7 +1585,7 @@ fastqc ${i} --outdir ${out_dir}
 ## 2. Optional: change file name (multiqc_raw.html) as desired
 
 # Activate conda environment
-source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
+source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 ## SET PATHS 
 ## fastqc_output = output from 00-fastqc.sh; fastqc program
@@ -1594,25 +1595,12 @@ multiqc_dir=&quot;&quot;
 ## RUN MULTIQC 
 multiqc --interactive ${fastqc_output} -o ${multiqc_dir} --filename multiqc_raw.html
 </code></pre></div>
-<p>To run:<br />
-- <code>sbatch 00-multiqc.sh</code> </p>
-<p>Notes:  </p>
-<ul>
-<li>Depending on the number of files per project, multiqc can be quick to run without a slurm script. To do this, activate conda environment within a working node:</li>
-</ul>
+<p>This program is typically very quick, depending on the number of files per project, and can be run on an interactive node. </p>
 <div class="highlight"><pre><span></span><code># Use srun to claim a node
 srun --pty bash 
 
-# Activate conda environment
-source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
-
-## SET PATHS 
-## fastqc_output = output from 00-fastqc.sh; fastqc program
-fastqc_output=&quot;&quot; 
-multiqc_dir=&quot;&quot; 
-
-## RUN MULTIQC 
-multiqc --interactive ${fastqc_output} -o ${multiqc_dir} --filename multiqc_raw.html
+# Run this script on that interactive node
+bash 00-multiqc.sh
 </code></pre></div>
 <h2 id="step-4-nf-coreampliseq">Step 4: nf-core/ampliseq</h2>
 <p><a href="https://nf-co.re/">Nf-core</a>: A community effort to collect a curated set of analysis pipelines built using <a href="https://www.nextflow.io/">Nextflow</a>.<br />
@@ -1692,7 +1680,7 @@ library(strex)
 
 ### Read in sample sheet 
 
-sample_list &lt;- read.delim2(&quot;/work/gmgi/Fisheries/eDNA/offshore_wind2023/raw_data/rawdata&quot;, header=F) %&gt;% 
+sample_list &lt;- read.delim2(&quot;/projects/gmgi/Fisheries/eDNA/offshore_wind2023/raw_data/rawdata&quot;, header=F) %&gt;% 
   dplyr::rename(forwardReads = V1) %&gt;%
   mutate(sampleID = str_after_nth(forwardReads, &quot;data/&quot;, 1),
          sampleID = str_before_nth(sampleID, &quot;_S&quot;, 1))
@@ -1712,7 +1700,7 @@ sample_list$reverseReads &lt;- gsub(&quot;R1&quot;, &quot;R2&quot;, sample_list$
 # rearranging columns 
 sample_list &lt;- sample_list[,c(2,1,3)]
 
-sample_list %&gt;% write.csv(&quot;/work/gmgi/Fisheries/eDNA/offshore_wind2023/metadata/samplesheet.csv&quot;, 
+sample_list %&gt;% write.csv(&quot;/projects/gmgi/Fisheries/eDNA/offshore_wind2023/metadata/samplesheet.csv&quot;, 
                           row.names=FALSE, quote = FALSE)
 </code></pre></div>
 <h3 id="run-nf-coreampliseq-cutadapt-dada2">Run nf-core/ampliseq (Cutadapt &amp; DADA2)</h3>
@@ -1737,8 +1725,7 @@ sample_list %&gt;% write.csv(&quot;/work/gmgi/Fisheries/eDNA/offshore_wind2023/m
 ## 4. Adjust parameters as needed (below is Fisheries team default for 12S)
 
 # LOAD MODULES
-module load singularity/3.10.3
-module load nextflow/24.04.4
+module load nextflow/24.10.3
 
 # SET PATHS 
 metadata=&quot;&quot; 
@@ -1763,6 +1750,7 @@ nextflow run nf-core/ampliseq -resume \
 </code></pre></div>
 <p>To run: <br />
 - <code>sbatch 01b-ampliseq.sh</code> </p>
+<p>Discovery needs <code>module load singularity/3.10.3 and module load nextflow/24.04.4</code>, but on Explorer this is just <code>module load nextflow/24.10.3</code>.  </p>
 <p>MiFish amplifies a longer target region which requires 2x250 bp sequencing (500 cycle kit). Thus following edits are required if using MiFish primers:<br />
 - F/R primer correct sequences <br />
 - Edit <code>--min_len_asv</code>, <code>--max_len_asv</code> to reflect the correct target region length  <br />
@@ -1805,11 +1793,11 @@ nextflow run nf-core/ampliseq -resume \
 </ul>
 <h2 id="step-5-blast-asv-sequences-output-from-dada2-against-our-3-databases">Step 5: Blast ASV sequences (output from DADA2) against our 3 databases</h2>
 <p><em>Note that the GMGI-12S database will not apply to the MiFish primer sets so only Mitofish and NCBI are required.</em> </p>
-<h3 id="populating-workgmgidatabases-folder">Populating /work/gmgi/databases folder</h3>
+<h3 id="populating-projectsgmgidatabases-folder">Populating /projects/gmgi/databases folder</h3>
 <p>We use NCBI, Mitofish, and GMGI-12S databases. </p>
 <h4 id="download-andor-update-nbci-blast-nt-database">Download and/or update NBCI blast nt database</h4>
 <p>NCBI is updated daily and therefore needs to be updated each time a project is analyzed. This is the not the most ideal method but we were struggling to get the <code>-remote</code> flag to work within slurm because I don't think NU slurm is connected to the internet? NU help desk was helping for awhile but we didn't get anywhere.</p>
-<p>Within <code>/work/gmgi/databases/ncbi</code>, there is a <code>update_nt.sh</code> script with the following code. To run <code>sbatch update_nt.sh</code>. This won't take long as it will check for updates rather than re-downloading every time. </p>
+<p>Within <code>/projects/gmgi/databases/ncbi</code>, there is a <code>update_nt.sh</code> script with the following code. To run <code>sbatch update_nt.sh</code>. This won't take long as it will check for updates rather than re-downloading every time. </p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
 #SBATCH --partition=short
 #SBATCH --nodes=1
@@ -1820,10 +1808,10 @@ nextflow run nf-core/ampliseq -resume \
 #SBATCH --error=%x_%j.err
 
 # Activate conda environment
-source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
+source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 # Create output directory if it doesn&#39;t exist
-cd /work/gmgi/databases/ncbi/nt
+cd /projects/gmgi/databases/ncbi/nt
 
 # Update BLAST nt database
 update_blastdb.pl --decompress nt
@@ -1833,9 +1821,9 @@ echo &quot;BLAST nt database update completed&quot;
 </code></pre></div>
 <p>View the <code>update_ncbi_nt.out</code> file to confirm the echo printed at the end.</p>
 <h4 id="download-andor-update-mitofish-database">Download and/or update Mitofish database</h4>
-<p>Check <a href="https://mitofish.aori.u-tokyo.ac.jp/download/">Mitofish webpage</a> for the most recent database version number. Compare to the <code>work/gmgi/databases/12S</code> folder. If needed, update Mitofish database:</p>
+<p>Check <a href="https://mitofish.aori.u-tokyo.ac.jp/download/">Mitofish webpage</a> for the most recent database version number. Compare to the <code>projects/gmgi/databases/12S</code> folder. If needed, update Mitofish database:</p>
 <div class="highlight"><pre><span></span><code>## navigate to databases folder 
-cd /work/gmgi/databases/12S/Mitofish
+cd /projects/gmgi/databases/12S/Mitofish
 
 ## move old versions to archive folder
 mv Mitofish_v* archive/
@@ -1857,16 +1845,16 @@ rm mito-all*
 rm index*
 
 ## Activate conda environment
-source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
+source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 ## make NCBI db 
 makeblastdb -in Mitofish_v4.08.fasta -dbtype nucl -out Mitofish_v4.08.fasta -parse_seqids
 </code></pre></div>
 <h4 id="download-gmgi-12s">Download GMGI 12S</h4>
-<p>This is our in-house GMGI database that will include version numbers. Check <code>/work/gmgi/databases/12S/GMGI/</code> for current uploaded version number and check our Box folder for the most recent version number. </p>
-<p>On OOD portal, click the Interactive Apps dropdown. Select Home Directory under the HTML Viewer section. Navigate to the <code>/work/gmgi/databases/12S/GMGI/</code> folder. In the top right hand corner of the portal, select Upload and add the most recent .fasta file from our Box folder. </p>
+<p>This is our in-house GMGI database that will include version numbers. Check <code>/projects/gmgi/databases/12S/GMGI/</code> for current uploaded version number and check our Box folder for the most recent version number. </p>
+<p>On OOD portal, click the Interactive Apps dropdown. Select Home Directory under the HTML Viewer section. Navigate to the <code>/projects/gmgi/databases/12S/GMGI/</code> folder. In the top right hand corner of the portal, select Upload and add the most recent .fasta file from our Box folder. </p>
 <p>To create a blast db from this reference fasta file (if updated): </p>
-<div class="highlight"><pre><span></span><code>cd /work/gmgi/databases/12S/GMGI/ 
+<div class="highlight"><pre><span></span><code>cd /projects/gmgi/databases/12S/GMGI/ 
 
 ## make NCBI db 
 ## make sure fisheries_eDNA conda environment is activated 
@@ -1874,7 +1862,7 @@ makeblastdb -in Mitofish_v4.08.fasta -dbtype nucl -out Mitofish_v4.08.fasta -par
 makeblastdb -in GMGI_Vert_Ref_2024v1.fasta -dbtype nucl -out GMGI_Vert_Ref_2024v1.fasta
 </code></pre></div>
 <h3 id="running-taxonomic-id-script">Running taxonomic ID script</h3>
-<p>Download taxonkit to your home directory. You only need to do this once, otherwise the program is set-up and you can skip this step. Taxonkit program is in <code>/work/gmgi/databases/taxonkit</code> but the program needs required files to be in your home directory. </p>
+<p>Download taxonkit to your home directory. You only need to do this once, otherwise the program is set-up and you can skip this step. Taxonkit program is in <code>/projects/gmgi/databases/taxonkit</code> but the program needs required files to be in your home directory. </p>
 <div class="highlight"><pre><span></span><code># Move to home directory and download taxonomy information
 cd ~
 wget -c ftp://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz
@@ -1904,16 +1892,16 @@ cp names.dmp nodes.dmp delnodes.dmp merged.dmp $HOME/.taxonkit
 ## 1. Set paths for project; change db path if not 12S
 
 # Activate conda environment
-source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
+source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 # SET PATHS 
 ASV_fasta=&quot;&quot;
 out=&quot;&quot;
 
-gmgi=&quot;/work/gmgi/databases/12S/GMGI&quot;
-mito=&quot;/work/gmgi/databases/12S/Mitofish&quot;
-ncbi=&quot;/work/gmgi/databases/ncbi/nt&quot;
-taxonkit=&quot;/work/gmgi/databases/taxonkit&quot;
+gmgi=&quot;/projects/gmgi/databases/12S/GMGI&quot;
+mito=&quot;/projects/gmgi/databases/12S/Mitofish&quot;
+ncbi=&quot;/projects/gmgi/databases/ncbi/nt&quot;
+taxonkit=&quot;/projects/gmgi/databases/taxonkit&quot;
 
 #### DATABASE QUERY ####
 ### NCBI database 
