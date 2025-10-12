@@ -24,8 +24,6 @@ Typical project folder structure (once analysis is run) for Fisheries team. Crea
 blast  fastqc  metadata  multiqc_raw_data  multiqc_raw.html  raw_data  results  scripts
 ```
 
-### The NU cluster shifted from Discovery to Explorer. This document reflects the change from /work to /projects. NMC 7/11/2025
-
 ## Basics
 
 Create/edit a slurm script: `nano name.sh`  
@@ -38,7 +36,7 @@ The conda environment is started within each slurm script, but to activate conda
 
 ```
 # Activate conda
-source /projects/gmgi/miniconda3/bin/activate
+source /work/gmgi/miniconda3/bin/activate
 
 # Activate fisheries eDNA conda environment 
 conda activate fisheries_eDNA
@@ -78,7 +76,7 @@ Create slurm script: `nano 01-fastqc.sh`. Copy below script into file and save (
 ## 1. Set paths for your project
 
 # Activate conda environment
-source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
+source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 ## SET PATHS (USER EDITS)
 raw_path=""
@@ -132,7 +130,7 @@ Create slurm script: `nano 02-multiqc.sh`. Copy below script into file and save 
 ## 2. Optional: change file name (multiqc_raw.html) as desired
 
 # Activate conda environment
-source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
+source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 ## SET PATHS 
 ## fastqc_output = output from 01-fastqc.sh; fastqc program
@@ -159,9 +157,9 @@ bash 02-multiqc.sh
 
 NCBI is updated daily and therefore needs to be updated each time a project is analyzed. This is the not the most ideal method but we were struggling to get the `-remote` flag to work within slurm because I don't think NU slurm is connected to the internet? NU help desk was helping for awhile but we didn't get anywhere.
 
-Within `/projects/gmgi/databases/ncbi`, there is a `update_nt.sh` script with the following code. To run `sbatch update_nt.sh`. This won't take long as it will check for updates rather than re-downloading every time. 
+Within `/work/gmgi/databases/ncbi`, there is a `update_nt.sh` script with the following code. To run `sbatch update_nt.sh`. This won't take long as it will check for updates rather than re-downloading every time. 
 
-`/projects/gmgi/databases/ncbi/update_nt.sh` (this script is already in shared gmgi folder): 
+`/work/gmgi/databases/ncbi/update_nt.sh` (this script is already in shared gmgi folder): 
 
 ```
 #!/bin/bash
@@ -174,10 +172,10 @@ Within `/projects/gmgi/databases/ncbi`, there is a `update_nt.sh` script with th
 #SBATCH --error=%x_%j.err
 
 # Activate conda environment
-source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
+source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 # Create output directory if it doesn't exist
-cd /projects/gmgi/databases/ncbi/nt
+cd /work/gmgi/databases/ncbi/nt
 
 # Update BLAST nt database
 update_blastdb.pl --decompress nt
@@ -192,7 +190,7 @@ View the `update_ncbi_nt.out` file to confirm the echo printed at the end.
 
 ### Download Taxonkit 
 
-Download taxonkit to your home directory. **You only need to do this once**, otherwise the program is set-up and you can skip this step. Taxonkit program is in `/projects/gmgi/databases/taxonkit` but the program needs required files to be in your home directory.
+Download taxonkit to your home directory. **You only need to do this once**, otherwise the program is set-up and you can skip this step. Taxonkit program is in `/work/gmgi/databases/taxonkit` but the program needs required files to be in your home directory.
 
 ```
 # Move to home directory and download taxonomy information
@@ -220,7 +218,7 @@ Instructions to update:
 
 Open RStudio in NU Discovery Cluster OOD and run the following R script to update both the Global and Atlantic versions of MetaZooGene. User needs to update the file name in `base::write()` to reflect the correct version number. This script is very quick, plan for ~3-5 minutes total to run the script, change the version number, and confirm output. 
 
-Path to R script: `/projects/gmgi/databases/COI/MetaZooGene/MZG_to_DADA2.R` (this script is already in gmgi shared folder).
+Path to R script: `/work/gmgi/databases/COI/MetaZooGene/MZG_to_DADA2.R` (this script is already in gmgi shared folder).
 
 ```
 ## GLOBAL DB 
@@ -255,7 +253,7 @@ Edited_Global_MZG <- Global_MZG %>%
 
 # Write vector to fasta 
 ### USER TO CHANGE VERSION NUMBER
-Edited_Global_MZG %>% base::write("/projects/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_Global_modeA.fasta")
+Edited_Global_MZG %>% base::write("/work/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_Global_modeA.fasta")
   
 ## ATLANTIC DB
 
@@ -287,7 +285,7 @@ Edited_ATL_MZG <- ATL_MZG %>%
 
 # Write vector to fasta
 ### USER TO CHANGE VERSION NUMBER
-Edited_ATL_MZG %>% base::write("/projects/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_NorthAtlantic_modeA.fasta")
+Edited_ATL_MZG %>% base::write("/work/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_NorthAtlantic_modeA.fasta")
 ```
 
 ## Step 4: nf-core/ampliseq 
@@ -349,7 +347,7 @@ library(stringr)
 library(strex) 
 
 ### Read in sample sheet 
-sample_list <- read.delim2("/projects/gmgi/ecosystem-diversity/Gobler/COI/raw_data/rawdata", header=F) %>% 
+sample_list <- read.delim2("/work/gmgi/ecosystem-diversity/Gobler/COI/raw_data/rawdata", header=F) %>% 
   dplyr::rename(forwardReads = V1) %>%
   mutate(sampleID = str_after_nth(forwardReads, "data/", 1),
 
@@ -374,7 +372,7 @@ sample_list$reverseReads <- gsub("R1", "R2", sample_list$reverseReads)
 # rearranging columns 
 sample_list <- sample_list[,c(2,1,3)]
 
-sample_list %>% write.csv("/projects/gmgi/ecosystem-diversity/Gobler/COI/metadata/samplesheet.csv", 
+sample_list %>% write.csv("/work/gmgi/ecosystem-diversity/Gobler/COI/metadata/samplesheet.csv", 
                           row.names=FALSE, quote = FALSE)
 ```
 
@@ -408,15 +406,15 @@ module load singularity/3.10.3
 module load nextflow/23.10.1
 
 # SET PATHS (PROJECT SPECIFIC)
-metadata="/projects/gmgi/ecosystem-diversity/Gobler/COI/metadata" 
-output_dir="/prokects/gmgi/ecosystem-diversity/Gobler/COI/results_Global"
+metadata="/work/gmgi/ecosystem-diversity/Gobler/COI/metadata" 
+output_dir="/work/gmgi/ecosystem-diversity/Gobler/COI/results_Global"
 
 # SET PATHS (EDIT VERSION # ON MZG IF NEEDED)
-assignTaxonomy="/projects/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_Global_modeA.fasta"
+assignTaxonomy="/work/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_Global_modeA.fasta"
 taxlevels="Kingdom,Phylum,Subphylum,Superclass,Class,Subclass,Infraclass,Superorder,Order,Family,Genus,Species"
 
 nextflow run nf-core/ampliseq -resume \
-   -c /projects/gmgi/Fisheries/scripts/COI_ampliseq.config \
+   -c /work/gmgi/Fisheries/scripts/COI_ampliseq.config \
    -profile singularity \
    --input ${metadata}/samplesheet.csv \
    --FW_primer "GGWACWGGWTGAACWGTWTAYCCYCC" \
@@ -501,7 +499,7 @@ Create slurm script: `nano 05-blast_NCBI.sh`. Copy below script into file and sa
 ## 1. Set paths for project; change db path if not 12S
 
 # Activate conda environment
-source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
+source /work/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 # SET PATHS (PROJECT SPECIFIC)
 ## ASV fasta file path, excluding the file name (already included below)
@@ -509,8 +507,8 @@ ASV_fasta=""
 out=""
 
 # SET PATHS (NO EDITS)
-ncbi="/projects/gmgi/databases/ncbi/nt"
-taxonkit="/projects/gmgi/databases/taxonkit"
+ncbi="/work/gmgi/databases/ncbi/nt"
+taxonkit="/work/gmgi/databases/taxonkit"
 
 #### DATABASE QUERY ####
 ### NCBI database 
@@ -544,8 +542,8 @@ Create `05-blast_sort.R` and use RStudio interface on NU OOD to run this script 
 library(tidyverse)
 
 ### Load data: user edits project path
-NCBI_input="/projects/gmgi/ecosystem-diversity/Gobler/COI/blast/BLASTResults_NCBI.txt"
-TAXID_output="/projects/gmgi/ecosystem-diversity/Gobler/COI/blast/taxids.txt"
+NCBI_input="/work/gmgi/ecosystem-diversity/Gobler/COI/blast/BLASTResults_NCBI.txt"
+TAXID_output="/work/gmgi/ecosystem-diversity/Gobler/COI/blast/taxids.txt"
 
 blast <- read.table(NCBI_input, header=F,
                     col.names = c("ASV_ID", "sseqid", "sscinames", "staxid", "pident", "length", "mismatch",
@@ -592,11 +590,11 @@ Create slurm script: `nano 06-LCA.sh`. Copy below script into file and save (Ctr
 ## 1. Set paths for project 
 
 # SET PATHS (PROJECT SPECIFIC)
-taxid_list="/projects/gmgi/ecosystem-diversity/Gobler/COI/blast/taxids.txt"
-out="/projects/gmgi/ecosystem-diversity/Gobler/COI/blast"
+taxid_list="/work/gmgi/ecosystem-diversity/Gobler/COI/blast/taxids.txt"
+out="/work/gmgi/ecosystem-diversity/Gobler/COI/blast"
 
 # SET PATHS (NO EDITS)
-taxonkit="/projects/gmgi/databases/taxonkit"
+taxonkit="/work/gmgi/databases/taxonkit"
 
 ###################
 

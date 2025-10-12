@@ -125,14 +125,27 @@ multiqc_dir=""
 multiqc --interactive ${fastqc_output} -o ${multiqc_dir} --filename multiqc_raw.html
 ```
 
-This program is typically very quick, depending on the number of files per project, and can be run on an interactive node. 
+To run:  
+- `sbatch 00-multiqc.sh` 
+
+Notes:  
+
+- Depending on the number of files per project, multiqc can be quick to run without a slurm script. To do this, activate conda environment within a working node:
 
 ```
 # Use srun to claim a node
 srun --pty bash 
 
-# Run this script on that interactive node
-bash 00-multiqc.sh
+# Activate conda environment
+source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
+
+## SET PATHS 
+## fastqc_output = output from 00-fastqc.sh; fastqc program
+fastqc_output="" 
+multiqc_dir="" 
+
+## RUN MULTIQC 
+multiqc --interactive ${fastqc_output} -o ${multiqc_dir} --filename multiqc_raw.html
 ```
 
 ## Step 4: nf-core/ampliseq 
@@ -279,8 +292,6 @@ nextflow run nf-core/ampliseq -resume \
 
 To run:   
 - `sbatch 01b-ampliseq.sh` 
-
-Discovery needs `module load singularity/3.10.3 and module load nextflow/24.04.4`, but on Explorer this is just `module load nextflow/24.10.3`.  
 
 MiFish amplifies a longer target region which requires 2x250 bp sequencing (500 cycle kit). Thus following edits are required if using MiFish primers:  
 - F/R primer correct sequences   
