@@ -57,7 +57,7 @@ nav:
     - 00-Create-conda-env: '00-creating_eDNA_conda_env.md'
     - 01-ampliseq-COI: 'eDNA COI metab/01-Metabarcoding ampliseq COI.md'
   - 'eDNA: qPCR':
-    - 01-dfprep-analysis: 'eDNA qPCR/qPCR_analysis.md'
+    - 01-dfprep-analysis: 'eDNA qPCR/qPCR-analysis-template.md'
   - 'Population Genomics':
     - coming soon!: 'PopGen/eDNA_01.md'
   - 'Epigenetic Aging':
