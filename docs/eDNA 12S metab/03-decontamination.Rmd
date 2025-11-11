@@ -150,7 +150,7 @@ ggsave("example_output/Figures/Filtering_subsample_before_after.png", combined_p
 ```
 
 
-### Microdecon 
+## Microdecon 
 
 https://github.com/donaldtmcknight/microDecon
 

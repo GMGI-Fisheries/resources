@@ -227,7 +227,7 @@ combined_plot <- total_presub + total_after_sub + plot_layout(ncol = 2)
 ggsave("example_output/Figures/Filtering_subsample_before_after.png", combined_plot, width = 10, height = 5, dpi = 300)
 ```
 
-### Microdecon
+## Microdecon
 
 <https://github.com/donaldtmcknight/microDecon>
 
