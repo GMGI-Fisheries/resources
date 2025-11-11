@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../01-Metabarcoding%20ampliseq%2012S%20Riaz/">
+        <link rel="prev" href="../01-Metabarcoding%20ampliseq_12S_Riaz/">
       
       
-        <link rel="next" href="../03-data_quality/">
+        <link rel="next" href="../03-decontamination/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -642,7 +642,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../01-Metabarcoding%20ampliseq%2012S%20Riaz/" class="md-nav__link">
+      <a href="../01-Metabarcoding%20ampliseq_12S_Riaz/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1012,11 +1012,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../03-data_quality/" class="md-nav__link">
+      <a href="../03-decontamination/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    03-data-quality
+    03-decontamination
   </span>
   
 
@@ -1033,11 +1033,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../04-relative_abundance_heatmap/" class="md-nav__link">
+      <a href="../04-report_generation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    04-relative-abund-heatmap
+    04-report_generation
   </span>
   
 
@@ -1054,11 +1054,32 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-biodiversity/" class="md-nav__link">
+      <a href="../../eDNA 12S metab/05-phyloseq.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    05-biodiversity
+    05-phyloseq
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../eDNA 12S metab/06-heatmap.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    06-heatmap
   </span>
   
 
@@ -1951,17 +1972,17 @@ directory to the Rproject directory, select ‘Knit’ and ‘Knit Directory’
 <span class="n">path_choice_required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_output/Taxonomic_assignments/Choice_required_GMGI_multiplehits.xlsx&quot;</span>
 <span class="n">path_choice_required_edited</span><span class="o">=</span><span class="s">&quot;example_output/Taxonomic_assignments/Choice_required_GMGI_multiplehits_edited.xlsx&quot;</span>
 
-<span class="n">path_disagree_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_output/Taxonomic_assignments/SampleReport_taxonomic_ID.xlsx&quot;</span>
-<span class="n">path_disagree_list_edited</span><span class="o">=</span><span class="s">&quot;example_output/Taxonomic_assignments/SampleReport_taxonomic_ID_edited.xlsx&quot;</span>
+<span class="n">path_disagree_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_output/Taxonomic_assignments/Three_DB_comparison_taxonomic_ID.xlsx&quot;</span>
+<span class="n">path_disagree_list_edited</span><span class="o">=</span><span class="s">&quot;example_output/Taxonomic_assignments/Three_DB_comparison_taxonomic_ID_edited.xlsx&quot;</span>
 
 <span class="n">path_commonnames_add</span><span class="o">=</span><span class="s">&quot;example_output/Taxonomic_assignments/CommonNames_required.xlsx&quot;</span>
 <span class="n">path_commonnames_add_edited</span><span class="o">=</span><span class="s">&quot;example_output/Taxonomic_assignments/CommonNames_required_edited.xlsx&quot;</span>
 
 <span class="c1">#### RESULTS MATRICES </span>
-<span class="n">results_rawreads_matrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_output/Results_1_rawreads_matrix.xlsx&quot;</span>
-<span class="n">results_rawreads_long</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_output/Results_rawreads_long_format.xlsx&quot;</span>
-<span class="n">results_relab_matrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_output/Results_2_relative_abundance_matrix.xlsx&quot;</span>
-<span class="n">results_relab_long</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_output/Results_relative_abundance_long_format.xlsx&quot;</span>
+<span class="n">results_rawreads_matrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_output/Results_initial/Results_rawreads_matrix.xlsx&quot;</span>
+<span class="n">results_rawreads_long</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_output/Results_initial/Results_rawreads_long_format.xlsx&quot;</span>
+<span class="n">results_relab_matrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_output/Results_initial/Results_relative_abundance_matrix.xlsx&quot;</span>
+<span class="n">results_relab_long</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_output/Results_initial/Results_relative_abundance_long_format.xlsx&quot;</span>
 
 <span class="n">reads_filtered_percent_out</span><span class="o">=</span><span class="s">&quot;example_output/Filtering_Percent_removed_reads.xlsx&quot;</span>
 <span class="n">reads_filtered10_out</span><span class="o">=</span><span class="s">&quot;example_output/Filtering_10_removed_reads.xlsx&quot;</span>

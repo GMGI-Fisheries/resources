@@ -1,0 +1,2013 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../00-creating_eDNA_conda_env/">
+      
+      
+        <link rel="next" href="../02-datatable_prep_12S_Riaz/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.37">
+    
+    
+      
+        <title>01-ampliseq-12S - GMGI Fisheries Handbook</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#metabarcoding-workflow-for-12s-amplicon-sequencing-with-riaz-primers" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="GMGI Fisheries Handbook" class="md-header__button md-logo" aria-label="GMGI Fisheries Handbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            GMGI Fisheries Handbook
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              01-ampliseq-12S
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/GMGI-Fisheries/resources" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="GMGI Fisheries Handbook" class="md-nav__button md-logo" aria-label="GMGI Fisheries Handbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    GMGI Fisheries Handbook
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/GMGI-Fisheries/resources" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Computing Hardware
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Computing Hardware
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Computing_GMGI/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GMGI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Computing_NU/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Northeastern University
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Management/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Data Management
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_To_Server/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Data Transfer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Computing Resources
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Computing Resources
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Computing_Begin_Resources/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Basics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data%20Visualization%20in%20R/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    R Resources
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tbd.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Intro to Github
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Introduction%20to%20HPC/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Intro to HPC
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Intro to Conda
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Introduction%20to%20Containers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Intro to Containers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Introduction%20to%20Workflow%20Managers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Intro to Workflow Managers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    eDNA: 12S metabarcoding
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            eDNA: 12S metabarcoding
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-creating_eDNA_conda_env/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    00-Create-conda-env
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    01-ampliseq-12S
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    01-ampliseq-12S
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-confirm-conda-environment-is-available-and-activate" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Confirm conda environment is available and activate
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-assess-quality-of-raw-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Assess quality of raw data
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-visualize-quality-of-raw-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: Visualize quality of raw data
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-nf-coreampliseq" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 4: nf-core/ampliseq
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: nf-core/ampliseq">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#12s-primer-sequences-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      12S primer sequences (required)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metadata-sheet-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metadata sheet (optional)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-samplesheet-sheet-for-ampliseq" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create samplesheet sheet for ampliseq
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-nf-coreampliseq-cutadapt-dada2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run nf-core/ampliseq (Cutadapt &amp; DADA2)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Run nf-core/ampliseq (Cutadapt & DADA2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#files-generated-by-ampliseq" class="md-nav__link">
+    <span class="md-ellipsis">
+      Files generated by ampliseq
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-blast-asv-sequences-output-from-dada2-against-our-3-databases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 5: Blast ASV sequences (output from DADA2) against our 3 databases
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Blast ASV sequences (output from DADA2) against our 3 databases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#populating-projectsgmgidatabases-folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      Populating /projects/gmgi/databases folder
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Populating /projects/gmgi/databases folder">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download-andor-update-nbci-blast-nt-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      Download and/or update NBCI blast nt database
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#download-andor-update-mitofish-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      Download and/or update Mitofish database
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#download-gmgi-12s" class="md-nav__link">
+    <span class="md-ellipsis">
+      Download GMGI 12S
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-taxonomic-id-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running taxonomic ID script
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-datatable_prep_12S_Riaz/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    02-dfprep-12S
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-decontamination/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    03-decontamination
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-report_generation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    04-report_generation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../eDNA 12S metab/05-phyloseq.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    05-phyloseq
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../eDNA 12S metab/06-heatmap.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    06-heatmap
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    eDNA: COI metabarcoding
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            eDNA: COI metabarcoding
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-creating_eDNA_conda_env/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    00-Create-conda-env
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../eDNA%20COI%20metab/01-Metabarcoding%20ampliseq%20COI/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    01-ampliseq-COI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    eDNA: qPCR
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            eDNA: qPCR
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../eDNA%20qPCR/qPCR-analysis-template/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    01-dfprep-analysis
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Population Genomics
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Population Genomics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PopGen/eDNA_01/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    coming soon!
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Epigenetic Aging
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Epigenetic Aging
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../EpiAge/eDNA_01.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    coming soon!
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Genome Assembly
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            Genome Assembly
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tbd.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    coming soon!
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-confirm-conda-environment-is-available-and-activate" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Confirm conda environment is available and activate
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-assess-quality-of-raw-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Assess quality of raw data
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-visualize-quality-of-raw-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: Visualize quality of raw data
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-nf-coreampliseq" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 4: nf-core/ampliseq
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: nf-core/ampliseq">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#12s-primer-sequences-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      12S primer sequences (required)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metadata-sheet-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metadata sheet (optional)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-samplesheet-sheet-for-ampliseq" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create samplesheet sheet for ampliseq
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-nf-coreampliseq-cutadapt-dada2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run nf-core/ampliseq (Cutadapt &amp; DADA2)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Run nf-core/ampliseq (Cutadapt & DADA2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#files-generated-by-ampliseq" class="md-nav__link">
+    <span class="md-ellipsis">
+      Files generated by ampliseq
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-blast-asv-sequences-output-from-dada2-against-our-3-databases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 5: Blast ASV sequences (output from DADA2) against our 3 databases
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Blast ASV sequences (output from DADA2) against our 3 databases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#populating-projectsgmgidatabases-folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      Populating /projects/gmgi/databases folder
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Populating /projects/gmgi/databases folder">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download-andor-update-nbci-blast-nt-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      Download and/or update NBCI blast nt database
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#download-andor-update-mitofish-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      Download and/or update Mitofish database
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#download-gmgi-12s" class="md-nav__link">
+    <span class="md-ellipsis">
+      Download GMGI 12S
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-taxonomic-id-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running taxonomic ID script
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/GMGI-Fisheries/resources/blob/master/docs/eDNA 12S metab/01-Metabarcoding ampliseq_12S_Riaz.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="metabarcoding-workflow-for-12s-amplicon-sequencing-with-riaz-primers">Metabarcoding workflow for 12S amplicon sequencing with Riaz primers</h1>
+<p><em>page details in progress.</em> </p>
+<p>The 12S rRNA gene region of the mitogenome is ~950 bp. There are two popular primer sets to amplify two different regions of 12S: Riaz and MiFish. The following workflow includes script specific to the <strong>Riaz</strong> primer set, but includes some notes on the MiFish U/E primer set. </p>
+<p>The NU cluster shifted from Discovery to Explorer. This script reflects the change from <code>/work</code> to <code>/projects</code>. NMC 7/11/2025 </p>
+<p><img alt="" src="https://th.bing.com/th/id/OIP.EbXPYETYLBPEymNEIVEGLQHaCc?rs=1&amp;pid=ImgDetMain" /></p>
+<p>Riaz ecoPrimers citation: <a href="https://academic.oup.com/nar/article/39/21/e145/1105558">Riaz et al. 2011</a><br />
+MiFish citation: <a href="https://royalsocietypublishing.org/doi/full/10.1098/rsos.150088">Miya et al. 2015</a></p>
+<p>Workflow done on HPC. Scripts to run: </p>
+<ol>
+<li>00-fastqc.sh   </li>
+<li>00-multiqc.sh  </li>
+<li>01a-metadata.R</li>
+<li>01b-ampliseq.sh</li>
+<li>02-taxonomicID.sh  </li>
+</ol>
+<h2 id="step-1-confirm-conda-environment-is-available-and-activate">Step 1: Confirm conda environment is available and activate</h2>
+<p>The conda environment is started within each slurm script, but to activate conda environment outside of the slurm script to update packages or check what is installed:</p>
+<div class="highlight"><pre><span></span><code># Activate fisheries eDNA conda environment 
+source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
+
+# List all available environments 
+conda env list 
+
+# List all packages installed in fisheries_eDNA
+conda list 
+
+# Update a package
+conda update [package name]
+
+# Update nextflow ampliseq workflow 
+nextflow pull nf-core/ampliseq
+</code></pre></div>
+<h2 id="step-2-assess-quality-of-raw-data">Step 2: Assess quality of raw data</h2>
+<p>Background information on <a href="https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon-flipped/lessons/05_qc_running_fastqc_interactively.html">FASTQC</a>. </p>
+<p><code>00-fastqc.sh</code>: </p>
+<div class="highlight"><pre><span></span><code>#!/bin/bash
+#SBATCH --error=output/fastqc_output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
+#SBATCH --output=output/fastqc_output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=20:00:00
+#SBATCH --job-name=fastqc
+#SBATCH --mem=3GB
+#SBATCH --ntasks=24
+#SBATCH --cpus-per-task=2
+
+### USER TO-DO ### 
+## 1. Set paths for your project
+
+# Activate conda environment
+source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
+
+## SET PATHS 
+raw_path=&quot;&quot;
+out_dir=&quot;&quot;
+
+## CREATE SAMPLE LIST FOR SLURM ARRAY
+### 1. Create list of all .gz files in raw data path
+ls -d ${raw_path}/*.gz &gt; ${raw_path}/rawdata
+
+### 2. Create a list of filenames based on that list created in step 1
+mapfile -t FILENAMES &lt; ${raw_path}/rawdata
+
+### 3. Create variable i that will assign each row of FILENAMES to a task ID
+i=${FILENAMES[$SLURM_ARRAY_TASK_ID]}
+
+## RUN FASTQC PROGRAM 
+fastqc ${i} --outdir ${out_dir}
+</code></pre></div>
+<p>To run:  <br />
+- Start slurm array with file 0 (e.g., with 138 files) = <code>sbatch --array=0-137 00-fastqc.sh</code>.</p>
+<p>Notes:  </p>
+<ul>
+<li>This is going to output <em>many</em> error and output files. After job completes, use <code>cat *output.* &gt; ../fastqc_output.txt</code> to create one file with all the output and <code>cat *error.* &gt; ../fastqc_error.txt</code> to create one file with all of the error message outputs. </li>
+<li>Within the <code>out_dir</code> output folder, use <code>ls *html | wc</code> to count the number of html output files (1st/2nd column values). This should be equal to the --array range used and the number of raw data files. If not, the script missed some input files so address this before moving on.  </li>
+</ul>
+<h2 id="step-3-visualize-quality-of-raw-data">Step 3: Visualize quality of raw data</h2>
+<p>Background information on <a href="https://multiqc.info/docs/#:~:text=MultiQC%20is%20a%20reporting%20tool%20that%20parses%20results,experiments%20containing%20multiple%20samples%20and%20multiple%20analysis%20steps">MULTIQC</a>.</p>
+<p><code>00-multiqc.sh</code> </p>
+<div class="highlight"><pre><span></span><code>#!/bin/bash
+#SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
+#SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=10:00:00
+#SBATCH --job-name=multiqc
+#SBATCH --mem=8GB
+#SBATCH --ntasks=24
+#SBATCH --cpus-per-task=2
+
+### USER TO-DO ### 
+## 1. Set paths for your project
+## 2. Optional: change file name (multiqc_raw.html) as desired
+
+# Activate conda environment
+source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
+
+## SET PATHS 
+## fastqc_output = output from 00-fastqc.sh; fastqc program
+fastqc_output=&quot;&quot; 
+multiqc_dir=&quot;&quot; 
+
+## RUN MULTIQC 
+multiqc --interactive ${fastqc_output} -o ${multiqc_dir} --filename multiqc_raw.html
+</code></pre></div>
+<p>This program is typically very quick, depending on the number of files per project, and can be run on an interactive node. </p>
+<div class="highlight"><pre><span></span><code># Use srun to claim a node
+srun --pty bash 
+
+# Run this script on that interactive node
+bash 00-multiqc.sh
+</code></pre></div>
+<h2 id="step-4-nf-coreampliseq">Step 4: nf-core/ampliseq</h2>
+<p><a href="https://nf-co.re/">Nf-core</a>: A community effort to collect a curated set of analysis pipelines built using <a href="https://www.nextflow.io/">Nextflow</a>.<br />
+Nextflow: scalable and reproducible scientific workflows using software containers, used to build wrapper programs like the one we use here.  </p>
+<p>[https://nf-co.re/ampliseq/2.11.0]: nfcore/ampliseq is a bioinformatics analysis pipeline used for amplicon sequencing, supporting denoising of any amplicon and supports a variety of taxonomic databases for taxonomic assignment including 16S, ITS, CO1 and 18S. </p>
+<p><img alt="" src="https://raw.githubusercontent.com/nf-core/ampliseq/2.11.0//docs/images/ampliseq_workflow.png" /></p>
+<p>We use ampliseq for the following programs:  </p>
+<ul>
+<li><a href="https://journal.embnet.org/index.php/embnetjournal/article/view/200">Cutadapt</a> is trimming primer sequences from sequencing reads. Primer sequences are non-biological sequences that often introduce point mutations that do not reflect sample sequences. This is especially true for degenerated PCR primer. If primer trimming would be omitted, artifactual amplicon sequence variants might be computed by the denoising tool or sequences might be lost due to become labelled as PCR chimera.  </li>
+<li><a href="https://www.nature.com/articles/nmeth.3869">DADA2</a> performs fast and accurate sample inference from amplicon data with single-nucleotide resolution. It infers exact amplicon sequence variants (ASVs) from amplicon data with fewer false positives than many other methods while maintaining high sensitivity.  </li>
+</ul>
+<p>We skip the taxonomic assignment because we use 3-db approach described in the next section. </p>
+<h3 id="12s-primer-sequences-required">12S primer sequences (required)</h3>
+<p>Below is what we used for 12S amplicon sequencing. Ampliseq will automatically calculate the reverse compliment and include this for us.</p>
+<p>Riaz 12S amplicon F Original: ACTGGGATTAGATACCCC<br />
+Riaz 12S amplicon F Degenerate: ACTGGGATTAGATACCCY   <br />
+Riaz 12S amplicon R: TAGAACAGGCTCCTCTAG     </p>
+<p>MiFish primer set: </p>
+<p>MiFish-U 12S amplicon F: GTCGGTAAAACTCGTGCCAGC<br />
+MiFish-U 12S amplicon R: CATAGTGGGGTATCTAATCCCAGTTTG       </p>
+<p>MiFish-E 12S amplicon F: GTTGGTAAATCTCGTGCCAGC  <br />
+MiFish-E 12S amplicon R: CATAGTGGGGTATCTAATCCTAGTTTG    </p>
+<h3 id="metadata-sheet-optional">Metadata sheet (optional)</h3>
+<p>The metadata file has to follow the <a href="https://docs.qiime2.org/2021.2/tutorials/metadata/">QIIME2 specifications</a>. Below is a preview of the sample sheet used for this test. Keep the column headers the same for future use. The first column needs to be "ID" and can only contain numbers, letters, or "-". This is different than the sample sheet. NAs should be empty cells rather than "NA". </p>
+<h3 id="create-samplesheet-sheet-for-ampliseq">Create samplesheet sheet for ampliseq</h3>
+<p>This file indicates the sample ID and the path to R1 and R2 files. Below is a preview of the sample sheet used in this test. File created on RStudio Interactive on Discovery Cluster using (<code>create_metadatasheets.R</code>).  </p>
+<ul>
+<li>sampleID (required): Unique sample IDs, must start with a letter, and can only contain letters, numbers or underscores (no hyphons!).  </li>
+<li>forwardReads (required): Paths to (forward) reads zipped FastQ files  </li>
+<li>reverseReads (optional): Paths to reverse reads zipped FastQ files, required if the data is paired-end  </li>
+<li>run (optional): If the data was produced by multiple sequencing runs, any string  </li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>sampleID</th>
+<th>forwardReads</th>
+<th>reverseReads</th>
+<th>run</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sample1</td>
+<td>./data/S1_R1_001.fastq.gz</td>
+<td>./data/S1_R2_001.fastq.gz</td>
+<td>A</td>
+</tr>
+<tr>
+<td>sample2</td>
+<td>./data/S2_fw.fastq.gz</td>
+<td>./data/S2_rv.fastq.gz</td>
+<td>A</td>
+</tr>
+<tr>
+<td>sample3</td>
+<td>./S4x.fastq.gz</td>
+<td>./S4y.fastq.gz</td>
+<td>B</td>
+</tr>
+<tr>
+<td>sample4</td>
+<td>./a.fastq.gz</td>
+<td>./b.fastq.gz</td>
+<td>B</td>
+</tr>
+</tbody>
+</table>
+<p><em>This is an R script, not slurm script. Open RStudio interactive on Discovery Cluster to run this script.</em></p>
+<p>Prior to running R script, use the <code>rawdata</code> file created for the fastqc slurm array from within the raw data folder to create a list of files. Below is an example from our Offshore Wind project but the specifics of the sampleID will be project dependent. This project had four sequencing runs with different file names. </p>
+<p><code>01a-metadata.R</code></p>
+<div class="highlight"><pre><span></span><code>## Load libraries 
+
+library(dplyr)
+library(stringr)
+library(strex) 
+
+### Read in sample sheet 
+
+sample_list &lt;- read.delim2(&quot;/projects/gmgi/Fisheries/eDNA/offshore_wind2023/raw_data/rawdata&quot;, header=F) %&gt;% 
+  dplyr::rename(forwardReads = V1) %&gt;%
+  mutate(sampleID = str_after_nth(forwardReads, &quot;data/&quot;, 1),
+         sampleID = str_before_nth(sampleID, &quot;_S&quot;, 1))
+
+# creating sample ID 
+sample_list$sampleID &lt;- gsub(&quot;-&quot;, &quot;_&quot;, sample_list$sampleID)
+
+# keeping only rows with R1
+sample_list &lt;- filter(sample_list, grepl(&quot;R1&quot;, forwardReads, ignore.case = TRUE))
+
+# duplicating column 
+sample_list$reverseReads &lt;- sample_list$forwardReads
+
+# replacing R1 with R2 in only one column 
+sample_list$reverseReads &lt;- gsub(&quot;R1&quot;, &quot;R2&quot;, sample_list$reverseReads)
+
+# rearranging columns 
+sample_list &lt;- sample_list[,c(2,1,3)]
+
+sample_list %&gt;% write.csv(&quot;/projects/gmgi/Fisheries/eDNA/offshore_wind2023/metadata/samplesheet.csv&quot;, 
+                          row.names=FALSE, quote = FALSE)
+</code></pre></div>
+<h3 id="run-nf-coreampliseq-cutadapt-dada2">Run nf-core/ampliseq (Cutadapt &amp; DADA2)</h3>
+<p>Update ampliseq workflow if needed: <code>nextflow pull nf-core/ampliseq</code>. </p>
+<p>Below script is set for Riaz primers:</p>
+<p><code>01b-ampliseq.sh</code>:</p>
+<div class="highlight"><pre><span></span><code>#!/bin/bash
+#SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
+#SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=20:00:00
+#SBATCH --job-name=ampliseq
+#SBATCH --mem=70GB
+#SBATCH --ntasks=24
+#SBATCH --cpus-per-task=2
+
+### USER TO-DO ### 
+## 1. Set paths for project 
+## 2. Adjust SBATCH options above (time, mem, ntasks, etc.) as desired  
+## 3. Fill in F primer information based on primer type (no reverse compliment needed)
+## 4. Adjust parameters as needed (below is Fisheries team default for 12S)
+
+# LOAD MODULES
+module load nextflow/24.10.3
+
+# SET PATHS 
+metadata=&quot;&quot; 
+output_dir=&quot;&quot;
+
+nextflow run nf-core/ampliseq -resume \
+   -profile singularity \
+   --input ${metadata}/samplesheet.csv \
+   --FW_primer &quot;&quot; \
+   --RV_primer &quot;TAGAACAGGCTCCTCTAG&quot; \
+   --outdir ${output_dir} \
+   --trunclenf 100 \
+   --trunclenr 100 \
+   --trunc_qmin 25 \
+   --max_len 200 \
+   --max_ee 2 \
+   --min_len_asv 80 \
+   --max_len_asv 115 \
+   --sample_inference pseudo \
+   --skip_taxonomy \
+   --ignore_failed_trimming
+</code></pre></div>
+<p>To run: <br />
+- <code>sbatch 01b-ampliseq.sh</code> </p>
+<p>Discovery needs <code>module load singularity/3.10.3 and module load nextflow/24.04.4</code>, but on Explorer this is just <code>module load nextflow/24.10.3</code>.  </p>
+<p>MiFish amplifies a longer target region which requires 2x250 bp sequencing (500 cycle kit). Thus following edits are required if using MiFish primers:<br />
+- F/R primer correct sequences <br />
+- Edit <code>--min_len_asv</code>, <code>--max_len_asv</code> to reflect the correct target region length  <br />
+- Edit <code>--trunclenf</code>, <code>--trunclenr</code>, <code>--max_len</code> to reflect correct trimming length for longer reads  </p>
+<h4 id="files-generated-by-ampliseq">Files generated by ampliseq</h4>
+<p>Pipeline summary reports:  </p>
+<ul>
+<li><code>summary_report/</code></li>
+<li><code>summary_report.html</code>: pipeline summary report as standalone HTML file that can be viewed in your web browser.</li>
+<li><code>*.svg*</code>: plots that were produced for (and are included in) the report.</li>
+<li><code>versions.yml</code>: software versions used to produce this report.</li>
+</ul>
+<p>Preprocessing:  </p>
+<ul>
+<li>FastQC: <code>fastqc/</code> and <code>*_fastqc.html</code>: FastQC report containing quality metrics for your untrimmed raw fastq files.  </li>
+<li>Cutadapt: <code>cutadapt/</code> and <code>cutadapt_summary.tsv</code>: summary of read numbers that pass cutadapt  </li>
+<li>MultiQC: <code>multiqc</code>, <code>multiqc_data/</code>, <code>multiqc_plots/</code> with <code>multiqc_report.html</code>: a standalone HTML file that can be viewed in your web browser; </li>
+</ul>
+<p>ASV inferrence with DADA2:  </p>
+<ul>
+<li><code>dada2/</code>, <code>dada2/args/</code>, <code>data2/log/</code> </li>
+<li><code>ASV_seqs.fasta</code>: Fasta file with ASV sequences.</li>
+<li><code>ASV_table.tsv</code>: Counts for each ASV sequence.</li>
+<li><code>DADA2_stats.tsv</code>: Tracking read numbers through DADA2 processing steps, for each sample.</li>
+<li><code>DADA2_table.rds</code>: DADA2 ASV table as R object.</li>
+<li><code>DADA2_table.tsv</code>: DADA2 ASV table.  </li>
+<li><code>dada2/QC/</code></li>
+<li><code>*.err.convergence.txt</code>: Convergence values for DADA2's dada command, should reduce over several magnitudes and approaching 0.  </li>
+<li><code>*.err.pdf</code>: Estimated error rates for each possible transition. The black line shows the estimated error rates after convergence of the machine-learning algorithm. The red line shows the error rates expected under the nominal definition of the Q-score. The estimated error rates (black line) should be a good fit to the observed rates (points), and the error rates should drop with increased quality.  </li>
+<li><code>*_qual_stats.pdf</code>: Overall read quality profiles: heat map of the frequency of each quality score at each base position. The mean quality score at each position is shown by the green line, and the quartiles of the quality score distribution by the orange lines. The red line shows the scaled proportion of reads that extend to at least that position.  </li>
+<li><code>*_preprocessed_qual_stats.pdf</code>: Same as above, but after preprocessing.  </li>
+</ul>
+<p>We add an ASV length filter that will output <code>asv_length_filter/</code> with:  </p>
+<ul>
+<li><code>ASV_seqs.len.fasta</code>: Fasta file with filtered ASV sequences.  </li>
+<li><code>ASV_table.len.tsv</code>: Counts for each filtered ASV sequence.  </li>
+<li><code>ASV_len_orig.tsv</code>: ASV length distribution before filtering.  </li>
+<li><code>ASV_len_filt.tsv</code>: ASV length distribution after filtering.  </li>
+<li><code>stats.len.tsv</code>: Tracking read numbers through filtering, for each sample.  </li>
+</ul>
+<h2 id="step-5-blast-asv-sequences-output-from-dada2-against-our-3-databases">Step 5: Blast ASV sequences (output from DADA2) against our 3 databases</h2>
+<p><em>Note that the GMGI-12S database will not apply to the MiFish primer sets so only Mitofish and NCBI are required.</em> </p>
+<h3 id="populating-projectsgmgidatabases-folder">Populating /projects/gmgi/databases folder</h3>
+<p>We use NCBI, Mitofish, and GMGI-12S databases. </p>
+<h4 id="download-andor-update-nbci-blast-nt-database">Download and/or update NBCI blast nt database</h4>
+<p>NCBI is updated daily and therefore needs to be updated each time a project is analyzed. This is the not the most ideal method but we were struggling to get the <code>-remote</code> flag to work within slurm because I don't think NU slurm is connected to the internet? NU help desk was helping for awhile but we didn't get anywhere.</p>
+<p>Within <code>/projects/gmgi/databases/ncbi</code>, there is a <code>update_nt.sh</code> script with the following code. To run <code>sbatch update_nt.sh</code>. This won't take long as it will check for updates rather than re-downloading every time. </p>
+<div class="highlight"><pre><span></span><code>#!/bin/bash
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=24:00:00
+#SBATCH --job-name=update_ncbi_nt
+#SBATCH --mem=50G
+#SBATCH --output=%x_%j.out
+#SBATCH --error=%x_%j.err
+
+# Activate conda environment
+source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
+
+# Create output directory if it doesn&#39;t exist
+cd /projects/gmgi/databases/ncbi/nt
+
+# Update BLAST nt database
+update_blastdb.pl --decompress nt
+
+# Print completion message
+echo &quot;BLAST nt database update completed&quot;
+</code></pre></div>
+<p>View the <code>update_ncbi_nt.out</code> file to confirm the echo printed at the end.</p>
+<h4 id="download-andor-update-mitofish-database">Download and/or update Mitofish database</h4>
+<p>Check <a href="https://mitofish.aori.u-tokyo.ac.jp/download/">Mitofish webpage</a> for the most recent database version number. Compare to the <code>projects/gmgi/databases/12S</code> folder. If needed, update Mitofish database:</p>
+<div class="highlight"><pre><span></span><code>## navigate to databases folder 
+cd /projects/gmgi/databases/12S/Mitofish
+
+## move old versions to archive folder
+mv Mitofish_v* archive/
+
+## download db 
+wget https://mitofish.aori.u-tokyo.ac.jp/species/detail/download/?filename=download%2F/complete_partial_mitogenomes.zip  
+
+## unzip db
+unzip &#39;index.html?filename=download%2F%2Fcomplete_partial_mitogenomes.zip&#39;
+
+## clean headers; change version number in the file name 
+awk &#39;/^&gt;/ {print $1} !/^&gt;/ {print}&#39; mito-all &gt; Mitofish_v4.08.fasta
+
+## confirm headers are in format as epxected 
+head Mitofish_v4.05.fasta
+
+## remove excess files 
+rm mito-all* 
+rm index*
+
+## Activate conda environment
+source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
+
+## make NCBI db 
+makeblastdb -in Mitofish_v4.08.fasta -dbtype nucl -out Mitofish_v4.08.fasta -parse_seqids
+</code></pre></div>
+<h4 id="download-gmgi-12s">Download GMGI 12S</h4>
+<p>This is our in-house GMGI database that will include version numbers. Check <code>/projects/gmgi/databases/12S/GMGI/</code> for current uploaded version number and check our Box folder for the most recent version number. </p>
+<p>On OOD portal, click the Interactive Apps dropdown. Select Home Directory under the HTML Viewer section. Navigate to the <code>/projects/gmgi/databases/12S/GMGI/</code> folder. In the top right hand corner of the portal, select Upload and add the most recent .fasta file from our Box folder. </p>
+<p>To create a blast db from this reference fasta file (if updated): </p>
+<div class="highlight"><pre><span></span><code>cd /projects/gmgi/databases/12S/GMGI/ 
+
+## make NCBI db 
+## make sure fisheries_eDNA conda environment is activated 
+### CHANGE THE VERSION NUMBER BELOW TO LATEST
+makeblastdb -in GMGI_Vert_Ref_2024v1.fasta -dbtype nucl -out GMGI_Vert_Ref_2024v1.fasta
+</code></pre></div>
+<h3 id="running-taxonomic-id-script">Running taxonomic ID script</h3>
+<p>Download taxonkit to your home directory. You only need to do this once, otherwise the program is set-up and you can skip this step. Taxonkit program is in <code>/projects/gmgi/databases/taxonkit</code> but the program needs required files to be in your home directory. </p>
+<div class="highlight"><pre><span></span><code># Move to home directory and download taxonomy information
+cd ~
+wget -c ftp://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz
+
+# Extract the downloaded file
+tar -zxvf taxdump.tar.gz
+
+# Create the TaxonKit data directory 
+mkdir -p $HOME/.taxonkit
+
+# Copy the required files to the TaxonKit data directory
+cp names.dmp nodes.dmp delnodes.dmp merged.dmp $HOME/.taxonkit
+</code></pre></div>
+<p><code>02-taxonomicID.sh</code>: </p>
+<div class="highlight"><pre><span></span><code>#!/bin/bash
+#SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
+#SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=20:00:00
+#SBATCH --job-name=tax_ID
+#SBATCH --mem=30GB
+#SBATCH --ntasks=24
+#SBATCH --cpus-per-task=2
+
+### USER TO-DO ### 
+## 1. Set paths for project; change db path if not 12S
+
+# Activate conda environment
+source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
+
+# SET PATHS 
+ASV_fasta=&quot;&quot;
+out=&quot;&quot;
+
+gmgi=&quot;/projects/gmgi/databases/12S/GMGI&quot;
+mito=&quot;/projects/gmgi/databases/12S/Mitofish&quot;
+ncbi=&quot;/projects/gmgi/databases/ncbi/nt&quot;
+taxonkit=&quot;/projects/gmgi/databases/taxonkit&quot;
+
+#### DATABASE QUERY ####
+### NCBI database 
+blastn -db ${ncbi}/&quot;nt&quot; \
+   -query ${ASV_fasta}/ASV_seqs.len.fasta \
+   -out ${out}/BLASTResults_NCBI.txt \
+   -max_target_seqs 10 -perc_identity 100 -qcov_hsp_perc 95 \
+   -outfmt &#39;6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore&#39;
+
+## Mitofish database 
+blastn -db ${mito}/*.fasta \
+   -query ${ASV_fasta}/ASV_seqs.len.fasta \
+   -out ${out}/BLASTResults_Mito.txt \
+   -max_target_seqs 10 -perc_identity 100 -qcov_hsp_perc 95 \
+   -outfmt &#39;6  qseqid   sseqid  pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore&#39;
+
+## GMGI database 
+blastn -db ${gmgi}/*.fasta \
+   -query ${ASV_fasta}/ASV_seqs.len.fasta \
+   -out ${out}/BLASTResults_GMGI.txt \
+   -max_target_seqs 10 -perc_identity 98 -qcov_hsp_perc 95 \
+   -outfmt &#39;6  qseqid   sseqid   pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore&#39;
+
+############################
+
+#### TAXONOMIC CLASSIFICATION #### 
+## creating list of staxids from all three files 
+awk -F $&#39;\t&#39; &#39;{ print $4}&#39; ${out}/BLASTResults_NCBI.txt | sort -u &gt; ${out}/NCBI_sp.txt
+
+## annotating taxid with full taxonomic classification
+cat ${out}/NCBI_sp.txt | ${taxonkit}/taxonkit reformat -I 1 -r &quot;Unassigned&quot; &gt; ${out}/NCBI_taxassigned.txt
+</code></pre></div>
+<p>To run:<br />
+- <code>sbatch 02-taxonomicID.sh</code> </p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.action.edit", "content.code.copy"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d6f25eb3.min.js"></script>
+      
+    
+  </body>
+</html>
