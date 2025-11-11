@@ -48,11 +48,12 @@ nav:
     - Intro to Workflow Managers: 'Introduction to Workflow Managers.md'
   - 'eDNA: 12S metabarcoding':
     - 00-Create-conda-env: '00-creating_eDNA_conda_env.md'
-    - 01-ampliseq-12S: 'eDNA 12S metab/01-Metabarcoding ampliseq 12S Riaz.md'
+    - 01-ampliseq-12S: 'eDNA 12S metab/01-Metabarcoding ampliseq_12S_Riaz.md'
     - 02-dfprep-12S: 'eDNA 12S metab/02-datatable_prep_12S_Riaz.md'
-    - 03-data-quality: 'eDNA 12S metab/03-data_quality.md'
-    - 04-relative-abund-heatmap: 'eDNA 12S metab/04-relative_abundance_heatmap.md'
-    - 05-biodiversity: 'eDNA 12S metab/05-biodiversity.md'
+    - 03-decontamination: 'eDNA 12S metab/03-decontamination.md'
+    - 04-report_generation: 'eDNA 12S metab/04-report_generation.md'
+    - 05-phyloseq: 'eDNA 12S metab/05-phyloseq.md'
+    - 06-heatmap: 'eDNA 12S metab/06-heatmap.md'
   - 'eDNA: COI metabarcoding':
     - 00-Create-conda-env: '00-creating_eDNA_conda_env.md'
     - 01-ampliseq-COI: 'eDNA COI metab/01-Metabarcoding ampliseq COI.md'

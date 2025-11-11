@@ -223,17 +223,17 @@ Create output files
 path_choice_required = "example_output/Taxonomic_assignments/Choice_required_GMGI_multiplehits.xlsx"
 path_choice_required_edited="example_output/Taxonomic_assignments/Choice_required_GMGI_multiplehits_edited.xlsx"
 
-path_disagree_list = "example_output/Taxonomic_assignments/SampleReport_taxonomic_ID.xlsx"
-path_disagree_list_edited="example_output/Taxonomic_assignments/SampleReport_taxonomic_ID_edited.xlsx"
+path_disagree_list = "example_output/Taxonomic_assignments/Three_DB_comparison_taxonomic_ID.xlsx"
+path_disagree_list_edited="example_output/Taxonomic_assignments/Three_DB_comparison_taxonomic_ID_edited.xlsx"
 
 path_commonnames_add="example_output/Taxonomic_assignments/CommonNames_required.xlsx"
 path_commonnames_add_edited="example_output/Taxonomic_assignments/CommonNames_required_edited.xlsx"
 
 #### RESULTS MATRICES 
-results_rawreads_matrix = "example_output/Results_1_rawreads_matrix.xlsx"
-results_rawreads_long = "example_output/Results_rawreads_long_format.xlsx"
-results_relab_matrix = "example_output/Results_2_relative_abundance_matrix.xlsx"
-results_relab_long = "example_output/Results_relative_abundance_long_format.xlsx"
+results_rawreads_matrix = "example_output/Results_initial/Results_rawreads_matrix.xlsx"
+results_rawreads_long = "example_output/Results_initial/Results_rawreads_long_format.xlsx"
+results_relab_matrix = "example_output/Results_initial/Results_relative_abundance_matrix.xlsx"
+results_relab_long = "example_output/Results_initial/Results_relative_abundance_long_format.xlsx"
 
 reads_filtered_percent_out="example_output/Filtering_Percent_removed_reads.xlsx"
 reads_filtered10_out="example_output/Filtering_10_removed_reads.xlsx"
