@@ -6,7 +6,7 @@ The 12S rRNA gene region of the mitogenome is ~950 bp. There are two popular pri
 
 If working on the NU system, 'Discovery' cluster is the old system that used the path (/work) and 'Explorer' is the new system that uses the path (/projects).  
 
-![](https://th.bing.com/th/id/OIP.EbXPYETYLBPEymNEIVEGLQHaCc?rs=1&pid=ImgDetMain)
+![](https://tse2.mm.bing.net/th/id/OIP.a7rMTpG54olqMy4-Ehkh1QHaCc?rs=1&pid=ImgDetMain&o=7&rm=3)
 
 Riaz ecoPrimers citation: [Riaz et al. 2011](https://academic.oup.com/nar/article/39/21/e145/1105558)  
 MiFish citation: [Miya et al. 2015](https://royalsocietypublishing.org/doi/full/10.1098/rsos.150088)
@@ -132,7 +132,7 @@ Read counts can be downloaded from the General Statistics section on Multiqc by 
 
 We use a median absolute deviation (MAD) approach that works by first finding the median of the data, then measuring how far each value deviates from that median and using the median of those deviations as the typical spread. Values whose deviation is much larger than this typical spread are flagged as outliers.
 
-Visit this [page] for the R script or download [here].
+Visit this [page](https://gmgi-fisheries.github.io/resources/eDNA%2012S%20metab/02-outlier_detection-template-12S/) for the R script or download [here](https://github.com/GMGI-Fisheries/resources/blob/master/docs/eDNA%2012S%20metab/02-outlier_detection-template-12S.Rmd).
 
 ## Step 3: Run nf-core/ampliseq to remove adapters, predict ASVs, and generate counts tables    
 
