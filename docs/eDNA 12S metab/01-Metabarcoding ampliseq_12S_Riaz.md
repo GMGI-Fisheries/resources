@@ -4,22 +4,20 @@
 
 The 12S rRNA gene region of the mitogenome is ~950 bp. There are two popular primer sets to amplify two different regions of 12S: Riaz and MiFish. The following workflow includes script specific to the **Riaz** primer set, but includes some notes on the MiFish U/E primer set. 
 
-The NU cluster shifted from Discovery to Explorer. This script reflects the change from `/work` to `/projects `. NMC 7/11/2025 
+If working on the NU system, 'Discovery' cluster is the old system that used the path (/work) and 'Explorer' is the new system that uses the path (/projects).  
 
 ![](https://th.bing.com/th/id/OIP.EbXPYETYLBPEymNEIVEGLQHaCc?rs=1&pid=ImgDetMain)
 
 Riaz ecoPrimers citation: [Riaz et al. 2011](https://academic.oup.com/nar/article/39/21/e145/1105558)  
 MiFish citation: [Miya et al. 2015](https://royalsocietypublishing.org/doi/full/10.1098/rsos.150088)
 
-Workflow done on HPC. Scripts to run: 
+**Analysis workflow:** 
+1. Assess quality of fastq files using FASTQC and MultiQC  
+2. Identify sequencing outliers and sub-sample if needed     
+3. Run nf-core/ampliseq to remove adapters, predict ASVs, and generate counts tables     
+4. Run blastn to assign taxonomy from three databases: GMGI's, Mitofish, and NCBI   
 
-1. 00-fastqc.sh   
-2. 00-multiqc.sh  
-3. 01a-metadata.R
-4. 01b-ampliseq.sh
-5. 02-taxonomicID.sh  
-
-## Step 1: Confirm conda environment is available and activate 
+#### Prerequisite: Confirm conda environment is available and activate 
 
 The conda environment is started within each slurm script, but to activate conda environment outside of the slurm script to update packages or check what is installed:
 
@@ -40,11 +38,13 @@ conda update [package name]
 nextflow pull nf-core/ampliseq
 ``` 
  
-## Step 2: Assess quality of raw data  
+## Step 1: Assess quality of fastq files using FASTQC and MultiQC 
 
-Background information on [FASTQC](https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon-flipped/lessons/05_qc_running_fastqc_interactively.html). 
+### Assessing quality with FASTQC
 
-`00-fastqc.sh`: 
+Background information on [FASTQC](https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon-flipped/lessons/05_qc_running_fastqc_interactively.html). For eDNA files, this program is extremely quick. Expect <10 seconds per sample when running in an array. 
+
+`01-fastqc.sh`: 
 
 ```
 #!/bin/bash
@@ -52,11 +52,11 @@ Background information on [FASTQC](https://hbctraining.github.io/Intro-to-rnaseq
 #SBATCH --output=output/fastqc_output/"%x_output.%j" #once your job is completed, any final job report comments will be put in this file
 #SBATCH --partition=short
 #SBATCH --nodes=1
-#SBATCH --time=20:00:00
-#SBATCH --job-name=fastqc
-#SBATCH --mem=3GB
-#SBATCH --ntasks=24
-#SBATCH --cpus-per-task=2
+#SBATCH --time=4:00:00
+#SBATCH --job-name=01-fastqc
+#SBATCH --mem=1GB
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
 
 ### USER TO-DO ### 
 ## 1. Set paths for your project
@@ -91,27 +91,15 @@ Notes:
 - Within the `out_dir` output folder, use `ls *html | wc` to count the number of html output files (1st/2nd column values). This should be equal to the --array range used and the number of raw data files. If not, the script missed some input files so address this before moving on.  
 
 
-## Step 3: Visualize quality of raw data  
+### Visualize quality with MULTIQC
 
 Background information on [MULTIQC](https://multiqc.info/docs/#:~:text=MultiQC%20is%20a%20reporting%20tool%20that%20parses%20results,experiments%20containing%20multiple%20samples%20and%20multiple%20analysis%20steps).
 
-`00-multiqc.sh` 
+Run the following code in an interactive node. This program will be quick for eDNA data (typically <2 minutes). 
 
 ```
-#!/bin/bash
-#SBATCH --error=output/"%x_error.%j" #if your job fails, the error report will be put in this file
-#SBATCH --output=output/"%x_output.%j" #once your job is completed, any final job report comments will be put in this file
-#SBATCH --partition=short
-#SBATCH --nodes=1
-#SBATCH --time=10:00:00
-#SBATCH --job-name=multiqc
-#SBATCH --mem=8GB
-#SBATCH --ntasks=24
-#SBATCH --cpus-per-task=2
-
-### USER TO-DO ### 
-## 1. Set paths for your project
-## 2. Optional: change file name (multiqc_raw.html) as desired
+# Use srun to claim a node
+srun --pty bash 
 
 # Activate conda environment
 source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
@@ -122,20 +110,28 @@ fastqc_output=""
 multiqc_dir="" 
 
 ## RUN MULTIQC 
+### Navigate to your project
 multiqc --interactive ${fastqc_output} -o ${multiqc_dir} --filename multiqc_raw.html
 ```
 
-This program is typically very quick, depending on the number of files per project, and can be run on an interactive node. 
+## Step 2: Identify sequencing outliers and sub-sample if needed    
+
+This step can be done two ways: 1) download read counts from Illumina basespace run information or 2) Download read counts from the multiqc report. Either way, you need an excel file with the sample ID and total read count. 
+
+We use a median absolute deviation (MAD) approach that works by first finding the median of the data, then measuring how far each value deviates from that median and using the median of those deviations as the typical spread. Values whose deviation is much larger than this typical spread are flagged as outliers.
+
+`02-outlier_detection.R`
 
 ```
-# Use srun to claim a node
-srun --pty bash 
 
-# Run this script on that interactive node
-bash 00-multiqc.sh
+
+
+
 ```
 
-## Step 4: nf-core/ampliseq 
+## Step 3: Run nf-core/ampliseq to remove adapters, predict ASVs, and generate counts tables    
+
+### Nf-core and ampliseq pipeline description 
 
 [Nf-core](https://nf-co.re/): A community effort to collect a curated set of analysis pipelines built using [Nextflow](https://www.nextflow.io/).  
 Nextflow: scalable and reproducible scientific workflows using software containers, used to build wrapper programs like the one we use here.  
@@ -191,7 +187,7 @@ This file indicates the sample ID and the path to R1 and R2 files. Below is a pr
 
 Prior to running R script, use the `rawdata` file created for the fastqc slurm array from within the raw data folder to create a list of files. Below is an example from our Offshore Wind project but the specifics of the sampleID will be project dependent. This project had four sequencing runs with different file names. 
 
-`01a-metadata.R`
+`03a-metadata.R`
 
 ```
 ## Load libraries 
@@ -232,7 +228,7 @@ Update ampliseq workflow if needed: `nextflow pull nf-core/ampliseq`.
 
 Below script is set for Riaz primers:
 
-`01b-ampliseq.sh`:
+`03b-ampliseq.sh`:
 
 ```
 #!/bin/bash

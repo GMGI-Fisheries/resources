@@ -1,0 +1,185 @@
+---
+title: "01-outlier-detection"
+output: html_document
+date: "2025-12-09"
+---
+
+## Load libraries
+
+```{r}
+library(dplyr)
+library(tidyverse) # for data transformation
+library(ggplot2) # for plotting
+library(readxl) ## for reading in excel files
+library(ggrepel)
+library(writexl)
+library(vegan) ## rareify 
+
+# removing scientific notation
+## remove line or comment out if not desired 
+options(scipen=999)
+set.seed(123)
+```
+
+## Load data 
+
+```{r}
+data <- read.csv("../INS2CO1.demultiplex_stats.csv") 
+data$Reads <- as.numeric(gsub(",", "", data$Reads))
+
+data <- data %>%
+  subset(!Sample.ID=="Undetermined")
+
+meta <- read_excel("../../../INSPIRE2025 Master Data Sheet.xlsx") %>% 
+  
+  filter(!is.na(`12S`)) %>%
+  filter(!is.na(`GMGI Sample ID`)) %>%
+  
+  dplyr::select(`GMGI Sample ID`:`No. Containers`, NOTES, `Container/Preservative`) %>%
+  
+  mutate(`GMGI Sample ID` = gsub("-", "_", `GMGI Sample ID`))
+```
+
+## Calculate outlier 
+
+### Identify outliers based on MAD calculation
+
+```{r}
+outliers <- data %>% dplyr::select(Sample.ID, Reads) %>%
+  mutate(
+    Median = median(Reads),
+    MAD = mad(Reads, constant=1),
+    
+    Mi = 0.6745*(abs(Reads - Median)/MAD),
+    Outlier = ifelse(Mi > 3.5, "Outlier", ""),
+    
+    
+    Upper_threshold = (3.5*MAD+0.6745*Median)/0.6745,
+    Lower_threshold =-1*(3.5*MAD-0.6745*Median)/0.6745
+  ) %>%
+  
+  arrange(desc(Reads))
+
+
+outliers %>% dplyr::select(`GMGI Sample ID`=Sample.ID, Reads, Outlier) %>%
+  mutate(`GMGI Sample ID` = gsub("-", "_", `GMGI Sample ID`)) %>%
+  left_join(., meta %>% dplyr::select(`GMGI Sample ID`, `Sample ID`), by = "GMGI Sample ID") %>%
+  dplyr::select(`Sample ID`, Reads, Outlier) %>%
+  write_xlsx("../Outliers.xlsx")
+
+unique(outliers$Upper_threshold)
+unique(outliers$Lower_threshold)
+
+## Samples above outlier 
+outliers %>% filter(Reads > Upper_threshold)
+
+### mean
+mean(data$Reads)
+### median
+median(data$Reads)
+```
+
+## Plot raw 
+
+```{r}
+outliers %>% 
+  mutate(Outlier = ifelse(Outlier == "Outlier", "Outlier", "NotOutlier")) %>%
+  
+  ggplot(., aes(x=Sample.ID, y=Reads)) + 
+  
+  geom_point(aes(fill = Outlier), shape = 21, size = 3) +
+  scale_fill_manual(
+    values = c("Outlier" = "darkred", "NotOutlier" = "lightblue"),
+    guide = "none"     # remove legend if not needed
+  ) +
+  
+  geom_text(
+    data = ~ subset(.x, Reads > unique(outliers$Upper_threshold)),
+    aes(label = Sample.ID),
+    vjust = 2.5,
+    size = 3.5
+  ) +
+  
+  geom_hline(yintercept = unique(outliers$Upper_threshold), linetype = "dashed", linewidth = 0.7, color = "grey70") +
+  
+  theme_bw() +
+  theme(
+    axis.text.x = element_text(angle=90, vjust=0.5, hjust=1),
+    axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=12, face="bold"),
+    axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=12, face="bold")
+  )
+
+ggsave("../figures/Outliers.png", width=7, height=4)
+```
+
+
+Plot for report
+
+```{r}
+outliers_plot <- outliers %>% 
+  mutate(
+    Outlier = ifelse(Outlier == "Outlier", "Outlier", "NotOutlier"),
+    x = "x"
+  ) %>%
+  
+  mutate(Sample.ID = gsub("-", "_", Sample.ID)) %>%
+  
+  left_join(., meta %>% dplyr::rename(Sample.ID=`GMGI Sample ID`), by = "Sample.ID")
+```
+
+```{r}
+outliers_plot %>%
+  
+  ggplot(aes(x = x, y = Reads)) +
+  
+  geom_boxplot(outlier.shape = NA, fill = NA, color = "#264653", width=0.75) +
+  
+  geom_jitter(
+    width = 0.15,
+    shape = 21,
+    alpha = 0.4,
+    size = 2.5,
+    color = "black",
+    aes(fill = Outlier)
+  ) +
+  
+  geom_hline(
+    yintercept = unique(outliers_plot$Upper_threshold),
+    color = "grey60",
+    linetype = "dotted",
+    size=0.75
+  ) +
+  
+  ggrepel::geom_text_repel(
+    data = subset(outliers_plot, Outlier == "Outlier"),
+    aes(label = `Sample ID`),
+    color = "black",
+    size = 4,
+    nudge_y = 0.1 * max(outliers_plot$Reads),
+    direction = "y",
+    segment.colour = NA,
+    point.padding = unit(0.7, "lines"),
+    box.padding = unit(0.75, "lines")
+  ) +
+  
+  scale_fill_manual(
+    values = c("Outlier" = "darkred", "NotOutlier" = "#264653"),
+    guide = "none"
+  ) +
+  
+  
+  theme_bw() +
+  labs(y = "Number of reads",
+       x = "") +
+  
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_text(size = 10, color = "black"),
+    axis.title.y = element_text(margin = margin(r = 10), size = 11, face = "bold"),
+    legend.position = "none"
+  )
+
+
+ggsave("../figures/SampleReport_Outliers.png", width = 4, height=5)
+```
+
