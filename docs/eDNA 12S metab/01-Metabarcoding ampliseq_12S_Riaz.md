@@ -118,6 +118,10 @@ multiqc --interactive ${fastqc_output} -o ${multiqc_dir} --filename multiqc_raw.
 
 This step can be done two ways: 1) download read counts from Illumina basespace run information or 2) Download read counts from the multiqc report. Either way, you need an excel file with the sample ID and total read count. 
 
+Read counts can be downloaded from the Sequence Counts section on Multiqc by selecting Export Plot > Data > Format (csv) > Download Plot Data. Save this file in the project repository. 
+
+![](https://github.com/GMGI-Fisheries/resources/blob/master/img/Multiqc_reads_example_download.png?raw=true)
+
 We use a median absolute deviation (MAD) approach that works by first finding the median of the data, then measuring how far each value deviates from that median and using the median of those deviations as the typical spread. Values whose deviation is much larger than this typical spread are flagged as outliers.
 
 `02-outlier_detection.R`

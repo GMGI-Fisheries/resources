@@ -4,6 +4,8 @@ output: html_document
 date: "2025-12-09"
 ---
 
+If paths are not working, select Knit > Project Directory. Ignore this comment if you're not using an R project. 
+
 ## Load libraries
 
 ```{r}
@@ -21,23 +23,23 @@ options(scipen=999)
 set.seed(123)
 ```
 
-## Load data 
+## Load read count data 
 
 ```{r}
-data <- read.csv("../INS2CO1.demultiplex_stats.csv") 
-data$Reads <- as.numeric(gsub(",", "", data$Reads))
-
-data <- data %>%
+## If loading from Basespace
+data <- read.csv("docs/eDNA 12S metab/example_input/Basespace_reads_example.csv") %>%
   subset(!Sample.ID=="Undetermined")
 
-meta <- read_excel("../../../INSPIRE2025 Master Data Sheet.xlsx") %>% 
-  
-  filter(!is.na(`12S`)) %>%
-  filter(!is.na(`GMGI Sample ID`)) %>%
-  
-  dplyr::select(`GMGI Sample ID`:`No. Containers`, NOTES, `Container/Preservative`) %>%
-  
-  mutate(`GMGI Sample ID` = gsub("-", "_", `GMGI Sample ID`))
+data$Reads <- as.numeric(gsub(",", "", data$Reads))
+
+## If loading from MultiQC
+multiqc_data <- 
+```
+
+## Load metadata
+
+```{r}
+meta <- read_xlsx("docs/eDNA 12S metab/example_input/SBNMS_metadata.xlsx") 
 ```
 
 ## Calculate outlier 
