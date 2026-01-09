@@ -1581,7 +1581,7 @@
 <p><em>page details in progress.</em> </p>
 <p>The 12S rRNA gene region of the mitogenome is ~950 bp. There are two popular primer sets to amplify two different regions of 12S: Riaz and MiFish. The following workflow includes script specific to the <strong>Riaz</strong> primer set, but includes some notes on the MiFish U/E primer set. </p>
 <p>If working on the NU system, 'Discovery' cluster is the old system that used the path (/work) and 'Explorer' is the new system that uses the path (/projects).  </p>
-<p><img alt="" src="https://th.bing.com/th/id/OIP.EbXPYETYLBPEymNEIVEGLQHaCc?rs=1&amp;pid=ImgDetMain" /></p>
+<p><img alt="" src="https://tse2.mm.bing.net/th/id/OIP.a7rMTpG54olqMy4-Ehkh1QHaCc?rs=1&amp;pid=ImgDetMain&amp;o=7&amp;rm=3" /></p>
 <p>Riaz ecoPrimers citation: <a href="https://academic.oup.com/nar/article/39/21/e145/1105558">Riaz et al. 2011</a><br />
 MiFish citation: <a href="https://royalsocietypublishing.org/doi/full/10.1098/rsos.150088">Miya et al. 2015</a></p>
 <p><strong>Analysis workflow:</strong> 
@@ -1680,7 +1680,7 @@ multiqc --interactive ${fastqc_output} -o ${multiqc_dir} --filename multiqc_raw.
 <p>Read counts can be downloaded from the General Statistics section on Multiqc by selecting Export as CSV &gt; Data &gt; Format (csv) &gt; Download Plot Data. Save this file in the project repository. </p>
 <p><img alt="" src="https://github.com/GMGI-Fisheries/resources/blob/master/img/Multiqc_reads_example_download2.png?raw=true" /></p>
 <p>We use a median absolute deviation (MAD) approach that works by first finding the median of the data, then measuring how far each value deviates from that median and using the median of those deviations as the typical spread. Values whose deviation is much larger than this typical spread are flagged as outliers.</p>
-<p>Visit this [page] for the R script or download [here].</p>
+<p>Visit this <a href="https://gmgi-fisheries.github.io/resources/eDNA%2012S%20metab/02-outlier_detection-template-12S/">page</a> for the R script or download <a href="https://github.com/GMGI-Fisheries/resources/blob/master/docs/eDNA%2012S%20metab/02-outlier_detection-template-12S.Rmd">here</a>.</p>
 <h2 id="step-3-run-nf-coreampliseq-to-remove-adapters-predict-asvs-and-generate-counts-tables">Step 3: Run nf-core/ampliseq to remove adapters, predict ASVs, and generate counts tables</h2>
 <h3 id="nf-core-and-ampliseq-pipeline-description">Nf-core and ampliseq pipeline description</h3>
 <p><a href="https://nf-co.re/">Nf-core</a>: A community effort to collect a curated set of analysis pipelines built using <a href="https://www.nextflow.io/">Nextflow</a>.<br />
