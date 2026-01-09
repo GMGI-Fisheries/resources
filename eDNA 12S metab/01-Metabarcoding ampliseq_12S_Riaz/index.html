@@ -12,7 +12,7 @@
         <link rel="prev" href="../../00-creating_eDNA_conda_env/">
       
       
-        <link rel="next" href="../02-datatable_prep_12S_Riaz/">
+        <link rel="next" href="../02-outlier_detection-template-12S/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -688,41 +688,74 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#step-1-confirm-conda-environment-is-available-and-activate" class="md-nav__link">
+  <a href="#prerequisite-confirm-conda-environment-is-available-and-activate" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 1: Confirm conda environment is available and activate
+      Prerequisite: Confirm conda environment is available and activate
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-2-assess-quality-of-raw-data" class="md-nav__link">
+  <a href="#step-1-assess-quality-of-fastq-files-using-fastqc-and-multiqc" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 2: Assess quality of raw data
+      Step 1: Assess quality of fastq files using FASTQC and MultiQC
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-3-visualize-quality-of-raw-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 3: Visualize quality of raw data
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-4-nf-coreampliseq" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 4: nf-core/ampliseq
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Step 4: nf-core/ampliseq">
+    <nav class="md-nav" aria-label="Step 1: Assess quality of fastq files using FASTQC and MultiQC">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#assessing-quality-with-fastqc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assessing quality with FASTQC
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visualize-quality-with-multiqc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visualize quality with MULTIQC
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-identify-sequencing-outliers-and-sub-sample-if-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Identify sequencing outliers and sub-sample if needed
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-run-nf-coreampliseq-to-remove-adapters-predict-asvs-and-generate-counts-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: Run nf-core/ampliseq to remove adapters, predict ASVs, and generate counts tables
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Run nf-core/ampliseq to remove adapters, predict ASVs, and generate counts tables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nf-core-and-ampliseq-pipeline-description" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nf-core and ampliseq pipeline description
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#12s-primer-sequences-required" class="md-nav__link">
@@ -862,11 +895,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../02-datatable_prep_12S_Riaz/" class="md-nav__link">
+      <a href="../02-outlier_detection-template-12S/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    02-dfprep-12S
+    02-outlier-12S
   </span>
   
 
@@ -883,11 +916,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../03-decontamination/" class="md-nav__link">
+      <a href="../../eDNA 12S metab/03-tax_assignment-template-12S.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    03-decontamination
+    03-tax_assign-12S
   </span>
   
 
@@ -904,11 +937,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../04-report_generation/" class="md-nav__link">
+      <a href="../../eDNA 12S metab/04-decontamination-template-12S.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    04-report_generation
+    04-decontamination
   </span>
   
 
@@ -925,11 +958,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../eDNA 12S metab/05-phyloseq.md" class="md-nav__link">
+      <a href="../../eDNA 12S metab/05-report_generation-template-12S.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    05-phyloseq
+    05-report_generation
   </span>
   
 
@@ -946,7 +979,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../eDNA 12S metab/06-heatmap.md" class="md-nav__link">
+      <a href="../../eDNA 12S metab/06-heatmap-template-12S.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1330,41 +1363,74 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#step-1-confirm-conda-environment-is-available-and-activate" class="md-nav__link">
+  <a href="#prerequisite-confirm-conda-environment-is-available-and-activate" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 1: Confirm conda environment is available and activate
+      Prerequisite: Confirm conda environment is available and activate
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-2-assess-quality-of-raw-data" class="md-nav__link">
+  <a href="#step-1-assess-quality-of-fastq-files-using-fastqc-and-multiqc" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 2: Assess quality of raw data
+      Step 1: Assess quality of fastq files using FASTQC and MultiQC
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-3-visualize-quality-of-raw-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 3: Visualize quality of raw data
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-4-nf-coreampliseq" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 4: nf-core/ampliseq
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Step 4: nf-core/ampliseq">
+    <nav class="md-nav" aria-label="Step 1: Assess quality of fastq files using FASTQC and MultiQC">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#assessing-quality-with-fastqc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assessing quality with FASTQC
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visualize-quality-with-multiqc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visualize quality with MULTIQC
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-identify-sequencing-outliers-and-sub-sample-if-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Identify sequencing outliers and sub-sample if needed
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-run-nf-coreampliseq-to-remove-adapters-predict-asvs-and-generate-counts-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: Run nf-core/ampliseq to remove adapters, predict ASVs, and generate counts tables
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Run nf-core/ampliseq to remove adapters, predict ASVs, and generate counts tables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nf-core-and-ampliseq-pipeline-description" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nf-core and ampliseq pipeline description
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#12s-primer-sequences-required" class="md-nav__link">
@@ -1514,19 +1580,16 @@
 <h1 id="metabarcoding-workflow-for-12s-amplicon-sequencing-with-riaz-primers">Metabarcoding workflow for 12S amplicon sequencing with Riaz primers</h1>
 <p><em>page details in progress.</em> </p>
 <p>The 12S rRNA gene region of the mitogenome is ~950 bp. There are two popular primer sets to amplify two different regions of 12S: Riaz and MiFish. The following workflow includes script specific to the <strong>Riaz</strong> primer set, but includes some notes on the MiFish U/E primer set. </p>
-<p>The NU cluster shifted from Discovery to Explorer. This script reflects the change from <code>/work</code> to <code>/projects</code>. NMC 7/11/2025 </p>
+<p>If working on the NU system, 'Discovery' cluster is the old system that used the path (/work) and 'Explorer' is the new system that uses the path (/projects).  </p>
 <p><img alt="" src="https://th.bing.com/th/id/OIP.EbXPYETYLBPEymNEIVEGLQHaCc?rs=1&amp;pid=ImgDetMain" /></p>
 <p>Riaz ecoPrimers citation: <a href="https://academic.oup.com/nar/article/39/21/e145/1105558">Riaz et al. 2011</a><br />
 MiFish citation: <a href="https://royalsocietypublishing.org/doi/full/10.1098/rsos.150088">Miya et al. 2015</a></p>
-<p>Workflow done on HPC. Scripts to run: </p>
-<ol>
-<li>00-fastqc.sh   </li>
-<li>00-multiqc.sh  </li>
-<li>01a-metadata.R</li>
-<li>01b-ampliseq.sh</li>
-<li>02-taxonomicID.sh  </li>
-</ol>
-<h2 id="step-1-confirm-conda-environment-is-available-and-activate">Step 1: Confirm conda environment is available and activate</h2>
+<p><strong>Analysis workflow:</strong> 
+1. Assess quality of fastq files using FASTQC and MultiQC<br />
+2. Identify sequencing outliers and sub-sample if needed   <br />
+3. Run nf-core/ampliseq to remove adapters, predict ASVs, and generate counts tables   <br />
+4. Run blastn to assign taxonomy from three databases: GMGI's, Mitofish, and NCBI   </p>
+<h4 id="prerequisite-confirm-conda-environment-is-available-and-activate">Prerequisite: Confirm conda environment is available and activate</h4>
 <p>The conda environment is started within each slurm script, but to activate conda environment outside of the slurm script to update packages or check what is installed:</p>
 <div class="highlight"><pre><span></span><code># Activate fisheries eDNA conda environment 
 source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
@@ -1543,19 +1606,20 @@ conda update [package name]
 # Update nextflow ampliseq workflow 
 nextflow pull nf-core/ampliseq
 </code></pre></div>
-<h2 id="step-2-assess-quality-of-raw-data">Step 2: Assess quality of raw data</h2>
-<p>Background information on <a href="https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon-flipped/lessons/05_qc_running_fastqc_interactively.html">FASTQC</a>. </p>
-<p><code>00-fastqc.sh</code>: </p>
+<h2 id="step-1-assess-quality-of-fastq-files-using-fastqc-and-multiqc">Step 1: Assess quality of fastq files using FASTQC and MultiQC</h2>
+<h3 id="assessing-quality-with-fastqc">Assessing quality with FASTQC</h3>
+<p>Background information on <a href="https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon-flipped/lessons/05_qc_running_fastqc_interactively.html">FASTQC</a>. For eDNA files, this program is extremely quick. Expect &lt;10 seconds per sample when running in an array. </p>
+<p><code>01-fastqc.sh</code>: </p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
 #SBATCH --error=output/fastqc_output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
 #SBATCH --output=output/fastqc_output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
 #SBATCH --partition=short
 #SBATCH --nodes=1
-#SBATCH --time=20:00:00
-#SBATCH --job-name=fastqc
-#SBATCH --mem=3GB
-#SBATCH --ntasks=24
-#SBATCH --cpus-per-task=2
+#SBATCH --time=4:00:00
+#SBATCH --job-name=01-fastqc
+#SBATCH --mem=1GB
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
 
 ### USER TO-DO ### 
 ## 1. Set paths for your project
@@ -1563,7 +1627,7 @@ nextflow pull nf-core/ampliseq
 # Activate conda environment
 source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
 
-## SET PATHS 
+## SET PATHS (CHANGE THESE TO PROJECT SPECIFIC)
 raw_path=&quot;&quot;
 out_dir=&quot;&quot;
 
@@ -1582,28 +1646,19 @@ fastqc ${i} --outdir ${out_dir}
 </code></pre></div>
 <p>To run:  <br />
 - Start slurm array with file 0 (e.g., with 138 files) = <code>sbatch --array=0-137 00-fastqc.sh</code>.</p>
+<p>Path examples:    <br />
+- raw_path="/projects/gmgi/Fisheries/eDNA/tidal_cycle/raw_data"<br />
+- out_dir="/projects/gmgi/Fisheries/eDNA/tidal_cycle/fastqc_output"     </p>
 <p>Notes:  </p>
 <ul>
 <li>This is going to output <em>many</em> error and output files. After job completes, use <code>cat *output.* &gt; ../fastqc_output.txt</code> to create one file with all the output and <code>cat *error.* &gt; ../fastqc_error.txt</code> to create one file with all of the error message outputs. </li>
 <li>Within the <code>out_dir</code> output folder, use <code>ls *html | wc</code> to count the number of html output files (1st/2nd column values). This should be equal to the --array range used and the number of raw data files. If not, the script missed some input files so address this before moving on.  </li>
 </ul>
-<h2 id="step-3-visualize-quality-of-raw-data">Step 3: Visualize quality of raw data</h2>
+<h3 id="visualize-quality-with-multiqc">Visualize quality with MULTIQC</h3>
 <p>Background information on <a href="https://multiqc.info/docs/#:~:text=MultiQC%20is%20a%20reporting%20tool%20that%20parses%20results,experiments%20containing%20multiple%20samples%20and%20multiple%20analysis%20steps">MULTIQC</a>.</p>
-<p><code>00-multiqc.sh</code> </p>
-<div class="highlight"><pre><span></span><code>#!/bin/bash
-#SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
-#SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
-#SBATCH --partition=short
-#SBATCH --nodes=1
-#SBATCH --time=10:00:00
-#SBATCH --job-name=multiqc
-#SBATCH --mem=8GB
-#SBATCH --ntasks=24
-#SBATCH --cpus-per-task=2
-
-### USER TO-DO ### 
-## 1. Set paths for your project
-## 2. Optional: change file name (multiqc_raw.html) as desired
+<p>Run the following code in an interactive node. This program will be quick for eDNA data (typically &lt;2 minutes). </p>
+<div class="highlight"><pre><span></span><code># Use srun to claim a node
+srun --pty bash 
 
 # Activate conda environment
 source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
@@ -1614,16 +1669,20 @@ fastqc_output=&quot;&quot;
 multiqc_dir=&quot;&quot; 
 
 ## RUN MULTIQC 
+### Navigate to your project
 multiqc --interactive ${fastqc_output} -o ${multiqc_dir} --filename multiqc_raw.html
 </code></pre></div>
-<p>This program is typically very quick, depending on the number of files per project, and can be run on an interactive node. </p>
-<div class="highlight"><pre><span></span><code># Use srun to claim a node
-srun --pty bash 
-
-# Run this script on that interactive node
-bash 00-multiqc.sh
-</code></pre></div>
-<h2 id="step-4-nf-coreampliseq">Step 4: nf-core/ampliseq</h2>
+<p>Path examples:  <br />
+- fastqc_output="/projects/gmgi/Fisheries/eDNA/tidal_cycle/fastqc_output"    <br />
+- multiqc_dir="/projects/gmgi/Fisheries/eDNA/tidal_cycle"   </p>
+<h2 id="step-2-identify-sequencing-outliers-and-sub-sample-if-needed">Step 2: Identify sequencing outliers and sub-sample if needed</h2>
+<p>This step can be done two ways: 1) download read counts from Illumina basespace run information or 2) Download read counts from the multiqc report. Either way, you need an excel file with the sample ID and total read count. </p>
+<p>Read counts can be downloaded from the General Statistics section on Multiqc by selecting Export as CSV &gt; Data &gt; Format (csv) &gt; Download Plot Data. Save this file in the project repository. </p>
+<p><img alt="" src="https://github.com/GMGI-Fisheries/resources/blob/master/img/Multiqc_reads_example_download2.png?raw=true" /></p>
+<p>We use a median absolute deviation (MAD) approach that works by first finding the median of the data, then measuring how far each value deviates from that median and using the median of those deviations as the typical spread. Values whose deviation is much larger than this typical spread are flagged as outliers.</p>
+<p>Visit this [page] for the R script or download [here].</p>
+<h2 id="step-3-run-nf-coreampliseq-to-remove-adapters-predict-asvs-and-generate-counts-tables">Step 3: Run nf-core/ampliseq to remove adapters, predict ASVs, and generate counts tables</h2>
+<h3 id="nf-core-and-ampliseq-pipeline-description">Nf-core and ampliseq pipeline description</h3>
 <p><a href="https://nf-co.re/">Nf-core</a>: A community effort to collect a curated set of analysis pipelines built using <a href="https://www.nextflow.io/">Nextflow</a>.<br />
 Nextflow: scalable and reproducible scientific workflows using software containers, used to build wrapper programs like the one we use here.  </p>
 <p>[https://nf-co.re/ampliseq/2.11.0]: nfcore/ampliseq is a bioinformatics analysis pipeline used for amplicon sequencing, supporting denoising of any amplicon and supports a variety of taxonomic databases for taxonomic assignment including 16S, ITS, CO1 and 18S. </p>
@@ -1692,7 +1751,7 @@ MiFish-E 12S amplicon R: CATAGTGGGGTATCTAATCCTAGTTTG    </p>
 </table>
 <p><em>This is an R script, not slurm script. Open RStudio interactive on Discovery Cluster to run this script.</em></p>
 <p>Prior to running R script, use the <code>rawdata</code> file created for the fastqc slurm array from within the raw data folder to create a list of files. Below is an example from our Offshore Wind project but the specifics of the sampleID will be project dependent. This project had four sequencing runs with different file names. </p>
-<p><code>01a-metadata.R</code></p>
+<p><code>03a-metadata.R</code></p>
 <div class="highlight"><pre><span></span><code>## Load libraries 
 
 library(dplyr)
@@ -1700,8 +1759,8 @@ library(stringr)
 library(strex) 
 
 ### Read in sample sheet 
-
-sample_list &lt;- read.delim2(&quot;/projects/gmgi/Fisheries/eDNA/offshore_wind2023/raw_data/rawdata&quot;, header=F) %&gt;% 
+### CHANGE THE PATH HERE
+sample_list &lt;- read.delim2(&quot;/rawdata&quot;, header=F) %&gt;% 
   dplyr::rename(forwardReads = V1) %&gt;%
   mutate(sampleID = str_after_nth(forwardReads, &quot;data/&quot;, 1),
          sampleID = str_before_nth(sampleID, &quot;_S&quot;, 1))
@@ -1721,13 +1780,16 @@ sample_list$reverseReads &lt;- gsub(&quot;R1&quot;, &quot;R2&quot;, sample_list$
 # rearranging columns 
 sample_list &lt;- sample_list[,c(2,1,3)]
 
-sample_list %&gt;% write.csv(&quot;/projects/gmgi/Fisheries/eDNA/offshore_wind2023/metadata/samplesheet.csv&quot;, 
+### CHANGE THE PATH HERE
+sample_list %&gt;% write.csv(&quot;/samplesheet.csv&quot;, 
                           row.names=FALSE, quote = FALSE)
 </code></pre></div>
+<p>Path example:  <br />
+- ""</p>
 <h3 id="run-nf-coreampliseq-cutadapt-dada2">Run nf-core/ampliseq (Cutadapt &amp; DADA2)</h3>
 <p>Update ampliseq workflow if needed: <code>nextflow pull nf-core/ampliseq</code>. </p>
 <p>Below script is set for Riaz primers:</p>
-<p><code>01b-ampliseq.sh</code>:</p>
+<p><code>03b-ampliseq.sh</code>:</p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
 #SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
 #SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
