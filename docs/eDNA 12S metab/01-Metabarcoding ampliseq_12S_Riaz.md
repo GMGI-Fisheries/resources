@@ -64,7 +64,7 @@ Background information on [FASTQC](https://hbctraining.github.io/Intro-to-rnaseq
 # Activate conda environment
 source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
 
-## SET PATHS 
+## SET PATHS (CHANGE THESE TO PROJECT SPECIFIC)
 raw_path=""
 out_dir=""
 
@@ -84,6 +84,10 @@ fastqc ${i} --outdir ${out_dir}
 
 To run:    
 - Start slurm array with file 0 (e.g., with 138 files) = `sbatch --array=0-137 00-fastqc.sh`.
+ 
+Path examples:      
+- raw_path="/projects/gmgi/Fisheries/eDNA/tidal_cycle/raw_data"  
+- out_dir="/projects/gmgi/Fisheries/eDNA/tidal_cycle/fastqc_output"     
 
 Notes:  
 
@@ -114,24 +118,21 @@ multiqc_dir=""
 multiqc --interactive ${fastqc_output} -o ${multiqc_dir} --filename multiqc_raw.html
 ```
 
+Path examples:    
+- fastqc_output="/projects/gmgi/Fisheries/eDNA/tidal_cycle/fastqc_output"      
+- multiqc_dir="/projects/gmgi/Fisheries/eDNA/tidal_cycle"   
+
 ## Step 2: Identify sequencing outliers and sub-sample if needed    
 
 This step can be done two ways: 1) download read counts from Illumina basespace run information or 2) Download read counts from the multiqc report. Either way, you need an excel file with the sample ID and total read count. 
 
-Read counts can be downloaded from the Sequence Counts section on Multiqc by selecting Export Plot > Data > Format (csv) > Download Plot Data. Save this file in the project repository. 
+Read counts can be downloaded from the General Statistics section on Multiqc by selecting Export as CSV > Data > Format (csv) > Download Plot Data. Save this file in the project repository. 
 
-![](https://github.com/GMGI-Fisheries/resources/blob/master/img/Multiqc_reads_example_download.png?raw=true)
+![](https://github.com/GMGI-Fisheries/resources/blob/master/img/Multiqc_reads_example_download2.png?raw=true)
 
 We use a median absolute deviation (MAD) approach that works by first finding the median of the data, then measuring how far each value deviates from that median and using the median of those deviations as the typical spread. Values whose deviation is much larger than this typical spread are flagged as outliers.
 
-`02-outlier_detection.R`
-
-```
-
-
-
-
-```
+Visit this [page] for the R script or download [here].
 
 ## Step 3: Run nf-core/ampliseq to remove adapters, predict ASVs, and generate counts tables    
 
@@ -201,8 +202,8 @@ library(stringr)
 library(strex) 
 
 ### Read in sample sheet 
-
-sample_list <- read.delim2("/projects/gmgi/Fisheries/eDNA/offshore_wind2023/raw_data/rawdata", header=F) %>% 
+### CHANGE THE PATH HERE
+sample_list <- read.delim2("/rawdata", header=F) %>% 
   dplyr::rename(forwardReads = V1) %>%
   mutate(sampleID = str_after_nth(forwardReads, "data/", 1),
          sampleID = str_before_nth(sampleID, "_S", 1))
@@ -222,9 +223,14 @@ sample_list$reverseReads <- gsub("R1", "R2", sample_list$reverseReads)
 # rearranging columns 
 sample_list <- sample_list[,c(2,1,3)]
 
-sample_list %>% write.csv("/projects/gmgi/Fisheries/eDNA/offshore_wind2023/metadata/samplesheet.csv", 
+### CHANGE THE PATH HERE
+sample_list %>% write.csv("/samplesheet.csv", 
                           row.names=FALSE, quote = FALSE)
 ```
+
+Path example:    
+- ""
+
 
 ### Run nf-core/ampliseq (Cutadapt & DADA2)
 

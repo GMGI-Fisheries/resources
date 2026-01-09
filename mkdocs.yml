@@ -49,11 +49,11 @@ nav:
   - 'eDNA: 12S metabarcoding':
     - 00-Create-conda-env: '00-creating_eDNA_conda_env.md'
     - 01-ampliseq-12S: 'eDNA 12S metab/01-Metabarcoding ampliseq_12S_Riaz.md'
-    - 02-dfprep-12S: 'eDNA 12S metab/02-datatable_prep_12S_Riaz.md'
-    - 03-decontamination: 'eDNA 12S metab/03-decontamination.md'
-    - 04-report_generation: 'eDNA 12S metab/04-report_generation.md'
-    - 05-phyloseq: 'eDNA 12S metab/05-phyloseq.md'
-    - 06-heatmap: 'eDNA 12S metab/06-heatmap.md'
+    - 02-outlier-12S: 'eDNA 12S metab/02-outlier_detection-template-12S.md'
+    - 03-tax_assign-12S: 'eDNA 12S metab/03-tax_assignment-template-12S.md'
+    - 04-decontamination: 'eDNA 12S metab/04-decontamination-template-12S.md'
+    - 05-report_generation: 'eDNA 12S metab/05-report_generation-template-12S.md'
+    - 06-heatmap: 'eDNA 12S metab/06-heatmap-template-12S.md'
   - 'eDNA: COI metabarcoding':
     - 00-Create-conda-env: '00-creating_eDNA_conda_env.md'
     - 01-ampliseq-COI: 'eDNA COI metab/01-Metabarcoding ampliseq COI.md'

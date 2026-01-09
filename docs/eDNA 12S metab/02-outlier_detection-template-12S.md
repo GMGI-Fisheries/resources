@@ -1,30 +1,52 @@
----
-title: "Detecting outliers based on raw read counts from fastq files "
-output:
-  github_document: default
-  pdf_document:
-    keep_tex: yes
-  html_document:
-    toc: yes
-    toc_depth: 6
-    toc_float: yes
-editor_options: 
-  chunk_output_type: inline
----
+Detecting outliers based on raw read counts from fastq files
+================
 
-
-If paths are not working, select Knit > Project Directory. Ignore this comment if you're not using an R project. 
+If paths are not working, select Knit \> Project Directory. Ignore this
+comment if you’re not using an R project.
 
 ## Load libraries
 
-```{r}
+``` r
 library(dplyr)
+```
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
 library(tidyverse) # for data transformation
+```
+
+    ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+    ## ✔ forcats   1.0.1     ✔ readr     2.1.5
+    ## ✔ ggplot2   4.0.0     ✔ stringr   1.6.0
+    ## ✔ lubridate 1.9.4     ✔ tibble    3.3.0
+    ## ✔ purrr     1.2.0     ✔ tidyr     1.3.1
+
+    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
+    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+``` r
 library(ggplot2) # for plotting
 library(readxl) ## for reading in excel files
 library(ggrepel)
 library(writexl)
 library(vegan) ## rareify 
+```
+
+    ## Loading required package: permute
+
+``` r
 library(strex)
 
 # removing scientific notation
@@ -33,9 +55,9 @@ options(scipen=999)
 set.seed(123)
 ```
 
-## Load read count data 
+## Load read count data
 
-```{r}
+``` r
 ## If loading from Basespace
 basespace_data <- read.csv("docs/eDNA 12S metab/example_input/TID12SRun.demultiplex_stats.csv") %>%
   subset(!Sample.ID=="Undetermined") %>%
@@ -48,7 +70,24 @@ multiqc_data <- read_csv("docs/eDNA 12S metab/example_input/general_stats_table.
   
   ## creating new column called Reads by multiplying M Seqs column by 1,000,000
   mutate(Reads = `M Seqs`*1000000)
+```
 
+    ## Warning: One or more parsing issues, call `problems()` on your data frame for details,
+    ## e.g.:
+    ##   dat <- vroom(...)
+    ##   problems(dat)
+
+    ## Rows: 92 Columns: 4
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (1): Sample
+    ## dbl (2): % Dups, % GC
+    ## num (1): M Seqs
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
 multiqc_summary <- multiqc_data %>%
   
   ## cleaning sample ID to remove R1 and R2 information
@@ -58,7 +97,7 @@ multiqc_summary <- multiqc_data %>%
 
 ## Load metadata
 
-```{r}
+``` r
 meta <- read_xlsx("docs/eDNA 12S metab/example_input/metadata_tidal_cycle.xlsx") 
 
 data <- basespace_data %>%
@@ -66,11 +105,11 @@ data <- basespace_data %>%
   left_join(., meta %>% dplyr::select(`GMGI Sample ID`, `Project Sample ID`), by = "GMGI Sample ID") 
 ```
 
-## Calculate outlier 
+## Calculate outlier
 
 ### Identify outliers based on MAD calculation
 
-```{r}
+``` r
 outliers <- data %>% dplyr::select(`GMGI Sample ID`, `Project Sample ID`, Reads) %>%
   mutate(
     Median = median(Reads),
@@ -87,27 +126,49 @@ outliers <- data %>% dplyr::select(`GMGI Sample ID`, `Project Sample ID`, Reads)
   arrange(desc(Reads))
 ```
 
-Identify high and low thresholds 
+Identify high and low thresholds
 
-```{r}
+``` r
 ## Print high and low thresholds for report 
 ## If low threshold is <0, then just put 0 in the report 
 unique(outliers$Upper_threshold)
-unique(outliers$Lower_threshold)
+```
 
+    ## [1] 101586.7
+
+``` r
+unique(outliers$Lower_threshold)
+```
+
+    ## [1] -5950.718
+
+``` r
 ## Samples above outlier 
 outliers %>% filter(Reads > Upper_threshold)
+```
 
+    ##   GMGI Sample ID Project Sample ID  Reads Median   MAD       Mi Outlier
+    ## 1      TDL-FS-15   9-16-2022_CP_11 106924  47818 10362 3.847423 Outlier
+    ##   Upper_threshold Lower_threshold
+    ## 1        101586.7       -5950.718
+
+``` r
 ### mean
 mean(data$Reads)
+```
 
+    ## [1] 51865.63
+
+``` r
 ### median (used for sub-sampling)
 median(data$Reads)
 ```
 
-Export outliers spreadsheet 
+    ## [1] 47818
 
-```{r}
+Export outliers spreadsheet
+
+``` r
 outliers %>% 
   
   ### for client projects, remove `GMGI Sample ID`
@@ -116,11 +177,12 @@ outliers %>%
   write_xlsx("docs/eDNA 12S metab/example_output/Outliers.xlsx")
 ```
 
-## Plot  
+## Plot
 
-You can adjust the GMGI or Project Sample ID as needed. Use the Project Sample ID for client reports. 
+You can adjust the GMGI or Project Sample ID as needed. Use the Project
+Sample ID for client reports.
 
-```{r}
+``` r
 outliers %>% 
   mutate(Outlier = ifelse(Outlier == "Outlier", "Outlier", "NotOutlier")) %>%
   
@@ -147,13 +209,17 @@ outliers %>%
     axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=12, face="bold"),
     axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=12, face="bold")
   )
+```
 
+![](02-outlier_detection-template-12S_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+``` r
 ggsave("docs/eDNA 12S metab/example_output/figures/Outliers.png", width=7, height=4)
 ```
 
 Plot for report
 
-```{r}
+``` r
 outliers_plot <- outliers %>%
   mutate(
     Outlier = ifelse(Outlier == "Outlier", "Outlier", "NotOutlier"),
@@ -205,8 +271,16 @@ outliers_plot %>%
     axis.title.y = element_text(margin = margin(r = 10), size = 11, face = "bold"),
     legend.position = "none"
   )
-
-
-ggsave("docs/eDNA 12S metab/example_output/figures/SampleReport_Outliers.png", width = 4, height=5)
 ```
 
+    ## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+    ## ℹ Please use `linewidth` instead.
+    ## This warning is displayed once every 8 hours.
+    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+    ## generated.
+
+![](02-outlier_detection-template-12S_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+``` r
+ggsave("docs/eDNA 12S metab/example_output/figures/SampleReport_Outliers.png", width = 4, height=5)
+```
