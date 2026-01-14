@@ -1,5 +1,5 @@
 ---
-title: "Detecting outliers based on raw read counts from fastq files "
+title: "Detecting outliers based on raw read counts from fastq files"
 output:
   github_document: default
   pdf_document:

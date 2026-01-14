@@ -14,6 +14,8 @@ editor_options:
 
 **.Rmd script** 
 
+Example data from [Polinski et al., 2025](https://onlinelibrary.wiley.com/doi/full/10.1002/edn3.70138)
+
 This script takes your Blast output from the GMGI database, Mitofish database, and NCBI database to create one datatable with read counts and taxonomic assignment.  
 
 **Workflow summary:**  
@@ -54,7 +56,7 @@ library(data.table)  ## for data table manipulation
 
 ### Identify paths for metadata and project data 
 
-Each user needs to write in their specific directory outputs prior to the file name. The default working directory is this document so the folder where this script is saved for the user. To change the working directory to the Rproject directory, select 'Knit' and 'Knit Directory' > 'Project Directory'.
+Each user needs to write in their specific directory outputs prior to the file name. The default working directory is this document so the folder where this script is saved for the user. To change the workign directory to the Rproject directory, select 'Knit' and 'Knit Directory' > 'Project Directory'.
 
 ```{r}
 ### User edits:
@@ -64,16 +66,16 @@ Each user needs to write in their specific directory outputs prior to the file n
 path_GMGIdb = "C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/Metabarcoding Lab Resources/Reference Databases/GMGI_Vert_Ref.xlsx"
 
 ## BLAST results
-path_blast_gmgi = "docs/eDNA 12S metab/example_input/blast/BLASTResults_GMGI.txt"
-path_blast_mito = "docs/eDNA 12S metab/example_input/blast/BLASTResults_Mito.txt"
-path_blast_ncbi_taxassigned = "docs/eDNA 12S metab/example_input/blast/NCBI_taxassigned.txt"
-path_blast_ncbi = "docs/eDNA 12S metab/example_input/blast/BLASTResults_NCBI.txt"
+path_blast_gmgi = "example_input/BLASTResults_GMGI.txt"
+path_blast_mito = "example_input/BLASTResults_Mito.txt"
+path_blast_ncbi_taxassigned = "example_input/NCBI_taxassigned.txt"
+path_blast_ncbi = "example_input/BLASTResults_NCBI.txt"
 
 ## ASV table results 
 ## confirm that the ASV_table.len.tsv name is correct for user's project
-path_asv_table = "docs/eDNA 12S metab/example_input/ASV_table.len.tsv"
-path_seq_file = "docs/eDNA 12S metab/example_input/ASV_seqs.len.fasta"
-path_output_summary = "docs/eDNA 12S metab/example_input/overall_summary.tsv"
+path_asv_table = "example_input/ASV_table.len.tsv"
+path_seq_file = "example_input/ASV_seqs.len.fasta"
+path_output_summary = "example_input/overall_summary.tsv"
 ```
 
 Create output files 
@@ -81,24 +83,26 @@ Create output files
 ```{r}
 ### TAXONOMIC CHOICES 
 # output paths 
-path_choice_required = "docs/eDNA 12S metab/example_output/taxonomic_assignments/Choice_required_GMGI_multiplehits.xlsx"
-path_choice_required_edited="docs/eDNA 12S metab/example_output/taxonomic_assignments/Choice_required_GMGI_multiplehits_edited.xlsx"
+path_choice_required = "example_output/Taxonomic_assignments/Choice_required_GMGI_multiplehits.xlsx"
+path_choice_required_edited="example_output/Taxonomic_assignments/Choice_required_GMGI_multiplehits_edited.xlsx"
 
-path_disagree_list = "docs/eDNA 12S metab/example_output/taxonomic_assignments/Three_DB_comparison_taxonomic_ID.xlsx"
-path_disagree_list_edited="docs/eDNA 12S metab/example_output/taxonomic_assignments/Three_DB_comparison_taxonomic_ID_edited.xlsx"
+path_disagree_list = "example_output/Taxonomic_assignments/Three_DB_comparison_taxonomic_ID.xlsx"
+path_disagree_list_edited="example_output/Taxonomic_assignments/Three_DB_comparison_taxonomic_ID_edited.xlsx"
 
-path_commonnames_add="docs/eDNA 12S metab/example_output/taxonomic_assignments/CommonNames_required.xlsx"
-path_commonnames_add_edited="docs/eDNA 12S metab/example_output/taxonomic_assignments/CommonNames_required_edited.xlsx"
+path_commonnames_add="example_output/Taxonomic_assignments/CommonNames_required.xlsx"
+path_commonnames_add_edited="example_output/Taxonomic_assignments/CommonNames_required_edited.xlsx"
 
-reads_filtered_percent_out="docs/eDNA 12S metab/example_output/Filtered_Percent_removed_reads.xlsx"
-reads_filtered10_out="docs/eDNA 12S metab/example_output/Filtered_10_removed_reads.xlsx"
+#### RESULTS MATRICES 
+results_rawreads_matrix = "example_output/Results_initial/Results_rawreads_matrix.xlsx"
+results_rawreads_long = "example_output/Results_initial/Results_rawreads_long_format.xlsx"
+results_relab_matrix = "example_output/Results_initial/Results_relative_abundance_matrix.xlsx"
+results_relab_long = "example_output/Results_initial/Results_relative_abundance_long_format.xlsx"
 
-Species_breakdown_sheet="docs/eDNA 12S metab/example_output/Summary_Species_level.xlsx"
-ASV_breakdown_sheet="docs/eDNA 12S metab/example_output/Summary_ASV_level.xlsx"
+reads_filtered_percent_out="example_output/Filtering_Percent_removed_reads.xlsx"
+reads_filtered10_out="example_output/Filtering_10_removed_reads.xlsx"
 
-results_filtered_df="docs/eDNA 12S metab/example_output/ASV_table_filtered.rds"
-results_matrix_df="docs/eDNA 12S metab/example_output/Results_matrix.xlsx"
-results_relative_df="docs/eDNA 12S metab/example_output/Results_matrix_relative.xlsx"
+Species_breakdown_sheet="example_output/Breakdown_Species_level.xlsx"
+ASV_breakdown_sheet="example_output/Breakdown_ASV_level.xlsx"
 ```
 
 ### Load project metadata 
@@ -110,10 +114,14 @@ Metadata specific to each project. This contains information about each sample (
 ### 1. change path of metadata file
 
 ## EXCEL
-meta <- read_excel("docs/eDNA 12S metab/example_input/metadata_tidal_cycle.xlsx") %>%
+# meta <- read_excel("example_input/metadata.xlsx")
+
+## CSV 
+meta <- read.csv("example_input/SBNMS_metadata.csv", header = TRUE) %>%
   
-  ## ampliseq needs _ but the MiSeq needs - 
-  mutate(`GMGI Sample ID` = gsub("-", "_", `GMGI Sample ID`))
+  ## comment out if not needed
+  ## ampliseq processes _ not -
+  mutate(sampleID = gsub("-", "_", sampleID))
 ```
 
 ### Load database metadata
@@ -173,7 +181,7 @@ Blast_Mito <- read.table(path_blast_mito, header=F, col.names = blast_col_header
          
          ## removing gb || sequence from species name 
          ### uncomment if we need this line again 
-         Species_name = str_after_nth(Species_name, "\\|", 2)
+         # Species_name = str_after_nth(Species_name, "\\|", 2)
          
          )
 ```
@@ -239,7 +247,7 @@ ASV_rank_list <- ASV_table %>% dplyr::select(ASV_ID, ASV_sum, ASV_rank)
 
 ## Taxonomic Assignment
 
-Identifying where NCBI, Mito, and GMGI disagree on tax assignment. With the hierarchical approach, ASVs that match to GMGI and several other databases will only result in GMGI assignment. By reviewing this df, we can be sure we aren't missing an assignment in our GMGI curated database. 
+Identifying where NCBI, Mito, and GMGI disagree on tax assignment. With the hierarchial approach, ASVs that match to GMGI and several other databases will only result in GMGI assignment. By reviewing this df, we can be sure we aren't missing an assignment in our GMGI curated database. 
 
 **Sub-workflow:**  
 1. Identify any ASVs that contain multiple hits within the GMGI database.  
@@ -266,15 +274,14 @@ multiple_hit_choice <- Blast_GMGI %>% dplyr::group_by(ASV_ID) %>%
   left_join(., Blast_GMGI, by = "ASV_ID") %>%
   left_join(., ASV_rank_list, by = "ASV_ID") %>%
   
-  ## adding choice column for next steps 
-  mutate(Choice = NA) %>%
-
   ## adding sequencing information 
   left_join(., fasta_db, by = "ASV_ID") %>%
   
   ## moving database percent ID to be next to Blast percent ID
-  relocate(c(db_percent_ID, ASV_sum, ASV_rank), .after = pident)
+  relocate(c(db_percent_ID, ASV_sum, ASV_rank), .after = pident) %>%
   
+  ## adding choice column for next steps 
+  mutate(Choice = NA)
 
 ## export this data frame as excel sheet 
 multiple_hit_choice %>% write_xlsx(path_choice_required)
@@ -312,7 +319,7 @@ for (i in multiple_hit_choice_edited$ASV_ID) {
 }
 ```
 
-#### Confirming that all entries have been dealt with
+#### Confirming that all entries have been dealth with
 
 No user edits.
 
@@ -348,9 +355,8 @@ disagree_df <- disagree_input_GMGI %>%
   full_join(disagree_input_Mito, by = "ASV_ID") %>%
   full_join(disagree_input_NCBI, by = "ASV_ID") %>%
   full_join(., ASV_rank_list, by = "ASV_ID") %>%
-  mutate(Choice = NA) %>%
-  left_join(., fasta_db, by = "ASV_ID") 
-  
+  left_join(., fasta_db, by = "ASV_ID") %>%
+  mutate(Choice = NA)
 
 ## Filtering the disagree_df to only output the entries that disagree with multiple entries
 filtered_disagree_df <- disagree_df %>%
@@ -576,46 +582,29 @@ colsums <- as.data.frame(colSums(ASV_table_taxID_filtered[, 7:ncol(ASV_table_tax
 
 range(colsums$sum)
 
-# ### Identify samples with <1000 reads
-# low_read_samples <- colsums %>% filter(sum < 1000) %>% pull(sampleID)
-# 
-# ### Remove those samples from dataset
-# ASV_table_taxID_filtered <- ASV_table_taxID_filtered %>%
-#   dplyr::select(-all_of(low_read_samples))
-# 
-# ### Verify
-# range(colSums(ASV_table_taxID_filtered[, 7:ncol(ASV_table_taxID_filtered)], na.rm = TRUE))
+### Identify samples with <1000 reads
+low_read_samples <- colsums %>% filter(sum < 1000) %>% pull(sampleID)
+
+### Remove those samples from dataset
+ASV_table_taxID_filtered <- ASV_table_taxID_filtered %>%
+  dplyr::select(-all_of(low_read_samples))
+
+### Verify
+range(colSums(ASV_table_taxID_filtered[, 7:ncol(ASV_table_taxID_filtered)], na.rm = TRUE))
 ```
 
-## Species List 
+## Create ASV breakdown table 
+
+No user edits.
 
 ```{r}
-species_list <- ASV_table_taxID_filtered %>% dplyr::select(Species_name, Category, ASV_sum) %>% 
-  
-  ## calculate total filtered reads
-  dplyr::group_by(Species_name, Category) %>%
-  reframe(Filtered_reads = sum(ASV_sum)) %>%
-  
-  ## arrange by stats
-  arrange(desc(Filtered_reads)) %>%
-  mutate(
-    Percent = round(Filtered_reads / sum(Filtered_reads) * 100, 4)
-  )
+## Export ASV break-down for 03-data_quality.Rmds
+ASV_table_taxID_filtered %>% dplyr::select(ASV_ID, Species_name, Common_name, Category, ASV_sum, ASV_rank) %>%
+  write_xlsx(ASV_breakdown_sheet)
 
-species_list %>% write_xlsx(Species_breakdown_sheet)
-
-nrow(species_list) == length(unique(species_list$Species_name)) ## should be TRUE
-
-length(unique(species_list$Species_name)) ## 112 species 
-```
-
-
-## Creating results Rdata output 
-
-```{r}
-ASV_table_taxID_filtered
-
-saveRDS(ASV_table_taxID_filtered, results_filtered_df)
+## Confirm number of samples is as expected (outputs should be the same)
+ncol(ASV_table_taxID_annotated %>% dplyr::select(-ASV_ID, -Species_name, -Common_name, -Category, -ASV_sum, -ASV_rank))
+ncol(ASV_table_taxID_filtered %>% dplyr::select(-ASV_ID, -Species_name, -Common_name, -Category, -ASV_sum, -ASV_rank))
 ```
 
 ## Collapsing read counts by species name
@@ -635,58 +624,60 @@ ASV_table_taxID_collapsed <- ASV_table_taxID_filtered %>%
                           .fns = ~ sum(., na.rm = TRUE)), 
                      .groups = 'drop')
 
-# Print number of samples = 39
-ncol(ASV_table_taxID_filtered %>% dplyr::select(-Species_name, -Common_name, -Category, -ASV_ID, -ASV_sum, -ASV_rank))
+# Print number of samples = 187
 ncol(ASV_table_taxID_collapsed %>% dplyr::select(-Species_name, -Common_name, -Category))
-
-length(unique(ASV_table_taxID_collapsed$Species_name))  
 ```
 
-#### Check if any rows or columns == 0 
+
+## Creating results output 
+
+Raw reads results output.   
+No user edits.  
 
 ```{r}
-### Rows
-ASV_table_taxID_collapsed %>%
-  filter(rowSums(across(where(is.numeric))) == 0)
-
-### Columns
-ASV_table_taxID_collapsed %>%
-  select(where(~ is.numeric(.x) && sum(.x, na.rm = TRUE) == 0))
-```
-
-## Create reports 
-
-Species and ASV breakdown reports
-
-```{r}
-### the total number of ASVs is from unfiltered ASVs 
-ASV_table_taxID_filtered %>% dplyr::select(ASV_ID:ASV_rank) %>%
-  write_xlsx(ASV_breakdown_sheet)
-
-## unique taxonomic assignments, not including the unassigned category (for the report)
+### Number of total assignments -1 for unassigned
 length(unique(ASV_table_taxID_collapsed$Species_name)) - 1
+
+## Raw reads matrix (wide format)
+ASV_table_taxID_collapsed %>% write_xlsx(results_rawreads_matrix)
+
+## Raw reads long format and filtering out entries with zero reads
+ASV_table_taxID_collapsed %>% 
+  gather("sampleID", "reads", c(4:last_col())) %>%
+  filter(reads > 0) %>% 
+  left_join(., meta, by = "sampleID") %>%
+  write_xlsx(results_rawreads_long)
+
+## exporting species summary
+ASV_table_taxID_collapsed %>% 
+  gather("sampleID", "reads", c(4:last_col())) %>% 
+  group_by(Species_name, Common_name, Category) %>%
+  dplyr::select(-sampleID) %>%
+  summarise(sum_reads = sum(reads)) %>%
+  write_xlsx(Species_breakdown_sheet)
 ```
 
-### Results tables 
+Relative Abundance
+No user edits.
 
 ```{r}
-# create named vector: names = old, values = new
-# new ID, old ID 
-map <- setNames(meta$`Project Sample ID`, meta$`GMGI Sample ID`)
-
-# replace only matching headers
-names(ASV_table_taxID_collapsed)[names(ASV_table_taxID_collapsed) %in% names(map)] <- map[names(ASV_table_taxID_collapsed)[names(ASV_table_taxID_collapsed) %in% names(map)]]
-
-# exporting that matrix
-ASV_table_taxID_collapsed %>% write_xlsx(results_matrix_df)
-
 ### Calculating relative abundance
-df_relab <- ASV_table_taxID_collapsed %>%
-  mutate(across(4:last_col(), ~ .x / sum(.x), .names = "{.col}")) 
+df_relab <- ASV_table_taxID_collapsed %>% 
+  gather("sampleID", "reads", 4:last_col()) %>%
+  group_by(sampleID) %>%
+  
+  ### total
+  mutate(sample_total = sum(reads)) %>%
+  group_by(sampleID, Species_name) %>%
+  
+  ## relab
+  mutate(relab = reads/sample_total) %>% ungroup() %>%
+  select(-reads, -sample_total) 
 
-df_relab %>% write_xlsx(results_relative_df)
+df_relab %>%
+  left_join(., meta, by = "sampleID") %>%
+  write_xlsx(results_relab_long)
+
+df_relab %>% spread(sampleID, relab) %>% write_xlsx(results_relab_matrix)
 ```
-
-
-
 

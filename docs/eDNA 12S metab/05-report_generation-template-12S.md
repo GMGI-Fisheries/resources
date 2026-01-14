@@ -1,40 +1,88 @@
----
-title: "Summarizing data for report"
-output:
-  github_document: default
-  pdf_document:
-    keep_tex: yes
-  html_document:
-    toc: yes
-    toc_depth: 6
-    toc_float: yes
-editor_options: 
-  chunk_output_type: inline
----
+Summarizing data for report
+================
 
-**.Rmd script** 
+**.Rmd script**
 
 ## Load libraries
 
-```{r}
+``` r
 library(ggplot2) ## for plotting
 library(tidyverse) ## for data table manipulation
+```
+
+    ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+    ## ✔ dplyr     1.1.4     ✔ readr     2.1.5
+    ## ✔ forcats   1.0.1     ✔ stringr   1.6.0
+    ## ✔ lubridate 1.9.4     ✔ tibble    3.3.0
+    ## ✔ purrr     1.2.0     ✔ tidyr     1.3.1
+    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
+    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+``` r
 library(readxl) ## read in excel spreadsheet 
 library(ggh4x) ## for facet wrap options
 library(writexl)
 library(ggrepel)
 library(cowplot)
-library(scales)
+```
 
+    ## 
+    ## Attaching package: 'cowplot'
+    ## 
+    ## The following object is masked from 'package:lubridate':
+    ## 
+    ##     stamp
+
+``` r
+library(scales)
+```
+
+    ## 
+    ## Attaching package: 'scales'
+    ## 
+    ## The following object is masked from 'package:purrr':
+    ## 
+    ##     discard
+    ## 
+    ## The following object is masked from 'package:readr':
+    ## 
+    ##     col_factor
+
+``` r
 library(phyloseq)     # ecological stats
 library(microbiome)   # alpha diversity
 ```
 
-## Load data 
+    ## 
+    ## microbiome R package (microbiome.github.com)
+    ##     
+    ## 
+    ## 
+    ##  Copyright (C) 2011-2022 Leo Lahti, 
+    ##     Sudarshan Shetty et al. <microbiome.github.io>
+    ## 
+    ## 
+    ## Attaching package: 'microbiome'
+    ## 
+    ## The following object is masked from 'package:scales':
+    ## 
+    ##     alpha
+    ## 
+    ## The following object is masked from 'package:ggplot2':
+    ## 
+    ##     alpha
+    ## 
+    ## The following object is masked from 'package:base':
+    ## 
+    ##     transform
 
-Change the paths for your exported excel matrices. 
+## Load data
 
-```{r}
+Change the paths for your exported excel matrices.
+
+``` r
 species_breakdown <- read_xlsx("docs/eDNA 12S metab/example_output/Summary_Species_level.xlsx")
 asv_breakdown <- read_xlsx("docs/eDNA 12S metab/example_output/Summary_ASV_level.xlsx")
 
@@ -48,10 +96,11 @@ rel_ab_df <- read_xlsx("docs/eDNA 12S metab/example_output/Results_matrix_relati
 commonNames_annotated <- read_xlsx("docs/eDNA 12S metab/example_output/taxonomic_assignments/CommonNames_required_edited.xlsx")
 ```
 
-Read in gmgi db taxonomic level information and additional common names from this project.   
-No user edits.   
-  
-```{r}
+Read in gmgi db taxonomic level information and additional common names
+from this project.  
+No user edits.
+
+``` r
 taxlevels <- read_excel(
   "C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/Metabarcoding Lab Resources/Reference Databases/GMGI_Vert_Ref.xlsx") %>% 
   dplyr::select("Species_name", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "species", "PhylogenySorting") %>%
@@ -74,12 +123,17 @@ df_annotated <- df_annotated %>%
 df_tax <- df_annotated %>% dplyr::select(Species_name, Kingdom:PhylogenySorting) %>% distinct()
 ```
 
-## Defining categories and order 
+## Defining categories and order
 
-```{r}
+``` r
 ## Print the unique entries in the column Category
 unique(rel_ab_df$Category) 
+```
 
+    ## [1] "Teleost Fish"  "Bird"          "Marine Mammal" "Livestock"    
+    ## [5] "Human"         "Mammal"        "Reptile"       "Unassigned"
+
+``` r
 ### order these how you'd like the report to be ordered (the figures)
 categories = c(
   "Unassigned", "Human", "Livestock", "Mammal", 
@@ -94,19 +148,31 @@ rel_ab_df <- rel_ab_df %>% dplyr::mutate(Category = factor(Category, levels = ca
 raw_reads <- raw_reads %>% dplyr::mutate(Category = factor(Category, levels = categories))
 ```
 
-Confirm that you didn't forget a category. If you did, <NA> will appear in the list. Re-run the code above *AND* the read_xlsx() code chunk to fix if needed. 
+Confirm that you didn’t forget a category. If you did, <NA> will appear
+in the list. Re-run the code above *AND* the read_xlsx() code chunk to
+fix if needed.
 
-```{r}
+``` r
 unique(rel_ab_df$Category) 
 ```
 
+    ## [1] Teleost Fish  Bird          Marine Mammal Livestock     Human        
+    ## [6] Mammal        Reptile       Unassigned   
+    ## 8 Levels: Unassigned Human Livestock Mammal Bird Reptile ... Teleost Fish
+
 ## Graph color and order options
 
-Edit colors and/or comment/uncomment as needed based on your category list. 
+Edit colors and/or comment/uncomment as needed based on your category
+list.
 
-```{r}
+``` r
 categories
+```
 
+    ## [1] "Unassigned"    "Human"         "Livestock"     "Mammal"       
+    ## [5] "Bird"          "Reptile"       "Marine Mammal" "Teleost Fish"
+
+``` r
 fill_colors <- c(
   "Unassigned" = "grey85",
   "Human" = "#FE9E20", 
@@ -120,11 +186,11 @@ fill_colors <- c(
   )
 ```
 
-## Calculating data for pie charts 
+## Calculating data for pie charts
 
-No user edits. 
+No user edits.
 
-```{r}
+``` r
 ### Creating a results summary df
 ## Group by category and calculate the total reads per category
 results_summary <- raw_reads %>% 
@@ -139,7 +205,21 @@ general_stats <- results_summary %>%
   dplyr::select(Category, percent) %>% distinct() %>%
   ## round to 2 decimal places 
   dplyr::mutate(across(c('percent'), round, 4))
+```
 
+    ## Warning: There was 1 warning in `dplyr::mutate()`.
+    ## ℹ In argument: `across(c("percent"), round, 4)`.
+    ## Caused by warning:
+    ## ! The `...` argument of `across()` is deprecated as of dplyr 1.1.0.
+    ## Supply arguments directly to `.fns` through an anonymous function instead.
+    ## 
+    ##   # Previously
+    ##   across(a:b, mean, na.rm = TRUE)
+    ## 
+    ##   # Now
+    ##   across(a:b, \(x) mean(x, na.rm = TRUE))
+
+``` r
 ### Creating ASV Summary df that will go into ASV pie chart 
 ## Group by category and count the # of distinct(unique) ASVs per category
 ASV_summary <- asv_breakdown %>%
@@ -153,12 +233,13 @@ species_summary <- raw_reads %>%
   reframe(count = n_distinct(Species_name))
 ```
 
-### Generate % reads piechart 
+### Generate % reads piechart
 
-User edits:    
-1. Change paths of output to desired folder (data/figures is the suggested data structure)  
+User edits:  
+1. Change paths of output to desired folder (data/figures is the
+suggested data structure)
 
-```{r}
+``` r
 ### Create pie chart df that calculates 'pos' and 'csum'
 ## 'csum' = reverse cumulative sum of percent (sum of that row’s percent plus all rows after it)
 ## 'pos' = Computes a label position. this ensures the pie chart is ordered by % total 
@@ -191,18 +272,23 @@ piechart_reads <- general_stats %>%
       ) +
   ggtitle("Raw reads (%)") +
   xlab("") + ylab("") + labs(fill = "Category"); piechart_reads
+```
 
+![](05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+``` r
 ggsave("docs/eDNA 12S metab/example_output/figures/SampleReport_Category_breakdown_percent_rawreads.png", width=4, height=3)
 ```
 
-### Generate ASV pie chart 
+### Generate ASV pie chart
 
-This is for internal use, not the contract report. 
+This is for internal use, not the contract report.
 
-User edits:    
-1. Change paths of output to desired folder (data/figures is the suggested data structure)  
+User edits:  
+1. Change paths of output to desired folder (data/figures is the
+suggested data structure)
 
-```{r}
+``` r
 piechart_ASV <- ASV_summary %>%  
   dplyr::mutate(csum = rev(cumsum(rev(count))), 
          pos = count/2 + lead(csum, 1),
@@ -229,16 +315,21 @@ ASV_summary %>%
       ) +
   ggtitle("Number of ASVs") +
   xlab("") + ylab("") + labs(fill = "Category")
+```
 
+![](05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+``` r
 ggsave("docs/eDNA 12S metab/example_output/figures/SampleReport_Category_breakdown_ASVs.png", width=4, height=3)
 ```
 
 ### Generate the number of species pie chart
 
-User edits:    
-1. Change paths of output to desired folder (data/figures is the suggested data structure)  
+User edits:  
+1. Change paths of output to desired folder (data/figures is the
+suggested data structure)
 
-```{r}
+``` r
 piechart_spp <- species_summary %>%  
   dplyr::mutate(csum = rev(cumsum(rev(count))), 
          pos = count/2 + lead(csum, 1),
@@ -264,29 +355,38 @@ piechart_species_plot <- species_summary %>%
   ) +
   ggtitle("Number of Taxonomic Assignments") +
   xlab("") + ylab("") + labs(fill = "Category"); piechart_species_plot
+```
 
+![](05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+``` r
 ggsave("docs/eDNA 12S metab/example_output/figures/SampleReport_Category_breakdown_Species.png", width=4, height=3)
 ```
 
-### Generate pie chart grid for contract report 
+### Generate pie chart grid for contract report
 
-1. Change paths of output to desired folder (data/figures is the suggested data structure)  
+1.  Change paths of output to desired folder (data/figures is the
+    suggested data structure)
 
-```{r}
+``` r
 plot_grid(piechart_reads, piechart_species_plot,
           ncol=2,
           align = "vh"
           )
+```
 
+![](05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+``` r
 ggsave("docs/eDNA 12S metab/example_output/figures/SampleReport_Category_breakdown.png", width=14, height=4)
 ```
 
-
 ## Calculate and plot relative abundance by category
 
-1. Change paths of output to desired folder (data/figures is the suggested data structure)  
+1.  Change paths of output to desired folder (data/figures is the
+    suggested data structure)
 
-```{r}
+``` r
 ### Calculate the reads per category per sample
 raw_reads %>%
   
@@ -316,16 +416,31 @@ ggplot(., aes(y=group_relab, x=Category)) +
         axis.text.x = element_text(size=7), # angle=45, hjust=1
         axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=11, face="bold"),
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=11, face="bold"))
+```
 
+    ## Warning: Removed 8 rows containing non-finite outside the scale range
+    ## (`stat_boxplot()`).
+
+    ## Warning: Removed 8 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+![](05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+``` r
 ggsave("docs/eDNA 12S metab/example_output/figures/SampleReport_Categories_relative_abundance.png", width = 6.5, height = 4)
 ```
 
+    ## Warning: Removed 8 rows containing non-finite outside the scale range
+    ## (`stat_boxplot()`).
+    ## Removed 8 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
 
-## Caluclate Top 30 Species List and plot  
+## Caluclate Top 30 Species List and plot
 
-1. Change paths of output to desired folder (data/figures is the suggested data structure)  
+1.  Change paths of output to desired folder (data/figures is the
+    suggested data structure)
 
-```{r}
+``` r
 ### Create dataframe that calculates the total reads per species and log10 transforms that value 
 top_list <- raw_reads %>%
   filter(!Category == "Other" & !Category == "Livestock" & !Category == "Unassigned" & !Category == "Human") %>%
@@ -334,7 +449,12 @@ top_list <- raw_reads %>%
             log = log10(total)) %>% 
   arrange(desc(total)) %>%
   head(30) %>% dplyr::select(-total)
+```
 
+    ## `summarise()` has grouped output by 'Species_name'. You can override using the
+    ## `.groups` argument.
+
+``` r
 ggplot(top_list, aes(x = fct_reorder(Common_name, log), y = log)) +
   geom_segment(aes(xend = Common_name, yend = 0), color = "#97C1DE") +  # Lollipop stick
   geom_point(size = 3, shape=21, color='grey30', fill = "#97C1DE") +  # Lollipop head
@@ -353,15 +473,20 @@ ggplot(top_list, aes(x = fct_reorder(Common_name, log), y = log)) +
     labels = comma,
     limits = c(0, max(top_list$log) + (max(top_list$log)*0.1))  # Set the upper limit to max value + 10%
   )
+```
 
+![](05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+``` r
 ggsave("docs/eDNA 12S metab/example_output/figures/SampleReport_Top_species_log.png", width=3.5, height=6)
 ```
 
-## Bubble plot 
+## Bubble plot
 
-1. Change paths of output to desired folder (data/figures is the suggested data structure)  
+1.  Change paths of output to desired folder (data/figures is the
+    suggested data structure)
 
-```{r}
+``` r
 raw_reads %>%
   
   ## calculate the sum of reads in the million 
@@ -418,16 +543,20 @@ raw_reads %>%
                         override.aes = list(fill = scales::seq_gradient_pal("#0C4D66", "lightskyblue2")
                                             (seq(0, 1, length.out = 4))))
   )
+```
 
+![](05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+``` r
 ggsave("docs/eDNA 12S metab/example_output/figures/SampleReport_Species_bubbleplot.png", width=4.5, height=10)
 ```
 
-## Biodiversity metrics 
+## Biodiversity metrics
 
-Creating phyloseq object with the df_relative matrix.   
-User edits: Change to df_raw if needed.  
-  
-```{r}
+Creating phyloseq object with the df_relative matrix.  
+User edits: Change to df_raw if needed.
+
+``` r
 df_for_biodiv <- rel_ab_df %>% filter(!is.na(reads))
 
 otu <- otu_table(df_for_biodiv %>% spread(sampleID, reads) %>%
@@ -450,17 +579,34 @@ phylo_obj <- merge_phyloseq(otu)
 
 # Ensure that your OTU table doesn't contain any NA or negative values (output should be FALSE)
 any(is.na(otu_table(phylo_obj)))
+```
+
+    ## [1] FALSE
+
+``` r
 any(otu_table(phylo_obj) < 0)
 ```
 
-### Calculating alpha diversity and species richness 
+    ## [1] FALSE
 
-This is currently done with relative abundance values which is not the best way.. But might be better than raw reads.
+### Calculating alpha diversity and species richness
 
-```{r}
+This is currently done with relative abundance values which is not the
+best way.. But might be better than raw reads.
+
+``` r
 alpha_div <- estimate_richness(phylo_obj, measures = c("Shannon", "Simpson")) %>%
   rownames_to_column(var = "sampleID")# %>% left_join(., meta, by = "sampleID") 
+```
 
+    ## Warning in estimate_richness(phylo_obj, measures = c("Shannon", "Simpson")): The data you have provided does not have
+    ## any singletons. This is highly suspicious. Results of richness
+    ## estimates (for example) are probably unreliable, or wrong, if you have already
+    ## trimmed low-abundance taxa from the data.
+    ## 
+    ## We recommended that you find the un-trimmed data and retry.
+
+``` r
 ## Species Richness
 biodiv_df <- rel_ab_df %>% subset(!Category == "Unassigned") %>% dplyr::group_by(sampleID) %>%
   filter(reads > 0) %>%
@@ -477,7 +623,7 @@ biodiv_df %>%
 
 Plotting
 
-```{r}
+``` r
 ## plotting
 biodiv_df %>%
   ggplot(., aes(x=Richness, y=Shannon)) + 
@@ -499,11 +645,10 @@ biodiv_df %>%
         axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0), size=10, face="bold"),
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=10, face="bold")
   )
-
-ggsave("docs/eDNA 12S metab/example_output/figures/SampleReport_Biodiversity.png", width = 5.5, height = 4)
 ```
 
+![](05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
-
-
-
+``` r
+ggsave("docs/eDNA 12S metab/example_output/figures/SampleReport_Biodiversity.png", width = 5.5, height = 4)
+```

@@ -1,42 +1,49 @@
----
-title: "Datatable preparation base script for eDNA metabarcoding"
-output:
-  github_document: default
-  pdf_document:
-    keep_tex: yes
-  html_document:
-    toc: yes
-    toc_depth: 6
-    toc_float: yes
-editor_options: 
-  chunk_output_type: inline
----
+Datatable preparation base script for eDNA metabarcoding
+================
 
-**.Rmd script** 
+**.Rmd script**
 
-This script takes your Blast output from the GMGI database, Mitofish database, and NCBI database to create one datatable with read counts and taxonomic assignment.  
+This script takes your Blast output from the GMGI database, Mitofish
+database, and NCBI database to create one datatable with read counts and
+taxonomic assignment.
 
 **Workflow summary:**  
-1. Load libraries   
-2. Load metadata     
-3. Load BLAST output from GMGI, Mitofish, and NCBI     
-4. Load DADA2 ASV Table    
+1. Load libraries  
+2. Load metadata  
+3. Load BLAST output from GMGI, Mitofish, and NCBI  
+4. Load DADA2 ASV Table  
 5. Taxonomic Assignment  
-  - 5a. Identify ASVs with multiple hits from GMGI's database    
-  - 5b. Identify entries that mismatch between GMGI, Mitofish, and NCBI databases   
-  - 5c. Assign taxonomy based on hierarchical approach  
-  - 5d. Edit taxonomy annotations based on mismatch table choices  
-  - 5e. Adjusting common name and category for those entries that don't have one (from Mito or NCBI)  
-6. Filtering: Filter ASV by less than 0.1% reads and then collapse by group  
+- 5a. Identify ASVs with multiple hits from GMGI’s database  
+- 5b. Identify entries that mismatch between GMGI, Mitofish, and NCBI
+databases  
+- 5c. Assign taxonomy based on hierarchical approach  
+- 5d. Edit taxonomy annotations based on mismatch table choices  
+- 5e. Adjusting common name and category for those entries that don’t
+have one (from Mito or NCBI)  
+6. Filtering: Filter ASV by less than 0.1% reads and then collapse by
+group  
 7. Collapsing read counts by species name  
-8. Creating results output 
-
+8. Creating results output
 
 ## Load libraries
 
-```{r}
+``` r
 library(ggplot2) ## for plotting
 library(dplyr) ## for data table manipulation
+```
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
 library(tidyr) ## for data table manipulation
 library(readr) ## for reading in tsv files
 library(readxl) ## for reading in excel files
@@ -46,17 +53,146 @@ library(writexl) ## for excel output
 library(purrr) ## for data transformation
 library(funrar) ## for make_relative()
 library(tidyverse) ## for data table manipulation
+```
+
+    ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+    ## ✔ forcats   1.0.1     ✔ tibble    3.3.0
+    ## ✔ lubridate 1.9.4
+
+    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
+    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+``` r
 library(Biostrings) ## for reading in fasta file 
+```
+
+    ## Loading required package: BiocGenerics
+    ## 
+    ## Attaching package: 'BiocGenerics'
+    ## 
+    ## The following objects are masked from 'package:lubridate':
+    ## 
+    ##     intersect, setdiff, union
+    ## 
+    ## The following objects are masked from 'package:dplyr':
+    ## 
+    ##     combine, intersect, setdiff, union
+    ## 
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     IQR, mad, sd, var, xtabs
+    ## 
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     anyDuplicated, aperm, append, as.data.frame, basename, cbind,
+    ##     colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
+    ##     get, grep, grepl, intersect, is.unsorted, lapply, Map, mapply,
+    ##     match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
+    ##     Position, rank, rbind, Reduce, rownames, sapply, setdiff, sort,
+    ##     table, tapply, union, unique, unsplit, which.max, which.min
+    ## 
+    ## Loading required package: S4Vectors
+    ## Loading required package: stats4
+    ## 
+    ## Attaching package: 'S4Vectors'
+    ## 
+    ## The following objects are masked from 'package:lubridate':
+    ## 
+    ##     second, second<-
+    ## 
+    ## The following object is masked from 'package:tidyr':
+    ## 
+    ##     expand
+    ## 
+    ## The following objects are masked from 'package:dplyr':
+    ## 
+    ##     first, rename
+    ## 
+    ## The following object is masked from 'package:utils':
+    ## 
+    ##     findMatches
+    ## 
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     expand.grid, I, unname
+    ## 
+    ## Loading required package: IRanges
+    ## 
+    ## Attaching package: 'IRanges'
+    ## 
+    ## The following object is masked from 'package:lubridate':
+    ## 
+    ##     %within%
+    ## 
+    ## The following object is masked from 'package:purrr':
+    ## 
+    ##     reduce
+    ## 
+    ## The following objects are masked from 'package:dplyr':
+    ## 
+    ##     collapse, desc, slice
+    ## 
+    ## The following object is masked from 'package:grDevices':
+    ## 
+    ##     windows
+    ## 
+    ## Loading required package: XVector
+    ## 
+    ## Attaching package: 'XVector'
+    ## 
+    ## The following object is masked from 'package:purrr':
+    ## 
+    ##     compact
+    ## 
+    ## Loading required package: GenomeInfoDb
+    ## 
+    ## Attaching package: 'Biostrings'
+    ## 
+    ## The following object is masked from 'package:base':
+    ## 
+    ##     strsplit
+
+``` r
 library(data.table)  ## for data table manipulation
 ```
 
+    ## 
+    ## Attaching package: 'data.table'
+    ## 
+    ## The following object is masked from 'package:IRanges':
+    ## 
+    ##     shift
+    ## 
+    ## The following objects are masked from 'package:S4Vectors':
+    ## 
+    ##     first, second
+    ## 
+    ## The following objects are masked from 'package:lubridate':
+    ## 
+    ##     hour, isoweek, mday, minute, month, quarter, second, wday, week,
+    ##     yday, year
+    ## 
+    ## The following object is masked from 'package:purrr':
+    ## 
+    ##     transpose
+    ## 
+    ## The following objects are masked from 'package:dplyr':
+    ## 
+    ##     between, first, last
+
 ## Metadata input
 
-### Identify paths for metadata and project data 
+### Identify paths for metadata and project data
 
-Each user needs to write in their specific directory outputs prior to the file name. The default working directory is this document so the folder where this script is saved for the user. To change the working directory to the Rproject directory, select 'Knit' and 'Knit Directory' > 'Project Directory'.
+Each user needs to write in their specific directory outputs prior to
+the file name. The default working directory is this document so the
+folder where this script is saved for the user. To change the working
+directory to the Rproject directory, select ‘Knit’ and ‘Knit Directory’
+\> ‘Project Directory’.
 
-```{r}
+``` r
 ### User edits:
 ### 1. change paths of input and output as desired 
 
@@ -76,9 +212,9 @@ path_seq_file = "docs/eDNA 12S metab/example_input/ASV_seqs.len.fasta"
 path_output_summary = "docs/eDNA 12S metab/example_input/overall_summary.tsv"
 ```
 
-Create output files 
+Create output files
 
-```{r}
+``` r
 ### TAXONOMIC CHOICES 
 # output paths 
 path_choice_required = "docs/eDNA 12S metab/example_output/taxonomic_assignments/Choice_required_GMGI_multiplehits.xlsx"
@@ -101,11 +237,13 @@ results_matrix_df="docs/eDNA 12S metab/example_output/Results_matrix.xlsx"
 results_relative_df="docs/eDNA 12S metab/example_output/Results_matrix_relative.xlsx"
 ```
 
-### Load project metadata 
+### Load project metadata
 
-Metadata specific to each project. This contains information about each sample (e.g., month, site, time, sample type, etc.). Confirm that sample IDs match those used in the ASV_table.len.tsv file. 
+Metadata specific to each project. This contains information about each
+sample (e.g., month, site, time, sample type, etc.). Confirm that sample
+IDs match those used in the ASV_table.len.tsv file.
 
-```{r}
+``` r
 ### User edits:
 ### 1. change path of metadata file
 
@@ -120,18 +258,19 @@ meta <- read_excel("docs/eDNA 12S metab/example_input/metadata_tidal_cycle.xlsx"
 
 No user edits in this section because paths have already been set above.
 
-```{r}
+``` r
 # Load GMGI database information (common name, species name, etc.)
 gmgi_db <- read_xlsx(path_GMGIdb, sheet = 1) %>% dplyr::rename(sseqid = Ref) %>%
   ## removing > from beginning of entires within Ref column
   mutate(sseqid = gsub(">", "", sseqid))
 ```
 
-## BLAST data input 
+## BLAST data input
 
-No user edits unless user changed blastn parameters from fisheries team default.
+No user edits unless user changed blastn parameters from fisheries team
+default.
 
-```{r}
+``` r
 ## Setting column header names and classes
 blast_col_headers = c("ASV_ID", "sseqid", "pident", "length", "mismatch", "gapopen",
                                         "qstart", "qend", "sstart", "send", "evalue", "bitscore")
@@ -142,7 +281,7 @@ blast_col_classes = c(rep("character", 2), rep("numeric", 10))
 
 No user edits.
 
-```{r}
+``` r
 Blast_GMGI <- read.table(path_blast_gmgi, header=F, col.names = blast_col_headers, colClasses = blast_col_classes) %>%
   ## blast changes spaces to hyphons so we need to change that back to match our metadata
   mutate(sseqid = gsub("-", " ", sseqid)) %>%
@@ -159,11 +298,13 @@ Blast_GMGI <- read.table(path_blast_gmgi, header=F, col.names = blast_col_header
 length(unique(Blast_GMGI$ASV_ID)) 
 ```
 
-### Mitofish database 
+    ## [1] 391
+
+### Mitofish database
 
 No user edits.
 
-```{r}
+``` r
 Blast_Mito <- read.table(path_blast_mito, header=F, col.names = blast_col_headers, colClasses = blast_col_classes) %>%
   # renaming sseqid to species name
   dplyr::rename(Species_name = sseqid) %>%
@@ -178,12 +319,11 @@ Blast_Mito <- read.table(path_blast_mito, header=F, col.names = blast_col_header
          )
 ```
 
-
-### NCBI database 
+### NCBI database
 
 No user edits.
 
-```{r}
+``` r
 NCBI_taxassigned <- read.delim2(path_blast_ncbi_taxassigned, header=F, col.names = c("staxid", "Phylo")) %>%
   ## creating taxonomic assignment columns
   separate(Phylo, c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species_name"), sep = ";") %>%
@@ -199,9 +339,9 @@ Blast_NCBI <- read.table(path_blast_ncbi, header=F,
 
 ## Load ASV sequences
 
-No user edits. 
+No user edits.
 
-```{r}
+``` r
 ### Read in fasta file 
 fasta <- readDNAStringSet(path_seq_file)
 
@@ -212,14 +352,17 @@ fasta_db <- data.table(
 )
 ```
 
+## Load DADA2 ASV Table
 
-## Load DADA2 ASV Table 
-
-The column headers will be the Sample IDs and the first column is the ASV ID. ASVs are given a "rank" based on sum of reads from that ASV (pre-filtering). 'Random' indicates that if ASVs are tied, then the code will randomly assign a rank for those tied. Because we don't need an exact rank here, 'random' will do for a tie-breaker.
+The column headers will be the Sample IDs and the first column is the
+ASV ID. ASVs are given a “rank” based on sum of reads from that ASV
+(pre-filtering). ‘Random’ indicates that if ASVs are tied, then the code
+will randomly assign a rank for those tied. Because we don’t need an
+exact rank here, ‘random’ will do for a tie-breaker.
 
 No user edits.
 
-```{r}
+``` r
 ASV_table <- read_tsv(path_asv_table, show_col_types = FALSE) %>%
   ## calculate the sum of all reads for each ASV
   mutate(., ASV_sum = rowSums(across(where(is.numeric)))) %>% 
@@ -239,24 +382,32 @@ ASV_rank_list <- ASV_table %>% dplyr::select(ASV_ID, ASV_sum, ASV_rank)
 
 ## Taxonomic Assignment
 
-Identifying where NCBI, Mito, and GMGI disagree on tax assignment. With the hierarchical approach, ASVs that match to GMGI and several other databases will only result in GMGI assignment. By reviewing this df, we can be sure we aren't missing an assignment in our GMGI curated database. 
+Identifying where NCBI, Mito, and GMGI disagree on tax assignment. With
+the hierarchical approach, ASVs that match to GMGI and several other
+databases will only result in GMGI assignment. By reviewing this df, we
+can be sure we aren’t missing an assignment in our GMGI curated
+database.
 
 **Sub-workflow:**  
-1. Identify any ASVs that contain multiple hits within the GMGI database.  
-2. Identify entries that mismatch between GMGI, Mitofish, and NCBI databases.  
+1. Identify any ASVs that contain multiple hits within the GMGI
+database.  
+2. Identify entries that mismatch between GMGI, Mitofish, and NCBI
+databases.  
 3. Assign taxonomy based on hierarchical approach.  
-4. Edit taxonomy annotations based on mismatch table.    
-5. Adjusting common name for those entries that don't have one (from Mito or GMGI).   
+4. Edit taxonomy annotations based on mismatch table.  
+5. Adjusting common name for those entries that don’t have one (from
+Mito or GMGI).
 
 ### Identify any ASVs that contain multiple hits within the GMGI database
 
-At this point, a fisheries team member needs to make choices about which taxonomic assignment to accept.
+At this point, a fisheries team member needs to make choices about which
+taxonomic assignment to accept.
 
 #### Create list of those ASVs with multiple hits
 
 No user edits.
 
-```{r}
+``` r
 multiple_hit_choice <- Blast_GMGI %>% dplyr::group_by(ASV_ID) %>%
   ## take top percent identity hit, count the number of top hits, and filter to those with more than 1 top hit 
   slice_max(pident, n=1) %>% dplyr::count() %>% filter(n>1) %>%
@@ -280,13 +431,15 @@ multiple_hit_choice <- Blast_GMGI %>% dplyr::group_by(ASV_ID) %>%
 multiple_hit_choice %>% write_xlsx(path_choice_required)
 ```
 
-Based on the output above, user needs to make some choices. In the excel spreadsheet, user needs to mark 'x' on the choices desired while leaving the other entries blank. 
+Based on the output above, user needs to make some choices. In the excel
+spreadsheet, user needs to mark ‘x’ on the choices desired while leaving
+the other entries blank.
 
-#### Choosing one of several hits. 
+#### Choosing one of several hits.
 
-Load choice edited dataset. No user edits. 
+Load choice edited dataset. No user edits.
 
-```{r}
+``` r
 multiple_hit_choice_edited <- read_xlsx(path_choice_required_edited) %>%
   ## selecting the choices made
   filter(!is.na(Choice)) %>%
@@ -294,9 +447,10 @@ multiple_hit_choice_edited <- read_xlsx(path_choice_required_edited) %>%
   dplyr::select(ASV_ID, sseqid, Choice)
 ```
 
-A for loop will filter Blast_GMGI df based on these choices. No user edits. 
+A for loop will filter Blast_GMGI df based on these choices. No user
+edits.
 
-```{r}
+``` r
 # Create a new edited df
 Blast_GMGI_edited <- Blast_GMGI 
 
@@ -316,18 +470,23 @@ for (i in multiple_hit_choice_edited$ASV_ID) {
 
 No user edits.
 
-```{r}
+``` r
 ### Check the below output to confirm the filtering steps above worked (if it worked, it won't be in output)
 Blast_GMGI_edited %>% dplyr::group_by(ASV_ID) %>% slice_max(pident, n=1) %>% dplyr::count() %>% filter(n>1)
 ```
 
+    ## # A tibble: 0 × 2
+    ## # Groups:   ASV_ID [0]
+    ## # ℹ 2 variables: ASV_ID <chr>, n <int>
+
 ### Identify entries that mismatch between GMGI, Mitofish, and NCBI databases
 
-Creating a df called "Disagree". Review the output before moving onto the next section.
+Creating a df called “Disagree”. Review the output before moving onto
+the next section.
 
 No user edits.
 
-```{r}
+``` r
 ## Create GMGI species input
 disagree_input_GMGI <- Blast_GMGI_edited %>% 
   dplyr::select(ASV_ID, GMGI_pident = pident, GMGI_db_ID = db_percent_ID, GMGI_Species = Species_name) %>%
@@ -374,11 +533,12 @@ filtered_disagree_df %>% write_xlsx(path_disagree_list)
 
 ### Assign taxonomy based on hierarchical approach
 
-Taxonomic identification is taken from GMGI 100%, then GMGI <100%, then Mitofish 100%, and finally NCBI 100%.
+Taxonomic identification is taken from GMGI 100%, then GMGI \<100%, then
+Mitofish 100%, and finally NCBI 100%.
 
 No user edits.
 
-```{r}
+``` r
 ASV_table_taxID <- ASV_table %>% 
   
   ## 1. Top hit from GMGI's database
@@ -414,10 +574,10 @@ ASV_table_taxID <- ASV_table %>%
 
 ### Edit taxonomy annotations based on mismatch table
 
-Override any annotations with edited taxonomic identification table.   
+Override any annotations with edited taxonomic identification table.  
 No user edits.
 
-```{r}
+``` r
 ## read in edited df 
 taxonomic_choice <- read_xlsx(path_disagree_list_edited) %>%
     ## selecting only columns needed 
@@ -443,17 +603,20 @@ for (i in taxonomic_choice$ASV_ID) {
 
 No user edits.
 
-```{r}
+``` r
 ## Output will be blank
 ASV_table_taxID_edited %>% dplyr::select(Species_name) %>% distinct() %>% 
   filter(., grepl(";", Species_name)) %>% arrange(Species_name) 
 ```
 
-### Adjusting common name for those entries that don't have one (from Mito or NCBI)
+    ## # A tibble: 0 × 1
+    ## # ℹ 1 variable: Species_name <chr>
+
+### Adjusting common name for those entries that don’t have one (from Mito or NCBI)
 
 No user edits.
 
-```{r}
+``` r
 ### add common name column to df
 ASV_table_taxID_edited <- ASV_table_taxID_edited %>%
   left_join(., gmgi_db %>% dplyr::select(Species_name, Common_name, Category) %>% distinct(), by = "Species_name") %>%
@@ -473,7 +636,7 @@ ASV_table_taxID_edited %>% dplyr::select(Species_name, Common_name) %>%
 
 Editing common names and category when needed.
 
-```{r}
+``` r
 ## read in edited df 
 commonNames_annotated <- read_xlsx(path_commonnames_add_edited)
 
@@ -500,11 +663,14 @@ for (i in commonNames_annotated$Species_name) {
 ASV_table_taxID_annotated %>% dplyr::select(Species_name, Common_name) %>% filter(is.na(Common_name)) %>% distinct()
 ```
 
+    ## # A tibble: 0 × 2
+    ## # ℹ 2 variables: Species_name <chr>, Common_name <chr>
+
 ## Filtering
 
 ### Filter out reads that are less than 10 in each sample per ASV
 
-```{r}
+``` r
 ASV_table_taxID_filtered_step1 <- ASV_table_taxID_annotated %>%
   ## telling the df we are doing the following function by rows (ASVs)
   rowwise() %>%
@@ -514,7 +680,11 @@ ASV_table_taxID_filtered_step1 <- ASV_table_taxID_annotated %>%
                 .fns = ~ ifelse(.x<10, 0, .x))) %>% ungroup()
 
 nrow(ASV_table_taxID_filtered_step1)  
+```
 
+    ## [1] 422
+
+``` r
 ## Remove rows with zero sums across the table
 ASV_table_taxID_filtered_step2 <- ASV_table_taxID_filtered_step1 %>%
   # Keep only rows where the sum across columns 7:ncol(.) is greater than 0
@@ -523,9 +693,11 @@ ASV_table_taxID_filtered_step2 <- ASV_table_taxID_filtered_step1 %>%
 nrow(ASV_table_taxID_filtered_step2) 
 ```
 
+    ## [1] 400
+
 Create output of reads that were filtered out
 
-```{r}
+``` r
 ASV_table_taxID_annotated %>%
   ## telling the df we are doing the following function by rows (ASVs)
   rowwise() %>%
@@ -539,11 +711,12 @@ ASV_table_taxID_annotated %>%
 
 ### Filter out reads that are less than a certain % of ASV (row) total per sample
 
-Values are based on the MiSeq used because the flow cell elicits different adapter hopping tendencies:  
+Values are based on the MiSeq used because the flow cell elicits
+different adapter hopping tendencies:  
 - Legacy MiSeq = 0.001  
 - New MiSeq = 0.0025
 
-```{r}
+``` r
 ASV_table_taxID_filtered <- ASV_table_taxID_filtered_step2 %>%
   ## telling the df we are doing the following function by rows (ASVs)
   rowwise() %>%
@@ -554,7 +727,7 @@ ASV_table_taxID_filtered <- ASV_table_taxID_filtered_step2 %>%
 
 Create output of reads that were filtered out
 
-```{r}
+``` r
 ASV_table_taxID_filtered_step1 %>%
   ## telling the df we are doing the following function by rows (ASVs)
   rowwise() %>%
@@ -567,15 +740,20 @@ ASV_table_taxID_filtered_step1 %>%
 
 ### Filter out samples with less than X number of reads
 
-Remove samples that don't meet minimum read count thresholds. GMGI Fisheries team minimum is 1,000 reads.
+Remove samples that don’t meet minimum read count thresholds. GMGI
+Fisheries team minimum is 1,000 reads.
 
-```{r}
+``` r
 ### View final number of reads for each sample
 colsums <- as.data.frame(colSums(ASV_table_taxID_filtered[, 7:ncol(ASV_table_taxID_filtered)], na.rm = TRUE)) %>%
   dplyr::rename(sum=1) %>% arrange(sum) %>% rownames_to_column(var = "sampleID")
 
 range(colsums$sum)
+```
 
+    ## [1]     0 90067
+
+``` r
 # ### Identify samples with <1000 reads
 # low_read_samples <- colsums %>% filter(sum < 1000) %>% pull(sampleID)
 # 
@@ -587,9 +765,9 @@ range(colsums$sum)
 # range(colSums(ASV_table_taxID_filtered[, 7:ncol(ASV_table_taxID_filtered)], na.rm = TRUE))
 ```
 
-## Species List 
+## Species List
 
-```{r}
+``` r
 species_list <- ASV_table_taxID_filtered %>% dplyr::select(Species_name, Category, ASV_sum) %>% 
   
   ## calculate total filtered reads
@@ -605,16 +783,45 @@ species_list <- ASV_table_taxID_filtered %>% dplyr::select(Species_name, Categor
 species_list %>% write_xlsx(Species_breakdown_sheet)
 
 nrow(species_list) == length(unique(species_list$Species_name)) ## should be TRUE
+```
 
+    ## [1] TRUE
+
+``` r
 length(unique(species_list$Species_name)) ## 112 species 
 ```
 
+    ## [1] 112
 
-## Creating results Rdata output 
+## Creating results Rdata output
 
-```{r}
+``` r
 ASV_table_taxID_filtered
+```
 
+    ## # A tibble: 400 × 55
+    ## # Rowwise: 
+    ##    ASV_ID       Species_name Common_name Category ASV_sum ASV_rank TDL_EC_49_12S
+    ##    <chr>        <chr>        <chr>       <chr>      <dbl> <chr>            <dbl>
+    ##  1 e9d13e82268… Menidia men… Atlantic s… Teleost…  867666 1/422             1417
+    ##  2 80b85e59cac… Fundulus he… Mummichog   Teleost…  478263 2/422             5299
+    ##  3 0c345c9a2aa… Brevoortia … Atlantic m… Teleost…  215802 3/422              406
+    ##  4 8961e2d14d8… Clupeidae sp Atlantic m… Teleost…  188456 4/422               75
+    ##  5 6a9c2d5770b… Ammodytes d… Northern s… Teleost…   56436 5/422             2766
+    ##  6 1186c621e04… Pseudopleur… Winter or … Teleost…   55158 6/422             6011
+    ##  7 ef311a4fd2c… Fundulus ma… Striped ki… Teleost…   49796 7/422               98
+    ##  8 ea364c18219… Homo sapiens Human       Human      49413 8/422             3537
+    ##  9 9a193f7029a… Gallus gall… Chicken     Livesto…   36080 9/422               12
+    ## 10 d38ddf42991… Apeltes qua… Fourspine … Teleost…   24082 10/422            2895
+    ## # ℹ 390 more rows
+    ## # ℹ 48 more variables: TDL_FS_10_12S <dbl>, TDL_FS_11_12S <dbl>,
+    ## #   TDL_FS_12_12S <dbl>, TDL_FS_13_12S <lgl>, TDL_FS_14_12S <dbl>,
+    ## #   TDL_FS_15_12S <dbl>, TDL_FS_16_12S <dbl>, TDL_FS_17_12S <dbl>,
+    ## #   TDL_FS_18_12S <dbl>, TDL_FS_19_12S <dbl>, TDL_FS_1_12S <dbl>,
+    ## #   TDL_FS_20_12S <dbl>, TDL_FS_21_12S <dbl>, TDL_FS_22_12S <dbl>,
+    ## #   TDL_FS_23_12S <dbl>, TDL_FS_24_12S <dbl>, TDL_FS_25_12S <dbl>, …
+
+``` r
 saveRDS(ASV_table_taxID_filtered, results_filtered_df)
 ```
 
@@ -622,7 +829,7 @@ saveRDS(ASV_table_taxID_filtered, results_filtered_df)
 
 No user edits.
 
-```{r}
+``` r
 ASV_table_taxID_collapsed <- ASV_table_taxID_filtered %>% 
   # removing original ASV_ID to collapse
   dplyr::select(-ASV_ID, -ASV_sum, -ASV_rank) %>%  
@@ -637,28 +844,65 @@ ASV_table_taxID_collapsed <- ASV_table_taxID_filtered %>%
 
 # Print number of samples = 39
 ncol(ASV_table_taxID_filtered %>% dplyr::select(-Species_name, -Common_name, -Category, -ASV_ID, -ASV_sum, -ASV_rank))
-ncol(ASV_table_taxID_collapsed %>% dplyr::select(-Species_name, -Common_name, -Category))
+```
 
+    ## [1] 49
+
+``` r
+ncol(ASV_table_taxID_collapsed %>% dplyr::select(-Species_name, -Common_name, -Category))
+```
+
+    ## [1] 49
+
+``` r
 length(unique(ASV_table_taxID_collapsed$Species_name))  
 ```
 
-#### Check if any rows or columns == 0 
+    ## [1] 112
 
-```{r}
+#### Check if any rows or columns == 0
+
+``` r
 ### Rows
 ASV_table_taxID_collapsed %>%
   filter(rowSums(across(where(is.numeric))) == 0)
+```
 
+    ## # A tibble: 0 × 52
+    ## # ℹ 52 variables: Species_name <chr>, Common_name <chr>, Category <chr>,
+    ## #   TDL_EC_49_12S <dbl>, TDL_FS_10_12S <dbl>, TDL_FS_11_12S <dbl>,
+    ## #   TDL_FS_12_12S <dbl>, TDL_FS_13_12S <int>, TDL_FS_14_12S <dbl>,
+    ## #   TDL_FS_15_12S <dbl>, TDL_FS_16_12S <dbl>, TDL_FS_17_12S <dbl>,
+    ## #   TDL_FS_18_12S <dbl>, TDL_FS_19_12S <dbl>, TDL_FS_1_12S <dbl>,
+    ## #   TDL_FS_20_12S <dbl>, TDL_FS_21_12S <dbl>, TDL_FS_22_12S <dbl>,
+    ## #   TDL_FS_23_12S <dbl>, TDL_FS_24_12S <dbl>, TDL_FS_25_12S <dbl>, …
+
+``` r
 ### Columns
 ASV_table_taxID_collapsed %>%
   select(where(~ is.numeric(.x) && sum(.x, na.rm = TRUE) == 0))
 ```
 
-## Create reports 
+    ## # A tibble: 112 × 1
+    ##    TDL_FS_13_12S
+    ##            <int>
+    ##  1             0
+    ##  2             0
+    ##  3             0
+    ##  4             0
+    ##  5             0
+    ##  6             0
+    ##  7             0
+    ##  8             0
+    ##  9             0
+    ## 10             0
+    ## # ℹ 102 more rows
+
+## Create reports
 
 Species and ASV breakdown reports
 
-```{r}
+``` r
 ### the total number of ASVs is from unfiltered ASVs 
 ASV_table_taxID_filtered %>% dplyr::select(ASV_ID:ASV_rank) %>%
   write_xlsx(ASV_breakdown_sheet)
@@ -667,9 +911,11 @@ ASV_table_taxID_filtered %>% dplyr::select(ASV_ID:ASV_rank) %>%
 length(unique(ASV_table_taxID_collapsed$Species_name)) - 1
 ```
 
-### Results tables 
+    ## [1] 111
 
-```{r}
+### Results tables
+
+``` r
 # create named vector: names = old, values = new
 # new ID, old ID 
 map <- setNames(meta$`Project Sample ID`, meta$`GMGI Sample ID`)
@@ -686,7 +932,3 @@ df_relab <- ASV_table_taxID_collapsed %>%
 
 df_relab %>% write_xlsx(results_relative_df)
 ```
-
-
-
-
