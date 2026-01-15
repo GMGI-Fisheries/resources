@@ -1,0 +1,124 @@
+---
+title: "Sub-sampling and Decontamination"
+output:
+  github_document: default
+  pdf_document:
+    keep_tex: yes
+  html_document:
+    toc: yes
+    toc_depth: 6
+    toc_float: yes
+editor_options: 
+  chunk_output_type: inline
+---
+
+**.Rmd script** 
+
+This script provides code for optional sub-sampling and decontamination based on NTCs and blanks. 
+
+## Load libraries
+
+```{r}
+library(tidyverse) # for data transformation
+library(ggplot2) # for plotting
+library(readxl) ## for reading in excel files
+library(viridis)
+library(hrbrthemes)
+library(ggrepel)
+library(cowplot)
+library(Rmisc)
+library(writexl)
+library(vegan) ## rareify 
+library(patchwork)
+library(microDecon)
+
+# removing scientific notation
+## remove line or comment out if not desired 
+options(scipen=999)
+set.seed(123)
+```
+
+## Load data 
+
+For the sake of demonstration, I added a NTC to the results matrix. Change the file name for own data.
+
+```{r}
+### loading RData if applicable uncomment
+# load("../results/Raw_data.RData")
+# data <- ASV_table_taxID_collapsed
+
+data <- read_xlsx("docs/eDNA 12S metab/example_output/")
+
+meta <- read_xlsx("docs/eDNA 12S metab/example_input/metadata_tidal_cycle.xlsx") %>%
+  mutate(`GMGI Sample ID` = gsub("-", "_", `GMGI Sample ID`))
+```
+
+## Microdecon 
+
+https://github.com/donaldtmcknight/microDecon
+
+At this point, remove positive controls from the dataset (not applicable to this example).
+
+```{r}
+## Add annotation as needed for the name of the NTC or blank
+df_for_microDecon <- data %>%
+  dplyr::select(-(Common_name:Category)) %>%
+  relocate(matches("BK|EC"), .after = Species_name)
+
+## numb.blanks = the number of blank columns present in the dataset
+## numb.ind=c(141) = the number of field samples 
+
+decontaminated <- decon(data = df_for_microDecon, 
+                        
+                        ## number of blank columns [integer]
+                        numb.blanks=1, 
+                        
+                        ## number of individuals per group [integer]
+                        ## number of samples - 1 (still troubleshooting why this is - 1..)
+                        numb.ind=c(141),
+                        
+                        ## Indicate if taxa columns are present (T/F)
+                        ## this includes species name column for us 
+                        taxa=T)
+```
+
+Exporting decontaminated data 
+
+```{r}
+removed <- decontaminated$reads.removed
+save(removed, file = "example_output/Results_decontaminated/Decontaminated_reads_removed.RData")
+
+decontamin_df <- decontaminated$decon.table
+
+## if multiple blanks, a new column called Mean.blank is created, if not the column name remains the same
+decontamin_df <- decontamin_df %>% 
+  #dplyr::select(-Mean.blank)
+  dplyr::select(-NTC)
+
+df_filtered <- df_adj %>% dplyr::select(Species_name:Category) %>% right_join(., decontamin_df)
+
+nrow(df_adj) ## Number spp before microdecon
+nrow(df_filtered) ## Number spp after microdecon
+```
+
+Exporting dataframe 
+
+```{r}
+df_filtered %>% write_xlsx("example_output/Results_decontaminated/Results_read_count_decontaminated.xlsx")
+
+df_relab <- df_filtered %>% 
+  gather("sampleID", "reads", 4:last_col()) %>%
+  dplyr::group_by(sampleID) %>%
+
+  ### total
+  dplyr::mutate(sample_total = sum(reads)) %>%
+  dplyr::group_by(sampleID, Species_name) %>%
+
+  ## relab
+  dplyr::mutate(relab = reads/sample_total) %>% ungroup() %>%
+  select(-reads, -sample_total) 
+
+df_relab %>% write_xlsx("example_output/Results_decontaminated/Results_relative_abundance_decontaminated.xlsx")
+```
+
+

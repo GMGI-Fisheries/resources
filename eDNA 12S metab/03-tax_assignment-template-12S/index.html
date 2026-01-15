@@ -12,7 +12,7 @@
         <link rel="prev" href="../02-outlier_detection-template-12S/">
       
       
-        <link rel="next" href="../05-report_generation-template-12S/">
+        <link rel="next" href="../04-report_generation-template-12S/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -991,18 +991,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#species-list" class="md-nav__link">
+  <a href="#creating-results-rdata-output" class="md-nav__link">
     <span class="md-ellipsis">
-      Species List
+      Creating results Rdata output
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#creating-results-rdata-output" class="md-nav__link">
+  <a href="#decontaminating-based-on-blanks" class="md-nav__link">
     <span class="md-ellipsis">
-      Creating results Rdata output
+      Decontaminating based on blanks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-species-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate species list
     </span>
   </a>
   
@@ -1072,11 +1081,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../eDNA 12S metab/04-decontamination-template-12S.md" class="md-nav__link">
+      <a href="../04-report_generation-template-12S/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    04-decontamination
+    04-report_generation
   </span>
   
 
@@ -1093,32 +1102,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../05-report_generation-template-12S/" class="md-nav__link">
+      <a href="../../eDNA 12S metab/05-heatmap-template-12S.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    05-report_generation
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../eDNA 12S metab/06-heatmap-template-12S.md" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    06-heatmap
+    05-heatmap
   </span>
   
 
@@ -1759,18 +1747,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#species-list" class="md-nav__link">
+  <a href="#creating-results-rdata-output" class="md-nav__link">
     <span class="md-ellipsis">
-      Species List
+      Creating results Rdata output
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#creating-results-rdata-output" class="md-nav__link">
+  <a href="#decontaminating-based-on-blanks" class="md-nav__link">
     <span class="md-ellipsis">
-      Creating results Rdata output
+      Decontaminating based on blanks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-species-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate species list
     </span>
   </a>
   
@@ -2017,6 +2014,8 @@ group<br />
 ## 
 ##     between, first, last
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">microDecon</span><span class="p">)</span><span class="w"> </span><span class="c1">## for microDecon </span>
+</code></pre></div>
 <h2 id="metadata-input">Metadata input</h2>
 <h3 id="identify-paths-for-metadata-and-project-data">Identify paths for metadata and project data</h3>
 <p>Each user needs to write in their specific directory outputs prior to
@@ -2056,6 +2055,7 @@ directory to the Rproject directory, select ‘Knit’ and ‘Knit Directory’
 
 <span class="n">reads_filtered_percent_out</span><span class="o">=</span><span class="s">&quot;docs/eDNA 12S metab/example_output/Filtered_Percent_removed_reads.xlsx&quot;</span>
 <span class="n">reads_filtered10_out</span><span class="o">=</span><span class="s">&quot;docs/eDNA 12S metab/example_output/Filtered_10_removed_reads.xlsx&quot;</span>
+<span class="n">reads_decontaminated_out</span><span class="o">=</span><span class="s">&quot;docs/eDNA 12S metab/example_output/Filtered_Decontaminated_removed_reads.RData&quot;</span>
 
 <span class="n">Species_breakdown_sheet</span><span class="o">=</span><span class="s">&quot;docs/eDNA 12S metab/example_output/Summary_Species_level.xlsx&quot;</span>
 <span class="n">ASV_breakdown_sheet</span><span class="o">=</span><span class="s">&quot;docs/eDNA 12S metab/example_output/Summary_ASV_level.xlsx&quot;</span>
@@ -2491,29 +2491,6 @@ Fisheries team minimum is 1,000 reads.</p>
 <span class="c1"># ### Verify</span>
 <span class="c1"># range(colSums(ASV_table_taxID_filtered[, 7:ncol(ASV_table_taxID_filtered)], na.rm = TRUE))</span>
 </code></pre></div>
-<h2 id="species-list">Species List</h2>
-<div class="highlight"><pre><span></span><code><span class="n">species_list</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ASV_table_taxID_filtered</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">Species_name</span><span class="p">,</span><span class="w"> </span><span class="n">Category</span><span class="p">,</span><span class="w"> </span><span class="n">ASV_sum</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
-
-<span class="w">  </span><span class="c1">## calculate total filtered reads</span>
-<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">group_by</span><span class="p">(</span><span class="n">Species_name</span><span class="p">,</span><span class="w"> </span><span class="n">Category</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
-<span class="w">  </span><span class="nf">reframe</span><span class="p">(</span><span class="n">Filtered_reads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">ASV_sum</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
-
-<span class="w">  </span><span class="c1">## arrange by stats</span>
-<span class="w">  </span><span class="nf">arrange</span><span class="p">(</span><span class="nf">desc</span><span class="p">(</span><span class="n">Filtered_reads</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
-<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span>
-<span class="w">    </span><span class="n">Percent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span><span class="n">Filtered_reads</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">Filtered_reads</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">100</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
-
-<span class="n">species_list</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="n">Species_breakdown_sheet</span><span class="p">)</span>
-
-<span class="nf">nrow</span><span class="p">(</span><span class="n">species_list</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nf">unique</span><span class="p">(</span><span class="n">species_list</span><span class="o">$</span><span class="n">Species_name</span><span class="p">))</span><span class="w"> </span><span class="c1">## should be TRUE</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>## [1] TRUE
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="nf">length</span><span class="p">(</span><span class="nf">unique</span><span class="p">(</span><span class="n">species_list</span><span class="o">$</span><span class="n">Species_name</span><span class="p">))</span><span class="w"> </span><span class="c1">## 112 species </span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>## [1] 112
-</code></pre></div>
 <h2 id="creating-results-rdata-output">Creating results Rdata output</h2>
 <div class="highlight"><pre><span></span><code><span class="n">ASV_table_taxID_filtered</span>
 </code></pre></div>
@@ -2541,9 +2518,97 @@ Fisheries team minimum is 1,000 reads.</p>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="nf">saveRDS</span><span class="p">(</span><span class="n">ASV_table_taxID_filtered</span><span class="p">,</span><span class="w"> </span><span class="n">results_filtered_df</span><span class="p">)</span>
 </code></pre></div>
+<h2 id="decontaminating-based-on-blanks">Decontaminating based on blanks</h2>
+<p>Optional if blanks are included in dataset. User edits:<br />
+1. Change the samples to be removed with 0 zeros. If none, then comment
+out that line.<br />
+2. Edit the number of blanks and number of samples.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Add annotation as needed for the name of the NTC or blank</span>
+<span class="n">df_for_microDecon</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ASV_table_taxID_filtered</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">Species_name</span><span class="o">:</span><span class="n">Category</span><span class="p">),</span><span class="w"> </span><span class="o">-</span><span class="n">ASV_sum</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">ASV_rank</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+
+<span class="w">  </span><span class="c1">## remove any samples with 0 reads total </span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">TDL_FS_13_12S</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+
+<span class="w">  </span><span class="c1">## replace NAs with zeros </span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">mutate</span><span class="p">(</span><span class="nf">across</span><span class="p">(</span><span class="nf">where</span><span class="p">(</span><span class="n">is.numeric</span><span class="p">),</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">tidyr</span><span class="o">::</span><span class="nf">replace_na</span><span class="p">(</span><span class="n">.x</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">)))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">relocate</span><span class="p">(</span><span class="nf">matches</span><span class="p">(</span><span class="s">&quot;BK|EC&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">.after</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ASV_ID</span><span class="p">)</span><span class="w"> </span>
+
+<span class="c1">## re-formatting</span>
+<span class="n">df_for_microDecon</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.data.frame</span><span class="p">(</span><span class="n">df_for_microDecon</span><span class="p">)</span>
+
+<span class="c1">## print the number of field samples in dataframe </span>
+<span class="nf">sum</span><span class="p">(</span><span class="nf">grepl</span><span class="p">(</span><span class="s">&quot;_FS&quot;</span><span class="p">,</span><span class="w"> </span><span class="nf">colnames</span><span class="p">(</span><span class="n">df_for_microDecon</span><span class="p">)))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## [1] 47
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nf">sum</span><span class="p">(</span><span class="nf">grepl</span><span class="p">(</span><span class="s">&quot;BK|EC&quot;</span><span class="p">,</span><span class="w"> </span><span class="nf">colnames</span><span class="p">(</span><span class="n">df_for_microDecon</span><span class="p">)))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## [1] 1
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## numb.blanks = the number of blank columns present in the dataset</span>
+<span class="c1">## numb.ind=c(141) = the number of field samples </span>
+
+<span class="n">decontaminated</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">decon</span><span class="p">(</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df_for_microDecon</span><span class="p">,</span><span class="w"> </span>
+
+<span class="w">                        </span><span class="c1">## number of blank columns [integer]</span>
+<span class="w">                        </span><span class="n">numb.blanks</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="w"> </span>
+
+<span class="w">                        </span><span class="c1">## number of individuals per group [integer]</span>
+<span class="w">                        </span><span class="n">numb.ind</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">47</span><span class="p">),</span>
+
+<span class="w">                        </span><span class="c1">## Indicate if taxa columns are present (T/F)</span>
+<span class="w">                        </span><span class="c1">## no species information here</span>
+<span class="w">                        </span><span class="n">taxa</span><span class="o">=</span><span class="bp">F</span><span class="p">)</span>
+</code></pre></div>
+<p>Exporting</p>
+<div class="highlight"><pre><span></span><code><span class="c1">### Reads removed </span>
+<span class="n">removed</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">decontaminated</span><span class="o">$</span><span class="n">reads.removed</span>
+<span class="nf">save</span><span class="p">(</span><span class="n">removed</span><span class="p">,</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reads_decontaminated_out</span><span class="p">)</span>
+
+<span class="n">decontamin_df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">decontaminated</span><span class="o">$</span><span class="n">decon.table</span>
+
+<span class="c1">## if multiple blanks, a new column called Mean.blank is created, if not the column name remains the same</span>
+<span class="n">ASV_table_taxID_decontaminated</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">decontamin_df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">full_join</span><span class="p">(</span>
+<span class="w">  </span><span class="n">ASV_table_taxID_filtered</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">ASV_ID</span><span class="p">,</span><span class="w"> </span><span class="n">Species_name</span><span class="p">,</span><span class="w"> </span><span class="n">Common_name</span><span class="p">,</span><span class="w"> </span><span class="n">Category</span><span class="p">,</span><span class="w"> </span><span class="n">ASV_sum</span><span class="p">,</span><span class="w"> </span><span class="n">ASV_rank</span><span class="p">),</span><span class="w"> </span><span class="n">.</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="n">by</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ASV_ID&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="nf">matches</span><span class="p">(</span><span class="s">&quot;_EC&quot;</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+
+<span class="w">  </span><span class="c1">## removing ASVs that were removed by decontamin</span>
+<span class="w">  </span><span class="c1">## these are characterized by NA read counts across every sample so remove NAs</span>
+<span class="w">  </span><span class="nf">na.omit</span><span class="p">()</span>
+</code></pre></div>
+<p>At this point:<br />
+- <code>ASV_table_taxID_filtered</code> = ASV-level pre-decontaminated matrix<br />
+- <code>ASV_table_taxID_decontaminated</code> = ASV-level post-decontaminated
+matrix</p>
+<h2 id="generate-species-list">Generate species list</h2>
+<div class="highlight"><pre><span></span><code><span class="n">species_list</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ASV_table_taxID_decontaminated</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">Species_name</span><span class="p">,</span><span class="w"> </span><span class="n">Category</span><span class="p">,</span><span class="w"> </span><span class="n">ASV_sum</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+
+<span class="w">  </span><span class="c1">## calculate total filtered reads</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">group_by</span><span class="p">(</span><span class="n">Species_name</span><span class="p">,</span><span class="w"> </span><span class="n">Category</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">reframe</span><span class="p">(</span><span class="n">Filtered_reads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">ASV_sum</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+
+<span class="w">  </span><span class="c1">## arrange by stats</span>
+<span class="w">  </span><span class="nf">arrange</span><span class="p">(</span><span class="nf">desc</span><span class="p">(</span><span class="n">Filtered_reads</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span>
+<span class="w">    </span><span class="n">Percent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span><span class="n">Filtered_reads</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">Filtered_reads</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">100</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="n">species_list</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="n">Species_breakdown_sheet</span><span class="p">)</span>
+
+<span class="nf">nrow</span><span class="p">(</span><span class="n">species_list</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nf">unique</span><span class="p">(</span><span class="n">species_list</span><span class="o">$</span><span class="n">Species_name</span><span class="p">))</span><span class="w"> </span><span class="c1">## should be TRUE</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## [1] TRUE
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nf">length</span><span class="p">(</span><span class="nf">unique</span><span class="p">(</span><span class="n">species_list</span><span class="o">$</span><span class="n">Species_name</span><span class="p">))</span><span class="w">  </span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## [1] 107
+</code></pre></div>
 <h2 id="collapsing-read-counts-by-species-name">Collapsing read counts by species name</h2>
 <p>No user edits.</p>
-<div class="highlight"><pre><span></span><code><span class="n">ASV_table_taxID_collapsed</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ASV_table_taxID_filtered</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+<div class="highlight"><pre><span></span><code><span class="n">ASV_table_taxID_collapsed</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ASV_table_taxID_decontaminated</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
 <span class="w">  </span><span class="c1"># removing original ASV_ID to collapse</span>
 <span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">ASV_ID</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">ASV_sum</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">ASV_rank</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">  </span>
 
@@ -2562,44 +2627,31 @@ Fisheries team minimum is 1,000 reads.</p>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="nf">ncol</span><span class="p">(</span><span class="n">ASV_table_taxID_collapsed</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">Species_name</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">Common_name</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">Category</span><span class="p">))</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>## [1] 49
+<div class="highlight"><pre><span></span><code>## [1] 47
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="nf">length</span><span class="p">(</span><span class="nf">unique</span><span class="p">(</span><span class="n">ASV_table_taxID_collapsed</span><span class="o">$</span><span class="n">Species_name</span><span class="p">))</span><span class="w">  </span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>## [1] 112
+<div class="highlight"><pre><span></span><code>## [1] 107
 </code></pre></div>
 <h4 id="check-if-any-rows-or-columns-0">Check if any rows or columns == 0</h4>
 <div class="highlight"><pre><span></span><code><span class="c1">### Rows</span>
 <span class="n">ASV_table_taxID_collapsed</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="nf">rowSums</span><span class="p">(</span><span class="nf">across</span><span class="p">(</span><span class="nf">where</span><span class="p">(</span><span class="n">is.numeric</span><span class="p">)))</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>## # A tibble: 0 × 52
-## # ℹ 52 variables: Species_name &lt;chr&gt;, Common_name &lt;chr&gt;, Category &lt;chr&gt;,
-## #   TDL_EC_49_12S &lt;dbl&gt;, TDL_FS_10_12S &lt;dbl&gt;, TDL_FS_11_12S &lt;dbl&gt;,
-## #   TDL_FS_12_12S &lt;dbl&gt;, TDL_FS_13_12S &lt;int&gt;, TDL_FS_14_12S &lt;dbl&gt;,
-## #   TDL_FS_15_12S &lt;dbl&gt;, TDL_FS_16_12S &lt;dbl&gt;, TDL_FS_17_12S &lt;dbl&gt;,
-## #   TDL_FS_18_12S &lt;dbl&gt;, TDL_FS_19_12S &lt;dbl&gt;, TDL_FS_1_12S &lt;dbl&gt;,
-## #   TDL_FS_20_12S &lt;dbl&gt;, TDL_FS_21_12S &lt;dbl&gt;, TDL_FS_22_12S &lt;dbl&gt;,
-## #   TDL_FS_23_12S &lt;dbl&gt;, TDL_FS_24_12S &lt;dbl&gt;, TDL_FS_25_12S &lt;dbl&gt;, …
+<div class="highlight"><pre><span></span><code>## # A tibble: 0 × 50
+## # ℹ 50 variables: Species_name &lt;chr&gt;, Common_name &lt;chr&gt;, Category &lt;chr&gt;,
+## #   TDL_FS_10_12S &lt;dbl&gt;, TDL_FS_11_12S &lt;dbl&gt;, TDL_FS_12_12S &lt;dbl&gt;,
+## #   TDL_FS_14_12S &lt;dbl&gt;, TDL_FS_15_12S &lt;dbl&gt;, TDL_FS_16_12S &lt;dbl&gt;,
+## #   TDL_FS_17_12S &lt;dbl&gt;, TDL_FS_18_12S &lt;dbl&gt;, TDL_FS_19_12S &lt;dbl&gt;,
+## #   TDL_FS_1_12S &lt;dbl&gt;, TDL_FS_20_12S &lt;dbl&gt;, TDL_FS_21_12S &lt;dbl&gt;,
+## #   TDL_FS_22_12S &lt;dbl&gt;, TDL_FS_23_12S &lt;dbl&gt;, TDL_FS_24_12S &lt;dbl&gt;,
+## #   TDL_FS_25_12S &lt;dbl&gt;, TDL_FS_26_12S &lt;dbl&gt;, TDL_FS_27_12S &lt;dbl&gt;, …
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1">### Columns</span>
 <span class="n">ASV_table_taxID_collapsed</span><span class="w"> </span><span class="o">%&gt;%</span>
 <span class="w">  </span><span class="nf">select</span><span class="p">(</span><span class="nf">where</span><span class="p">(</span><span class="o">~</span><span class="w"> </span><span class="nf">is.numeric</span><span class="p">(</span><span class="n">.x</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">.x</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">))</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>## # A tibble: 112 × 1
-##    TDL_FS_13_12S
-##            &lt;int&gt;
-##  1             0
-##  2             0
-##  3             0
-##  4             0
-##  5             0
-##  6             0
-##  7             0
-##  8             0
-##  9             0
-## 10             0
-## # ℹ 102 more rows
+<div class="highlight"><pre><span></span><code>## # A tibble: 107 × 0
 </code></pre></div>
 <h2 id="create-reports">Create reports</h2>
 <p>Species and ASV breakdown reports</p>
@@ -2610,7 +2662,7 @@ Fisheries team minimum is 1,000 reads.</p>
 <span class="c1">## unique taxonomic assignments, not including the unassigned category (for the report)</span>
 <span class="nf">length</span><span class="p">(</span><span class="nf">unique</span><span class="p">(</span><span class="n">ASV_table_taxID_collapsed</span><span class="o">$</span><span class="n">Species_name</span><span class="p">))</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>## [1] 111
+<div class="highlight"><pre><span></span><code>## [1] 106
 </code></pre></div>
 <h3 id="results-tables">Results tables</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># create named vector: names = old, values = new</span>

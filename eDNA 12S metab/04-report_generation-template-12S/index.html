@@ -20,7 +20,7 @@
     
     
       
-        <title>05-report_generation - GMGI Fisheries Handbook</title>
+        <title>04-report_generation - GMGI Fisheries Handbook</title>
       
     
     
@@ -108,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              05-report_generation
+              04-report_generation
             
           </span>
         </div>
@@ -702,27 +702,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../../eDNA 12S metab/04-decontamination-template-12S.md" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    04-decontamination
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -739,7 +718,7 @@
           
   
   <span class="md-ellipsis">
-    05-report_generation
+    04-report_generation
   </span>
   
 
@@ -750,7 +729,7 @@
         
   
   <span class="md-ellipsis">
-    05-report_generation
+    04-report_generation
   </span>
   
 
@@ -925,11 +904,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../eDNA 12S metab/06-heatmap-template-12S.md" class="md-nav__link">
+      <a href="../../eDNA 12S metab/05-heatmap-template-12S.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    06-heatmap
+    05-heatmap
   </span>
   
 
@@ -1461,7 +1440,7 @@
                   
 
   
-    <a href="https://github.com/GMGI-Fisheries/resources/blob/master/docs/eDNA 12S metab/05-report_generation-template-12S.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/GMGI-Fisheries/resources/blob/master/docs/eDNA 12S metab/04-report_generation-template-12S.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -1702,7 +1681,7 @@ suggested data structure)</p>
 <span class="w">  </span><span class="nf">ggtitle</span><span class="p">(</span><span class="s">&quot;Raw reads (%)&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 <span class="w">  </span><span class="nf">xlab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">ylab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">labs</span><span class="p">(</span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Category&quot;</span><span class="p">);</span><span class="w"> </span><span class="n">piechart_reads</span>
 </code></pre></div>
-<p><img alt="" src="../05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-8-1.png" /><!-- --></p>
+<p><img alt="" src="../04-report_generation-template-12S_files/figure-gfm/unnamed-chunk-8-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;docs/eDNA 12S metab/example_output/figures/SampleReport_Category_breakdown_percent_rawreads.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">3</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="generate-asv-pie-chart">Generate ASV pie chart</h3>
@@ -1737,7 +1716,7 @@ suggested data structure)</p>
 <span class="w">  </span><span class="nf">ggtitle</span><span class="p">(</span><span class="s">&quot;Number of ASVs&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 <span class="w">  </span><span class="nf">xlab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">ylab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">labs</span><span class="p">(</span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Category&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p><img alt="" src="../05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-9-1.png" /><!-- --></p>
+<p><img alt="" src="../04-report_generation-template-12S_files/figure-gfm/unnamed-chunk-9-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;docs/eDNA 12S metab/example_output/figures/SampleReport_Category_breakdown_ASVs.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">3</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="generate-the-number-of-species-pie-chart">Generate the number of species pie chart</h3>
@@ -1770,7 +1749,7 @@ suggested data structure)</p>
 <span class="w">  </span><span class="nf">ggtitle</span><span class="p">(</span><span class="s">&quot;Number of Taxonomic Assignments&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 <span class="w">  </span><span class="nf">xlab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">ylab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">labs</span><span class="p">(</span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Category&quot;</span><span class="p">);</span><span class="w"> </span><span class="n">piechart_species_plot</span>
 </code></pre></div>
-<p><img alt="" src="../05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-10-1.png" /><!-- --></p>
+<p><img alt="" src="../04-report_generation-template-12S_files/figure-gfm/unnamed-chunk-10-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;docs/eDNA 12S metab/example_output/figures/SampleReport_Category_breakdown_Species.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">3</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="generate-pie-chart-grid-for-contract-report">Generate pie chart grid for contract report</h3>
@@ -1783,7 +1762,7 @@ suggested data structure)</p>
 <span class="w">          </span><span class="n">align</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;vh&quot;</span>
 <span class="w">          </span><span class="p">)</span>
 </code></pre></div>
-<p><img alt="" src="../05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-11-1.png" /><!-- --></p>
+<p><img alt="" src="../04-report_generation-template-12S_files/figure-gfm/unnamed-chunk-11-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;docs/eDNA 12S metab/example_output/figures/SampleReport_Category_breakdown.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">14</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="calculate-and-plot-relative-abundance-by-category">Calculate and plot relative abundance by category</h2>
@@ -1821,19 +1800,8 @@ suggested data structure)</p>
 <span class="w">        </span><span class="n">axis.title.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">11</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
 <span class="w">        </span><span class="n">axis.title.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">11</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">))</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>## Warning: Removed 8 rows containing non-finite outside the scale range
-## (`stat_boxplot()`).
-
-## Warning: Removed 8 rows containing missing values or values outside the scale range
-## (`geom_point()`).
-</code></pre></div>
-<p><img alt="" src="../05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-12-1.png" /><!-- --></p>
+<p><img alt="" src="../04-report_generation-template-12S_files/figure-gfm/unnamed-chunk-12-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;docs/eDNA 12S metab/example_output/figures/SampleReport_Categories_relative_abundance.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6.5</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">)</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>## Warning: Removed 8 rows containing non-finite outside the scale range
-## (`stat_boxplot()`).
-## Removed 8 rows containing missing values or values outside the scale range
-## (`geom_point()`).
 </code></pre></div>
 <h2 id="caluclate-top-30-species-list-and-plot">Caluclate Top 30 Species List and plot</h2>
 <ol>
@@ -1871,7 +1839,7 @@ suggested data structure)</p>
 <span class="w">    </span><span class="n">limits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">top_list</span><span class="o">$</span><span class="n">log</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="nf">max</span><span class="p">(</span><span class="n">top_list</span><span class="o">$</span><span class="n">log</span><span class="p">)</span><span class="o">*</span><span class="m">0.1</span><span class="p">))</span><span class="w">  </span><span class="c1"># Set the upper limit to max value + 10%</span>
 <span class="w">  </span><span class="p">)</span>
 </code></pre></div>
-<p><img alt="" src="../05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-13-1.png" /><!-- --></p>
+<p><img alt="" src="../04-report_generation-template-12S_files/figure-gfm/unnamed-chunk-13-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;docs/eDNA 12S metab/example_output/figures/SampleReport_Top_species_log.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">3.5</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">6</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="bubble-plot">Bubble plot</h2>
@@ -1936,7 +1904,7 @@ suggested data structure)</p>
 <span class="w">                                            </span><span class="p">(</span><span class="nf">seq</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">length.out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">))))</span>
 <span class="w">  </span><span class="p">)</span>
 </code></pre></div>
-<p><img alt="" src="../05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-14-1.png" /><!-- --></p>
+<p><img alt="" src="../04-report_generation-template-12S_files/figure-gfm/unnamed-chunk-14-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;docs/eDNA 12S metab/example_output/figures/SampleReport_Species_bubbleplot.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">4.5</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">10</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="biodiversity-metrics">Biodiversity metrics</h2>
@@ -2020,7 +1988,7 @@ best way.. But might be better than raw reads.</p>
 <span class="w">        </span><span class="n">axis.title.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="p">)</span>
 </code></pre></div>
-<p><img alt="" src="../05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-17-1.png" /><!-- --></p>
+<p><img alt="" src="../04-report_generation-template-12S_files/figure-gfm/unnamed-chunk-17-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="s">&quot;docs/eDNA 12S metab/example_output/figures/SampleReport_Biodiversity.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5.5</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">)</span>
 </code></pre></div>
 
