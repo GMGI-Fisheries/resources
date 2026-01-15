@@ -274,7 +274,7 @@ piechart_reads <- general_stats %>%
   xlab("") + ylab("") + labs(fill = "Category"); piechart_reads
 ```
 
-![](05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](04-report_generation-template-12S_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ``` r
 ggsave("docs/eDNA 12S metab/example_output/figures/SampleReport_Category_breakdown_percent_rawreads.png", width=4, height=3)
@@ -317,7 +317,7 @@ ASV_summary %>%
   xlab("") + ylab("") + labs(fill = "Category")
 ```
 
-![](05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](04-report_generation-template-12S_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 ``` r
 ggsave("docs/eDNA 12S metab/example_output/figures/SampleReport_Category_breakdown_ASVs.png", width=4, height=3)
@@ -357,7 +357,7 @@ piechart_species_plot <- species_summary %>%
   xlab("") + ylab("") + labs(fill = "Category"); piechart_species_plot
 ```
 
-![](05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](04-report_generation-template-12S_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 ``` r
 ggsave("docs/eDNA 12S metab/example_output/figures/SampleReport_Category_breakdown_Species.png", width=4, height=3)
@@ -375,7 +375,7 @@ plot_grid(piechart_reads, piechart_species_plot,
           )
 ```
 
-![](05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](04-report_generation-template-12S_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 ``` r
 ggsave("docs/eDNA 12S metab/example_output/figures/SampleReport_Category_breakdown.png", width=14, height=4)
@@ -418,22 +418,11 @@ ggplot(., aes(y=group_relab, x=Category)) +
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=11, face="bold"))
 ```
 
-    ## Warning: Removed 8 rows containing non-finite outside the scale range
-    ## (`stat_boxplot()`).
-
-    ## Warning: Removed 8 rows containing missing values or values outside the scale range
-    ## (`geom_point()`).
-
-![](05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](04-report_generation-template-12S_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 ``` r
 ggsave("docs/eDNA 12S metab/example_output/figures/SampleReport_Categories_relative_abundance.png", width = 6.5, height = 4)
 ```
-
-    ## Warning: Removed 8 rows containing non-finite outside the scale range
-    ## (`stat_boxplot()`).
-    ## Removed 8 rows containing missing values or values outside the scale range
-    ## (`geom_point()`).
 
 ## Caluclate Top 30 Species List and plot
 
@@ -475,7 +464,7 @@ ggplot(top_list, aes(x = fct_reorder(Common_name, log), y = log)) +
   )
 ```
 
-![](05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](04-report_generation-template-12S_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 ``` r
 ggsave("docs/eDNA 12S metab/example_output/figures/SampleReport_Top_species_log.png", width=3.5, height=6)
@@ -545,7 +534,7 @@ raw_reads %>%
   )
 ```
 
-![](05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](04-report_generation-template-12S_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 ``` r
 ggsave("docs/eDNA 12S metab/example_output/figures/SampleReport_Species_bubbleplot.png", width=4.5, height=10)
@@ -647,7 +636,7 @@ biodiv_df %>%
   )
 ```
 
-![](05-report_generation-template-12S_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](04-report_generation-template-12S_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 ``` r
 ggsave("docs/eDNA 12S metab/example_output/figures/SampleReport_Biodiversity.png", width = 5.5, height = 4)

@@ -48,6 +48,7 @@ library(funrar) ## for make_relative()
 library(tidyverse) ## for data table manipulation
 library(Biostrings) ## for reading in fasta file 
 library(data.table)  ## for data table manipulation
+library(microDecon) ## for microDecon 
 ```
 
 ## Metadata input
@@ -92,6 +93,7 @@ path_commonnames_add_edited="docs/eDNA 12S metab/example_output/taxonomic_assign
 
 reads_filtered_percent_out="docs/eDNA 12S metab/example_output/Filtered_Percent_removed_reads.xlsx"
 reads_filtered10_out="docs/eDNA 12S metab/example_output/Filtered_10_removed_reads.xlsx"
+reads_decontaminated_out="docs/eDNA 12S metab/example_output/Filtered_Decontaminated_removed_reads.RData"
 
 Species_breakdown_sheet="docs/eDNA 12S metab/example_output/Summary_Species_level.xlsx"
 ASV_breakdown_sheet="docs/eDNA 12S metab/example_output/Summary_ASV_level.xlsx"
@@ -587,10 +589,83 @@ range(colsums$sum)
 # range(colSums(ASV_table_taxID_filtered[, 7:ncol(ASV_table_taxID_filtered)], na.rm = TRUE))
 ```
 
-## Species List 
+## Creating results Rdata output 
 
 ```{r}
-species_list <- ASV_table_taxID_filtered %>% dplyr::select(Species_name, Category, ASV_sum) %>% 
+ASV_table_taxID_filtered
+saveRDS(ASV_table_taxID_filtered, results_filtered_df)
+```
+
+## Decontaminating based on blanks 
+
+Optional if blanks are included in dataset. User edits:  
+1. Change the samples to be removed with 0 zeros. If none, then comment out that line.  
+2. Edit the number of blanks and number of samples. 
+
+```{r}
+## Add annotation as needed for the name of the NTC or blank
+df_for_microDecon <- ASV_table_taxID_filtered %>%
+  dplyr::select(-(Species_name:Category), -ASV_sum, -ASV_rank) %>%
+  
+  ## remove any samples with 0 reads total 
+  dplyr::select(-TDL_FS_13_12S) %>%
+  
+  ## replace NAs with zeros 
+  dplyr::mutate(across(where(is.numeric), ~ tidyr::replace_na(.x, 0))) %>%
+  relocate(matches("BK|EC"), .after = ASV_ID) 
+
+## re-formatting
+df_for_microDecon <- as.data.frame(df_for_microDecon)
+
+## print the number of field samples in dataframe 
+sum(grepl("_FS", colnames(df_for_microDecon)))
+sum(grepl("BK|EC", colnames(df_for_microDecon)))
+
+## numb.blanks = the number of blank columns present in the dataset
+## numb.ind=c(141) = the number of field samples 
+
+decontaminated <- decon(data = df_for_microDecon, 
+                        
+                        ## number of blank columns [integer]
+                        numb.blanks=1, 
+                        
+                        ## number of individuals per group [integer]
+                        numb.ind=c(47),
+                        
+                        ## Indicate if taxa columns are present (T/F)
+                        ## no species information here
+                        taxa=F)
+```
+
+Exporting 
+
+```{r}
+### Reads removed 
+removed <- decontaminated$reads.removed
+save(removed, file = reads_decontaminated_out)
+
+decontamin_df <- decontaminated$decon.table
+
+## if multiple blanks, a new column called Mean.blank is created, if not the column name remains the same
+ASV_table_taxID_decontaminated <- decontamin_df %>% full_join(
+  ASV_table_taxID_filtered %>% dplyr::select(ASV_ID, Species_name, Common_name, Category, ASV_sum, ASV_rank), ., 
+  by = "ASV_ID") %>%
+  
+  dplyr::select(-matches("_EC")) %>%
+  
+  ## removing ASVs that were removed by decontamin
+  ## these are characterized by NA read counts across every sample so remove NAs
+  na.omit()
+```
+
+At this point:  
+- `ASV_table_taxID_filtered` = ASV-level pre-decontaminated matrix   
+- `ASV_table_taxID_decontaminated` = ASV-level post-decontaminated matrix    
+
+## Generate species list 
+
+```{r}
+species_list <- ASV_table_taxID_decontaminated %>% dplyr::select(Species_name, Category, ASV_sum) %>% 
   
   ## calculate total filtered reads
   dplyr::group_by(Species_name, Category) %>%
@@ -606,16 +681,7 @@ species_list %>% write_xlsx(Species_breakdown_sheet)
 
 nrow(species_list) == length(unique(species_list$Species_name)) ## should be TRUE
 
-length(unique(species_list$Species_name)) ## 112 species 
-```
-
-
-## Creating results Rdata output 
-
-```{r}
-ASV_table_taxID_filtered
-
-saveRDS(ASV_table_taxID_filtered, results_filtered_df)
+length(unique(species_list$Species_name))  
 ```
 
 ## Collapsing read counts by species name
@@ -623,7 +689,7 @@ saveRDS(ASV_table_taxID_filtered, results_filtered_df)
 No user edits.
 
 ```{r}
-ASV_table_taxID_collapsed <- ASV_table_taxID_filtered %>% 
+ASV_table_taxID_collapsed <- ASV_table_taxID_decontaminated %>% 
   # removing original ASV_ID to collapse
   dplyr::select(-ASV_ID, -ASV_sum, -ASV_rank) %>%  
   
