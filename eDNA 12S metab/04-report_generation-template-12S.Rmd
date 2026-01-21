@@ -66,7 +66,7 @@ for (i in commonNames_annotated$Species_name) {
   
   # Apply filter based on the current row's condition
 df_annotated <- df_annotated %>%
-  mutate(across(c(Common_name, Category, Kingdom, Phylum, Class, Order, Family, Genus, species),
+  mutate(across(c(Common_name, Category, Kingdom, Phylum, Class, Order, Family, Genus, species, PhylogenySorting),
                 ~case_when(Species_name == current_row$Species_name ~ current_row[[cur_column()]],
                            TRUE ~ .x)))
 }
