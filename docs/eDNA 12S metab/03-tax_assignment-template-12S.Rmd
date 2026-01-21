@@ -464,7 +464,8 @@ ASV_table_taxID_edited <- ASV_table_taxID_edited %>%
 ### print entries with no common name
 ASV_table_taxID_edited %>% dplyr::select(Species_name, Common_name) %>% 
   filter(is.na(Common_name)) %>% distinct() %>%
-  mutate(Category = NA, Kingdom = NA, Phylum = NA, Class = NA, Order = NA, Family = NA, Genus = NA, species = NA) %>%
+  mutate(Category = NA, Kingdom = NA, Phylum = NA, Class = NA, 
+         Order = NA, Family = NA, Genus = NA, species = NA, PhylogenySorting = NA) %>%
   mutate(
     across(everything(), ~case_when(
       Species_name == "Unassigned" ~ "Unassigned",

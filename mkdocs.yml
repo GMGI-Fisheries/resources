@@ -53,6 +53,7 @@ nav:
     - 03-tax_assign-12S: 'eDNA 12S metab/03-tax_assignment-template-12S.md'
     - 04-report_generation: 'eDNA 12S metab/04-report_generation-template-12S.md'
     - 05-heatmap: 'eDNA 12S metab/05-heatmap-template-12S.md'
+    - 06-phyloseq: 'eDNA 12S metab/06-phyloseq-template-12S.md'
   - 'eDNA: COI metabarcoding':
     - 00-Create-conda-env: '00-creating_eDNA_conda_env.md'
     - 01-ampliseq-COI: 'eDNA COI metab/01-Metabarcoding ampliseq COI.md'

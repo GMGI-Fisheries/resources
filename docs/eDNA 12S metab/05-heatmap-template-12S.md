@@ -1,26 +1,31 @@
----
-title: "Relative Abundance Heatmaps: eDNA metabarcoding base script"
-output:
-  github_document: default
-  pdf_document:
-    keep_tex: yes
-  html_document:
-    toc: yes
-    toc_depth: 6
-    toc_float: yes
-editor_options: 
-  chunk_output_type: inline
----
+Relative Abundance Heatmaps: eDNA metabarcoding base script
+================
 
-**.Rmd script** 
+**.Rmd script**
 
-This script plots your relative abundance matrix as a heatmap. Figures produced are potentially part of the main figures of your manuscript/report. 
+This script plots your relative abundance matrix as a heatmap. Figures
+produced are potentially part of the main figures of your
+manuscript/report.
 
 ## Load libraries
 
-```{r}
+``` r
 library(ggplot2) ## for plotting
 library(dplyr) ## for data table manipulation
+```
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
 library(tidyr) ## for data table manipulation
 library(readxl) ## for reading in excel files
 library(stringr) ## for data transformation
@@ -28,6 +33,18 @@ library(strex) ## for data transformation
 library(purrr) ## for data transformation
 library(funrar) ## for make_relative()
 library(tidyverse) ## for data transformation
+```
+
+    ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+    ## ✔ forcats   1.0.1     ✔ readr     2.1.5
+    ## ✔ lubridate 1.9.4     ✔ tibble    3.3.0
+
+    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
+    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+``` r
 library(naniar) ## replace_with_na_all function
 library(ggh4x) ## for facet wrap options
 library(tidytext)
@@ -35,16 +52,26 @@ library(forcats)
 library(scales)
 ```
 
-## Load data 
+    ## 
+    ## Attaching package: 'scales'
+    ## 
+    ## The following object is masked from 'package:readr':
+    ## 
+    ##     col_factor
+    ## 
+    ## The following object is masked from 'package:purrr':
+    ## 
+    ##     discard
 
-```{r}
+## Load data
+
+``` r
 metadata <- read_xlsx("docs/eDNA 12S metab/example_input/metadata_tidal_cycle.xlsx") %>%
   mutate(`GMGI Sample ID` = gsub("-", "_", `GMGI Sample ID`),
          `GMGI Sample ID` = paste0(`GMGI Sample ID`, "_12S"))
 ```
 
-
-```{r}
+``` r
 data <- read_xlsx("docs/eDNA 12S metab/example_output/Results_matrix_relative.xlsx")
 
 taxlevels <- read_excel(
@@ -58,9 +85,9 @@ df_annotated <- data %>% gather("GMGI Sample ID", "Rel_Ab", 4:last_col()) %>%
   left_join(., metadata, by = "GMGI Sample ID")
 ```
 
-Adding any common names that are new to this project 
+Adding any common names that are new to this project
 
-```{r}
+``` r
 ## bringing in common names information for those not in our db
 commonNames_annotated <- read_xlsx("docs/eDNA 12S metab/example_output/Taxonomic_assignments/CommonNames_required_edited.xlsx")
   
@@ -80,24 +107,30 @@ df_annotated <- df_annotated %>%
 df_tax <- df_annotated %>% dplyr::select(Species_name, Kingdom:Genus) %>% distinct()
 ```
 
-## Remove Categories 
+## Remove Categories
 
-If you want to plot relative abundance without human, other, or livestock categories. As FYI/warning, relative abundance is calculated with these categories included. Relative abundance can also be thought of as proportion of total reads, which is calculated from the total reads for that sample. 
+If you want to plot relative abundance without human, other, or
+livestock categories. As FYI/warning, relative abundance is calculated
+with these categories included. Relative abundance can also be thought
+of as proportion of total reads, which is calculated from the total
+reads for that sample.
 
-```{r}
+``` r
 df_filtered <- df_annotated %>% 
   filter(!Category == "Other" & !Category == "Livestock" & !Category == "Unassigned" & !Category == "Human") 
 ```
 
-If targeted species heatmap is desired, replace df_annotated with df_filtered in the heatmap code below. If so, remember to change the file name exported. 
+If targeted species heatmap is desired, replace df_annotated with
+df_filtered in the heatmap code below. If so, remember to change the
+file name exported.
 
-## Heatmap plot  
+## Heatmap plot
 
 reverse label order: scale y discrete limits reverse limits=rev
 
-https://coolors.co/ (hit tools on the top right hand side)
+<https://coolors.co/> (hit tools on the top right hand side)
 
-```{r}
+``` r
 ## if subset of categories is desired, replace df below with df_filtered
 df_annotated %>%
   
@@ -154,15 +187,11 @@ df_annotated %>%
     strip.background.y = element_blank(),
     strip.clip = "off"
     )
-   
-  
+```
+
+![](05-heatmap-template-12S_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+``` r
 ## USER EDITS WIDTH AND HEIGHT TO DESIRED   
 ggsave("docs/eDNA 12S metab/example_output/figures/Relative_abundance.png", width = 22, height = 14)  
 ```
-
-
-
-
-
-
-
