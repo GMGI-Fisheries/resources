@@ -1,5 +1,5 @@
 ---
-title: "Relative Abundance Heatmaps: eDNA metabarcoding base script"
+title: "Relative Abundance Heatmap_non decon"
 output:
   github_document: default
   pdf_document:
@@ -38,14 +38,13 @@ library(scales)
 ## Load data 
 
 ```{r}
-metadata <- read_xlsx("docs/eDNA 12S metab/example_input/metadata_tidal_cycle.xlsx") %>%
-  mutate(`GMGI Sample ID` = gsub("-", "_", `GMGI Sample ID`),
-         `GMGI Sample ID` = paste0(`GMGI Sample ID`, "_12S"))
+metadata <- read.csv("C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/Filter Pore Size Experiment/github/eDNA_FilterPoreSize/metadata/NPFPS_metadata.csv")
+
 ```
 
-
+#data non decontaminated
 ```{r}
-data <- read_xlsx("docs/eDNA 12S metab/example_output/Results_matrix_relative.xlsx")
+data_nondecon <- read_xlsx("C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/Filter Pore Size Experiment/github/eDNA_FilterPoreSize/ninigret_pond_data/results/Results_matrix_relative.xlsx")
 
 taxlevels <- read_excel(
   "C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/Metabarcoding Lab Resources/Reference Databases/GMGI_Vert_Ref.xlsx") %>% 
@@ -53,16 +52,37 @@ taxlevels <- read_excel(
                 "Order", "Family", "Genus", "species", "PhylogenySorting") %>%
   distinct()
 
-df_annotated <- data %>% gather("GMGI Sample ID", "Rel_Ab", 4:last_col()) %>%
+#non decontaminated data
+df_annotated_nondecon <- data_nondecon %>% gather("GMGI.Sample.ID", "Rel_Ab", 4:last_col()) %>%
   left_join(., taxlevels, by = "Species_name") %>%
-  left_join(., metadata, by = "GMGI Sample ID")
+  left_join(., metadata, by = "GMGI.Sample.ID")
+
 ```
 
-Adding any common names that are new to this project 
+#data contaminated
+```{r}
+data_decon <- read_xlsx("C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/Filter Pore Size Experiment/github/eDNA_FilterPoreSize/ninigret_pond_data/results_decon/Results_matrix_relative.xlsx")
 
+taxlevels <- read_excel(
+  "C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/Metabarcoding Lab Resources/Reference Databases/GMGI_Vert_Ref.xlsx") %>% 
+  dplyr::select("Species_name", "Kingdom", "Phylum", "Class", 
+                "Order", "Family", "Genus", "species", "PhylogenySorting") %>%
+  distinct()
+
+#non decontaminated data
+df_annotated_decon <- data_decon %>% gather("GMGI.Sample.ID", "Rel_Ab", 5:last_col()) %>%
+  left_join(., taxlevels, by = "Species_name") %>%
+  left_join(., metadata, by = "GMGI.Sample.ID")
+
+```
+
+
+
+Adding any common names that are new to this project 
+#non decon
 ```{r}
 ## bringing in common names information for those not in our db
-commonNames_annotated <- read_xlsx("docs/eDNA 12S metab/example_output/Taxonomic_assignments/CommonNames_required_edited.xlsx")
+commonNames_annotated <- read_xlsx("C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/Filter Pore Size Experiment/github/eDNA_FilterPoreSize/ninigret_pond_data/Taxonomic_assignments/CommonNames_required_edited.xlsx")
   
 # Loop through each row of the dataframe to add taxonomic level information from required edited worksheet 
 for (i in commonNames_annotated$Species_name) {
@@ -70,14 +90,38 @@ for (i in commonNames_annotated$Species_name) {
   current_row <- commonNames_annotated %>% subset(Species_name==i)
   
   # Apply filter based on the current row's condition
-df_annotated <- df_annotated %>%
+df_annotated <- df_annotated_nondecon %>%
   mutate(across(c(Common_name, Category, Kingdom, Phylum, Class, Order, Family, Genus, species, PhylogenySorting),
                 ~case_when(Species_name == current_row$Species_name ~ current_row[[cur_column()]],
                            TRUE ~ .x)))
 }
 
-## tax list 
-df_tax <- df_annotated %>% dplyr::select(Species_name, Kingdom:Genus) %>% distinct()
+## tax list non decon
+df_tax_nondecon <- df_annotated_nondecon %>% dplyr::select(Species_name, Kingdom:Genus) %>% distinct()
+
+
+```
+
+#decon
+```{r}
+## bringing in common names information for those not in our db
+commonNames_annotated <- read_xlsx("C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/Filter Pore Size Experiment/github/eDNA_FilterPoreSize/ninigret_pond_data/Taxonomic_assignments/CommonNames_required_edited.xlsx")
+  
+# Loop through each row of the dataframe to add taxonomic level information from required edited worksheet 
+for (i in commonNames_annotated$Species_name) {
+  # Extract the current row (will do this for each ASV_ID in the choice df)
+  current_row <- commonNames_annotated %>% subset(Species_name==i)
+  
+  # Apply filter based on the current row's condition
+df_annotated <- df_annotated_decon %>%
+  mutate(across(c(Common_name, Category, Kingdom, Phylum, Class, Order, Family, Genus, species, PhylogenySorting),
+                ~case_when(Species_name == current_row$Species_name ~ current_row[[cur_column()]],
+                           TRUE ~ .x)))
+}
+
+## tax list non decon
+df_tax_decon <- df_annotated_decon %>% dplyr::select(Species_name, Kingdom:Genus) %>% distinct()
+
 ```
 
 ## Remove Categories 
@@ -85,9 +129,16 @@ df_tax <- df_annotated %>% dplyr::select(Species_name, Kingdom:Genus) %>% distin
 If you want to plot relative abundance without human, other, or livestock categories. As FYI/warning, relative abundance is calculated with these categories included. Relative abundance can also be thought of as proportion of total reads, which is calculated from the total reads for that sample. 
 
 ```{r}
-df_filtered <- df_annotated %>% 
+df_filtered_nondecon <- df_annotated_nondecon %>% 
   filter(!Category == "Other" & !Category == "Livestock" & !Category == "Unassigned" & !Category == "Human") 
 ```
+
+
+```{r}
+df_filtered_decon <- df_annotated_decon %>% 
+  filter(!Category == "Other" & !Category == "Livestock" & !Category == "Unassigned" & !Category == "Human") 
+```
+
 
 If targeted species heatmap is desired, replace df_annotated with df_filtered in the heatmap code below. If so, remember to change the file name exported. 
 
@@ -99,7 +150,8 @@ https://coolors.co/ (hit tools on the top right hand side)
 
 ```{r}
 ## if subset of categories is desired, replace df below with df_filtered
-df_annotated %>%
+df_annotated_decon %>%
+  filter(Sample.Type == "Blank") %>% 
   
   ## replace zeros with NAs for plotting
   replace_with_na_all(condition = ~.x == 0.00000) %>%
@@ -110,7 +162,7 @@ df_annotated %>%
   ungroup() %>%
   
   ## ggplot basic options (USER EDIT: X AND Y AXIS)
-  ggplot(., aes(x = `Project Sample ID`, y = Common_name)) +
+  ggplot(., aes(x = GMGI.Sample.ID, y = Common_name)) +
   geom_tile(aes(fill = Rel_Ab), color = "black") +
   
   ## x, y, and legend labels (USER EDITS IF DESIRED)
@@ -141,7 +193,6 @@ df_annotated %>%
     legend.key.height = unit(5, 'mm'),
     legend.direction = "horizontal",
     legend.key.width = unit(5, 'mm'),
-    legend.title.align = 0.5,
     legend.title.position = "top",
     
     ## axis titles 
@@ -157,7 +208,7 @@ df_annotated %>%
    
   
 ## USER EDITS WIDTH AND HEIGHT TO DESIRED   
-ggsave("docs/eDNA 12S metab/example_output/figures/Relative_abundance.png", width = 22, height = 14)  
+ggsave("C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/Filter Pore Size Experiment/github/eDNA_FilterPoreSize/ninigret_pond_data/figures_decon/Relative_abundance_blanks.png", width = 22, height = 14)  
 ```
 
 

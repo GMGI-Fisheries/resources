@@ -134,6 +134,115 @@ We use a median absolute deviation (MAD) approach that works by first finding th
 
 Visit this [page](https://gmgi-fisheries.github.io/resources/eDNA%2012S%20metab/02-outlier_detection-template-12S/) for the R script or download [here](https://github.com/GMGI-Fisheries/resources/blob/master/docs/eDNA%2012S%20metab/02-outlier_detection-template-12S.Rmd).
 
+### Download seqtk program
+
+This program has already been installed on NU with the below code:
+
+```
+# move to gmgi/packages folder 
+cd /projects/gmgi/packages/
+
+# download seqtk program from their github page; move into that folder; and enable (`make`) the program
+# ; indicates a pipe much like %>% in R
+git clone https://github.com/lh3/seqtk.git;
+cd seqtk; make
+```
+
+Path to the program: `/projects/gmgi/packages/seqtk/seqtk`
+
+### Running seqtk with a single (or handful) of samples 
+
+Calculate the median number of reads prior to this code. This example will use 70,377. 
+
+```
+# start an interactive session on 1 node
+srun --pty bash 
+
+# cd to your raw data folder
+# make a new folder called outliers (`mkdir` = make directory)
+mkdir outliers
+
+# define a path to reference later using ${seqtk}
+seqtk="/projects/gmgi/packages/seqtk/seqtk"
+
+# reference the program path above using ${} and subsample the original fastq file 
+# to 70,377 reads using a set seed of -s100 following by gzipping that file using a pipe |
+# that is similar to %>% in R. I have two commands then: 1) sub-sample 2) gzip 
+# > indicates a new output file 
+
+${seqtk} sample -s100 INS2-FS-0011_S284_L001_R1_001.fastq.gz 70377 | gzip > INS2-FS-0011_S284_L001_R1_001_subset.fastq.gz
+${seqtk} sample -s100 INS2-FS-0011_S284_L001_R2_001.fastq.gz 70377 | gzip > INS2-FS-0011_S284_L001_R2_001_subset.fastq.gz
+
+# move original files into the outliers folders so they are out of the way of our analysis 
+mv INS2-FS-0011_S284_L001_R1_001.fastq.gz outliers/
+mv INS2-FS-0011_S284_L001_R2_001.fastq.gz outliers/
+```
+
+### Running seqtk with a list of files 
+
+Create a samplesheet using `03a-metadata.R` below as an example. If you have a csv with 'sampleID', 'forwardReads', and 'reverseReads' columns then turn that csv into a text file with:
+
+`tail -n +2 outlier_list_for_subsampling.csv | cut -d',' -f2,3 | tr ',' '\n' > outlier_paths.txt`
+
+The input to the below .sh is a txt file with a single column with no header that lists the full path of each fastq file to subset.
+
+`02-outlier.sh`
+
+```
+#!/bin/bash
+#SBATCH --error=output/"%x_error.%j" #if your job fails, the error report will be put in this file
+#SBATCH --output=output/"%x_output.%j" #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=4:00:00
+#SBATCH --job-name=02-outlier
+#SBATCH --mem=1GB
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+
+### Running seqtk for a list of files
+
+# path to seqtk
+seqtk="/projects/gmgi/packages/seqtk/seqtk"
+
+# input list
+input_list="/projects/gmgi/oceanX/2025_CVDD_puffer-transect/18S_v8v9/outlier_paths.txt"
+
+# directory for subset files 
+output_directory="/projects/gmgi/oceanX/2025_CVDD_puffer-transect/18S_v8v9/combined_rawdata"
+
+# directory to archive files
+archive_directory="/projects/gmgi/oceanX/2025_CVDD_puffer-transect/18S_v8v9/combined_rawdata/outliers"
+
+# number of reads
+nreads=70377
+seed=100
+
+# Run seqtk on the input_list files
+while read -r fq; do
+    [[ -z "$fq" ]] && continue
+
+    base=$(basename "$fq" .fastq.gz)
+    out="${output_directory}/${base}_subset.fastq.gz"
+
+    echo "Subsampling: $fq -> $out"
+    "${seqtk}" sample -s"${seed}" "$fq" "${nreads}" | gzip > "$out"
+
+done < "$input_list"
+
+
+# Move input_list files to the archive folder
+mkdir -p "$archive_directory"
+
+while read -r fq; do
+    [[ -z "$fq" ]] && continue
+
+    echo "Archiving: $fq -> $archive_directory"
+    mv "$fq" "$archive_directory/"
+
+done < "$input_list"
+```
+
 ## Step 3: Run nf-core/ampliseq to remove adapters, predict ASVs, and generate counts tables    
 
 ### Nf-core and ampliseq pipeline description 
@@ -236,6 +345,8 @@ Path example:
 
 Update ampliseq workflow if needed: `nextflow pull nf-core/ampliseq`. 
 
+*Important to confirm that the samplesheet.csv you're using includes the subsetted fastq files (if any).* 
+
 Below script is set for Riaz primers:
 
 `03b-ampliseq.sh`:
@@ -258,8 +369,8 @@ Below script is set for Riaz primers:
 ## 3. Fill in F primer information based on primer type (no reverse compliment needed)
 ## 4. Adjust parameters as needed (below is Fisheries team default for 12S)
 
-# LOAD MODULES
-module load nextflow/24.10.3
+# Load nextflow conda environment
+source /projects/gmgi/miniconda3/bin/activate nextflow_env
 
 # SET PATHS 
 metadata="" 
@@ -284,7 +395,7 @@ nextflow run nf-core/ampliseq -resume \
 ```
 
 To run:   
-- `sbatch 01b-ampliseq.sh` 
+- `sbatch 03b-ampliseq.sh` 
 
 Discovery needs `module load singularity/3.10.3 and module load nextflow/24.04.4`, but on Explorer this is just `module load nextflow/24.10.3`.  
 
@@ -439,7 +550,7 @@ mkdir -p $HOME/.taxonkit
 cp names.dmp nodes.dmp delnodes.dmp merged.dmp $HOME/.taxonkit
 ```
 
-`02-taxonomicID.sh`: 
+`04-taxonomicID.sh`: 
 
 ```
 #!/bin/bash
@@ -501,4 +612,4 @@ cat ${out}/NCBI_sp.txt | ${taxonkit}/taxonkit reformat -I 1 -r "Unassigned" > ${
 ```
 
 To run:  
-- `sbatch 02-taxonomicID.sh` 
+- `sbatch 04-taxonomicID.sh` 
