@@ -736,6 +736,39 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Step 2: Identify sequencing outliers and sub-sample if needed">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download-seqtk-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      Download seqtk program
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-seqtk-with-a-single-or-handful-of-samples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running seqtk with a single (or handful) of samples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-seqtk-with-a-list-of-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running seqtk with a list of files
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1411,6 +1444,39 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Step 2: Identify sequencing outliers and sub-sample if needed">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download-seqtk-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      Download seqtk program
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-seqtk-with-a-single-or-handful-of-samples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running seqtk with a single (or handful) of samples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-seqtk-with-a-list-of-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running seqtk with a list of files
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1681,6 +1747,99 @@ multiqc --interactive ${fastqc_output} -o ${multiqc_dir} --filename multiqc_raw.
 <p><img alt="" src="https://github.com/GMGI-Fisheries/resources/blob/master/img/Multiqc_reads_example_download2.png?raw=true" /></p>
 <p>We use a median absolute deviation (MAD) approach that works by first finding the median of the data, then measuring how far each value deviates from that median and using the median of those deviations as the typical spread. Values whose deviation is much larger than this typical spread are flagged as outliers.</p>
 <p>Visit this <a href="https://gmgi-fisheries.github.io/resources/eDNA%2012S%20metab/02-outlier_detection-template-12S/">page</a> for the R script or download <a href="https://github.com/GMGI-Fisheries/resources/blob/master/docs/eDNA%2012S%20metab/02-outlier_detection-template-12S.Rmd">here</a>.</p>
+<h3 id="download-seqtk-program">Download seqtk program</h3>
+<p>This program has already been installed on NU with the below code:</p>
+<div class="highlight"><pre><span></span><code># move to gmgi/packages folder 
+cd /projects/gmgi/packages/
+
+# download seqtk program from their github page; move into that folder; and enable (`make`) the program
+# ; indicates a pipe much like %&gt;% in R
+git clone https://github.com/lh3/seqtk.git;
+cd seqtk; make
+</code></pre></div>
+<p>Path to the program: <code>/projects/gmgi/packages/seqtk/seqtk</code></p>
+<h3 id="running-seqtk-with-a-single-or-handful-of-samples">Running seqtk with a single (or handful) of samples</h3>
+<p>Calculate the median number of reads prior to this code. This example will use 70,377. </p>
+<div class="highlight"><pre><span></span><code># start an interactive session on 1 node
+srun --pty bash 
+
+# cd to your raw data folder
+# make a new folder called outliers (`mkdir` = make directory)
+mkdir outliers
+
+# define a path to reference later using ${seqtk}
+seqtk=&quot;/projects/gmgi/packages/seqtk/seqtk&quot;
+
+# reference the program path above using ${} and subsample the original fastq file 
+# to 70,377 reads using a set seed of -s100 following by gzipping that file using a pipe |
+# that is similar to %&gt;% in R. I have two commands then: 1) sub-sample 2) gzip 
+# &gt; indicates a new output file 
+
+${seqtk} sample -s100 INS2-FS-0011_S284_L001_R1_001.fastq.gz 70377 | gzip &gt; INS2-FS-0011_S284_L001_R1_001_subset.fastq.gz
+${seqtk} sample -s100 INS2-FS-0011_S284_L001_R2_001.fastq.gz 70377 | gzip &gt; INS2-FS-0011_S284_L001_R2_001_subset.fastq.gz
+
+# move original files into the outliers folders so they are out of the way of our analysis 
+mv INS2-FS-0011_S284_L001_R1_001.fastq.gz outliers/
+mv INS2-FS-0011_S284_L001_R2_001.fastq.gz outliers/
+</code></pre></div>
+<h3 id="running-seqtk-with-a-list-of-files">Running seqtk with a list of files</h3>
+<p>Create a samplesheet using <code>03a-metadata.R</code> below as an example. If you have a csv with 'sampleID', 'forwardReads', and 'reverseReads' columns then turn that csv into a text file with:</p>
+<p><code>tail -n +2 outlier_list_for_subsampling.csv | cut -d',' -f2,3 | tr ',' '\n' &gt; outlier_paths.txt</code></p>
+<p>The input to the below .sh is a txt file with a single column with no header that lists the full path of each fastq file to subset.</p>
+<p><code>02-outlier.sh</code></p>
+<div class="highlight"><pre><span></span><code>#!/bin/bash
+#SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
+#SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=4:00:00
+#SBATCH --job-name=02-outlier
+#SBATCH --mem=1GB
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+
+### Running seqtk for a list of files
+
+# path to seqtk
+seqtk=&quot;/projects/gmgi/packages/seqtk/seqtk&quot;
+
+# input list
+input_list=&quot;/projects/gmgi/oceanX/2025_CVDD_puffer-transect/18S_v8v9/outlier_paths.txt&quot;
+
+# directory for subset files 
+output_directory=&quot;/projects/gmgi/oceanX/2025_CVDD_puffer-transect/18S_v8v9/combined_rawdata&quot;
+
+# directory to archive files
+archive_directory=&quot;/projects/gmgi/oceanX/2025_CVDD_puffer-transect/18S_v8v9/combined_rawdata/outliers&quot;
+
+# number of reads
+nreads=70377
+seed=100
+
+# Run seqtk on the input_list files
+while read -r fq; do
+    [[ -z &quot;$fq&quot; ]] &amp;&amp; continue
+
+    base=$(basename &quot;$fq&quot; .fastq.gz)
+    out=&quot;${output_directory}/${base}_subset.fastq.gz&quot;
+
+    echo &quot;Subsampling: $fq -&gt; $out&quot;
+    &quot;${seqtk}&quot; sample -s&quot;${seed}&quot; &quot;$fq&quot; &quot;${nreads}&quot; | gzip &gt; &quot;$out&quot;
+
+done &lt; &quot;$input_list&quot;
+
+
+# Move input_list files to the archive folder
+mkdir -p &quot;$archive_directory&quot;
+
+while read -r fq; do
+    [[ -z &quot;$fq&quot; ]] &amp;&amp; continue
+
+    echo &quot;Archiving: $fq -&gt; $archive_directory&quot;
+    mv &quot;$fq&quot; &quot;$archive_directory/&quot;
+
+done &lt; &quot;$input_list&quot;
+</code></pre></div>
 <h2 id="step-3-run-nf-coreampliseq-to-remove-adapters-predict-asvs-and-generate-counts-tables">Step 3: Run nf-core/ampliseq to remove adapters, predict ASVs, and generate counts tables</h2>
 <h3 id="nf-core-and-ampliseq-pipeline-description">Nf-core and ampliseq pipeline description</h3>
 <p><a href="https://nf-co.re/">Nf-core</a>: A community effort to collect a curated set of analysis pipelines built using <a href="https://www.nextflow.io/">Nextflow</a>.<br />
@@ -1788,6 +1947,7 @@ sample_list %&gt;% write.csv(&quot;/samplesheet.csv&quot;,
 - ""</p>
 <h3 id="run-nf-coreampliseq-cutadapt-dada2">Run nf-core/ampliseq (Cutadapt &amp; DADA2)</h3>
 <p>Update ampliseq workflow if needed: <code>nextflow pull nf-core/ampliseq</code>. </p>
+<p><em>Important to confirm that the samplesheet.csv you're using includes the subsetted fastq files (if any).</em> </p>
 <p>Below script is set for Riaz primers:</p>
 <p><code>03b-ampliseq.sh</code>:</p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
@@ -1807,8 +1967,8 @@ sample_list %&gt;% write.csv(&quot;/samplesheet.csv&quot;,
 ## 3. Fill in F primer information based on primer type (no reverse compliment needed)
 ## 4. Adjust parameters as needed (below is Fisheries team default for 12S)
 
-# LOAD MODULES
-module load nextflow/24.10.3
+# Load nextflow conda environment
+source /projects/gmgi/miniconda3/bin/activate nextflow_env
 
 # SET PATHS 
 metadata=&quot;&quot; 
@@ -1832,7 +1992,7 @@ nextflow run nf-core/ampliseq -resume \
    --ignore_failed_trimming
 </code></pre></div>
 <p>To run: <br />
-- <code>sbatch 01b-ampliseq.sh</code> </p>
+- <code>sbatch 03b-ampliseq.sh</code> </p>
 <p>Discovery needs <code>module load singularity/3.10.3 and module load nextflow/24.04.4</code>, but on Explorer this is just <code>module load nextflow/24.10.3</code>.  </p>
 <p>MiFish amplifies a longer target region which requires 2x250 bp sequencing (500 cycle kit). Thus following edits are required if using MiFish primers:<br />
 - F/R primer correct sequences <br />
@@ -1959,7 +2119,7 @@ mkdir -p $HOME/.taxonkit
 # Copy the required files to the TaxonKit data directory
 cp names.dmp nodes.dmp delnodes.dmp merged.dmp $HOME/.taxonkit
 </code></pre></div>
-<p><code>02-taxonomicID.sh</code>: </p>
+<p><code>04-taxonomicID.sh</code>: </p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
 #SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
 #SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
@@ -2018,7 +2178,7 @@ awk -F $&#39;\t&#39; &#39;{ print $4}&#39; ${out}/BLASTResults_NCBI.txt | sort -
 cat ${out}/NCBI_sp.txt | ${taxonkit}/taxonkit reformat -I 1 -r &quot;Unassigned&quot; &gt; ${out}/NCBI_taxassigned.txt
 </code></pre></div>
 <p>To run:<br />
-- <code>sbatch 02-taxonomicID.sh</code> </p>
+- <code>sbatch 04-taxonomicID.sh</code> </p>
 
 
 
