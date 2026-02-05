@@ -12,7 +12,7 @@
         <link rel="prev" href="../../00-creating_eDNA_conda_env/">
       
       
-        <link rel="next" href="../../eDNA%20qPCR/qPCR-analysis-template/">
+        <link rel="next" href="../../00-creating_eDNA_conda_env/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -877,58 +877,97 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-nu-cluster-shifted-from-discovery-to-explorer-this-document-reflects-the-change-from-work-to-projects-nmc-7112025" class="md-nav__link">
+  <a href="#project-set-up" class="md-nav__link">
     <span class="md-ellipsis">
-      The NU cluster shifted from Discovery to Explorer. This document reflects the change from /work to /projects. NMC 7/11/2025
+      Project set-up
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#basics" class="md-nav__link">
+  <a href="#confirm-conda-environment-is-available" class="md-nav__link">
     <span class="md-ellipsis">
-      Basics
+      Confirm conda environment is available
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-1-confirm-conda-environment-is-available" class="md-nav__link">
+  <a href="#assess-quality-of-raw-data" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 1: Confirm conda environment is available
+      Assess quality of raw data
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Assess quality of raw data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#visualize-quality-of-raw-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visualize quality of raw data
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#step-2-assess-quality-of-raw-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 2: Assess quality of raw data
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-3-visualize-quality-of-raw-data" class="md-nav__link">
+  <a href="#identify-sequencing-outliers-and-sub-sample-if-needed" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 3: Visualize quality of raw data
+      Identify sequencing outliers and sub-sample if needed
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Identify sequencing outliers and sub-sample if needed">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download-seqtk-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      Download seqtk program
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#step-4-downloading-and-updating-reference-databases" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#running-seqtk-with-a-single-or-handful-of-samples" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 4: Downloading and updating reference databases
+      Running seqtk with a single (or handful) of samples
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Step 4: Downloading and updating reference databases">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-seqtk-with-a-list-of-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running seqtk with a list of files
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#downloading-and-updating-reference-databases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Downloading and updating reference databases
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Downloading and updating reference databases">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1117,7 +1156,7 @@
             
   
   <span class="md-ellipsis">
-    eDNA: qPCR
+    eDNA: 16S metabarcoding
   </span>
   
 
@@ -1126,6 +1165,174 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            eDNA: 16S metabarcoding
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-creating_eDNA_conda_env/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    00-Create-conda-env
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../eDNA%2016S%20metab/01-Metabarcoding%20ampliseq%2016S/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    01-ampliseq-16S
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    eDNA: 18S metabarcoding
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            eDNA: 18S metabarcoding
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-creating_eDNA_conda_env/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    00-Create-conda-env
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../eDNA%2018S%20metab/01-Metabarcoding%20ampliseq%2018S/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    01-ampliseq-18S
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    eDNA: qPCR
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
             eDNA: qPCR
           </label>
@@ -1173,10 +1380,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1187,8 +1394,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_9">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             Population Genomics
           </label>
@@ -1236,10 +1443,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1250,8 +1457,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             Epigenetic Aging
           </label>
@@ -1299,10 +1506,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1313,8 +1520,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
             <span class="md-nav__icon md-icon"></span>
             Genome Assembly
           </label>
@@ -1375,58 +1582,97 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-nu-cluster-shifted-from-discovery-to-explorer-this-document-reflects-the-change-from-work-to-projects-nmc-7112025" class="md-nav__link">
+  <a href="#project-set-up" class="md-nav__link">
     <span class="md-ellipsis">
-      The NU cluster shifted from Discovery to Explorer. This document reflects the change from /work to /projects. NMC 7/11/2025
+      Project set-up
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#basics" class="md-nav__link">
+  <a href="#confirm-conda-environment-is-available" class="md-nav__link">
     <span class="md-ellipsis">
-      Basics
+      Confirm conda environment is available
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-1-confirm-conda-environment-is-available" class="md-nav__link">
+  <a href="#assess-quality-of-raw-data" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 1: Confirm conda environment is available
+      Assess quality of raw data
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Assess quality of raw data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#visualize-quality-of-raw-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visualize quality of raw data
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#step-2-assess-quality-of-raw-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 2: Assess quality of raw data
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-3-visualize-quality-of-raw-data" class="md-nav__link">
+  <a href="#identify-sequencing-outliers-and-sub-sample-if-needed" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 3: Visualize quality of raw data
+      Identify sequencing outliers and sub-sample if needed
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Identify sequencing outliers and sub-sample if needed">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download-seqtk-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      Download seqtk program
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#step-4-downloading-and-updating-reference-databases" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#running-seqtk-with-a-single-or-handful-of-samples" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 4: Downloading and updating reference databases
+      Running seqtk with a single (or handful) of samples
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Step 4: Downloading and updating reference databases">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-seqtk-with-a-list-of-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running seqtk with a list of files
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#downloading-and-updating-reference-databases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Downloading and updating reference databases
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Downloading and updating reference databases">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1605,25 +1851,21 @@
 <p>The COI region is commonly used for metabarcoding practices and consequently there are many primer options to choose from. The Fisheries team at GMGI has optimized the Leray Geller set (outlined in red box below). Citation: <a href="https://link.springer.com/article/10.1186/1742-9994-10-34">Leray et al 2013</a>.</p>
 <p>We have primarily use this set for invertebrate targets and 12S for vertebrate communities. </p>
 <p><img alt="" src="https://github.com/GMGI-Fisheries/resources/blob/master/img/eDNA_meta_COI_primerset.png?raw=true" /></p>
-<p>Workflow done on HPC. Scripts to run: </p>
-<ol>
-<li>01-fastqc.sh   </li>
-<li>02-multiqc.sh  </li>
-<li>03-metadata.R</li>
-<li>04-ampliseq.sh</li>
-<li>05-taxonomicID.sh  </li>
-</ol>
-<p>Taxonomic identification is completed using 1) NCBI at 90% percent identity + Least Common Ancestor (LCA) and 2) RDP Classifier via DADA2 with MetaZooGene. After filtering and annotation confirmation, the remaining unassigned sequences are 3) assigned to family-level at best from NCBI at 80% identity. </p>
-<p>This document does quality filtering (fastQC + multiQC), database updates, ASV generation (ampliseq DADA2), taxonomic identification with MetaZooGene (ampliseq DADA2), and lastly, taxonomic identification with NCBI (blast). The blast step is completed at 80% threshold and in future R scripts, this will be split into 90%+ and 80%+ at different steps.</p>
+<p>Analysis workflow:  <br />
+1. Assess quality of fastq files using FASTQC and MultiQC<br />
+2. Identify sequencing outliers and sub-sample if needed <br />
+3. Run nf-core/ampliseq to remove adapters, predict ASVs, assign taxonomy, and generate counts tables  <br />
+4. Run blastn and least common ancestor analysis to supplement assignment with DADA2   </p>
+<p>Taxonomic identification is completed using 1) NCBI at 90% percent identity + Least Common Ancestor (LCA) and 2) RDP Classifier via DADA2 with MetaZooGene. After filtering and annotation confirmation, the remaining unassigned sequences are *3) assigned to family-level at best from NCBI at 80% identity. </p>
+<p>*<em>This step is option for users. E.g., Instead users can use 80% identity for Class level instead of Family.</em></p>
+<h3 id="project-set-up">Project set-up</h3>
 <p>Typical project folder structure (once analysis is run) for Fisheries team. Create <code>scripts</code>, <code>results</code> (for ampliseq output), <code>fastqc</code>, <code>blast</code>, and <code>metadata</code>. E.g., <code>mkdir results</code>. </p>
 <div class="highlight"><pre><span></span><code>blast  fastqc  metadata  multiqc_raw_data  multiqc_raw.html  raw_data  results  scripts
 </code></pre></div>
-<h3 id="the-nu-cluster-shifted-from-discovery-to-explorer-this-document-reflects-the-change-from-work-to-projects-nmc-7112025">The NU cluster shifted from Discovery to Explorer. This document reflects the change from /work to /projects. NMC 7/11/2025</h3>
-<h2 id="basics">Basics</h2>
-<p>Create/edit a slurm script: <code>nano name.sh</code><br />
-View a file without editing: <code>less name.sh</code><br />
-Start an interactive node: <code>srun --pty bash</code>  </p>
-<h2 id="step-1-confirm-conda-environment-is-available">Step 1: Confirm conda environment is available</h2>
+<p>Create/edit a slurm script: <code>nano name.sh</code>  <br />
+View a file without editing: <code>less name.sh</code>  <br />
+Start an interactive node: <code>srun --pty bash</code>    </p>
+<h2 id="confirm-conda-environment-is-available">Confirm conda environment is available</h2>
 <p>The conda environment is started within each slurm script, but to activate conda environment outside of the slurm script to update packages or check what is installed:</p>
 <div class="highlight"><pre><span></span><code># Activate conda
 source /projects/gmgi/miniconda3/bin/activate
@@ -1643,7 +1885,7 @@ conda update [package name]
 # Update nextflow ampliseq workflow 
 nextflow pull nf-core/ampliseq
 </code></pre></div>
-<h2 id="step-2-assess-quality-of-raw-data">Step 2: Assess quality of raw data</h2>
+<h2 id="assess-quality-of-raw-data">Assess quality of raw data</h2>
 <p>Background information on <a href="https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon-flipped/lessons/05_qc_running_fastqc_interactively.html">FASTQC</a>. This should take ~10 seconds per file for a typical full MiSeq run. If &lt;2 seconds, then check output/error files.  </p>
 <p>Create slurm script: <code>nano 01-fastqc.sh</code>. Copy below script into file and save (Ctrl+X; Y; Enter).</p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
@@ -1654,7 +1896,7 @@ nextflow pull nf-core/ampliseq
 #SBATCH --time=20:00:00
 #SBATCH --job-name=fastqc
 #SBATCH --mem=3GB
-#SBATCH --ntasks=24
+#SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2
 
 ### USER TO-DO ### 
@@ -1664,8 +1906,8 @@ nextflow pull nf-core/ampliseq
 source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 ## SET PATHS (USER EDITS)
-raw_path=&quot;&quot;
-out_dir=&quot;&quot;
+raw_path=&quot;/projects/gmgi/example/COI/raw_data&quot;
+out_dir=&quot;/projects/gmgi/example/COI/fastqc&quot;
 
 ## CREATE SAMPLE LIST FOR SLURM ARRAY
 ### 1. Create list of all .gz files in raw data path
@@ -1688,43 +1930,127 @@ fastqc ${i} --outdir ${out_dir}
 <li>This is going to output <em>many</em> error and output files. After job completes, navigate to <code>cd scripts/output/fastqc_output</code> and use <code>cat *output.* &gt; ../fastqc_output.txt</code> to create one file with all the output and <code>cat *error.* &gt; ../fastqc_error.txt</code> to create one file with all of the error message outputs. </li>
 <li>Within the <code>out_dir</code> output folder, use <code>ls *html | wc</code> to count the number of html output files (1st/2nd column values). This should be equal to the --array range used and the number of raw data files. If not, the script missed some input files so address this before moving on.  </li>
 </ul>
-<h2 id="step-3-visualize-quality-of-raw-data">Step 3: Visualize quality of raw data</h2>
+<h3 id="visualize-quality-of-raw-data">Visualize quality of raw data</h3>
 <p>Background information on <a href="https://multiqc.info/docs/#:~:text=MultiQC%20is%20a%20reporting%20tool%20that%20parses%20results,experiments%20containing%20multiple%20samples%20and%20multiple%20analysis%20steps">MULTIQC</a>.</p>
-<p>Create slurm script: <code>nano 02-multiqc.sh</code>. Copy below script into file and save (Ctrl+X; Y; Enter).</p>
-<div class="highlight"><pre><span></span><code>#!/bin/bash
-#SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
-#SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
-#SBATCH --partition=short
-#SBATCH --nodes=1
-#SBATCH --time=10:00:00
-#SBATCH --job-name=multiqc
-#SBATCH --mem=8GB
-#SBATCH --ntasks=24
-#SBATCH --cpus-per-task=2
-
-### USER TO-DO ### 
-## 1. Set paths for your project
-## 2. Optional: change file name (multiqc_raw.html) as desired
+<p>Run the following code in an interactive node. This program will be quick for eDNA data (typically &lt;2 minutes).</p>
+<div class="highlight"><pre><span></span><code># Use srun to claim a node
+srun --pty bash 
 
 # Activate conda environment
 source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 ## SET PATHS 
-## fastqc_output = output from 01-fastqc.sh; fastqc program
+## fastqc_output = output from 00-fastqc.sh; fastqc program
 fastqc_output=&quot;&quot; 
 multiqc_dir=&quot;&quot; 
 
 ## RUN MULTIQC 
+### Navigate to your project
 multiqc --interactive ${fastqc_output} -o ${multiqc_dir} --filename multiqc_raw.html
 </code></pre></div>
-<p>For typical MiSeq runs, this multiqc step is quick. Use an interactive node instead of sbatch. You'll generate output and error files if you create a .sh script and run with <code>bash</code> within an interactive node. Otherwise you could run the code line by line. </p>
-<div class="highlight"><pre><span></span><code>## Start an interactive node
-# Use srun to claim a node
+<p>Path examples:  <br />
+- fastqc_output="/projects/gmgi/Fisheries/eDNA/tidal_cycle/fastqc_output" <br />
+- multiqc_dir="/projects/gmgi/Fisheries/eDNA/tidal_cycle"    </p>
+<h2 id="identify-sequencing-outliers-and-sub-sample-if-needed">Identify sequencing outliers and sub-sample if needed</h2>
+<p>This step can be done two ways: 1) download read counts from Illumina basespace run information or 2) Download read counts from the multiqc report. Either way, you need an excel file with the sample ID and total read count. </p>
+<p>Read counts can be downloaded from the General Statistics section on Multiqc by selecting Export as CSV &gt; Data &gt; Format (csv) &gt; Download Plot Data. Save this file in the project repository. </p>
+<p><img alt="" src="https://github.com/GMGI-Fisheries/resources/blob/master/img/Multiqc_reads_example_download2.png?raw=true" /></p>
+<p>We use a median absolute deviation (MAD) approach that works by first finding the median of the data, then measuring how far each value deviates from that median and using the median of those deviations as the typical spread. Values whose deviation is much larger than this typical spread are flagged as outliers.</p>
+<p>Visit this <a href="https://gmgi-fisheries.github.io/resources/eDNA%2012S%20metab/02-outlier_detection-template-12S/">page</a> for the R script or download <a href="https://github.com/GMGI-Fisheries/resources/blob/master/docs/eDNA%2012S%20metab/02-outlier_detection-template-12S.Rmd">here</a>.</p>
+<h3 id="download-seqtk-program">Download seqtk program</h3>
+<p>This program has already been installed on NU with the below code:</p>
+<div class="highlight"><pre><span></span><code># move to gmgi/packages folder 
+cd /projects/gmgi/packages/
+
+# download seqtk program from their github page; move into that folder; and enable (`make`) the program
+# ; indicates a pipe much like %&gt;% in R
+git clone https://github.com/lh3/seqtk.git;
+cd seqtk; make
+</code></pre></div>
+<p>Path to the program: <code>/projects/gmgi/packages/seqtk/seqtk</code></p>
+<h3 id="running-seqtk-with-a-single-or-handful-of-samples">Running seqtk with a single (or handful) of samples</h3>
+<p>Calculate the median number of reads prior to this code. This example will use 70,377. </p>
+<div class="highlight"><pre><span></span><code># start an interactive session on 1 node
 srun --pty bash 
 
-bash 02-multiqc.sh
+# cd to your raw data folder
+# make a new folder called outliers (`mkdir` = make directory)
+mkdir outliers
+
+# define a path to reference later using ${seqtk}
+seqtk=&quot;/projects/gmgi/packages/seqtk/seqtk&quot;
+
+# reference the program path above using ${} and subsample the original fastq file 
+# to 70,377 reads using a set seed of -s100 following by gzipping that file using a pipe |
+# that is similar to %&gt;% in R. I have two commands then: 1) sub-sample 2) gzip 
+# &gt; indicates a new output file 
+
+${seqtk} sample -s100 INS2-FS-0011_S284_L001_R1_001.fastq.gz 70377 | gzip &gt; INS2-FS-0011_S284_L001_R1_001_subset.fastq.gz
+${seqtk} sample -s100 INS2-FS-0011_S284_L001_R2_001.fastq.gz 70377 | gzip &gt; INS2-FS-0011_S284_L001_R2_001_subset.fastq.gz
+
+# move original files into the outliers folders so they are out of the way of our analysis 
+mv INS2-FS-0011_S284_L001_R1_001.fastq.gz outliers/
+mv INS2-FS-0011_S284_L001_R2_001.fastq.gz outliers/
 </code></pre></div>
-<h2 id="step-4-downloading-and-updating-reference-databases">Step 4: Downloading and updating reference databases</h2>
+<h3 id="running-seqtk-with-a-list-of-files">Running seqtk with a list of files</h3>
+<p>Create a samplesheet using <code>03a-metadata.R</code> below as an example. If you have a csv with 'sampleID', 'forwardReads', and 'reverseReads' columns then turn that csv into a text file with:</p>
+<p><code>tail -n +2 outlier_list_for_subsampling.csv | cut -d',' -f2,3 | tr ',' '\n' &gt; outlier_paths.txt</code></p>
+<p>The input to the below .sh is a txt file with a single column with no header that lists the full path of each fastq file to subset.</p>
+<p><code>02-outlier.sh</code></p>
+<div class="highlight"><pre><span></span><code>#!/bin/bash
+#SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
+#SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=4:00:00
+#SBATCH --job-name=02-outlier
+#SBATCH --mem=1GB
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+
+### Running seqtk for a list of files
+
+# path to seqtk
+seqtk=&quot;/projects/gmgi/packages/seqtk/seqtk&quot;
+
+# input list
+input_list=&quot;/projects/gmgi/example/COI/outlier_paths.txt&quot;
+
+# directory for subset files 
+output_directory=&quot;/projects/gmgi/example/COI/raw_data&quot;
+
+# directory to archive files
+archive_directory=&quot;/projects/gmgi/oceanX/example/COI/raw_data/outliers&quot;
+
+# number of reads
+nreads=70377
+seed=100
+
+# Run seqtk on the input_list files
+while read -r fq; do
+    [[ -z &quot;$fq&quot; ]] &amp;&amp; continue
+
+    base=$(basename &quot;$fq&quot; .fastq.gz)
+    out=&quot;${output_directory}/${base}_subset.fastq.gz&quot;
+
+    echo &quot;Subsampling: $fq -&gt; $out&quot;
+    &quot;${seqtk}&quot; sample -s&quot;${seed}&quot; &quot;$fq&quot; &quot;${nreads}&quot; | gzip &gt; &quot;$out&quot;
+
+done &lt; &quot;$input_list&quot;
+
+
+# Move input_list files to the archive folder
+mkdir -p &quot;$archive_directory&quot;
+
+while read -r fq; do
+    [[ -z &quot;$fq&quot; ]] &amp;&amp; continue
+
+    echo &quot;Archiving: $fq -&gt; $archive_directory&quot;
+    mv &quot;$fq&quot; &quot;$archive_directory/&quot;
+
+done &lt; &quot;$input_list&quot;
+</code></pre></div>
+<h2 id="downloading-and-updating-reference-databases">Downloading and updating reference databases</h2>
 <h3 id="download-andor-update-nbci-blast-nt-database">Download and/or update NBCI blast nt database</h3>
 <p>NCBI is updated daily and therefore needs to be updated each time a project is analyzed. This is the not the most ideal method but we were struggling to get the <code>-remote</code> flag to work within slurm because I don't think NU slurm is connected to the internet? NU help desk was helping for awhile but we didn't get anywhere.</p>
 <p>Within <code>/projects/gmgi/databases/ncbi</code>, there is a <code>update_nt.sh</code> script with the following code. To run <code>sbatch update_nt.sh</code>. This won't take long as it will check for updates rather than re-downloading every time. </p>
@@ -1943,15 +2269,16 @@ sample_list %&gt;% write.csv(&quot;/projects/gmgi/ecosystem-diversity/Gobler/COI
 <h3 id="run-nf-coreampliseq-cutadapt-dada2">Run nf-core/ampliseq (Cutadapt &amp; DADA2)</h3>
 <p>Update ampliseq workflow if needed: <code>nextflow pull nf-core/ampliseq</code>. </p>
 <p>Create slurm script: <code>nano 04-ampliseq.sh</code>. Copy below script into file and save (Ctrl+X; Y; Enter).</p>
+<p>Set <code>trunclenf</code> and <code>trunclenr</code> based on data quality. </p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
 #SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
 #SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
 #SBATCH --partition=short
 #SBATCH --nodes=1
-#SBATCH --time=20:00:00
-#SBATCH --job-name=ampliseq
-#SBATCH --mem=70GB
-#SBATCH --ntasks=24
+#SBATCH --time=48:00:00
+#SBATCH --job-name=ampliseq_project_marker
+#SBATCH --mem=30GB
+#SBATCH --ntasks=12
 #SBATCH --cpus-per-task=2
 
 ### USER TO-DO ### 
@@ -1960,21 +2287,19 @@ sample_list %&gt;% write.csv(&quot;/projects/gmgi/ecosystem-diversity/Gobler/COI
 ## 3. Fill in F primer information based on primer type (no reverse compliment needed)
 ## 4. Adjust parameters as needed (below is Fisheries team default for COI)
 
-# LOAD MODULES
-### This script does not use the eDNA conda environment
-module load singularity/3.10.3
-module load nextflow/23.10.1
+# Load nextflow conda environment
+source /projects/gmgi/miniconda3/bin/activate nextflow_env
 
 # SET PATHS (PROJECT SPECIFIC)
-metadata=&quot;/projects/gmgi/ecosystem-diversity/Gobler/COI/metadata&quot; 
-output_dir=&quot;/prokects/gmgi/ecosystem-diversity/Gobler/COI/results_Global&quot;
+metadata=&quot;&quot; 
+output_dir=&quot;&quot;
 
 # SET PATHS (EDIT VERSION # ON MZG IF NEEDED)
 assignTaxonomy=&quot;/projects/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_Global_modeA.fasta&quot;
 taxlevels=&quot;Kingdom,Phylum,Subphylum,Superclass,Class,Subclass,Infraclass,Superorder,Order,Family,Genus,Species&quot;
 
 nextflow run nf-core/ampliseq -resume \
-   -c /projects/gmgi/Fisheries/scripts/COI_ampliseq.config \
+   -c /projects/gmgi/Fisheries/scripts/ampliseq_minBoot.config \
    -profile singularity \
    --input ${metadata}/samplesheet.csv \
    --FW_primer &quot;GGWACWGGWTGAACWGTWTAYCCYCC&quot; \
@@ -1988,12 +2313,14 @@ nextflow run nf-core/ampliseq -resume \
    --max_len_asv 330 \
    --dada_ref_tax_custom ${assignTaxonomy} \
    --dada_assign_taxlevels ${taxlevels} \
-   --skip_dada_addspecies \
    --sample_inference pseudo \
    --ignore_failed_trimming
 </code></pre></div>
 <p>To run: <br />
 - <code>sbatch 04-ampliseq.sh</code> </p>
+<p>Path examples:  <br />
+- metadata="/projects/gmgi/ecosystem-diversity/Gobler/COI/metadata"   <br />
+- output_dir="/prokects/gmgi/ecosystem-diversity/Gobler/COI/results_Global"    </p>
 <h4 id="files-generated-by-ampliseq">Files generated by ampliseq</h4>
 <p>Pipeline summary reports:  </p>
 <ul>
@@ -2043,7 +2370,7 @@ nextflow run nf-core/ampliseq -resume \
 #SBATCH --time=20:00:00
 #SBATCH --job-name=tax_ID
 #SBATCH --mem=30GB
-#SBATCH --ntasks=24
+#SBATCH --ntasks=12
 #SBATCH --cpus-per-task=2
 
 ### USER TO-DO ### 
@@ -2082,13 +2409,13 @@ cat ${out}/NCBI_sp.txt | ${taxonkit}/taxonkit reformat -I 1 -r &quot;Unassigned&
 <p>To run:<br />
 - <code>sbatch 05-blast_NCBI.sh</code> </p>
 <h3 id="reformat-taxonkit-output-for-lca">Reformat taxonkit output for LCA</h3>
-<p>Create <code>05-blast_sort.R</code> and use RStudio interface on NU OOD to run this script to create a taxid list to use as input for LCA. </p>
+<p>Create <code>06-blast_sort.R</code> and use RStudio interface on NU OOD to run this script to create a taxid list to use as input for LCA. </p>
 <div class="highlight"><pre><span></span><code>## Sorting BLAST output for LCA 
 library(tidyverse)
 
 ### Load data: user edits project path
-NCBI_input=&quot;/projects/gmgi/ecosystem-diversity/Gobler/COI/blast/BLASTResults_NCBI.txt&quot;
-TAXID_output=&quot;/projects/gmgi/ecosystem-diversity/Gobler/COI/blast/taxids.txt&quot;
+NCBI_input=&quot;/projects/gmgi/example/COI/blast/BLASTResults_NCBI.txt&quot;
+TAXID_output=&quot;/projects/gmgi/example/COI/blast/taxids.txt&quot;
 
 blast &lt;- read.table(NCBI_input, header=F,
                     col.names = c(&quot;ASV_ID&quot;, &quot;sseqid&quot;, &quot;sscinames&quot;, &quot;staxid&quot;, &quot;pident&quot;, &quot;length&quot;, &quot;mismatch&quot;,
@@ -2114,7 +2441,7 @@ staxid_list %&gt;% write_tsv(TAXID_output)
 </code></pre></div>
 <h3 id="run-lca-on-blast-output">Run LCA on BLAST output</h3>
 <p>Running LCA on Blast output. At this point, the blast hits have been filtered down to the top hit(s). LCA is performed on those top hit(s) rather than everything above 80%. This way, we can take 90% in our first step then 80% later on. </p>
-<p>Create slurm script: <code>nano 06-LCA.sh</code>. Copy below script into file and save (Ctrl+X; Y; Enter).</p>
+<p>Create slurm script: <code>nano 07-LCA.sh</code>. Copy below script into file and save (Ctrl+X; Y; Enter).</p>
 <div class="highlight"><pre><span></span><code>#!/bin/bash
 #SBATCH --error=output/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
 #SBATCH --output=output/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
@@ -2123,15 +2450,15 @@ staxid_list %&gt;% write_tsv(TAXID_output)
 #SBATCH --time=20:00:00
 #SBATCH --job-name=LCA
 #SBATCH --mem=10GB
-#SBATCH --ntasks=24
+#SBATCH --ntasks=2
 #SBATCH --cpus-per-task=2
 
 ### USER TO-DO ### 
 ## 1. Set paths for project 
 
 # SET PATHS (PROJECT SPECIFIC)
-taxid_list=&quot;/projects/gmgi/ecosystem-diversity/Gobler/COI/blast/taxids.txt&quot;
-out=&quot;/projects/gmgi/ecosystem-diversity/Gobler/COI/blast&quot;
+taxid_list=&quot;/projects/gmgi/example/COI/blast/taxids.txt&quot;
+out=&quot;/projects/gmgi/example/COI/blast&quot;
 
 # SET PATHS (NO EDITS)
 taxonkit=&quot;/projects/gmgi/databases/taxonkit&quot;
