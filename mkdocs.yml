@@ -57,6 +57,12 @@ nav:
   - 'eDNA: COI metabarcoding':
     - 00-Create-conda-env: '00-creating_eDNA_conda_env.md'
     - 01-ampliseq-COI: 'eDNA COI metab/01-Metabarcoding ampliseq COI.md'
+  - 'eDNA: 16S metabarcoding':
+    - 00-Create-conda-env: '00-creating_eDNA_conda_env.md'
+    - 01-ampliseq-16S: 'eDNA 16S metab/01-Metabarcoding ampliseq 16S.md'
+  - 'eDNA: 18S metabarcoding':
+    - 00-Create-conda-env: '00-creating_eDNA_conda_env.md'
+    - 01-ampliseq-18S: 'eDNA 18S metab/01-Metabarcoding ampliseq 18S.md'
   - 'eDNA: qPCR':
     - 01-dfprep-analysis: 'eDNA qPCR/qPCR-analysis-template.md'
   - 'Population Genomics':

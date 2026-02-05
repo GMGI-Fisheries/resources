@@ -1,27 +1,25 @@
-# Metabarcoding workflow for COI amplicon sequencing 
+# Metabarcoding workflow for 16S amplicon sequencing 
 
-The COI region is commonly used for metabarcoding practices and consequently there are many primer options to choose from. The Fisheries team at GMGI has optimized the Leray Geller set (outlined in red box below). Citation: [Leray et al 2013](https://link.springer.com/article/10.1186/1742-9994-10-34).
+The 16S region contains many different regions to pick from for metabarcoding. The Ecosystem team at GMGI has optimized the 16S-v4 set (16S-v4_515F, 16S-v4_806R), the 16S-v2v3 set (16S-v2_104F, 16S-v3_519R), and the 16S-v4v5 set (16S-v4_515F, 16S-v5_924R). The Ecosystem team recommends using the v4 primer set for most projects. 
 
-We have primarily use this set for invertebrate targets and 12S for vertebrate communities. 
+Citations:  
+- 16S-v4_515 F, 16S-v4_806R [Apprill et al. 2015 and Parada et al. 2016]  
+- 16S-v2_104F, 16S-v3_519R [Glendinning et al. 2017 and Lane et al. 1991]  
+- 16S-v4 515F, 16S-v5_924R [Apprill et al. 20215 and Wang et al. 2018]  
 
-![](https://github.com/GMGI-Fisheries/resources/blob/master/img/eDNA_meta_COI_primerset.png?raw=true)
+![](https://microbenotes.com/wp-content/uploads/2024/07/16S-rRNA-Gene-Variable-Regions.jpeg)
 
 Analysis workflow:    
 1. Assess quality of fastq files using FASTQC and MultiQC  
 2. Identify sequencing outliers and sub-sample if needed   
 3. Run nf-core/ampliseq to remove adapters, predict ASVs, assign taxonomy, and generate counts tables    
-4. Run blastn and least common ancestor analysis to supplement assignment with DADA2   
-
-Taxonomic identification is completed using 1) NCBI at 90% percent identity + Least Common Ancestor (LCA) and 2) RDP Classifier via DADA2 with MetaZooGene. After filtering and annotation confirmation, the remaining unassigned sequences are *3) assigned to family-level at best from NCBI at 80% identity. 
-
-**This step is option for users. E.g., Instead users can use 80% identity for Class level instead of Family.*
 
 ### Project set-up 
 
-Typical project folder structure (once analysis is run) for Fisheries team. Create `scripts`, `results` (for ampliseq output), `fastqc`, `blast`, and `metadata`. E.g., `mkdir results`. 
+Typical project folder structure (once analysis is run) for Fisheries team. Create `scripts`, `results` (for ampliseq output), `fastqc`, and `metadata`. E.g., `mkdir results`. 
 
 ```
-blast  fastqc  metadata  multiqc_raw_data  multiqc_raw.html  raw_data  results  scripts
+fastqc  metadata  multiqc_raw_data  multiqc_raw.html  raw_data  results  scripts
 ```
 
 Create/edit a slurm script: `nano name.sh`    
@@ -77,8 +75,8 @@ Create slurm script: `nano 01-fastqc.sh`. Copy below script into file and save (
 source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 ## SET PATHS (USER EDITS)
-raw_path="/projects/gmgi/example/COI/raw_data"
-out_dir="/projects/gmgi/example/COI/fastqc"
+raw_path="/projects/gmgi/example/16S/raw_data"
+out_dir="/projects/gmgi/example/16S/fastqc"
 
 ## CREATE SAMPLE LIST FOR SLURM ARRAY
 ### 1. Create list of all .gz files in raw data path
@@ -129,8 +127,8 @@ multiqc --interactive ${fastqc_output} -o ${multiqc_dir} --filename multiqc_raw.
 ```
 
 Path examples:    
-- fastqc_output="/projects/gmgi/Fisheries/eDNA/tidal_cycle/fastqc_output"   
-- multiqc_dir="/projects/gmgi/Fisheries/eDNA/tidal_cycle"    
+- fastqc_output="/projects/gmgi/Fisheries/eDNA/tidal_cycle/fastqc_output"     
+- multiqc_dir="/projects/gmgi/Fisheries/eDNA/tidal_cycle"      
 
 ## Identify sequencing outliers and sub-sample if needed
 
@@ -216,13 +214,13 @@ The input to the below .sh is a txt file with a single column with no header tha
 seqtk="/projects/gmgi/packages/seqtk/seqtk"
 
 # input list
-input_list="/projects/gmgi/example/COI/outlier_paths.txt"
+input_list="/projects/gmgi/example/16S/outlier_paths.txt"
 
 # directory for subset files 
-output_directory="/projects/gmgi/example/COI/raw_data"
+output_directory="/projects/gmgi/example/16S/raw_data"
 
 # directory to archive files
-archive_directory="/projects/gmgi/oceanX/example/COI/raw_data/outliers"
+archive_directory="/projects/gmgi/oceanX/example/16S/raw_data/outliers"
 
 # number of reads
 nreads=70377
@@ -255,139 +253,22 @@ done < "$input_list"
 
 ## Downloading and updating reference databases 
 
-### Download and/or update NBCI blast nt database
+### Download and/or update Silva database 
 
-NCBI is updated daily and therefore needs to be updated each time a project is analyzed. This is the not the most ideal method but we were struggling to get the `-remote` flag to work within slurm because I don't think NU slurm is connected to the internet? NU help desk was helping for awhile but we didn't get anywhere.
+[https://www.arb-silva.de/]
 
-Within `/projects/gmgi/databases/ncbi`, there is a `update_nt.sh` script with the following code. To run `sbatch update_nt.sh`. This won't take long as it will check for updates rather than re-downloading every time. 
+nf-core/ampliseq will download Silva on its own, but see below website to confirm that the most recent version was indeed used in your workflow. After ampliseq, view the contents of this file:
 
-`/projects/gmgi/databases/ncbi/update_nt.sh` (this script is already in shared gmgi folder): 
-
-```
-#!/bin/bash
-#SBATCH --partition=short
-#SBATCH --nodes=1
-#SBATCH --time=24:00:00
-#SBATCH --job-name=update_ncbi_nt
-#SBATCH --mem=50G
-#SBATCH --output=%x_%j.out
-#SBATCH --error=%x_%j.err
-
-# Activate conda environment
-source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
-
-# Create output directory if it doesn't exist
-cd /projects/gmgi/databases/ncbi/nt
-
-# Update BLAST nt database
-update_blastdb.pl --decompress nt
-
-# Print completion message
-echo "BLAST nt database update completed"
-```
-
-This can take hours so plan ahead - start updating NCBI nt database when you know you are a couple days out from analyzing data. 
-
-View the `update_ncbi_nt.out` file to confirm the echo printed at the end.
-
-### Download Taxonkit 
-
-Download taxonkit to your home directory. **You only need to do this once**, otherwise the program is set-up and you can skip this step. Taxonkit program is in `/projects/gmgi/databases/taxonkit` but the program needs required files to be in your home directory.
+`/results/dada2/ref_taxonomy.silva_138_2.txt`
 
 ```
-# Move to home directory and download taxonomy information
-cd ~
-wget -c ftp://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz
+--dada_ref_taxonomy: silva=138.2
 
-# Extract the downloaded file
-tar -zxvf taxdump.tar.gz
+Title: Silva 138.2 prokaryotic SSU
 
-# Create the TaxonKit data directory 
-mkdir -p $HOME/.taxonkit
+Citation: Quast C, Pruesse E, Yilmaz P, Gerken J, Schweer T, Yarza P, Peplies J, Glöckner FO. The SILVA ribosomal RNA gene database project: improved data processing and web-based tools. Nucleic Acids Res. 2013 Jan;41(Database issue):D590-6. doi: 10.1093/nar/gks1219. Epub 2012 Nov 28. PMID: 23193283; PMCID: PMC3531112.
 
-# Copy the required files to the TaxonKit data directory
-cp names.dmp nodes.dmp delnodes.dmp merged.dmp $HOME/.taxonkit
-```
-
-### Download MetaZooGene
-
-Check the following webpages for the most recent release's version number. If that version number is the same as the database we have on our server, then you don't need to update the database. If not, we need to download the most recent version.
-
-[MetaZooGene North Altantic](https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/html-src/data__MZGdbALL__o02.html)  
-[MetaZooGene Global](https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/html-src/data__MZGdbALL__o00.html) 
-
-Instructions to update:
-
-Open RStudio in NU Discovery Cluster OOD and run the following R script to update both the Global and Atlantic versions of MetaZooGene. User needs to update the file name in `base::write()` to reflect the correct version number. This script is very quick, plan for ~3-5 minutes total to run the script, change the version number, and confirm output. 
-
-Path to R script: `/projects/gmgi/databases/COI/MetaZooGene/MZG_to_DADA2.R` (this script is already in gmgi shared folder).
-
-```
-## GLOBAL DB 
-
-library(magrittr)
-input_file = "https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGdata-coi__MZGdbALL__o00__A.csv.gz"
-
-
-Global_MZG <- 
-  # Download
-  readr::read_csv(input_file, 
-                              col_names = FALSE, 
-                              trim_ws = TRUE, 
-                              na = c("", "NA", "N/A"),
-                              col_types = cols(.default = "c"),
-                              show_col_types = FALSE) %>%
-  # Select ID, Sequence and taxa columns
-  dplyr::select(X34, X31, X33, X2) 
-
-Edited_Global_MZG <- Global_MZG %>% 
-  # Separate taxa column into separate columns
-  tidyr::separate(X34, into = as.character(1:21), sep = ";") %>%
-  
-  # Merge wanted taxa columns and add ">"
-  tidyr::unite(col = "Taxa", 1,4,5,7,8,9,10,11,12,16,18,X2, sep = ";" ) %>%
-  dplyr::mutate(Taxa = paste(">", Taxa, sep = "")) %>%
-  
-  # Restructure into one single column vector
-  dplyr::select(X33, Taxa, X31) %>% 
-  tidyr::pivot_longer(cols = c("Taxa", "X31")) %>%
-  dplyr::pull(value)
-
-# Write vector to fasta 
-### USER TO CHANGE VERSION NUMBER
-Edited_Global_MZG %>% base::write("/projects/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_Global_modeA.fasta")
-  
-## ATLANTIC DB
-
-input_file_ATL = "https://www.st.nmfs.noaa.gov/copepod/collaboration/metazoogene/atlas/data-src/MZGdata-coi__T4000000__o02__A.csv.gz"
-
-ATL_MZG <- 
-  # Download
-  readr::read_csv(input_file_ATL, 
-                  col_names = FALSE, 
-                  trim_ws = TRUE, 
-                  na = c("", "NA", "N/A"),
-                  col_types = cols(.default = "c"),
-                  show_col_types = FALSE) %>%
-  # Select ID, Sequence and taxa columns
-  dplyr::select(X34, X31, X33, X2) 
-
-Edited_ATL_MZG <- ATL_MZG %>% 
-  # Separate taxa column into separate columns
-  tidyr::separate(X34, into = as.character(1:21), sep = ";") %>%
-  
-  # Merge wanted taxa columns and add ">"
-  tidyr::unite(col = "Taxa", 1,4,5,7,8,9,10,11,12,16,18,X2, sep = ";" ) %>%
-  dplyr::mutate(Taxa = paste(">", Taxa, sep = "")) %>%
-  
-  # Restructure into one single column vector
-  dplyr::select(X33, Taxa, X31) %>% 
-  tidyr::pivot_longer(cols = c("Taxa", "X31")) %>%
-  dplyr::pull(value)
-
-# Write vector to fasta
-### USER TO CHANGE VERSION NUMBER
-Edited_ATL_MZG %>% base::write("/projects/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_NorthAtlantic_modeA.fasta")
+All entries: [title:Silva 138.2 prokaryotic SSU, file:[https://zenodo.org/records/14169026/files/silva_nr99_v138.2_toSpecies_trainset.fa.gz, https://zenodo.org/records/14169026/files/silva_v138.2_assignSpecies.fa.gz], citation:Quast C, Pruesse E, Yilmaz P, Gerken J, Schweer T, Yarza P, Peplies J, Glöckner FO. The SILVA ribosomal RNA gene database project: improved data processing and web-based tools. Nucleic Acids Res. 2013 Jan;41(Database issue):D590-6. doi: 10.1093/nar/gks1219. Epub 2012 Nov 28. PMID: 23193283; PMCID: PMC3531112., fmtscript:taxref_reformat_standard.sh, dbversion:SILVA v138.2 (https://zenodo.org/records/14169026)]
 ```
 
 ## Step 4: nf-core/ampliseq 
@@ -404,14 +285,20 @@ We use ampliseq for the following programs:
 - [Cutadapt](https://journal.embnet.org/index.php/embnetjournal/article/view/200) is trimming primer sequences from sequencing reads. Primer sequences are non-biological sequences that often introduce point mutations that do not reflect sample sequences. This is especially true for degenerated PCR primer. If primer trimming would be omitted, artifactual amplicon sequence variants might be computed by the denoising tool or sequences might be lost due to become labelled as PCR chimera.  
 - [DADA2](https://www.nature.com/articles/nmeth.3869) performs fast and accurate sample inference from amplicon data with single-nucleotide resolution. It infers exact amplicon sequence variants (ASVs) from amplicon data with fewer false positives than many other methods while maintaining high sensitivity. This program also assigns taxonomy using a RDP classifier.    
 
-### COI primer sequences (required)
+### 16S primer sequences (required)
 
-Below is what we used for COI amplicon sequencing. This results in ~313 bp expected ASV. 
+Below is what we used for 16S amplicon sequencing. Ampliseq will automatically calculate the reverse compliment and include this for us. Copy the capitalized primer region to place inside the ampliseq script. 
 
-LG COI amplicon F: GGWACWGGWTGAACWGTWTAYCCYCC      
-LG COI amplicon R: TAIACYTCIGGRTGICCRAARAAYCA       
+Format: lower_case_adapter UPPER_CASE_PRIMER_SEQUENCE
 
-Ampliseq will automatically calculate the reverse compliment and include this for us.
+16S-v4_515F_illumina (51 bases): tcgtcggcagcgtcagatgtgtataagagacag GTGYCAGCMGCCGCGGTA    
+16S-v4_806R_illumina: gtctcgtgggctcggagatgtgtataagagacag GGACTACNVGGGTWTCTAAT   
+
+16S-V2_104F_Illumina: tcgtcggcagcgtcagatgtgtataagagacag GGCGVACGGGTGAGTAA    
+16S-V3_519R_Illumina: gtctcgtgggctcggagatgtgtataagagacag GWATTACCGCGGCKGCTG   
+
+16S-v4_515F_illumina (51 bases): tcgtcggcagcgtcagatgtgtataagagacag GTGYCAGCMGCCGCGGTA  
+16S-V5_924R_Illumina (54 bases): gtctcgtgggctcggagatgtgtataagagacag CCCCGYCAATTCMTTTRAGT  
 
 ### Metadata sheet (optional) 
 
@@ -449,7 +336,7 @@ library(stringr)
 library(strex) 
 
 ### Read in sample sheet 
-sample_list <- read.delim2("/projects/gmgi/ecosystem-diversity/Gobler/COI/raw_data/rawdata", header=F) %>% 
+sample_list <- read.delim2("/projects/gmgi/example/16S/raw_data/rawdata", header=F) %>% 
   dplyr::rename(forwardReads = V1) %>%
   mutate(sampleID = str_after_nth(forwardReads, "data/", 1),
 
@@ -474,7 +361,7 @@ sample_list$reverseReads <- gsub("R1", "R2", sample_list$reverseReads)
 # rearranging columns 
 sample_list <- sample_list[,c(2,1,3)]
 
-sample_list %>% write.csv("/projects/gmgi/ecosystem-diversity/Gobler/COI/metadata/samplesheet.csv", 
+sample_list %>% write.csv("/projects/gmgi/example/16S/metadata/samplesheet.csv", 
                           row.names=FALSE, quote = FALSE)
 ```
 
@@ -482,9 +369,15 @@ sample_list %>% write.csv("/projects/gmgi/ecosystem-diversity/Gobler/COI/metadat
 
 Update ampliseq workflow if needed: `nextflow pull nf-core/ampliseq`. 
 
-Create slurm script: `nano 04-ampliseq.sh`. Copy below script into file and save (Ctrl+X; Y; Enter).
+Create slurm script: `nano 04-ampliseq.sh`. Copy below script into file and save (Ctrl+X; Y; Enter). You'll notice that `/projects/gmgi/Fisheries/scripts/	ampliseq_minBoot.config` is used as a custom config file. This file will set minBoot=80 instead of 50 to reflect a more conservative taxonomic assignment. 
 
-Set `trunclenf` and `trunclenr` based on data quality. 
+Set `trunclenf` and `trunclenr` based on data quality. Set job name as desired, I use the format `ampliseq_<project>_<marker>`. Our in-house MiSeq i100 data has been extremely high quality and 250 could be used for trimming. 
+
+Either `silva` or `silva=138.2` can be used in the ref taxonomy flag. Ensure the most recent version of silva is being used. 
+
+*`skip_summary_report_fastqc` is being used right now because this version of ampliseq has a bug in the summary report creation step.* 
+
+`04-ampliseq_16S.sh`: 
 
 ```
 #!/bin/bash
@@ -494,52 +387,44 @@ Set `trunclenf` and `trunclenr` based on data quality.
 #SBATCH --nodes=1
 #SBATCH --time=48:00:00
 #SBATCH --job-name=ampliseq_project_marker
-#SBATCH --mem=30GB
+#SBATCH --mem=70GB
 #SBATCH --ntasks=12
 #SBATCH --cpus-per-task=2
 
 ### USER TO-DO ### 
 ## 1. Set paths for project 
 ## 2. Adjust SBATCH options above (time, mem, ntasks, etc.) as desired  
-## 3. Fill in F primer information based on primer type (no reverse compliment needed)
-## 4. Adjust parameters as needed (below is Fisheries team default for COI)
+## 3. Fill in F and R primer information based on primer type (no reverse compliment needed)
+## 4. Adjust parameters as needed (below is Fisheries team default for 16S)
 
 # Load nextflow conda environment
 source /projects/gmgi/miniconda3/bin/activate nextflow_env
 
-# SET PATHS (PROJECT SPECIFIC)
-metadata="" 
-output_dir=""
+# SET PATHS 
+metadata="/projects/gmgi/example/16S/metadata" 
+output_dir="/projects/gmgi/example/16S/results"
 
-# SET PATHS (EDIT VERSION # ON MZG IF NEEDED)
-assignTaxonomy="/projects/gmgi/databases/COI/MetaZooGene/DADA2_MZG_v2023-m07-15_Global_modeA.fasta"
-taxlevels="Kingdom,Phylum,Subphylum,Superclass,Class,Subclass,Infraclass,Superorder,Order,Family,Genus,Species"
+taxlevels="Kingdom,Phylum,Class,Order,Family,Genus,Species"
 
 nextflow run nf-core/ampliseq -resume \
    -c /projects/gmgi/Fisheries/scripts/ampliseq_minBoot.config \
    -profile singularity \
    --input ${metadata}/samplesheet.csv \
-   --FW_primer "GGWACWGGWTGAACWGTWTAYCCYCC" \
-   --RV_primer "TAIACYTCIGGRTGICCRAARAAYCA" \
+   --FW_primer "" \
+   --RV_primer "" \
    --outdir ${output_dir} \
-   --trunclenf 220 \
-   --trunclenr 220 \
-   --trunc_qmin 25 \
+   --trunclenf 240 \
+   --trunclenr 240 \
    --max_ee 2 \
-   --min_len_asv 300 \
-   --max_len_asv 330 \
-   --dada_ref_tax_custom ${assignTaxonomy} \
-   --dada_assign_taxlevels ${taxlevels} \
    --sample_inference pseudo \
-   --ignore_failed_trimming
+   --ignore_failed_trimming \
+   --dada_ref_taxonomy silva=138.2 \
+   --dada_assign_taxlevels ${taxlevels} \
+   --skip_summary_report_fastqc true
 ```
 
 To run:   
 - `sbatch 04-ampliseq.sh` 
-
-Path examples:    
-- metadata="/projects/gmgi/ecosystem-diversity/Gobler/COI/metadata"     
-- output_dir="/prokects/gmgi/ecosystem-diversity/Gobler/COI/results_Global"    
 
 #### Files generated by ampliseq 
 
@@ -577,159 +462,3 @@ We add an ASV length filter that will output `asv_length_filter/` with:
 - `ASV_len_orig.tsv`: ASV length distribution before filtering.  
 - `ASV_len_filt.tsv`: ASV length distribution after filtering.  
 - `stats.len.tsv`: Tracking read numbers through filtering, for each sample.  
-
-## Step 5: Running additional NCBI taxonomic assignment ID script 
-
-Ampliseq uses MetaZooGene Global to assign taxonomy but we also use NCBI Eukaryotic database sequences and blastn to find 90+% hits then use Least Common Ancestor approach. After filtering and confirming annotations, we then take NCBI hits at 80+% at family-level only.
-
-Create new folder `blast` in project folder. 
-
-### Blast NCBI at 80% identity 
-
-Create slurm script: `nano 05-blast_NCBI.sh`. Copy below script into file and save (Ctrl+X; Y; Enter).
-
-```
-#!/bin/bash
-#SBATCH --error=output/"%x_error.%j" #if your job fails, the error report will be put in this file
-#SBATCH --output=output/"%x_output.%j" #once your job is completed, any final job report comments will be put in this file
-#SBATCH --partition=short
-#SBATCH --nodes=1
-#SBATCH --time=20:00:00
-#SBATCH --job-name=tax_ID
-#SBATCH --mem=30GB
-#SBATCH --ntasks=12
-#SBATCH --cpus-per-task=2
-
-### USER TO-DO ### 
-## 1. Set paths for project; change db path if not 12S
-
-# Activate conda environment
-source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
-
-# SET PATHS (PROJECT SPECIFIC)
-## ASV fasta file path, excluding the file name (already included below)
-ASV_fasta=""
-out=""
-
-# SET PATHS (NO EDITS)
-ncbi="/projects/gmgi/databases/ncbi/nt"
-taxonkit="/projects/gmgi/databases/taxonkit"
-
-#### DATABASE QUERY ####
-### NCBI database 
-blastn -db ${ncbi}/"nt" \
-   -query ${ASV_fasta}/ASV_seqs.len.fasta -num_threads 16 \
-   -taxids 2759 -culling_limit 50 -max_target_seqs 50 -qcov_hsp_perc 95 -evalue 1e-30 \
-   -perc_identity 80 \
-   -out ${out}/BLASTResults_NCBI.txt \
-   -outfmt '6  qseqid   sseqid   sscinames   staxid pident   length   mismatch gapopen  qstart   qend  sstart   send  evalue   bitscore'
-
-############################
-
-#### TAXONOMIC CLASSIFICATION #### 
-## creating list of staxids from all three files 
-awk -F $'\t' '{ print $4}' ${out}/BLASTResults_NCBI.txt | sort -u > ${out}/NCBI_sp.txt
-
-## annotating taxid with full taxonomic classification
-cat ${out}/NCBI_sp.txt | ${taxonkit}/taxonkit reformat -I 1 -r "Unassigned" > ${out}/NCBI_taxassigned.txt
-```
-
-To run:  
-- `sbatch 05-blast_NCBI.sh` 
-
-
-### Reformat taxonkit output for LCA 
-
-Create `06-blast_sort.R` and use RStudio interface on NU OOD to run this script to create a taxid list to use as input for LCA. 
-
-```
-## Sorting BLAST output for LCA 
-library(tidyverse)
-
-### Load data: user edits project path
-NCBI_input="/projects/gmgi/example/COI/blast/BLASTResults_NCBI.txt"
-TAXID_output="/projects/gmgi/example/COI/blast/taxids.txt"
-
-blast <- read.table(NCBI_input, header=F,
-                    col.names = c("ASV_ID", "sseqid", "sscinames", "staxid", "pident", "length", "mismatch",
-                                  "gapopen", "qstart", "qend", "sstart", "send", "evalue", "bitscore"),
-                    colClasses = c(rep("character", 3), "integer", rep("numeric", 9)))
-
-### Print number of ASVs that had a BLAST output
-length(unique(blast$ASV_ID))
-
-### Filter to top pident; this will include ties so any entries with the top pident
-blast_filtered <- blast %>% group_by(ASV_ID) %>% slice_max(pident, n=1) 
-
-## nrow should = the number of unique ASVs 
-staxid_list <- blast_filtered %>% 
-  dplyr::select(ASV_ID, staxid) %>%
-  group_by(ASV_ID) %>%
-  
-  ## combine tax ids into one row and separate with a space 
-  summarise(tax_list = paste(staxid, collapse = " ")) 
-
-### USER EDITS PATH
-staxid_list %>% write_tsv(TAXID_output)
-```
-
-### Run LCA on BLAST output 
-
-Running LCA on Blast output. At this point, the blast hits have been filtered down to the top hit(s). LCA is performed on those top hit(s) rather than everything above 80%. This way, we can take 90% in our first step then 80% later on. 
-
-Create slurm script: `nano 07-LCA.sh`. Copy below script into file and save (Ctrl+X; Y; Enter).
-
-```
-#!/bin/bash
-#SBATCH --error=output/"%x_error.%j" #if your job fails, the error report will be put in this file
-#SBATCH --output=output/"%x_output.%j" #once your job is completed, any final job report comments will be put in this file
-#SBATCH --partition=short
-#SBATCH --nodes=1
-#SBATCH --time=20:00:00
-#SBATCH --job-name=LCA
-#SBATCH --mem=10GB
-#SBATCH --ntasks=2
-#SBATCH --cpus-per-task=2
-
-### USER TO-DO ### 
-## 1. Set paths for project 
-
-# SET PATHS (PROJECT SPECIFIC)
-taxid_list="/projects/gmgi/example/COI/blast/taxids.txt"
-out="/projects/gmgi/example/COI/blast"
-
-# SET PATHS (NO EDITS)
-taxonkit="/projects/gmgi/databases/taxonkit"
-
-###################
-
-# Output file for LCA results
-lca_results_file="${out}/lca_results.txt"
-lca_reformat_file="${out}/lca_results_reformatted.txt"
-
-##### LCA by TaxonKit #####
-## Running LCA 
-${taxonkit}/taxonkit lca ${taxid_list} -i 2 -o ${lca_results_file}
-
-## Reformatting output 
-${taxonkit}/taxonkit reformat ${lca_results_file} -I 3 -o ${lca_reformat_file}
-
-```
-
-### Download files for R analysis
-
-In working folder (for Fisheries team, this is your folder on Box), create the following folders: `data`, `metadata`, and `scripts`. Within `data`, make a folder for `Taxonomic_assignments`. 
-
-Download and place in `data`:  
-- `results/summary_report/summary_report.html`    
-- `results/overall_summary.tsv`    
-- `results/pipeline_info/execution_report_*date*.html`    
-- `results/asv_length_filter/ASV_seqs.len.fasta`    
-- `results/ASV_table.len.tsv`  
-
-Download and place in `data/Taxonomic_assignments`:  
-- `results/phyloseq/dada2_phyloseq.rds`    
-- `blast/NCBI_taxassigned.txt`    
-- `blast/lca_results_reformatted.txt`    
-
-
