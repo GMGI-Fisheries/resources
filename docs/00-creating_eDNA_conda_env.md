@@ -29,6 +29,7 @@ pip install nsdpy
 conda install wget
 conda install -c bioconda coidb
 conda install bioconda::mothur
+conda install -c conda-forge pandas
 ```
 
 The conda environment is started within each slurm script, but to activate conda environment outside of the slurm script to update packages or check what is installed:

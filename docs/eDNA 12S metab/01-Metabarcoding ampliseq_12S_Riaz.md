@@ -482,36 +482,65 @@ View the `update_ncbi_nt.out` file to confirm the echo printed at the end.
 
 #### Download and/or update Mitofish database  
 
-Check [Mitofish webpage](https://mitofish.aori.u-tokyo.ac.jp/download/) for the most recent database version number. Compare to the `projects/gmgi/databases/12S` folder. If needed, update Mitofish database:
+Check [Mitofish webpage](https://mitofish.aori.u-tokyo.ac.jp/download/) for the most recent database version number. Compare to the `projects/gmgi/databases/12S` folder. If needed, update Mitofish database with the below code.
+
+- Move the old database to the `archve/` folder within `/projects/gmgi/databases/12S/Mitofish`.   
+- Use `wget` with the link to the new db (eg `wget https://mitofish.aori.u-tokyo.ac.jp/download/fullseq/2025/06/mitofishdb.fa.gz`).    
+- Use `wget` to download tables file (eg `wget https://mitofish.aori.u-tokyo.ac.jp/download/tables/2025/06/tables.tar`)   
+- Run `update_mitofish.sh` by using `sbatch update_mitofish.sh v2025.06`. Replace the version # as needed. 
+
+`update_mitofish.sh` 
 
 ```
-## navigate to databases folder 
-cd /projects/gmgi/databases/12S/Mitofish
-
-## move old versions to archive folder
-mv Mitofish_v* archive/
-
-## download db 
-wget https://mitofish.aori.u-tokyo.ac.jp/species/detail/download/?filename=download%2F/complete_partial_mitogenomes.zip  
-
-## unzip db
-unzip 'index.html?filename=download%2F%2Fcomplete_partial_mitogenomes.zip'
-
-## clean headers; change version number in the file name 
-awk '/^>/ {print $1} !/^>/ {print}' mito-all > Mitofish_v4.08.fasta
-
-## confirm headers are in format as epxected 
-head Mitofish_v4.05.fasta
-
-## remove excess files 
-rm mito-all* 
-rm index*
+#!/bin/bash
+#SBATCH --error=update_mito_err/"%x_error.%j" #if your job fails, the error report will be put in this file
+#SBATCH --output=update_mito_err/"%x_output.%j" #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=1:00:00
+#SBATCH --job-name=update_mitofish
+#SBATCH --mem=5GB
+#SBATCH --ntasks=2
+#SBATCH --cpus-per-task=2
 
 ## Activate conda environment
 source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 ## make NCBI db 
-makeblastdb -in Mitofish_v4.08.fasta -dbtype nucl -out Mitofish_v4.08.fasta -parse_seqids
+gunzip mitofishdb.fa.gz
+makeblastdb -in mitofishdb.fa -dbtype nucl -out mitofishdb -parse_seqids
+
+## create csv files from parquet files
+tar -xvf tables.tar
+for f in *.parquet; do
+  parquet-tools csv "$f" > "${f%.parquet}.csv"
+done
+
+## merge parquet-derived CSVs to provide one db csv
+python - <<'PY'
+import pandas as pd
+
+df = (
+    pd.read_csv("seq_taxonid.csv")
+      .merge(pd.read_csv("taxonid_speciesid.csv"), on="taxon_id", how="left")
+      .merge(pd.read_csv("speciesid_lineageid.csv"), on="species_id", how="left")
+      .merge(pd.read_csv("taxonid_name.csv"), on="lineage_id", how="left")
+)
+
+df.to_csv("mitofish_merged_taxonomy.csv", index=False)
+PY
+
+# --- add version prefix to files in this directory ---
+# Excludes directories, the script itself, and anything already prefixed.
+version="$1"
+script_name="$(basename "$0")"
+
+for f in *; do
+  [[ -f "$f" ]] || continue
+  [[ "$f" == *.sh ]] && continue
+  [[ "$f" == "${version}_"* ]] && continue
+  mv -- "$f" "${version}_$f"
+done
 ```
 
 #### Download GMGI 12S 
