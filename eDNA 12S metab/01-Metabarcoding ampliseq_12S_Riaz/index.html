@@ -2232,34 +2232,63 @@ echo &quot;BLAST nt database update completed&quot;
 </code></pre></div>
 <p>View the <code>update_ncbi_nt.out</code> file to confirm the echo printed at the end.</p>
 <h4 id="download-andor-update-mitofish-database">Download and/or update Mitofish database</h4>
-<p>Check <a href="https://mitofish.aori.u-tokyo.ac.jp/download/">Mitofish webpage</a> for the most recent database version number. Compare to the <code>projects/gmgi/databases/12S</code> folder. If needed, update Mitofish database:</p>
-<div class="highlight"><pre><span></span><code>## navigate to databases folder 
-cd /projects/gmgi/databases/12S/Mitofish
-
-## move old versions to archive folder
-mv Mitofish_v* archive/
-
-## download db 
-wget https://mitofish.aori.u-tokyo.ac.jp/species/detail/download/?filename=download%2F/complete_partial_mitogenomes.zip  
-
-## unzip db
-unzip &#39;index.html?filename=download%2F%2Fcomplete_partial_mitogenomes.zip&#39;
-
-## clean headers; change version number in the file name 
-awk &#39;/^&gt;/ {print $1} !/^&gt;/ {print}&#39; mito-all &gt; Mitofish_v4.08.fasta
-
-## confirm headers are in format as epxected 
-head Mitofish_v4.05.fasta
-
-## remove excess files 
-rm mito-all* 
-rm index*
+<p>Check <a href="https://mitofish.aori.u-tokyo.ac.jp/download/">Mitofish webpage</a> for the most recent database version number. Compare to the <code>projects/gmgi/databases/12S</code> folder. If needed, update Mitofish database with the below code.</p>
+<ul>
+<li>Move the old database to the <code>archve/</code> folder within <code>/projects/gmgi/databases/12S/Mitofish</code>.   </li>
+<li>Use <code>wget</code> with the link to the new db (eg <code>wget https://mitofish.aori.u-tokyo.ac.jp/download/fullseq/2025/06/mitofishdb.fa.gz</code>).    </li>
+<li>Use <code>wget</code> to download tables file (eg <code>wget https://mitofish.aori.u-tokyo.ac.jp/download/tables/2025/06/tables.tar</code>)   </li>
+<li>Run <code>update_mitofish.sh</code> by using <code>sbatch update_mitofish.sh v2025.06</code>. Replace the version # as needed. </li>
+</ul>
+<p><code>update_mitofish.sh</code> </p>
+<div class="highlight"><pre><span></span><code>#!/bin/bash
+#SBATCH --error=update_mito_err/&quot;%x_error.%j&quot; #if your job fails, the error report will be put in this file
+#SBATCH --output=update_mito_err/&quot;%x_output.%j&quot; #once your job is completed, any final job report comments will be put in this file
+#SBATCH --partition=short
+#SBATCH --nodes=1
+#SBATCH --time=1:00:00
+#SBATCH --job-name=update_mitofish
+#SBATCH --mem=5GB
+#SBATCH --ntasks=2
+#SBATCH --cpus-per-task=2
 
 ## Activate conda environment
 source /projects/gmgi/miniconda3/bin/activate fisheries_eDNA
 
 ## make NCBI db 
-makeblastdb -in Mitofish_v4.08.fasta -dbtype nucl -out Mitofish_v4.08.fasta -parse_seqids
+gunzip mitofishdb.fa.gz
+makeblastdb -in mitofishdb.fa -dbtype nucl -out mitofishdb -parse_seqids
+
+## create csv files from parquet files
+tar -xvf tables.tar
+for f in *.parquet; do
+  parquet-tools csv &quot;$f&quot; &gt; &quot;${f%.parquet}.csv&quot;
+done
+
+## merge parquet-derived CSVs to provide one db csv
+python - &lt;&lt;&#39;PY&#39;
+import pandas as pd
+
+df = (
+    pd.read_csv(&quot;seq_taxonid.csv&quot;)
+      .merge(pd.read_csv(&quot;taxonid_speciesid.csv&quot;), on=&quot;taxon_id&quot;, how=&quot;left&quot;)
+      .merge(pd.read_csv(&quot;speciesid_lineageid.csv&quot;), on=&quot;species_id&quot;, how=&quot;left&quot;)
+      .merge(pd.read_csv(&quot;taxonid_name.csv&quot;), on=&quot;lineage_id&quot;, how=&quot;left&quot;)
+)
+
+df.to_csv(&quot;mitofish_merged_taxonomy.csv&quot;, index=False)
+PY
+
+# --- add version prefix to files in this directory ---
+# Excludes directories, the script itself, and anything already prefixed.
+version=&quot;$1&quot;
+script_name=&quot;$(basename &quot;$0&quot;)&quot;
+
+for f in *; do
+  [[ -f &quot;$f&quot; ]] || continue
+  [[ &quot;$f&quot; == *.sh ]] &amp;&amp; continue
+  [[ &quot;$f&quot; == &quot;${version}_&quot;* ]] &amp;&amp; continue
+  mv -- &quot;$f&quot; &quot;${version}_$f&quot;
+done
 </code></pre></div>
 <h4 id="download-gmgi-12s">Download GMGI 12S</h4>
 <p>This is our in-house GMGI database that will include version numbers. Check <code>/projects/gmgi/databases/12S/GMGI/</code> for current uploaded version number and check our Box folder for the most recent version number. </p>
