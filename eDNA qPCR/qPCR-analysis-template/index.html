@@ -1710,10 +1710,10 @@ calculations based on a standard curve<br />
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ## ✔ dplyr     1.1.4     ✔ readr     2.1.5
-## ✔ forcats   1.0.0     ✔ stringr   1.5.1
-## ✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+## ✔ forcats   1.0.1     ✔ stringr   1.6.0
+## ✔ ggplot2   4.0.0     ✔ tibble    3.3.0
 ## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
-## ✔ purrr     1.1.0     
+## ✔ purrr     1.2.0     
 ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
@@ -1770,18 +1770,18 @@ calculations based on a standard curve<br />
 <p>Read in data and confirm No Template Controls (NTC)s contain no data</p>
 <div class="highlight"><pre><span></span><code><span class="n">std_curve_raw</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read.csv</span><span class="p">(</span><span class="n">std_curve_path</span><span class="p">,</span><span class="w"> </span><span class="n">skip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">19</span><span class="p">)</span><span class="w"> </span>
 
-<span class="n">std_curve_raw</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="n">Sample</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;neg&quot;</span><span class="p">)</span>
+<span class="n">std_curve_raw</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="n">Sample</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Neg&quot;</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>##   Well Fluor  Target Content Sample Cq Starting.Quantity..SQ.
-## 1  F12  SYBR Library     NTC    neg NA                     NA
-## 2  G12  SYBR Library     NTC    neg NA                     NA
-## 3  H12  SYBR Library     NTC    neg NA                     NA
+<div class="highlight"><pre><span></span><code>## [1] Well                   Fluor                  Target                
+## [4] Content                Sample                 Cq                    
+## [7] Starting.Quantity..SQ.
+## &lt;0 rows&gt; (or 0-length row.names)
 </code></pre></div>
 <p>Calculate mean Cq and remove No Template Controls (NTC)s</p>
 <div class="highlight"><pre><span></span><code><span class="n">std_curve</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">std_curve_raw</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">rename</span><span class="p">(</span><span class="n">St_Quant</span><span class="o">=</span><span class="m">7</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 
 <span class="w">  </span><span class="c1">## Remove NTCs </span>
-<span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="o">!</span><span class="n">Sample</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;neg&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="o">!</span><span class="n">Sample</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Neg&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 
 <span class="w">  </span><span class="c1">## Calculate mean Cq</span>
 <span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">group_by</span><span class="p">(</span><span class="n">Sample</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
@@ -1905,15 +1905,9 @@ calculations based on a standard curve<br />
 <span class="w">        </span><span class="n">axis.title.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">12</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">),</span>
 <span class="w">        </span><span class="n">axis.title.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="m">12</span><span class="p">,</span><span class="w"> </span><span class="n">face</span><span class="o">=</span><span class="s">&quot;bold&quot;</span><span class="p">))</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>## Warning: Use of `std_curve$Cq` is discouraged.
-## ℹ Use `Cq` instead.
-
-## Warning in geom_text(aes(x = log10(LOD), y = max(std_curve$Cq, na.rm = TRUE) * : All aesthetics have length 1, but the data has 93 rows.
+<div class="highlight"><pre><span></span><code>## Warning in geom_text(aes(x = log10(LOD), y = max(std_curve$Cq, na.rm = TRUE) * : All aesthetics have length 1, but the data has 93 rows.
 ## ℹ Please consider using `annotate()` or provide this layer with data containing
 ##   a single row.
-
-## Warning: Use of `std_curve$Cq` is discouraged.
-## ℹ Use `Cq` instead.
 
 ## Warning in geom_text(aes(x = log10(LOQ), y = max(std_curve$Cq, na.rm = TRUE) * : All aesthetics have length 1, but the data has 93 rows.
 ## ℹ Please consider using `annotate()` or provide this layer with data containing
@@ -1933,15 +1927,9 @@ calculations based on a standard curve<br />
 <p><img alt="" src="../qPCR-analysis-template_files/figure-gfm/unnamed-chunk-10-1.png" /><!-- --></p>
 <div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="n">std_curve_plot</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">=</span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>## Warning: Use of `std_curve$Cq` is discouraged.
-## ℹ Use `Cq` instead.
-
-## Warning in geom_text(aes(x = log10(LOD), y = max(std_curve$Cq, na.rm = TRUE) * : All aesthetics have length 1, but the data has 93 rows.
+<div class="highlight"><pre><span></span><code>## Warning in geom_text(aes(x = log10(LOD), y = max(std_curve$Cq, na.rm = TRUE) * : All aesthetics have length 1, but the data has 93 rows.
 ## ℹ Please consider using `annotate()` or provide this layer with data containing
 ##   a single row.
-
-## Warning: Use of `std_curve$Cq` is discouraged.
-## ℹ Use `Cq` instead.
 
 ## Warning in geom_text(aes(x = log10(LOQ), y = max(std_curve$Cq, na.rm = TRUE) * : All aesthetics have length 1, but the data has 93 rows.
 ## ℹ Please consider using `annotate()` or provide this layer with data containing
@@ -2230,7 +2218,26 @@ those two filters for each water sample.</p>
 <span class="w">  </span><span class="c1">## take log10 of copy number </span>
 <span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">`Mean Copy Number Normalized`</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">log10</span><span class="p">(</span><span class="n">`Mean Copy Number`</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="p">))</span>
 
-<span class="c1">## create an outlier cut-off </span>
+<span class="c1">### Identifying outliers</span>
+<span class="n">outliers</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">normalized_df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="n">`Sample_ID`</span><span class="p">,</span><span class="w"> </span><span class="n">`Mean Copy Number Normalized`</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span>
+<span class="w">    </span><span class="n">Median</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">median</span><span class="p">(</span><span class="n">`Mean Copy Number Normalized`</span><span class="p">),</span>
+<span class="w">    </span><span class="n">MAD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">mad</span><span class="p">(</span><span class="n">`Mean Copy Number Normalized`</span><span class="p">,</span><span class="w"> </span><span class="n">constant</span><span class="o">=</span><span class="m">1</span><span class="p">),</span>
+
+<span class="w">    </span><span class="n">Mi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.6745</span><span class="o">*</span><span class="p">(</span><span class="nf">abs</span><span class="p">(</span><span class="n">`Mean Copy Number Normalized`</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Median</span><span class="p">)</span><span class="o">/</span><span class="n">MAD</span><span class="p">),</span>
+<span class="w">    </span><span class="n">Outlier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ifelse</span><span class="p">(</span><span class="n">Mi</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">3.5</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Outlier&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">),</span>
+
+<span class="w">    </span><span class="n">Upper_threshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="m">3.5</span><span class="o">*</span><span class="n">MAD</span><span class="m">+0.6745</span><span class="o">*</span><span class="n">Median</span><span class="p">)</span><span class="o">/</span><span class="m">0.6745</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Lower_threshold</span><span class="w"> </span><span class="o">=</span><span class="m">-1</span><span class="o">*</span><span class="p">(</span><span class="m">3.5</span><span class="o">*</span><span class="n">MAD</span><span class="m">-0.6745</span><span class="o">*</span><span class="n">Median</span><span class="p">)</span><span class="o">/</span><span class="m">0.6745</span>
+<span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+
+<span class="w">  </span><span class="nf">arrange</span><span class="p">(</span><span class="nf">desc</span><span class="p">(</span><span class="n">`Mean Copy Number Normalized`</span><span class="p">))</span>
+
+<span class="nf">unique</span><span class="p">(</span><span class="n">outliers</span><span class="o">$</span><span class="n">Upper_threshold</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>## [1] NA
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## create an outlier cut-off </span>
 <span class="n">cutoff</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">quantile</span><span class="p">(</span><span class="n">normalized_df</span><span class="o">$</span><span class="n">`Mean Copy Number Normalized`</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span><span class="w"> </span><span class="n">probs</span><span class="o">=</span><span class="m">0.75</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>
 <span class="w">  </span><span class="m">1.5</span><span class="o">*</span><span class="nf">IQR</span><span class="p">(</span><span class="n">normalized_df</span><span class="o">$</span><span class="n">`Mean Copy Number Normalized`</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
 
@@ -2319,7 +2326,10 @@ those two filters for each water sample.</p>
 <p>Bar chart</p>
 <div class="highlight"><pre><span></span><code><span class="n">fieldsamples_df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">subset</span><span class="p">(</span><span class="n">Detection</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Present&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
 
-<span class="w">  </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">Sample_ID</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">`Mean Copy Number Normalized`</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>
+<span class="w">  </span><span class="c1">## comment out the below line since it&#39;s only for the example plot</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Sample_ID_plot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sprintf</span><span class="p">(</span><span class="s">&quot;FS_%02d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">row_number</span><span class="p">()))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span>
+
+<span class="w">  </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">Sample_ID_plot</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">`Mean Copy Number Normalized`</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>
 <span class="w">  </span><span class="nf">geom_bar</span><span class="p">(</span><span class="n">stat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;identity&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.7</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#669bbc&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
 <span class="w">  </span><span class="nf">labs</span><span class="p">(</span>
 <span class="w">    </span><span class="n">y</span><span class="o">=</span><span class="s">&quot;Log10-Normalized Copy Number&quot;</span><span class="p">,</span>
@@ -2366,7 +2376,7 @@ those two filters for each water sample.</p>
 ##   a single row.
 </code></pre></div>
 <p><img alt="" src="../qPCR-analysis-template_files/figure-gfm/unnamed-chunk-23-1.png" /><!-- --></p>
-<div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="n">field_samples_barchart</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">9.5</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">5</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nf">ggsave</span><span class="p">(</span><span class="n">field_samples_barchart</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">9.5</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">=</span><span class="m">3</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>## Warning in geom_text(aes(y = cutoff, x = 2, label = &quot;Outlier&quot;), hjust = 0.4, : All aesthetics have length 1, but the data has 58 rows.
 ## ℹ Please consider using `annotate()` or provide this layer with data containing
@@ -2425,13 +2435,13 @@ those two filters for each water sample.</p>
 <span class="c1">#### HOLD SPACE FOR CUSTOM SAMPLE ID NEEDS, </span>
 <span class="c1">##### DELETE IF NOT NEEDED </span>
 <span class="c1">### adding some meta for Rich </span>
-<span class="n">rich_meta</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_xlsx</span><span class="p">(</span><span class="s">&quot;C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/RI Striped Bass/metadata/eDNA_Data_RI_STB_2024.xlsx&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
-<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">rename</span><span class="p">(</span><span class="n">Date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sample_Date</span><span class="p">,</span><span class="w"> </span><span class="n">Sample_Location</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Station_Code</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
-<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Sample_Time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">format</span><span class="p">(</span><span class="n">Sample_Time</span><span class="p">,</span><span class="w"> </span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;%H:%M:%S&quot;</span><span class="p">))</span>
-
-<span class="n">normalized_df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="c1">#full_join(rich_meta, ., by = c(&quot;Date&quot;, &quot;Sample_Location&quot;)) %&gt;%</span>
-<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="n">Date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as.Date</span><span class="p">(</span><span class="n">Date</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
-<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">Number_of_Filters</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">write_xlsx</span><span class="p">(</span><span class="n">results_samples</span><span class="p">)</span>
+<span class="c1"># rich_meta &lt;- read_xlsx(&quot;C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/RI Striped Bass/metadata/eDNA_Data_RI_STB_2024.xlsx&quot;) %&gt;%</span>
+<span class="c1">#   dplyr::rename(Date = Sample_Date, Sample_Location = Station_Code) %&gt;%</span>
+<span class="c1">#   mutate(Sample_Time = format(Sample_Time, format = &quot;%H:%M:%S&quot;))</span>
+<span class="c1"># </span>
+<span class="c1"># normalized_df %&gt;% #full_join(rich_meta, ., by = c(&quot;Date&quot;, &quot;Sample_Location&quot;)) %&gt;%</span>
+<span class="c1">#   mutate(Date = as.Date(Date)) %&gt;%</span>
+<span class="c1">#   dplyr::select(-Number_of_Filters) %&gt;% write_xlsx(results_samples)</span>
 </code></pre></div>
 
 
