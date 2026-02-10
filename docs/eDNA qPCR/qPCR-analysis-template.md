@@ -18,10 +18,10 @@ library(tidyverse)   # covers ggplot2, dplyr, tidyr, readr, purrr, stringr
 
     ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
     ## ✔ dplyr     1.1.4     ✔ readr     2.1.5
-    ## ✔ forcats   1.0.0     ✔ stringr   1.5.1
-    ## ✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+    ## ✔ forcats   1.0.1     ✔ stringr   1.6.0
+    ## ✔ ggplot2   4.0.0     ✔ tibble    3.3.0
     ## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
-    ## ✔ purrr     1.1.0     
+    ## ✔ purrr     1.2.0     
     ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
     ## ✖ dplyr::lag()    masks stats::lag()
@@ -88,13 +88,13 @@ Read in data and confirm No Template Controls (NTC)s contain no data
 ``` r
 std_curve_raw <- read.csv(std_curve_path, skip = 19) 
 
-std_curve_raw %>% filter(Sample == "neg")
+std_curve_raw %>% filter(Sample == "Neg")
 ```
 
-    ##   Well Fluor  Target Content Sample Cq Starting.Quantity..SQ.
-    ## 1  F12  SYBR Library     NTC    neg NA                     NA
-    ## 2  G12  SYBR Library     NTC    neg NA                     NA
-    ## 3  H12  SYBR Library     NTC    neg NA                     NA
+    ## [1] Well                   Fluor                  Target                
+    ## [4] Content                Sample                 Cq                    
+    ## [7] Starting.Quantity..SQ.
+    ## <0 rows> (or 0-length row.names)
 
 Calculate mean Cq and remove No Template Controls (NTC)s
 
@@ -102,7 +102,7 @@ Calculate mean Cq and remove No Template Controls (NTC)s
 std_curve <- std_curve_raw %>% dplyr::rename(St_Quant=7) %>%
   
   ## Remove NTCs 
-  filter(!Sample == "neg") %>%
+  filter(!Sample == "Neg") %>%
   
   ## Calculate mean Cq
   dplyr::group_by(Sample) %>%
@@ -246,15 +246,9 @@ std_curve %>%
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0), size=12, face="bold"))
 ```
 
-    ## Warning: Use of `std_curve$Cq` is discouraged.
-    ## ℹ Use `Cq` instead.
-
     ## Warning in geom_text(aes(x = log10(LOD), y = max(std_curve$Cq, na.rm = TRUE) * : All aesthetics have length 1, but the data has 93 rows.
     ## ℹ Please consider using `annotate()` or provide this layer with data containing
     ##   a single row.
-
-    ## Warning: Use of `std_curve$Cq` is discouraged.
-    ## ℹ Use `Cq` instead.
 
     ## Warning in geom_text(aes(x = log10(LOQ), y = max(std_curve$Cq, na.rm = TRUE) * : All aesthetics have length 1, but the data has 93 rows.
     ## ℹ Please consider using `annotate()` or provide this layer with data containing
@@ -277,15 +271,9 @@ std_curve %>%
 ggsave(std_curve_plot, width=6, height=4)
 ```
 
-    ## Warning: Use of `std_curve$Cq` is discouraged.
-    ## ℹ Use `Cq` instead.
-
     ## Warning in geom_text(aes(x = log10(LOD), y = max(std_curve$Cq, na.rm = TRUE) * : All aesthetics have length 1, but the data has 93 rows.
     ## ℹ Please consider using `annotate()` or provide this layer with data containing
     ##   a single row.
-
-    ## Warning: Use of `std_curve$Cq` is discouraged.
-    ## ℹ Use `Cq` instead.
 
     ## Warning in geom_text(aes(x = log10(LOQ), y = max(std_curve$Cq, na.rm = TRUE) * : All aesthetics have length 1, but the data has 93 rows.
     ## ℹ Please consider using `annotate()` or provide this layer with data containing
@@ -615,6 +603,27 @@ normalized_df <- samples_df %>%
   ## take log10 of copy number 
   mutate(`Mean Copy Number Normalized` = log10(`Mean Copy Number` + 1))
         
+### Identifying outliers
+outliers <- normalized_df %>% dplyr::select(`Sample_ID`, `Mean Copy Number Normalized`) %>%
+  mutate(
+    Median = median(`Mean Copy Number Normalized`),
+    MAD = mad(`Mean Copy Number Normalized`, constant=1),
+
+    Mi = 0.6745*(abs(`Mean Copy Number Normalized` - Median)/MAD),
+    Outlier = ifelse(Mi > 3.5, "Outlier", ""),
+
+    Upper_threshold = (3.5*MAD+0.6745*Median)/0.6745,
+    Lower_threshold =-1*(3.5*MAD-0.6745*Median)/0.6745
+  ) %>%
+
+  arrange(desc(`Mean Copy Number Normalized`))
+
+unique(outliers$Upper_threshold)
+```
+
+    ## [1] NA
+
+``` r
 ## create an outlier cut-off 
 cutoff <- quantile(normalized_df$`Mean Copy Number Normalized`, na.rm = TRUE, probs=0.75) + 
   1.5*IQR(normalized_df$`Mean Copy Number Normalized`, na.rm=TRUE)
@@ -727,7 +736,10 @@ Bar chart
 ``` r
 fieldsamples_df %>% subset(Detection == "Present") %>%
   
-  ggplot(., aes(x=Sample_ID, y=`Mean Copy Number Normalized`)) + 
+  ## comment out the below line since it's only for the example plot
+  mutate(Sample_ID_plot = sprintf("FS_%02d", dplyr::row_number())) %>% 
+  
+  ggplot(., aes(x=Sample_ID_plot, y=`Mean Copy Number Normalized`)) + 
   geom_bar(stat = "identity", width = 0.7, alpha=0.5, fill = "#669bbc") +
   labs(
     y="Log10-Normalized Copy Number",
@@ -777,7 +789,7 @@ fieldsamples_df %>% subset(Detection == "Present") %>%
 ![](qPCR-analysis-template_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
 ``` r
-ggsave(field_samples_barchart, width = 9.5, height=5)
+ggsave(field_samples_barchart, width = 9.5, height=3)
 ```
 
     ## Warning in geom_text(aes(y = cutoff, x = 2, label = "Outlier"), hjust = 0.4, : All aesthetics have length 1, but the data has 58 rows.
@@ -845,11 +857,11 @@ blank_df %>% mutate(Date = as.Date(Date)) %>%
 #### HOLD SPACE FOR CUSTOM SAMPLE ID NEEDS, 
 ##### DELETE IF NOT NEEDED 
 ### adding some meta for Rich 
-rich_meta <- read_xlsx("C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/RI Striped Bass/metadata/eDNA_Data_RI_STB_2024.xlsx") %>%
-  dplyr::rename(Date = Sample_Date, Sample_Location = Station_Code) %>%
-  mutate(Sample_Time = format(Sample_Time, format = "%H:%M:%S"))
-
-normalized_df %>% #full_join(rich_meta, ., by = c("Date", "Sample_Location")) %>%
-  mutate(Date = as.Date(Date)) %>%
-  dplyr::select(-Number_of_Filters) %>% write_xlsx(results_samples)
+# rich_meta <- read_xlsx("C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/RI Striped Bass/metadata/eDNA_Data_RI_STB_2024.xlsx") %>%
+#   dplyr::rename(Date = Sample_Date, Sample_Location = Station_Code) %>%
+#   mutate(Sample_Time = format(Sample_Time, format = "%H:%M:%S"))
+# 
+# normalized_df %>% #full_join(rich_meta, ., by = c("Date", "Sample_Location")) %>%
+#   mutate(Date = as.Date(Date)) %>%
+#   dplyr::select(-Number_of_Filters) %>% write_xlsx(results_samples)
 ```

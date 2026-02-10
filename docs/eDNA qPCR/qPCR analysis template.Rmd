@@ -556,7 +556,10 @@ Bar chart
 ```{r}
 fieldsamples_df %>% subset(Detection == "Present") %>%
   
-  ggplot(., aes(x=Sample_ID, y=`Mean Copy Number Normalized`)) + 
+  ## comment out the below line since it's only for the example plot
+  mutate(Sample_ID_plot = sprintf("FS_%02d", dplyr::row_number())) %>% 
+  
+  ggplot(., aes(x=Sample_ID_plot, y=`Mean Copy Number Normalized`)) + 
   geom_bar(stat = "identity", width = 0.7, alpha=0.5, fill = "#669bbc") +
   labs(
     y="Log10-Normalized Copy Number",
@@ -590,7 +593,7 @@ fieldsamples_df %>% subset(Detection == "Present") %>%
         strip.text = element_text(face = "bold", size = 9)
     )
 
-ggsave(field_samples_barchart, width = 9.5, height=5)
+ggsave(field_samples_barchart, width = 9.5, height=3)
 ```
 
 Show distance of outliers
@@ -636,13 +639,13 @@ blank_df %>% mutate(Date = as.Date(Date)) %>%
 #### HOLD SPACE FOR CUSTOM SAMPLE ID NEEDS, 
 ##### DELETE IF NOT NEEDED 
 ### adding some meta for Rich 
-rich_meta <- read_xlsx("C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/RI Striped Bass/metadata/eDNA_Data_RI_STB_2024.xlsx") %>%
-  dplyr::rename(Date = Sample_Date, Sample_Location = Station_Code) %>%
-  mutate(Sample_Time = format(Sample_Time, format = "%H:%M:%S"))
-
-normalized_df %>% #full_join(rich_meta, ., by = c("Date", "Sample_Location")) %>%
-  mutate(Date = as.Date(Date)) %>%
-  dplyr::select(-Number_of_Filters) %>% write_xlsx(results_samples)
+# rich_meta <- read_xlsx("C:/BoxDrive/Box/Science/Fisheries/Projects/eDNA/RI Striped Bass/metadata/eDNA_Data_RI_STB_2024.xlsx") %>%
+#   dplyr::rename(Date = Sample_Date, Sample_Location = Station_Code) %>%
+#   mutate(Sample_Time = format(Sample_Time, format = "%H:%M:%S"))
+# 
+# normalized_df %>% #full_join(rich_meta, ., by = c("Date", "Sample_Location")) %>%
+#   mutate(Date = as.Date(Date)) %>%
+#   dplyr::select(-Number_of_Filters) %>% write_xlsx(results_samples)
 ```
 
 
